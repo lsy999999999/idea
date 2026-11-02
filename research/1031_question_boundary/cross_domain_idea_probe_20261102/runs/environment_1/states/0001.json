@@ -1,0 +1,143 @@
+{
+  "version": 1,
+  "replies": [
+    {
+      "label": "L1",
+      "role": "leader",
+      "reply": {
+        "recognition": "Recognized as the public UCI Beijing PM2.5 hourly dataset (UCI 381), spanning 2010-2014; the supplied documentation also cites Liang et al. (2015). No remembered result is being claimed as a new finding.",
+        "summary": "The useful opportunity is to turn the single-station hourly record into a falsifiable episode-response question rather than another generic next-hour concentration predictor. I select whether observed wind-regime transitions mark a change in the persistence of already-high PM2.5, while treating the result as observational and accounting for serial dependence and missing outcome hours.",
+        "candidates": [
+          {
+            "id": "I1",
+            "title": "Do wind-regime transitions change the persistence of high-PM2.5 episodes?",
+            "question": "Among observed hours in an episode with PM2.5 at or above 150 ug/m^3, is the probability that the episode remains above that threshold over the next six hours lower after a transition from calm (cbwd=cv) to a named wind direction with higher Iws than after matched hours without that transition?",
+            "new_claim": "Adds an episode-persistence and response-timing question to the supplied regression framing: the target is a six-hour continuation probability conditional on the episode already being high, not a point forecast. It proposes a directional, testable observational contrast, not a pollution-removal mechanism or intervention effect.",
+            "input_delta": "The documentation identifies hourly PM2.5 and weather fields, missing PM2.5, and a time series. The proposed thresholded episode definition, calm-to-named-wind transition contrast, six-hour horizon, and persistence estimand are additions.",
+            "domain_value": "Could help characterize when a high-pollution episode is likely to persist and inform how long monitoring or response resources should remain elevated, subject to external validation.",
+            "known_basis_refs": [
+              "official_documentation.variables",
+              "official_documentation.additional_info.summary",
+              "data_profile.univariate_stats",
+              "data_profile.fixed_sample_rows"
+            ],
+            "assumptions": [
+              "The row sequence represents consecutive hourly observations as described.",
+              "cbwd=cv is treated only as the recorded calm category; direction and Iws are imperfect proxies for transport and dilution.",
+              "The 150 ug/m^3 threshold and six-hour horizon are operational choices to freeze before analysis, not supplied scientific facts.",
+              "There are enough eligible transitions and complete follow-up windows to estimate a contrast; this must be checked."
+            ],
+            "variables_and_units": {
+              "PM2.5": "ug/m^3, observed hourly concentration",
+              "Iws": "m/s, recorded cumulative wind speed field",
+              "cbwd": "recorded combined wind direction category",
+              "episode": "consecutive observed hourly PM2.5 values >=150 ug/m^3",
+              "outcome": "indicator that PM2.5 remains >=150 ug/m^3 at all observed follow-up hours through six hours; incomplete follow-up is censored/excluded by a prespecified rule",
+              "independent_unit": "episode, with uncertainty clustered or resampled by calendar block/year rather than treating hours as independent"
+            },
+            "testable_prediction": "Within the eligible episodes, the adjusted six-hour continuation proportion will be lower after a cv-to-named-direction transition accompanied by increased Iws than in matched episode-hours without that transition.",
+            "alternative": "After matching on calendar season, hour of day, current and recent PM2.5, temperature, dew point, pressure, and recent Iws, the continuation proportions are similar or higher; the apparent contrast is due to temporal confounding, selection, or insufficient transport information.",
+            "discriminating_test": "Freeze the threshold, horizon, transition definition, matching variables, censoring rule, and block-level uncertainty method before inspecting contrast results. Compare eligible transition and control episode-hours using only covariate overlap; report counts of episodes and transitions, absolute continuation difference with block-based uncertainty, and missing-follow-up sensitivity. Check the sign in a held-out calendar year if support permits. This observational test distinguishes persistence patterns but cannot identify a causal wind effect.",
+            "feasible_with_current_data": true,
+            "required_new_data": "For a causal or operationally transferable claim: simultaneous local wind speed/direction and boundary-layer height at the embassy monitor, multi-site PM2.5, and dated emissions or intervention records; a prospective validation period is needed for a response rule.",
+            "failure_condition": "Withdraw the proposed transition-persistence pattern if eligible matched support is inadequate, the adjusted difference is not negative with uncertainty compatible with a meaningful reduction, the result reverses across held-out years, or reasonable missing-follow-up handling changes its sign.",
+            "nearest_prior_query": "Search for studies of Beijing PM2.5 episode duration or persistence conditional on wind-direction transitions, calm-to-transport changes, and matched meteorology; distinguish this estimand from ordinary concentration prediction and weather association."
+          },
+          {
+            "id": "I2",
+            "title": "Are missing PM2.5 hours concentrated around episode boundaries?",
+            "question": "Do missing PM2.5 labels occur more often in hours adjacent to observed transitions into or out of high-PM2.5 episodes than in meteorologically and seasonally comparable hours away from episode boundaries?",
+            "new_claim": "Adds a specific sensor-coverage/episode-boundary diagnostic: missingness could selectively obscure episode onset or recovery, changing estimated episode counts and duration. This is a measurement-process hypothesis, not evidence that missing values are high or low.",
+            "input_delta": "The supplied profile reports 2,067 missing PM2.5 observations among 43,824 rows. The proposed boundary-relative missingness contrast and its consequence for episode-duration summaries are not stated.",
+            "domain_value": "Could show whether episode surveillance systematically loses observations near operationally important transitions and motivate targeted monitor uptime checks.",
+            "known_basis_refs": [
+              "official_documentation.variables",
+              "data_profile.univariate_stats.pm2.5",
+              "data_profile.actual_rows"
+            ],
+            "assumptions": [
+              "The regular row sequence allows identifying missing hours and observed episode boundaries.",
+              "Observed boundaries are imperfect because the true status during missing hours is unknown.",
+              "Comparable meteorological and calendar strata have adequate support."
+            ],
+            "variables_and_units": {
+              "missingness": "binary per hourly row",
+              "boundary_window": "within two hours of an observed threshold crossing at 150 ug/m^3",
+              "comparison": "hours outside boundary windows matched by month, hour, and recorded meteorology",
+              "unit": "hourly row, uncertainty blocked by calendar period"
+            },
+            "testable_prediction": "The odds of a missing PM2.5 value will be higher within the prespecified two-hour episode-boundary window than in matched non-boundary hours.",
+            "alternative": "Missingness is unrelated to boundary proximity after calendar and meteorology adjustment, or apparent enrichment is caused by the requirement that boundaries be observed on both sides.",
+            "discriminating_test": "Define threshold crossings using observed adjacent values only, compare missing-label frequency in the fixed boundary window to matched hours, and vary the window once as a declared sensitivity analysis. Quantify how many observed episodes could be split or have uncertain endpoints; do not impute missing labels as independent measurements.",
+            "feasible_with_current_data": true,
+            "required_new_data": "Monitor maintenance, calibration, and instrument-status logs to test whether any boundary enrichment corresponds to equipment downtime.",
+            "failure_condition": "The boundary-diagnostic hypothesis fails if matched missingness is not elevated and plausible assignments of missing hours do not materially alter observed episode-boundary counts.",
+            "nearest_prior_query": "Search for missing-not-at-random or monitor downtime analyses in hourly air-quality episode datasets, especially tests of missingness near threshold crossings."
+          },
+          {
+            "id": "I3",
+            "title": "Does recorded wet-weather duration add episode-clearance information?",
+            "question": "Among high-PM2.5 episode-hours, do positive recorded cumulative rain or snow hours (Ir or Is) predict lower PM2.5 at the next observed hour than dry episode-hours matched on season, temperature, dew point, pressure, wind, and recent PM2.5?",
+            "new_claim": "Adds an episode-conditioned, one-hour wet-weather contrast to the task. It tests whether the supplied cumulative precipitation-duration fields contain incremental clearance information; it does not identify scavenging causally because the fields are cumulative and the data lack emissions and direct precipitation intensity.",
+            "input_delta": "The documentation gives Ir and Is as cumulative hours of rain and snow, but does not pose a wet-versus-dry episode-clearance estimand.",
+            "domain_value": "Could establish whether these readily available weather fields are useful for anticipating short-term episode change and whether a more direct precipitation measurement is warranted.",
+            "known_basis_refs": [
+              "official_documentation.variables",
+              "official_documentation.additional_info.variable_info",
+              "data_profile.univariate_stats.Is",
+              "data_profile.univariate_stats.Ir"
+            ],
+            "assumptions": [
+              "Ir and Is encode relevant recent wet-weather duration consistently enough for a predictive contrast.",
+              "The next observed hourly value is not treated as an independent environmental replicate.",
+              "Seasonal and temporal matching can address measured confounding only, not unobserved emissions or boundary-layer dynamics."
+            ],
+            "variables_and_units": {
+              "PM2.5": "ug/m^3",
+              "Ir": "cumulative hours of rain",
+              "Is": "cumulative hours of snow",
+              "outcome": "next observed-hour PM2.5 change in ug/m^3",
+              "unit": "episode, with calendar-block uncertainty"
+            },
+            "testable_prediction": "Within supported matched episode-hours, Ir>0 or Is>0 will be associated with a more negative next-observed-hour PM2.5 change than Ir=0 and Is=0.",
+            "alternative": "No incremental difference remains after matching, or positive Ir/Is tracks seasonal or synoptic conditions rather than precipitation-related clearance.",
+            "discriminating_test": "Estimate separate rain and snow contrasts, freeze matching and outcome-gap rules, compare with a baseline using current PM2.5 and measured meteorology, and test temporal transfer by year. Interpret as predictive association only.",
+            "feasible_with_current_data": true,
+            "required_new_data": "Hourly precipitation amount/intensity, boundary-layer height, multi-site PM2.5, and emissions/intervention records for mechanistic or causal attribution.",
+            "failure_condition": "The incremental wet-weather contrast is unsupported if overlap is sparse, the association is absent or reverses under year holdout, or the sign depends on how gaps in observed PM2.5 are handled.",
+            "nearest_prior_query": "Search for prior analyses of rain/snow duration and short-horizon PM2.5 episode clearance, separating concentration prediction from wet-scavenging mechanism claims."
+          }
+        ],
+        "selected_id": "I1",
+        "method_ids": [
+          "M19",
+          "M33",
+          "M43"
+        ],
+        "task": {
+          "deliverable": "Critique I1 and return a frozen analysis specification for the six-hour episode-continuation contrast, plus any justified revision to the candidate record. Request at most one broker computation and one Crossref search, each tied to a concrete uncertainty.",
+          "acceptance": [
+            "State the key confounding, selection, serial-dependence, and missing-follow-up risks and whether the supplied fields can address each.",
+            "Define episode eligibility, wind transition, control selection, six-hour outcome, incomplete-window handling, and uncertainty unit before seeing computed contrast results.",
+            "The computation, if requested, must report support counts and the prespecified contrast without causal language; specify a result that would weaken or withdraw I1.",
+            "The search, if requested, must target the missing relation in nearest work and describe which finding would change the novelty framing; titles alone cannot establish detailed prior results."
+          ],
+          "proposed_computation": "If feasible, use the complete DF to count eligible high-PM2.5 episode-hours and calm-to-named-wind transitions with increased Iws, then estimate the predeclared matched six-hour continuation contrast and calendar-block uncertainty. This checks support and the proposed premise; it is not a causal estimate.",
+          "proposed_search": "Search Crossref for prior work on episode duration/persistence after wind-direction or calm-to-transport transitions in Beijing PM2.5 or comparable hourly urban monitoring records. If close work already asks this conditional episode-persistence question, narrow the contribution to a specific measurement or transfer test rather than asserting world novelty."
+        },
+        "critique": [],
+        "requests": [],
+        "final": null
+      },
+      "input_sha256": "118525573fca81a1ee3b5388d66fe425c952cf0b6061304bbb2617735339a76a",
+      "reply_sha256": "2fc3fb46bdf7cf134d514742adb96be5ea286f1080ffa749fe6aa37d6de5dd3f"
+    }
+  ],
+  "tools": [],
+  "counters": {
+    "replies": 1,
+    "compute": 0,
+    "search": 0
+  },
+  "final": null
+}

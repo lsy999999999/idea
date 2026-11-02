@@ -1,0 +1,357 @@
+{
+  "version": 5,
+  "replies": [
+    {
+      "label": "L1",
+      "role": "leader",
+      "reply": {
+        "recognition": "Recognize this as the public UCI Student Performance dataset (UCI 320; Portuguese course records), including the 2008 Cortez and Silva study named in the supplied documentation. This is a known dataset; I do not claim the dataset or its documented prediction/leakage observations as new.",
+        "summary": "Goal: identify an actionable question for when schools allocate support, beyond predicting G3. Three candidate increments are frozen below. I select I1 because it connects a potentially actionable attendance signal to a randomized support decision; current cross-sectional records can only motivate/check feasibility, not identify a treatment effect. No computation or search has yet been run.",
+        "candidates": [
+          {
+            "id": "I1",
+            "title": "Does attendance-sensitive tutoring improve term-grade recovery?",
+            "question": "Among students flagged after the first grading period, does an offer of structured subject tutoring produce a larger second-period grade gain for students with higher first-period absence counts than for students with lower absence counts?",
+            "new_claim": "The proposed increment is a decision-specific effect-modification question: attendance burden may identify when tutoring access is especially valuable, rather than merely predicting final grades. This is a hypothesis, not a finding.",
+            "input_delta": "Adds an explicit post-G1 support decision and a pre-specified attendance-by-randomized-offer contrast, absent from the supplied prediction framing.",
+            "domain_value": "Could help schools decide whether to prioritize outreach/tutoring for students whose attendance burden may make ordinary support less accessible or more consequential.",
+            "known_basis_refs": [
+              "input: official documentation states G1 and G2 are first- and second-period grades and schoolsup is extra educational support; it gives no intervention timing or assignment mechanism",
+              "input: 649 records, two Portuguese schools; absences are counts with no stated time window; schoolsup is binary"
+            ],
+            "assumptions": [
+              "A future protocol can measure absences accrued strictly before the G1 decision and record tutoring offer, uptake, and dose.",
+              "A randomized offer can be made ethically among students for whom either offer timing is acceptable; otherwise this contrast is not identified.",
+              "G2 is measured after the offer and on a comparable 0-20 scale."
+            ],
+            "variables_and_units": "For each student: baseline absence count before G1 (days, with window recorded); G1 and G2 (grade points, 0-20); randomized offer (0/1); uptake and attended tutoring sessions (sessions); school and subject. Primary contrast: difference in mean G2-G1 between offered and control students in the pre-specified high-absence group minus the same offer effect in the low-absence group. Define groups by a threshold fixed before enrollment, such as at least 3 pre-G1 absence days versus fewer; also retain absence count continuously as a secondary interaction.",
+            "testable_prediction": "Before any tool return: in the current rows, the association between schoolsup=yes and G2-G1 will be more positive among students with absences >=3 than among students with fewer absences, after descriptive adjustment for G1, failures, studytime, school, and age. This is a weak, confounded feasibility prediction only. In a randomized follow-up, predict a positive offer-by-high-absence interaction on G2-G1; no minimum effect size is claimed.",
+            "alternative": "Support is targeted to students with greater unmeasured need, so its observational association can be null or negative in both attendance groups; attendance may instead mark barriers that reduce tutoring uptake, yielding a smaller offer effect among high-absence students.",
+            "discriminating_test": "First use the supplied rows only to estimate the pre-specified adjusted descriptive interaction and inspect group counts/overlap. Then run a student-level randomized tutoring-offer trial after G1, stratified by the pre-G1 absence threshold, and compare G2-G1 by assignment and stratum under intention-to-treat. Record uptake to distinguish offer access from attendance at sessions.",
+            "feasible_with_current_data": "Only a confounded descriptive interaction is feasible: schoolsup has no stated timing/dose, absences lack a time window, and no randomized assignment is given. G1, G2, absences, schoolsup and listed covariates are present.",
+            "required_new_data": "Prospective student-level cohort or trial: timestamped absence counts before G1; consent/eligibility; randomized tutoring offer or a defensible randomized encouragement; tutoring uptake and sessions; G1 and G2 dates and grades; school/subject; reasons for nonparticipation. Unit is the student; comparison is offer versus control within pre-registered absence strata.",
+            "failure_condition": "The motivating association is absent or has opposite sign in the supplied data; or, in an adequately powered pre-registered trial, the offer-by-absence interaction is non-positive with an interval excluding the pre-specified practically useful benefit. Either result rejects the proposed attendance-sensitive allocation rule, though not necessarily tutoring overall.",
+            "nearest_prior_query": "Search for randomized or encouragement-based secondary-school tutoring studies testing baseline absenteeism as a moderator of academic support effects on subsequent term grades; distinguish moderation evidence from grade prediction and observational support allocation."
+          },
+          {
+            "id": "I2",
+            "title": "When does an early-grade alert miss students who recover?",
+            "question": "Does an alert rule based on low G1 over-allocate follow-up to students who recover by G2 while missing students whose G1 is not low but whose grade falls substantially by G2?",
+            "new_claim": "Adds a transition-aware support-planning question: compare static low-grade flags with flags for deterioration between periods, then quantify their different follow-up caseloads and missed deteriorators. This is a measurement/decision proposal, not an established pattern.",
+            "input_delta": "Uses the ordered G1 and G2 records to define a between-period decision and compare two explicit flagging rules, rather than predicting G3 from all features.",
+            "domain_value": "A school could choose whether to schedule a check-in after the second period for students whose performance is deteriorating, instead of relying only on a single early threshold.",
+            "known_basis_refs": [
+              "input: G1 is first-period grade and G2 second-period grade, each 0-20",
+              "input: documentation notes strong correlation of G1/G2 with G3 and warns about grade timing"
+            ],
+            "assumptions": [
+              "A future school workflow can act after G2, so the deterioration flag has a meaningful decision window.",
+              "A grade-point change is measured comparably across periods.",
+              "Descriptive flag overlap is not evidence that either policy improves achievement."
+            ],
+            "variables_and_units": "G1 and G2 grade points (0-20); change = G2-G1 grade points. Compare low-G1 flag (G1<=10) with deterioration flag (G2-G1<=-3); threshold choices are illustrative and must be validated with educators before a prospective test. Report student counts, overlap, and subsequent support need measured prospectively.",
+            "testable_prediction": "Before any tool return: the two flags will identify non-identical sets of students, with at least some students flagged by one rule but not the other. No prevalence or benefit magnitude is asserted.",
+            "alternative": "The flags may be nearly redundant, or period-to-period variation may mainly reflect grading noise and produce unstable alert membership.",
+            "discriminating_test": "Calculate the cross-tabulation and grade-change distribution using G1/G2, then repeat over adjacent plausible thresholds to assess stability. In a prospective rollout, randomize follow-up among discordant-flag groups and measure subsequent attendance, help uptake, and next-period grade.",
+            "feasible_with_current_data": "Yes for flag overlap and retrospective G1-to-G2 change only. The rows do not establish when support occurred or whether follow-up helps.",
+            "required_new_data": "For prospective value: dated grades, timestamped alert and contact, support offer/uptake, next-period outcome, and preferably randomized or phased follow-up; student is the independent unit.",
+            "failure_condition": "The two rules identify essentially the same students across pre-specified threshold sensitivity checks, or prospective follow-up among deterioration-only students shows no useful actionable need or benefit.",
+            "nearest_prior_query": "Search for secondary-school early-warning systems comparing static grade thresholds with grade-trajectory or deterioration alerts, including evaluation of intervention consequences rather than alert prediction alone."
+          },
+          {
+            "id": "I3",
+            "title": "Does commute burden mark an attendance-support pathway?",
+            "question": "Among students with comparable school and age, is longer reported travel time associated with more absences, and does a transport or attendance-navigation offer reduce later absences most for those with long commutes?",
+            "new_claim": "Proposes a domain decision pathway from an ordinal commute measure to a targeted, testable attendance intervention; the current data can only check whether the first link is plausible.",
+            "input_delta": "Adds a specific operational hypothesis and transport-support intervention question, beyond using travel time as another grade-prediction feature.",
+            "domain_value": "If validated, a school could offer transport navigation or schedule support to students reporting long commutes and assess attendance directly.",
+            "known_basis_refs": [
+              "input: traveltime is a four-level home-to-school time category; absences is a count from 0 to 93",
+              "input: two schools, 649 records; no stated commute intervention or absence observation window"
+            ],
+            "assumptions": [
+              "Reported commute category approximates actual burden and is measured before the absence period.",
+              "School, age, residence, health and other recorded differences do not fully explain the association; unmeasured confounding remains possible.",
+              "A future school can offer a feasible transport/navigation service without making access conditional on sensitive disclosures."
+            ],
+            "variables_and_units": "Travel-time category 1-4 (ordinal, documented bins <15 min, 15-30 min, 30-60 min, >60 min); absence days in a defined prospective term; school; age in years; randomized offer 0/1 and uptake. Primary prospective endpoint: offer effect on absence days among category 3-4 versus 1-2.",
+            "testable_prediction": "Before any tool return: categories 3-4 will have a higher adjusted mean absence count than categories 1-2 within school, controlling age and address. This is observational and not causal. In a later randomized offer test, predict fewer absences from offer among categories 3-4, conditional on feasible uptake.",
+            "alternative": "Commute category may not track absences once school and residence are considered; health, family circumstances or measurement error may dominate, and the proposed service may not address the actual cause.",
+            "discriminating_test": "Check the pre-specified within-school adjusted association in the supplied data and category cell counts. If feasible, prospectively randomize an offer of transport/navigation assistance within commute strata and compare term absence days by assignment.",
+            "feasible_with_current_data": "Yes for a cross-sectional adjusted association only; no temporal ordering or intervention effect can be identified.",
+            "required_new_data": "Commute measurement date and actual minutes or validated category; prospective dated absence counts; intervention offer, uptake and type; student-level randomized assignment or another credible design; school and term identifiers.",
+            "failure_condition": "No monotonic or practically meaningful association with absences within either school, or a randomized service offer does not reduce later absence days in the long-commute stratum.",
+            "nearest_prior_query": "Search for school-based transport or commute assistance trials and studies relating secondary-school travel burden to attendance; identify whether prior work tests a targeted intervention or only an association."
+          }
+        ],
+        "selected_id": "I1",
+        "method_ids": [
+          "M02",
+          "M33",
+          "M34"
+        ],
+        "task": {
+          "deliverable": "Critique I1, especially whether its descriptive premise and proposed randomized interaction are interpretable given support timing, coarse attendance, small sample and confounding. Return a compact recommendation to retain, narrow or replace the hypothesis, preserving proposal-only status for uncomputed claims.",
+          "acceptance": [
+            "State that the current schoolsup association is not a treatment effect and that absence timing is unavailable.",
+            "Evaluate feasibility with actual overlap/counts and an explicitly adjusted descriptive contrast, without causal language.",
+            "Specify a prospective randomized offer design with unit, comparison, outcome, moderator, timing and a decision rule; retain a plausible alternative and failure test.",
+            "Compare the closest literature returned by the single requested search; distinguish title-only support from verified findings and do not claim novelty from an incomplete search."
+          ],
+          "proposed_computation": "One descriptive feasibility calculation on the supplied DF: estimate schoolsup yes/no differences in G2-G1 separately for absences >=3 and <3, adjusted using only pre-specified available covariates G1, failures, studytime, school and age; report cell sizes and the interaction estimate with uncertainty. State limitations, especially unknown support/absence timing. This is not causal and must not be treated as an estimate of the tutoring offer effect.",
+          "proposed_search": "Search Crossref for secondary-school tutoring or educational support studies that test baseline absenteeism as a moderator of randomized/encouragement intervention effects on subsequent grades. Return closest records and say what relationship each title/abstract actually verifies; identify whether I1's specific question appears already tested."
+        },
+        "critique": [],
+        "requests": [],
+        "final": null
+      },
+      "input_sha256": "3698105bb673baf02194260fa9582581cf4804db5285f6461e9db3a144809372",
+      "reply_sha256": "8cd0bf06237c8d92cd5e0a4bbb2d3651e03cdcaaba1ba7025524f58f840fb347"
+    },
+    {
+      "label": "R1",
+      "role": "executor",
+      "reply": {
+        "recognition": "Recognize the public UCI Student Performance dataset (UCI 320), Portuguese-course records, and the Cortez and Silva 2008 study named in the supplied documentation. The data and its documented grade-prediction context are known; neither is claimed as new.",
+        "summary": "I retain the leader's I1 as a proposal about whether pre-G1 attendance burden modifies the effect of an offer of tutoring after G1 on G2-G1. The current data can only assess a confounded descriptive contrast: absence timing is unspecified, schoolsup timing and dose are unknown, and support was not randomized. I request one adjusted descriptive feasibility calculation and one focused Crossref search; no results are available yet.",
+        "candidates": [],
+        "selected_id": "I1",
+        "method_ids": [
+          "M02",
+          "M33",
+          "M34"
+        ],
+        "task": {
+          "deliverable": "Critique and develop I1 while preserving the pre-tool prediction as frozen and labeling every uncomputed claim proposal-only.",
+          "acceptance": [
+            "Report the supplied-data schoolsup contrast as descriptive only; absence and support timing are unknown, and observed support is not an intervention effect.",
+            "Show support-by-absence cell counts, overlap, and an adjusted interaction estimate with uncertainty, while noting small or sparse cells and model limitations.",
+            "Specify a student-level randomized offer after G1, with pre-G1 absence measured and stratified, G2-G1 as outcome, intention-to-treat comparison, and a pre-registered practically useful interaction threshold and failure rule.",
+            "Compare returned Crossref records only to the extent their metadata or returned abstracts support; do not claim literature novelty from a limited search."
+          ],
+          "proposed_computation": "On all rows of DF, describe schoolsup yes/no by absences >=3 versus <3, then fit OLS for G2-G1 with schoolsup, high-absence indicator, their interaction, G1, failures, studytime, school and age. Return cell counts, the interaction coefficient, and HC3 standard error and 95% interval. This checks only a pre-specified descriptive premise; adjustment cannot recover temporal ordering or remove unmeasured confounding.",
+          "proposed_search": "Crossref search for secondary-school tutoring or academic-support randomized/encouragement evaluations that report baseline absenteeism as an effect moderator for subsequent grades. Compare the closest records and indicate whether metadata/abstract actually establishes this relation."
+        },
+        "critique": [
+          "The supplied schoolsup variable is a binary report of extra educational support, not a dated offer of the structured tutoring intervention in I1. Its association with grade change cannot estimate tutoring efficacy.",
+          "Absences are an undated total count, so absences >=3 cannot be interpreted as a pre-G1 moderator in these rows. The requested calculation is therefore a feasibility check on coding and overlap only.",
+          "G2-G1 adjusted for G1 is interpretable as a conditional descriptive contrast, but grade-change measurement and adjustment for its baseline component can introduce regression-to-the-mean coupling. Report the model as exploratory and do not read the interaction causally.",
+          "The randomized follow-up should define the eligibility/flagging rule before assignment, record pre-G1 absence days over a fixed window, randomize tutoring offer within absence strata, and measure offer, uptake, session dose, and dated G1/G2 grades. The allocation claim is supported only if the intention-to-treat offer-by-absence interaction is positive and its interval excludes zero and a predeclared minimum useful benefit; if it does not, do not prioritize by attendance burden, though an overall tutoring effect may remain."
+        ],
+        "requests": [
+          {
+            "type": "compute",
+            "id": "c1",
+            "idea_id": "I1",
+            "purpose": "Check the frozen descriptive feasibility prediction and whether the binary absence split has support in each schoolsup group. This is not a treatment-effect estimate.",
+            "model_spec": {
+              "unit": "student record",
+              "outcome": "G2 minus G1 grade points",
+              "exposure_proxy": "schoolsup=yes indicator; timing and dose unknown",
+              "moderator_proxy": "absences >=3 versus <3; observation window unknown",
+              "adjustment": [
+                "G1",
+                "failures",
+                "studytime",
+                "school",
+                "age"
+              ],
+              "estimand": "OLS coefficient on schoolsup-by-high-absence interaction, a conditional descriptive contrast in grade change",
+              "uncertainty": "HC3 heteroskedasticity-robust standard error and normal-approximation 95% interval",
+              "report": [
+                "four exposure-by-stratum cell counts",
+                "interaction estimate",
+                "standard error",
+                "95% interval",
+                "design-matrix rank"
+              ]
+            },
+            "code": "import json\nimport numpy as np\nimport pandas as pd\n\nd = DF.copy()\nd['high_abs'] = (d['absences'] >= 3).astype(float)\nd['sup'] = (d['schoolsup'] == 'yes').astype(float)\nd['gain'] = d['G2'] - d['G1']\nX = pd.DataFrame({\n    'intercept': np.ones(len(d)),\n    'sup': d['sup'],\n    'high_abs': d['high_abs'],\n    'sup_x_high': d['sup'] * d['high_abs'],\n    'G1': d['G1'].astype(float),\n    'failures': d['failures'].astype(float),\n    'studytime': d['studytime'].astype(float),\n    'age': d['age'].astype(float)\n})\nX = pd.concat([X, pd.get_dummies(d['school'], drop_first=True, dtype=float)], axis=1)\nA = X.to_numpy(dtype=float)\ny = d['gain'].to_numpy(dtype=float)\nbeta = np.linalg.lstsq(A, y, rcond=None)[0]\nresid = y - A @ beta\nbread = np.linalg.pinv(A.T @ A)\nh = np.einsum('ij,jk,ik->i', A, bread, A)\nadj = resid / np.maximum(1.0 - h, 1e-12)\nmeat = (A.T * (adj ** 2)) @ A\ncov = bread @ meat @ bread\nj = list(X.columns).index('sup_x_high')\nest = float(beta[j])\nse = float(np.sqrt(max(cov[j, j], 0.0)))\ncells = {}\nfor hi, hlabel in [(0.0, 'abs_lt_3'), (1.0, 'abs_ge_3')]:\n    for su, slabel in [(0.0, 'support_no'), (1.0, 'support_yes')]:\n        cells[hlabel + '_' + slabel] = int(((d['high_abs'] == hi) & (d['sup'] == su)).sum())\nprint(json.dumps({\n    'n': int(len(d)),\n    'cells': cells,\n    'interaction_grade_points': est,\n    'hc3_se': se,\n    'ci95_normal': [est - 1.96 * se, est + 1.96 * se],\n    'design_rank': int(np.linalg.matrix_rank(A)),\n    'design_columns': int(A.shape[1]),\n    'interpretation': 'descriptive_conditional_association_only_unknown_timing_and_confounding'\n}, separators=(',', ':')))"
+          },
+          {
+            "type": "search",
+            "id": "s1",
+            "idea_id": "I1",
+            "missing_relation": "Whether baseline absenteeism has been tested as a moderator of randomized or encouragement-based secondary-school tutoring/support effects on subsequent grades, distinct from observational allocation and grade prediction.",
+            "query": "secondary school tutoring academic support randomized trial baseline absenteeism moderator effect grades attendance subgroup",
+            "change_if_found": "If a close study tests this same moderator and outcome, narrow I1 to a distinct intervention, absence window, or decision context and cite it as prior work. If returned records only cover general tutoring effects or absenteeism prediction, retain the question as a candidate but make no world-literature novelty claim."
+          }
+        ],
+        "final": null
+      },
+      "input_sha256": "83e9b2f1cb756c5947a693f5a03365f0ef0cb4b812b9608fef3be0103d148e05",
+      "reply_sha256": "3d9901baa59e625794bfde69438e19104c466585ea8313c598e5087182301e2a"
+    }
+  ],
+  "tools": [
+    {
+      "id": "c1",
+      "type": "compute",
+      "request": {
+        "type": "compute",
+        "id": "c1",
+        "idea_id": "I1",
+        "purpose": "Check the frozen descriptive feasibility prediction and whether the binary absence split has support in each schoolsup group. This is not a treatment-effect estimate.",
+        "model_spec": {
+          "unit": "student record",
+          "outcome": "G2 minus G1 grade points",
+          "exposure_proxy": "schoolsup=yes indicator; timing and dose unknown",
+          "moderator_proxy": "absences >=3 versus <3; observation window unknown",
+          "adjustment": [
+            "G1",
+            "failures",
+            "studytime",
+            "school",
+            "age"
+          ],
+          "estimand": "OLS coefficient on schoolsup-by-high-absence interaction, a conditional descriptive contrast in grade change",
+          "uncertainty": "HC3 heteroskedasticity-robust standard error and normal-approximation 95% interval",
+          "report": [
+            "four exposure-by-stratum cell counts",
+            "interaction estimate",
+            "standard error",
+            "95% interval",
+            "design-matrix rank"
+          ]
+        },
+        "code": "import json\nimport numpy as np\nimport pandas as pd\n\nd = DF.copy()\nd['high_abs'] = (d['absences'] >= 3).astype(float)\nd['sup'] = (d['schoolsup'] == 'yes').astype(float)\nd['gain'] = d['G2'] - d['G1']\nX = pd.DataFrame({\n    'intercept': np.ones(len(d)),\n    'sup': d['sup'],\n    'high_abs': d['high_abs'],\n    'sup_x_high': d['sup'] * d['high_abs'],\n    'G1': d['G1'].astype(float),\n    'failures': d['failures'].astype(float),\n    'studytime': d['studytime'].astype(float),\n    'age': d['age'].astype(float)\n})\nX = pd.concat([X, pd.get_dummies(d['school'], drop_first=True, dtype=float)], axis=1)\nA = X.to_numpy(dtype=float)\ny = d['gain'].to_numpy(dtype=float)\nbeta = np.linalg.lstsq(A, y, rcond=None)[0]\nresid = y - A @ beta\nbread = np.linalg.pinv(A.T @ A)\nh = np.einsum('ij,jk,ik->i', A, bread, A)\nadj = resid / np.maximum(1.0 - h, 1e-12)\nmeat = (A.T * (adj ** 2)) @ A\ncov = bread @ meat @ bread\nj = list(X.columns).index('sup_x_high')\nest = float(beta[j])\nse = float(np.sqrt(max(cov[j, j], 0.0)))\ncells = {}\nfor hi, hlabel in [(0.0, 'abs_lt_3'), (1.0, 'abs_ge_3')]:\n    for su, slabel in [(0.0, 'support_no'), (1.0, 'support_yes')]:\n        cells[hlabel + '_' + slabel] = int(((d['high_abs'] == hi) & (d['sup'] == su)).sum())\nprint(json.dumps({\n    'n': int(len(d)),\n    'cells': cells,\n    'interaction_grade_points': est,\n    'hc3_se': se,\n    'ci95_normal': [est - 1.96 * se, est + 1.96 * se],\n    'design_rank': int(np.linalg.matrix_rank(A)),\n    'design_columns': int(A.shape[1]),\n    'interpretation': 'descriptive_conditional_association_only_unknown_timing_and_confounding'\n}, separators=(',', ':')))"
+      },
+      "result": {
+        "status": "executed",
+        "code_sha256": "a0941d73bc8d9627429936884e1bd07c06a706cabfa6529c5ca7013d36316b8b",
+        "data_sha256": "5be7b02f13f5800fddd66e2c8d834cd00ece14c552fb404def2397b31b63236b",
+        "returncode": 0,
+        "stdout": "{\"n\":649,\"cells\":{\"abs_lt_3_support_no\":322,\"abs_lt_3_support_yes\":44,\"abs_ge_3_support_no\":259,\"abs_ge_3_support_yes\":24},\"interaction_grade_points\":0.6781152219296042,\"hc3_se\":0.4862870677345265,\"ci95_normal\":[-0.27500743083006773,1.6312378746892762],\"design_rank\":9,\"design_columns\":9,\"interpretation\":\"descriptive_conditional_association_only_unknown_timing_and_confounding\"}\n",
+        "stderr": "",
+        "stdout_truncated": false
+      }
+    },
+    {
+      "id": "s1",
+      "type": "search",
+      "request": {
+        "type": "search",
+        "id": "s1",
+        "idea_id": "I1",
+        "missing_relation": "Whether baseline absenteeism has been tested as a moderator of randomized or encouragement-based secondary-school tutoring/support effects on subsequent grades, distinct from observational allocation and grade prediction.",
+        "query": "secondary school tutoring academic support randomized trial baseline absenteeism moderator effect grades attendance subgroup",
+        "change_if_found": "If a close study tests this same moderator and outcome, narrow I1 to a distinct intervention, absence window, or decision context and cite it as prior work. If returned records only cover general tutoring effects or absenteeism prediction, retain the question as a candidate but make no world-literature novelty claim."
+      },
+      "result": {
+        "status": "returned",
+        "sources": [
+          {
+            "id": "s1_S1",
+            "title": "The Effect of Islamic Secondary School Attendance on Academic Achievement",
+            "doi": "10.2139/ssrn.2450424",
+            "published_date_parts": [
+              2014
+            ],
+            "original_abstract": " Using unique survey data on rural secondary school children, this paper evaluates the relative quality of Islamic secondary schools (i.e. madrasahs) in Bangladesh. Students attending registered madrasahs fare worse in maths and English than students attending non-madrasah schools. However, failure to account for non-random sorting over-estimates the negative influence of madrasahs on student achievement. Evidence on the magnitude of this bias is presented. Once selection effect is taken into account, madrasah disadvantage in English is small while that in maths becomes insignificant. Given the overall low level of achievement, this suggests that madrasah students perform just as poorly as those from non-madrasah schools in rural Bangladesh. ",
+            "scope": "abstract and metadata",
+            "query": "secondary school tutoring academic support randomized trial baseline absenteeism moderator effect grades attendance subgroup"
+          },
+          {
+            "id": "s1_S2",
+            "title": "Taabo Tutoring Study",
+            "doi": "10.1257/rct.18080-1.0",
+            "published_date_parts": [
+              2026,
+              3,
+              12
+            ],
+            "original_abstract": "",
+            "scope": "title/date/DOI only; do not infer findings",
+            "query": "secondary school tutoring academic support randomized trial baseline absenteeism moderator effect grades attendance subgroup"
+          },
+          {
+            "id": "s1_S3",
+            "title": "Taabo Tutoring Study",
+            "doi": "10.1257/rct.18080",
+            "published_date_parts": [
+              2026,
+              3,
+              12
+            ],
+            "original_abstract": "",
+            "scope": "title/date/DOI only; do not infer findings",
+            "query": "secondary school tutoring academic support randomized trial baseline absenteeism moderator effect grades attendance subgroup"
+          },
+          {
+            "id": "s1_S4",
+            "title": "Overcoming gender-based barriers to women in the healthcare workforce in northern Nigeria: a randomized evaluation of Girls 4 Health",
+            "doi": "10.1257/rct.13806-1.0",
+            "published_date_parts": [
+              2024,
+              6,
+              12
+            ],
+            "original_abstract": "",
+            "scope": "title/date/DOI only; do not infer findings",
+            "query": "secondary school tutoring academic support randomized trial baseline absenteeism moderator effect grades attendance subgroup"
+          },
+          {
+            "id": "s1_S5",
+            "title": "Overcoming gender-based barriers to women in the healthcare workforce in northern Nigeria: a randomized evaluation of Girls 4 Health",
+            "doi": "10.1257/rct.13806",
+            "published_date_parts": [
+              2024,
+              6,
+              12
+            ],
+            "original_abstract": "",
+            "scope": "title/date/DOI only; do not infer findings",
+            "query": "secondary school tutoring academic support randomized trial baseline absenteeism moderator effect grades attendance subgroup"
+          },
+          {
+            "id": "s1_S6",
+            "title": "Signature-Based Accountability and Chronic Absenteeism Among Secondary School Students: A Behavioral Approach to Attendance",
+            "doi": "10.58806/ijsshmr.2025.v4i9n09",
+            "published_date_parts": [
+              2025,
+              9,
+              25
+            ],
+            "original_abstract": " This study evaluated the effectiveness of the Learners Official Signature Sheet (LOSS) in reducing chronic absenteeism among at-risk secondary school students in a Philippine rural context. Employing a quantitative action research design grounded in Pavlov’s classical conditioning theory, the study involved 10 purposively selected Grade 10 students identified as Students at Risk of Dropping Out (SARDO). Absenteeism data were collected from School Form 2 records before and after the intervention, analyzed using mean percentages, standard deviations, and the Wilcoxon signed-rank test. A validated scale categorized absenteeism levels, showing a decline from moderate (M = 46.25%) to low (M = 39.33%) post-intervention, with a significant difference (Z = -2.8031, p = 0.05). The intervention fostered accountability through structured monitoring. Findings advocate for scalable behavioral strategies to combat absenteeism globally, offering actionable recommendations to enhance student retention in resource-constrained settings. ",
+            "scope": "abstract and metadata",
+            "query": "secondary school tutoring academic support randomized trial baseline absenteeism moderator effect grades attendance subgroup"
+          },
+          {
+            "id": "s1_S7",
+            "title": "An Evaluation of the Centre for Girls Educations Girls for Education and Health Program in Selected Schools of Kaduna State",
+            "doi": "10.1257/rct.13806-1.1",
+            "published_date_parts": [
+              2024,
+              6,
+              12
+            ],
+            "original_abstract": "",
+            "scope": "title/date/DOI only; do not infer findings",
+            "query": "secondary school tutoring academic support randomized trial baseline absenteeism moderator effect grades attendance subgroup"
+          },
+          {
+            "id": "s1_S8",
+            "title": "Human capital accumulation and compensation: Evidence from Left-behind Children in rural China",
+            "doi": "10.1257/rct.8027",
+            "published_date_parts": [
+              2021,
+              8,
+              1
+            ],
+            "original_abstract": "",
+            "scope": "title/date/DOI only; do not infer findings",
+            "query": "secondary school tutoring academic support randomized trial baseline absenteeism moderator effect grades attendance subgroup"
+          }
+        ],
+        "raw_sha256": "cd62b39be6253595b9f288d8de89b82e00920e5b245fa0b5727634248871b393",
+        "scope": "Relevance-ordered Crossref index; limited coverage, no full-text or exhaustive novelty verdict"
+      }
+    }
+  ],
+  "counters": {
+    "replies": 2,
+    "compute": 1,
+    "search": 1
+  },
+  "final": null
+}

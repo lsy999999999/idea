@@ -1,0 +1,183 @@
+{
+  "recognition": "Recognized as UCI Bike Sharing (UCI 275), hourly Capital Bikeshare rentals from 2011-2012; documentation names Fanaee-T and Gama's 2013 event-labeling paper. This is a familiar public benchmark; no known benchmark finding is claimed as new. The supplied parsed count is 17,379 versus 17,389 in official metadata, and that discrepancy is retained.",
+  "summary": "The selected question compares weather-associated proportional changes in fulfilled casual versus registered rentals during nonworking daytime hours, within season-hour strata. The returned computation supports a negative descriptive contrast in this subset. It does not identify causal weather effects, latent demand, or operational benefit. A Crossref search returned adjacent and potentially overlapping work, so world-literature novelty is unresolved.",
+  "candidates": [
+    {
+      "id": "I1",
+      "title": "Does weather change who rents, even when total demand is the planning target?",
+      "question": "Among comparable season, hour, and workday strata, is adverse weather more negatively associated with fulfilled casual than registered rentals, and does the contrast vary by daypart?",
+      "new_claim": "Adds a user-composition contrast to the supplied focus on total hourly counts; it is an incremental question, not an established or literature-novel result.",
+      "input_delta": "Analyze casual and registered system-hour counts separately and jointly rather than only cnt.",
+      "domain_value": "Could motivate user-group-specific weather contingency planning if stable; no station redistribution or unmet demand is observed.",
+      "known_basis_refs": [
+        "official_documentation.variables: casual, registered, cnt, hr, workingday, weathersit",
+        "data_profile.actual_rows: 17379; no listed-column missing values"
+      ],
+      "assumptions": [
+        "Counts are fulfilled rentals, not latent requests.",
+        "Calendar matching reduces but does not remove confounding.",
+        "Date is the repeated-unit cluster.",
+        "One system and two years limit transportability."
+      ],
+      "variables_and_units": "casual and registered rentals per system-hour; weathersit categories; hour, season, workingday; dteday cluster; derived log count ratios are dimensionless.",
+      "testable_prediction": "Frozen L1 prediction: adverse weather categories 2-3 versus 1 have a more negative proportional association with casual than registered use, largest in nonworking daytime hours.",
+      "alternative": "The contrast vanishes, reverses, or reflects sparse support, correlated weather, baseline scale, or fulfilled access rather than preference.",
+      "discriminating_test": "Compare group-specific weather contrasts within calendar strata and dayparts, using date-clustered uncertainty and a shared-response alternative; report category support.",
+      "feasible_with_current_data": true,
+      "required_new_data": "Station-hour availability, failed attempts, trip/station flows, and redistribution actions for unmet-demand or intervention claims.",
+      "failure_condition": "A robust nonnegative adjusted casual-minus-registered contrast contradicts the directional prediction; sparse support or intervals spanning zero are inconclusive.",
+      "nearest_prior_query": "Search empirical comparisons of weather-associated casual versus registered/member use, especially by daypart and workday status."
+    },
+    {
+      "id": "I2",
+      "title": "Do hourly weather effects persist into the next rental hour?",
+      "question": "Does a weather transition associate with next-hour fulfilled rentals beyond current weather, count history, and calendar timing?",
+      "new_claim": "Adds a one-hour response-memory question to the static condition/count framing.",
+      "input_delta": "Derive adjacent-hour weather/count transitions from dteday and hr, checking continuity and midnight boundaries.",
+      "domain_value": "A reproducible lag could motivate evaluating slower operational forecast updates.",
+      "known_basis_refs": [
+        "official_documentation.variables: dteday, hr, weather fields, cnt",
+        "data_profile.actual_rows: 17379 across 731 dates"
+      ],
+      "assumptions": [
+        "Only verified adjacent clock hours form transitions.",
+        "Autocorrelation, persistent weather, and daily profiles can mimic lag.",
+        "No inventory or unmet requests are measured."
+      ],
+      "variables_and_units": "cnt rentals per system-hour; lag one clock hour; weather categories/normalized values; dteday cluster.",
+      "testable_prediction": "Weather at t adds little predictive value for cnt at t+1 after current cnt, calendar timing, and weather at t+1.",
+      "alternative": "Any apparent lag is explained by demand autocorrelation, persistent weather, or daily profiles.",
+      "discriminating_test": "Compare whole-date held-out predictions with and without lag terms after verifying hour continuity.",
+      "feasible_with_current_data": true,
+      "required_new_data": "Station availability and trip duration/flows, plus an exogenous design for causal interpretation.",
+      "failure_condition": "No support if lagged weather adds no held-out-date value or disappears after history, current weather, and calendar controls.",
+      "nearest_prior_query": "Search lagged bike-share weather-response studies and out-of-date value beyond demand history and hourly calendar patterns."
+    },
+    {
+      "id": "I3",
+      "title": "Are weather responses different on working and nonworking days after matching the hour?",
+      "question": "Does the weather association with fulfilled rentals differ by workingday status at the same hour and season, especially in commute hours?",
+      "new_claim": "Adds a weather-by-workingday interaction prediction to the aggregate-count framing.",
+      "input_delta": "Test the weather-by-workingday interaction in pre-specified commute versus other hours using cnt.",
+      "domain_value": "Could inform whether weather contingency planning differs across commute windows, pending external validation.",
+      "known_basis_refs": [
+        "official_documentation.variables: workingday, holiday, weekday, hr, season, weather fields, cnt"
+      ],
+      "assumptions": [
+        "This observational interaction is not a causal workday effect.",
+        "Dates are the uncertainty clusters.",
+        "cnt omits failed requests and available fleet."
+      ],
+      "variables_and_units": "cnt rentals per system-hour; weather; workingday binary; hour; season; date cluster.",
+      "testable_prediction": "Adverse weather has a more negative association in working-day commute hours than the same nonworking-day hours.",
+      "alternative": "Responses are similar, calendar adjustment removes the contrast, or weekend leisure use is more weather-sensitive.",
+      "discriminating_test": "Estimate weather contrasts within hour-by-season strata and compare workingday interactions with date-clustered intervals.",
+      "feasible_with_current_data": true,
+      "required_new_data": "Station inventory and failed requests for capacity interpretation; newer system data for transportability.",
+      "failure_condition": "The predicted interaction is near zero, imprecise at the day level, or reversed across plausible calendar specifications.",
+      "nearest_prior_query": "Search weather-by-workday or commute-hour heterogeneity studies, distinguishing prediction from service design."
+    },
+    {
+      "id": "I1",
+      "title": "Is the weather-associated rental-mix shift larger for casual users in nonworking daytime hours?",
+      "question": "Among nonworking-day system-hours 09:00-17:00, is the within-season-and-hour proportional association of weathersit categories 2-3 versus 1 more negative for fulfilled casual than registered rentals?",
+      "new_claim": "Adds a paired user-group contrast and a focused daypart estimand to the supplied total-count framing. The computation supports this contrast in these data; novelty in world literature is unresolved.",
+      "input_delta": "Treat casual and registered counts as paired outcomes; compare their equal-season-hour mean-count log ratios for weather categories 2-3 versus 1. This requires no new measure for the observational test.",
+      "domain_value": "A stable contrast could justify testing differentiated weather contingency planning. It does not establish latent demand, preference, station redistribution, or intervention benefit.",
+      "known_basis_refs": [
+        "official_documentation.variables: casual, registered, cnt, dteday, season, hr, workingday, weathersit",
+        "R1_C1: executed date-cluster bootstrap",
+        "R1_S1_S8: title indicates prior regular/casual weather-demand work"
+      ],
+      "assumptions": [
+        "Counts are fulfilled rentals, not requests or unmet demand.",
+        "Season-hour stratification addresses some calendar composition but leaves residual confounding.",
+        "Date is the resampling unit; hours within date are dependent.",
+        "Categories 2 and 3 are combined, and category 4 is excluded.",
+        "One system and two years limit transportability."
+      ],
+      "variables_and_units": "Outcomes casual and registered fulfilled rentals per system-hour; exposure weathersit 2-3 versus 1; strata season and hour for workingday=0, hr=9,...,17; cluster dteday. Estimand for each group is the equal-stratum average of log((mean adverse count+0.5)/(mean clear count+0.5)); primary contrast is casual minus registered, dimensionless.",
+      "testable_prediction": "The casual-minus-registered contrast is below zero in the specified subset. No minimum useful operational effect was supplied.",
+      "alternative": "The contrast is zero or positive, is due to baseline scale or residual calendar/weather differences, or reflects fulfilled access rather than different latent preferences; categories 2 and 3 may mask distinct responses.",
+      "discriminating_test": "The returned test used 36 common season-hour strata and 500 date-cluster bootstrap replicates. Negative contrast with interval below zero supports the descriptive prediction; interval wholly at/above zero contradicts it; interval spanning zero is inconclusive. A separate study should set an operator-defined useful-effect threshold before decision use.",
+      "feasible_with_current_data": true,
+      "required_new_data": "For unmet-demand or service-intervention claims: station-hour inventory/availability, failed or abandoned attempts, station trips/returns, redistribution actions, and an operator-set useful-effect threshold; causal intervention claims need an appropriate intervention or exogenous design.",
+      "failure_condition": "The directional prediction is contradicted if a suitable date-cluster interval lies wholly at or above zero. A zero-crossing interval or inadequate common support is inconclusive; operational value remains unassessed without a prespecified threshold.",
+      "nearest_prior_query": "The returned Crossref search includes a 2020 title explicitly about weather and regular/casual cycle-sharing users (R1_S1_S8), and an abstract describing prior average weather effects at user-group level (R1_S1_S3). Whether either tests this exact nonworking-day daytime estimand remains unknown; inspect full text before claiming novelty."
+    }
+  ],
+  "selected_id": "I1",
+  "method_ids": [
+    "M21",
+    "M33",
+    "M43"
+  ],
+  "task": {
+    "deliverable": "Critique I1 and specify one grouped observational contrast checking its frozen user-group-by-weather prediction.",
+    "acceptance": [
+      "Keep fulfilled rentals distinct from latent demand and do not claim causality.",
+      "Use date as the repeated-unit cluster.",
+      "Report separate casual and registered estimates and weather-category support.",
+      "Preserve the frozen direction and distinguish contradiction from an inconclusive interval."
+    ],
+    "proposed_computation": "Compare category 2-3 versus category 1 within common season-hour strata in nonworking hours 09:00-17:00, separately for casual and registered counts; date-cluster bootstrap uncertainty and report support. Do not interpret as causal.",
+    "proposed_search": "Search comparative casual/member weather-response work by daypart/workday and report coverage without inferring findings from titles alone."
+  },
+  "critique": [
+    "The leader's proposed adjustment for weathersit alongside temperature, atemp, humidity, and windspeed made the estimand unclear; define weathersit as the primary exposure and treat correlated continuous weather adjustment as a separately labeled sensitivity analysis.",
+    "No operator-defined minimum useful effect was given, so direction and uncertainty do not establish practical relevance.",
+    "Fulfilled rentals do not measure unmet demand or user preference."
+  ],
+  "requests": [],
+  "final": {
+    "status": "revised",
+    "final_idea": {
+      "id": "I1",
+      "title": "Is the weather-associated rental-mix shift larger for casual users in nonworking daytime hours?",
+      "question": "Among nonworking-day system-hours 09:00-17:00, is the within-season-and-hour proportional association of weathersit categories 2-3 versus 1 more negative for fulfilled casual than registered rentals?",
+      "new_claim": "Adds a paired user-group contrast and a focused daypart estimand to the supplied total-count framing. The computation supports this contrast in these data; novelty in world literature is unresolved.",
+      "input_delta": "Treat casual and registered counts as paired outcomes; compare their equal-season-hour mean-count log ratios for weather categories 2-3 versus 1. This requires no new measure for the observational test.",
+      "domain_value": "A stable contrast could justify testing differentiated weather contingency planning. It does not establish latent demand, preference, station redistribution, or intervention benefit.",
+      "known_basis_refs": [
+        "official_documentation.variables: casual, registered, cnt, dteday, season, hr, workingday, weathersit",
+        "R1_C1: executed date-cluster bootstrap",
+        "R1_S1_S8: title indicates prior regular/casual weather-demand work"
+      ],
+      "assumptions": [
+        "Counts are fulfilled rentals, not requests or unmet demand.",
+        "Season-hour stratification addresses some calendar composition but leaves residual confounding.",
+        "Date is the resampling unit; hours within date are dependent.",
+        "Categories 2 and 3 are combined, and category 4 is excluded.",
+        "One system and two years limit transportability."
+      ],
+      "variables_and_units": "Outcomes casual and registered fulfilled rentals per system-hour; exposure weathersit 2-3 versus 1; strata season and hour for workingday=0, hr=9,...,17; cluster dteday. Estimand for each group is the equal-stratum average of log((mean adverse count+0.5)/(mean clear count+0.5)); primary contrast is casual minus registered, dimensionless.",
+      "testable_prediction": "The casual-minus-registered contrast is below zero in the specified subset. No minimum useful operational effect was supplied.",
+      "alternative": "The contrast is zero or positive, is due to baseline scale or residual calendar/weather differences, or reflects fulfilled access rather than different latent preferences; categories 2 and 3 may mask distinct responses.",
+      "discriminating_test": "The returned test used 36 common season-hour strata and 500 date-cluster bootstrap replicates. Negative contrast with interval below zero supports the descriptive prediction; interval wholly at/above zero contradicts it; interval spanning zero is inconclusive. A separate study should set an operator-defined useful-effect threshold before decision use.",
+      "feasible_with_current_data": true,
+      "required_new_data": "For unmet-demand or service-intervention claims: station-hour inventory/availability, failed or abandoned attempts, station trips/returns, redistribution actions, and an operator-set useful-effect threshold; causal intervention claims need an appropriate intervention or exogenous design.",
+      "failure_condition": "The directional prediction is contradicted if a suitable date-cluster interval lies wholly at or above zero. A zero-crossing interval or inadequate common support is inconclusive; operational value remains unassessed without a prespecified threshold.",
+      "nearest_prior_query": "The returned Crossref search includes a 2020 title explicitly about weather and regular/casual cycle-sharing users (R1_S1_S8), and an abstract describing prior average weather effects at user-group level (R1_S1_S3). Whether either tests this exact nonworking-day daytime estimand remains unknown; inspect full text before claiming novelty."
+    },
+    "evidence_level": "observational_support",
+    "what_changed": "R1 narrowed I1 to a pre-specified nonworking daytime, category 2-3 versus 1 contrast within season-hour strata and removed simultaneous adjustment for related weather measures from the primary estimand. The executed contrast is directionally consistent with the frozen prediction. The search revealed directly adjacent user-type/weather literature, so the final novelty statement is limited to the specific proposed estimand and remains unverified in world literature.",
+    "what_is_known": "R1_C1 executed successfully on the supplied dataset hash. Casual log ratio was -0.372688, registered log ratio -0.217154, and casual-minus-registered contrast -0.155534; the 95% date-cluster bootstrap percentile interval was [-0.262767, -0.079028]. There were 36 eligible season-hour strata, 500 valid bootstrap replicates, and exposure support was 1,460 rows/206 dates for category 1 versus 619 rows/124 dates for categories 2-3. This is observational support for the specified contrast only.",
+    "what_is_new_hypothesis": "In nonworking daytime hours, the weather-category association with fulfilled casual rentals is more negative than the corresponding association with fulfilled registered rentals, after equal weighting over common season-hour strata. The result is a candidate pattern, not an established mechanism.",
+    "falsifier": "A prespecified, adequately supported date-cluster analysis in an independent period or system yields a casual-minus-registered contrast at or above zero with an interval excluding negative values, or the present result fails a justified robustness analysis for category definitions and calendar composition. A zero-crossing interval is inconclusive.",
+    "minimum_next_test": "First inspect full texts for R1_S1_S8 and relevant user-group-level work to determine overlap with this exact daypart/workday estimand. Then preregister an independent-system or later-period replication: system-hour casual and registered fulfilled counts, weathersit categories, date/hour/season/workday, the same contrast and date-cluster interval, category support, a prespecified useful-effect threshold, and the shared-response alternative. For service or unmet-demand claims, add station-hour availability and failed rental attempts.",
+    "tool_evidence_refs": [
+      "R1_C1",
+      "R1_S1_S1",
+      "R1_S1_S2",
+      "R1_S1_S3",
+      "R1_S1_S4",
+      "R1_S1_S5",
+      "R1_S1_S6",
+      "R1_S1_S7",
+      "R1_S1_S8"
+    ],
+    "nearest_work_comparison": "R1_S1_S8 is titled 'The demand for cycle sharing: Examining the links between weather conditions, air quality levels, and cycling demand for regular and casual users' (2020); its returned record has no abstract, so its findings and overlap are unknown. R1_S1_S3's abstract says existing studies include average weather effects at the user-group level and describes station-level heterogeneity, but does not establish whether it tests this exact daypart contrast. R1_S1_S1 and R1_S1_S2 concern broad weather response/resilience and forecasting; they are adjacent, not proof of this exact contrast. Search coverage is relevance-ordered Crossref metadata, not exhaustive or full-text review.",
+    "novelty_status": "Input-level increment: explicit paired casual-versus-registered proportional contrast in a pre-specified nonworking daytime subset, beyond total-count prediction. World-literature novelty: unresolved; relevant prior titles and group-level work exist, and titles/abstract summaries do not establish whether the exact estimand is already studied. Make no claim of firstness.",
+    "limitations": "The computation is a conditional observational association from one system and two years. The weather grouping combines categories 2 and 3, excludes category 4, and omits continuous-weather adjustment; residual confounding and selection through fulfilled access remain possible. The confidence interval addresses date clustering under the requested bootstrap, not all model or design uncertainty. There is no station inventory, failed-request, trip-flow, intervention, or operator usefulness threshold. Literature search coverage is limited."
+  }
+}

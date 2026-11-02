@@ -1,0 +1,150 @@
+{
+  "recognition": "Recognize UCI Parkinsons Telemonitoring (UCI 189), also identified in the supplied documentation as the Oxford Parkinson's Disease Telemonitoring Dataset. The supplied materials identify the 2010 introductory paper. Existing speech-based UPDRS prediction is not claimed as new.",
+  "summary": "Retain I1 as a concrete proposal-only monitoring study, revised to specify independent calibration of the voice trigger and a prospective fixed-alert-burden comparison against actual visit-level clinical change. The executor correctly declined computation because interpolated targets cannot validate clinical enrichment and a threshold simulation would be arbitrary. The returned Crossref sample contains no directly matching voice-trigger study, but its limited, title-heavy coverage cannot establish novelty.",
+  "candidates": [
+    {
+      "id": "I1",
+      "title": "Person-calibrated voice alerts for targeted clinical reassessment",
+      "question": "Can a sustained within-person shift in home voice features identify when an additional clinician assessment is more informative than waiting for the next scheduled visit?",
+      "new_claim": "Input delta: changes the objective from predicting interpolated UPDRS at each recording to deciding when to request an additional clinical measurement. The proposed contribution is a prespecified, person-calibrated persistent voice-deviation alert evaluated at a fixed alert burden against actual subsequent clinical assessment, not row-level predictive fit.",
+      "domain_value": "Could focus clinician time on periods when a patient's voice departs persistently from their own reference while limiting alerts for transient variability.",
+      "known_basis_refs": [
+        "Supplied UCI 189 documentation: 5,875 repeated home recordings from 42 people over about six months; UPDRS targets are linearly interpolated."
+      ],
+      "assumptions": [
+        "A prespecified initial reference period can estimate a useful personal voice baseline.",
+        "A sustained deviation sometimes precedes or accompanies clinically meaningful motor change, but may also arise from context, medication, illness, or ordinary variability.",
+        "An alert is actionable only if independent assessment can occur within the stated horizon."
+      ],
+      "variables_and_units": "Recording-level voice features in their supplied scales; elapsed time in days (test_time); baseline deviation as a dimensionless robust score per recording; trigger status per person-week; endpoint as actual clinician motor-UPDRS point change over the following 14 days; alert burden as alerts per person-month.",
+      "testable_prediction": "In prospective follow-up, at a fixed alert budget, person-weeks with a frozen persistent voice-deviation trigger will have a greater proportion of prespecified clinically meaningful motor-UPDRS changes within 14 days than matched non-trigger person-weeks with comparable assessment opportunity.",
+      "alternative": "Voice shifts mostly reflect recording context, vocal effort, medication timing, illness, or ordinary day-to-day variability and do not enrich for independently observed clinical change.",
+      "discriminating_test": "Before prospective outcome access, define an initial baseline window and a small voice-feature set using an independent calibration cohort; freeze robust within-person centers/scales and the trigger threshold there. Trigger when the prespecified deviation is exceeded on at least two consecutive scheduled recording days. Fix a maximum alert rate per person-month and a 14-day horizon. Compare trigger windows with within-person non-trigger windows matched on calendar period and opportunity for assessment. Primary endpoint: fraction followed by actual clinician motor-UPDRS change meeting a clinically meaningful threshold. Report paired enrichment, participant-level uncertainty, sensitivity, and alerts per person-month. Set the minimum useful enrichment margin before evaluation. This is a protocol proposal; no threshold is validated by the supplied data.",
+      "feasible_with_current_data": "Partly: exploratory trigger-rate and baseline/persistence sensitivity analyses are possible from the supplied repeated features and timestamps. The interpolated target series and absent raw visit dates/scores cannot establish trigger enrichment, independent lead time, or clinical utility.",
+      "required_new_data": "Prospective timestamped home recordings; exact dates and actual clinician motor-UPDRS scores at visits; clinically meaningful point-change and minimum enrichment thresholds defined before evaluation; an independent calibration cohort to freeze the feature set, baseline transformation, and trigger threshold; contemporaneous medication timing and brief illness/recording-context annotations. Unit: person-week trigger windows nested within participant, with assessment opportunity recorded.",
+      "failure_condition": "At the frozen alert budget, enrichment over matched non-trigger windows is below the prespecified minimum useful margin, or apparent enrichment vanishes when assessment opportunity and recorded context are considered.",
+      "nearest_prior_query": "Have personalized longitudinal voice-deviation or anomaly triggers been evaluated as prompts for additional Parkinson's clinical assessment using actual visit-level outcomes, with a fixed alert burden and follow-up horizon? Search personalized voice monitoring, change detection, and alert-triggered assessment; prediction-only papers are adjacent rather than direct evidence of trigger utility."
+    },
+    {
+      "id": "I2",
+      "title": "Separate disease-related voice change from recording context",
+      "question": "How much apparent within-person voice change under home monitoring is attributable to recording context or vocal state rather than change in clinically assessed motor function?",
+      "new_claim": "Input delta: turns a prediction task into a measurement-validity study that estimates whether standardized repeated voice tasks and lightweight context annotations reduce within-person disagreement with actual clinical change.",
+      "domain_value": "Could identify which low-burden protocol or annotations are needed before voice trends are used for remote monitoring decisions.",
+      "known_basis_refs": [
+        "Supplied UCI 189 documentation: recordings were automatically captured at home; targets are interpolated clinical scores."
+      ],
+      "assumptions": [
+        "Recording context and vocal state vary over time and are not fully represented by the supplied acoustic variables.",
+        "A short standardized task plus context annotation can reduce some measurement variation without removing clinically relevant signal."
+      ],
+      "variables_and_units": "Within-person voice-feature change per recording (feature units as recorded); standardized-task indicator and annotations for medication timing, illness, and recording context; actual motor-UPDRS point change between clinical visits; paired within-person comparison of protocol conditions.",
+      "testable_prediction": "For paired recordings collected under usual home conditions and a standardized task within the same day, standardized-task features with context annotations will show lower within-person test-retest dispersion and stronger agreement in direction with independently assessed between-visit motor-UPDRS change than unannotated usual-condition features.",
+      "alternative": "Standardization does not improve reliability or agreement, or removes useful variation; apparent disagreement is mainly because voice and motor UPDRS measure different constructs.",
+      "discriminating_test": "Collect both recording conditions on the same days, repeat each condition, record context/medication timing, and obtain actual clinical assessments. Predefine a feature summary and compare within-person repeat dispersion and directional agreement with subsequent actual UPDRS change; include a no-context-adjustment comparator.",
+      "feasible_with_current_data": "No: the supplied fields do not include repeated paired protocol conditions, context annotations, or actual visit-level target anchors. Existing rows may support only exploratory assessment of feature repeatability across time, which cannot identify the proposed context effect.",
+      "required_new_data": "Same-day repeated usual-condition and standardized-task voice recordings, recording-context and medication/illness annotations, exact visit dates, and actual clinician motor-UPDRS scores. Unit: paired recording day nested within participant.",
+      "failure_condition": "Standardized and annotated recordings do not reduce prespecified within-person dispersion or improve directional agreement beyond uncertainty, or improvement is not reproducible across participants.",
+      "nearest_prior_query": "Which standardized speech tasks and context covariates improve within-person longitudinal reliability and agreement with actual Parkinson's clinical assessments in home voice monitoring?"
+    },
+    {
+      "id": "I3",
+      "title": "Choose a voice sampling cadence by change-detection value",
+      "question": "At what home-recording cadence can a voice-monitoring system detect a sustained personal deviation with acceptable delay and burden, when clinical assessments occur much less often?",
+      "new_claim": "Input delta: treats sampling frequency as an operational design variable and evaluates detection delay and recording burden against prespecified sustained voice shifts, instead of optimizing a row-level regression metric.",
+      "domain_value": "Could reduce unnecessary recording burden while preserving timely detection of persistent changes that warrant review.",
+      "known_basis_refs": [
+        "Supplied UCI 189 documentation: roughly 200 recordings per participant over about six months, with repeated recordings and interpolated clinical targets."
+      ],
+      "assumptions": [
+        "The observed schedule contains enough temporal coverage to simulate less frequent sampling of voice-feature deviations, though not to establish disease-change detection.",
+        "A persistent voice deviation is a candidate operational signal, not a validated surrogate for clinical progression."
+      ],
+      "variables_and_units": "Sampling cadence: recordings per week; detection delay: days from onset of a prespecified sustained feature deviation to trigger; burden: recordings per person-month; outcome for future validation: actual clinician UPDRS change in points.",
+      "testable_prediction": "When the same prespecified persistent-deviation rule is applied to subsampled schedules, a moderate cadence will achieve a lower recording burden than daily sampling while keeping median detection delay below a predefined operational limit; this is a design prediction about voice deviations only, not clinical deterioration.",
+      "alternative": "Sparse sampling misses or delays many deviations, or observed deviations are too unstable for cadence optimization to be meaningful.",
+      "discriminating_test": "Using fixed person-level time series and a fixed deviation rule, replay several prespecified sampling cadences with repeated random phase offsets. Compare detection delay and recordings per person-month; freeze an operational delay limit and select the lowest burden cadence meeting it. Then validate that cadence prospectively against actual assessment changes.",
+      "feasible_with_current_data": "Partly: recording times and voice measures permit an exploratory replay of detection of voice-feature deviations, but variable observation schedules and the absence of independent clinical event times preclude conclusions about clinical detection or optimal deployment cadence.",
+      "required_new_data": "Prospective recordings at randomized or assigned cadences, actual clinical assessment dates and scores, and adherence/burden measures; ideally multiple participants with different disease trajectories. Unit: participant trajectory, with cadence assignment at participant or participant-period level.",
+      "failure_condition": "No tested lower-burden cadence meets the frozen delay limit reliably across participants, or the cadence that detects voice deviations does not detect independently assessed clinical changes.",
+      "nearest_prior_query": "How has sampling cadence been selected for longitudinal digital biomarkers or Parkinson's voice monitoring using detection delay, measurement burden, and independently observed clinical events?"
+    }
+  ],
+  "selected_id": "I1",
+  "method_ids": [
+    "M01",
+    "M33",
+    "M43"
+  ],
+  "task": {
+    "deliverable": "Critique and sharpen I1 as a prospective trigger-validation protocol, explicitly separating exploratory feasibility in this dataset from clinical validation.",
+    "acceptance": [
+      "Use independently observed visit-level outcomes, not interpolated labels, for clinical validation.",
+      "Specify trigger, baseline calibration, persistence, unit, horizon, matched comparison, alert budget, and failure margin before outcome access.",
+      "Identify context and assessment-opportunity alternatives and state a result that rejects usefulness.",
+      "Do not claim causation, lead time, or clinical validity from this dataset."
+    ],
+    "proposed_computation": "No computation requested: the dataset lacks independent clinical visit anchors, and trigger-rate simulations would depend on arbitrary thresholds without materially establishing the clinical premise. Such feasibility work can follow once the prospective protocol fixes candidate parameters.",
+    "proposed_search": "Crossref search for work evaluating personalized longitudinal voice-change/anomaly triggers as prompts for Parkinson's assessment using actual clinical outcomes, fixed alert burden, and a defined horizon. Revise novelty framing if direct overlap is found; title-only results cannot establish study findings."
+  },
+  "critique": [
+    "I1's original trigger was described as a standardized within-person multivariate distance or feature change but lacked a reproducible baseline, threshold, and persistence rule. I specify these as protocol elements to freeze prospectively, while avoiding claims that any threshold is validated by this dataset.",
+    "Matching on assessment opportunity matters because visit schedules and interpolation can create apparent temporal enrichment. The primary outcome must use actual visit scores and dates.",
+    "The proposed single 14-day outcome window tests short-horizon enrichment, not causal influence or general disease progression; participants, not recording rows, determine independent uncertainty."
+  ],
+  "requests": [
+    {
+      "type": "search",
+      "id": "R1_prior_trigger_work",
+      "idea_id": "I1",
+      "missing_relation": "Whether personalized longitudinal voice-deviation or anomaly triggers have been tested as prompts for extra Parkinson's clinical assessment using actual visit-level outcomes, a fixed alert budget, and explicit follow-up horizon.",
+      "query": "Parkinson personalized voice monitoring longitudinal change anomaly detection trigger clinical assessment actual UPDRS visit-level outcome alert burden",
+      "change_if_found": "If direct work evaluates the same decision and endpoint, narrow the contribution to the prespecified alert-budget and matched assessment-opportunity evaluation or withdraw novelty of the trigger concept. If only voice-to-score prediction is found, retain the distinction as a candidate question, not a verified literature gap."
+    }
+  ],
+  "final": {
+    "status": "revised",
+    "final_idea": {
+      "id": "I1",
+      "title": "Person-calibrated voice alerts for targeted clinical reassessment",
+      "question": "Can a sustained within-person shift in home voice features identify when an additional clinician assessment is more informative than waiting for the next scheduled visit?",
+      "new_claim": "Input delta: changes the objective from predicting interpolated UPDRS at each recording to deciding when to request an additional clinical measurement. The proposed contribution is a prespecified, person-calibrated persistent voice-deviation alert evaluated at a fixed alert burden against actual subsequent clinical assessment, not row-level predictive fit.",
+      "domain_value": "Could focus clinician time on periods when a patient's voice departs persistently from their own reference while limiting alerts for transient variability.",
+      "known_basis_refs": [
+        "Supplied UCI 189 documentation: 5,875 repeated home recordings from 42 people over about six months; UPDRS targets are linearly interpolated."
+      ],
+      "assumptions": [
+        "A prespecified initial reference period can estimate a useful personal voice baseline.",
+        "A sustained deviation sometimes precedes or accompanies clinically meaningful motor change, but may also arise from context, medication, illness, or ordinary variability.",
+        "An alert is actionable only if independent assessment can occur within the stated horizon."
+      ],
+      "variables_and_units": "Recording-level voice features in their supplied scales; elapsed time in days (test_time); baseline deviation as a dimensionless robust score per recording; trigger status per person-week; endpoint as actual clinician motor-UPDRS point change over the following 14 days; alert burden as alerts per person-month.",
+      "testable_prediction": "In prospective follow-up, at a fixed alert budget, person-weeks with a frozen persistent voice-deviation trigger will have a greater proportion of prespecified clinically meaningful motor-UPDRS changes within 14 days than matched non-trigger person-weeks with comparable assessment opportunity.",
+      "alternative": "Voice shifts mostly reflect recording context, vocal effort, medication timing, illness, or ordinary day-to-day variability and do not enrich for independently observed clinical change.",
+      "discriminating_test": "Before prospective outcome access, define an initial baseline window and a small voice-feature set using an independent calibration cohort; freeze robust within-person centers/scales and the trigger threshold there. Trigger when the prespecified deviation is exceeded on at least two consecutive scheduled recording days. Fix a maximum alert rate per person-month and a 14-day horizon. Compare trigger windows with within-person non-trigger windows matched on calendar period and opportunity for assessment. Primary endpoint: fraction followed by actual clinician motor-UPDRS change meeting a clinically meaningful threshold. Report paired enrichment, participant-level uncertainty, sensitivity, and alerts per person-month. Set the minimum useful enrichment margin before evaluation. This is a protocol proposal; no threshold is validated by the supplied data.",
+      "feasible_with_current_data": "Partly: exploratory trigger-rate and baseline/persistence sensitivity analyses are possible from the supplied repeated features and timestamps. The interpolated target series and absent raw visit dates/scores cannot establish trigger enrichment, independent lead time, or clinical utility.",
+      "required_new_data": "Prospective timestamped home recordings; exact dates and actual clinician motor-UPDRS scores at visits; clinically meaningful point-change and minimum enrichment thresholds defined before evaluation; an independent calibration cohort to freeze the feature set, baseline transformation, and trigger threshold; contemporaneous medication timing and brief illness/recording-context annotations. Unit: person-week trigger windows nested within participant, with assessment opportunity recorded.",
+      "failure_condition": "At the frozen alert budget, enrichment over matched non-trigger windows is below the prespecified minimum useful margin, or apparent enrichment vanishes when assessment opportunity and recorded context are considered.",
+      "nearest_prior_query": "Have personalized longitudinal voice-deviation or anomaly triggers been evaluated as prompts for additional Parkinson's clinical assessment using actual visit-level outcomes, with a fixed alert burden and follow-up horizon? Search personalized voice monitoring, change detection, and alert-triggered assessment; prediction-only papers are adjacent rather than direct evidence of trigger utility."
+    },
+    "evidence_level": "proposal_only",
+    "what_changed": "I1 was sharpened from a broad persistent voice-change trigger to a prospective protocol: calibrate a small feature set and threshold in an independent cohort, trigger on deviation on at least two consecutive scheduled recording days, cap alerts per person-month, and compare matched person-week windows over 14 days using actual clinician motor-UPDRS changes. The executor rejected computation as uninformative for the clinical premise with the supplied labels. No scientific computation was run.",
+    "what_is_known": "The supplied case describes 5,875 repeated home recordings from 42 people over about six months. The motor_UPDRS and total_UPDRS columns are linearly interpolated. The executor notes that actual clinical visit scores and dates are absent, so these rows cannot establish clinical enrichment, independent lead time, or alert utility. The Crossref broker returned eight relevance-ordered items; none is a direct voice-trigger evaluation in the returned set. One title concerns accelerometer-based UPDRS finger-tapping assessment in Parkinson disease (R1_prior_trigger_work_S1), an adjacent monitoring modality. The other returned anomaly/alert titles are from unrelated application domains or insufficiently informative titles.",
+    "what_is_new_hypothesis": "A person-calibrated persistent voice deviation may enrich for independently assessed clinically meaningful motor-UPDRS change within 14 days at a fixed alert burden, making it useful to request targeted reassessment. This extends the input benchmark objective into a decision-focused question; it is not established as new in world literature.",
+    "falsifier": "In prospective evaluation, at the predeclared alert cap the matched trigger windows fail to exceed non-trigger windows by the prespecified minimum useful enrichment, or any apparent enrichment disappears after matching assessment opportunity and considering recorded context.",
+    "minimum_next_test": "Run a preregistered prospective validation after an independent calibration phase. Freeze feature set, robust baseline transform, trigger threshold, two-consecutive-recording persistence rule, alert cap, clinically meaningful UPDRS change threshold, minimum useful enrichment margin, and 14-day horizon before validation outcomes are accessed. Collect timestamped home voice recordings, actual clinician motor-UPDRS visit dates/scores, assessment opportunity, and medication/illness/recording-context annotations. Compare triggered with within-person matched non-trigger person-weeks and calculate participant-level uncertainty.",
+    "tool_evidence_refs": [
+      "R1_prior_trigger_work_S1",
+      "R1_prior_trigger_work_S2",
+      "R1_prior_trigger_work_S3",
+      "R1_prior_trigger_work_S4",
+      "R1_prior_trigger_work_S5",
+      "R1_prior_trigger_work_S6",
+      "R1_prior_trigger_work_S7",
+      "R1_prior_trigger_work_S8"
+    ],
+    "nearest_work_comparison": "The supplied dataset documentation and its cited 2010 introductory paper establish the existing telemonitoring and speech-to-UPDRS prediction context. In this limited Crossref return, the closest Parkinson item is titled \"P-96 Accelerometer-data-driven assessment of UPDRS finger tapping for Parkinson disease monitoring\" (10.1016/j.clinph.2023.02.113), which is an adjacent modality and cannot be characterized further from title/date/DOI alone. The returned personalized anomaly and alert papers are in unrelated domains. No returned result directly demonstrates the proposed voice-triggered reassessment endpoint, but the search is neither exhaustive nor sufficient to establish a gap.",
+    "novelty_status": "The idea adds to the supplied benchmark framing by asking whether personalized voice deviations should trigger additional clinical assessment, with alert burden and actual visit-level outcomes as the decision criteria. World-literature novelty is unverified: the single limited Crossref search produced no direct match but does not establish absence of prior work.",
+    "limitations": "Proposal only; no computation or prospective validation. The supplied labels are interpolated and actual visit anchors are unavailable. Trigger features and threshold remain to be calibrated and frozen independently. Clinical change thresholds and alert burden require clinical justification before evaluation. Crossref coverage is limited and several returned records provide only titles and metadata."
+  }
+}

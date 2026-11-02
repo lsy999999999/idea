@@ -1,0 +1,153 @@
+{
+  "recognition": "Recognize the supplied UCI Bike Sharing dataset (Capital Bikeshare; Fanaee-T and Gama 2013) from the supplied documentation. No additional remembered study is used. Literature novelty remains unverified.",
+  "summary": "Executor critique and development of selected I1. The evidence is 17,379 parsed hourly system records across 731 dates in 2011-2012; the official metadata reports 17,389 instances. Counts are observed rentals split into casual and registered, with calendar and weather fields. Station inventories, denials, individual rider histories, and policy assignments are absent. This turn submits pending requests only; no computation or search result is available.",
+  "candidates": [
+    {
+      "id": "I1",
+      "title": "Weather contingency by rider segment and service period",
+      "question": "Within comparable calendar-hour conditions, does the adverse-versus-reference weather association with observed rental counts differ between casual and registered rentals, and is that segment contrast larger in non-working daytime leisure-proxy hours than in working-day commute-proxy hours?",
+      "new_claim": "Input increment: test a prespecified weather-by-rider-segment-by-service-period contrast and assess whether it could inform a service contingency rule. The period labels are operational proxies, not measured trip purposes. This is descriptive association, not a causal demand or unmet-demand claim.",
+      "domain_value": "Could tell a shared-mobility operator whether weather monitoring should distinguish casual and registered rental counts and leisure-proxy versus commute-proxy periods before investing in a prospective contingency trial.",
+      "known_basis_refs": [
+        "materials.case.unit",
+        "materials.official_documentation.variables:casual",
+        "materials.official_documentation.variables:registered",
+        "materials.official_documentation.variables:weathersit",
+        "materials.official_documentation.variables:workingday",
+        "materials.official_documentation.additional_info.variable_info",
+        "materials.data_profile"
+      ],
+      "assumptions": [
+        "Casual and registered are aggregate usage categories, not stable individual types or trip purposes.",
+        "Adverse weather is prespecified as weathersit 3-4 versus 1-2; category-specific counts and sensitivity must expose sparse category 4 support.",
+        "Leisure-proxy is workingday=0 and hr 10-18 inclusive; commute-proxy is workingday=1 and hr in 7-9 or 16-18 inclusive. Other hours are excluded. These bins are pragmatic operational proxies and do not establish trip purpose.",
+        "Calendar-hour standardization and date-clustered resampling address observed composition and within-date dependence, but cannot remove unmeasured events, capacity limits, or date-level confounding.",
+        "The observational contrast can prioritize a future policy test but cannot establish the effect of a weather-response intervention."
+      ],
+      "variables_and_units": {
+        "outcomes": "casual and registered observed rentals per system-hour (bikes)",
+        "weather_exposure": "weathersit categories 3-4 adverse versus 1-2 reference; category is ordinal/categorical",
+        "period": "leisure proxy: non-working day hours 10-18; commute proxy: working-day hours 7-9 and 16-18",
+        "standardization": "matched support by year, month, weekday, and hour; report strata without both exposure groups",
+        "independent_unit_for_uncertainty": "date (731 dates in profile)"
+      },
+      "testable_prediction": "Frozen directional prediction: among common-support calendar-hour strata, adverse weather is associated with a larger proportional reduction in casual than registered rentals, and this casual-versus-registered contrast is more negative in leisure-proxy than commute-proxy hours. No effect size is asserted.",
+      "alternative": "The segment contrast is near zero or reversed after common-support calendar-hour standardization, or any apparent contrast reflects sparse severe-weather support, period proxy misclassification, weather-related capacity limits, or unmeasured date conditions.",
+      "discriminating_test": "Estimate the log adverse/reference standardized rental-rate ratio for each segment and period using common year-month-weekday-hour strata; the primary estimand is [(casual minus registered log rate ratio) in leisure proxy] minus [(casual minus registered log rate ratio) in commute proxy]. Resample whole dates for uncertainty, report supported/excluded strata and category-specific exposure counts, and keep the observational interpretation. A separate prospective policy assignment is required for an operational effect.",
+      "feasible_with_current_data": "Partly: the descriptive contrast and support audit can be requested from the supplied columns. Causal weather response, station-level rebalancing, unmet demand, rider purpose, and service-policy benefit are not identifiable here.",
+      "required_new_data": "For operational validation, collect station-hour available bikes and dock slots, station-level rentals by user category, failed/denied requests, forecast weather available at decision time, and dated randomized or credibly assigned weather-response policy exposure. Units are station-hour, bikes/slots, denied requests, and station-hour or station-date policy assignment.",
+      "failure_condition": "Do not advance the directional proposal if the prespecified three-way contrast is near zero or opposite and its date-clustered interval excludes a positive contrast in the predicted direction. Call the current-data test inconclusive if common support or date-level information is inadequate, particularly for categories 3-4. A null total-count contrast is not support for I1.",
+      "nearest_prior_query": "Search for bike-share or shared-mobility work jointly comparing weather-associated rental changes by casual versus registered users and commute versus leisure periods, especially work translating that comparison into a service contingency decision."
+    },
+    {
+      "id": "I2",
+      "title": "Locate two-year rental growth within commute and leisure use",
+      "question": "Was the system-level change from 2011 to 2012 concentrated in registered working-day commute hours or in casual/non-working leisure hours, and which segment-period should be prioritized for service planning?",
+      "new_claim": "Input increment: decompose the observed two-year count change into rider-segment and time-of-week/hour cells to distinguish growth in routine commute use from growth in discretionary leisure use. The year contrast is descriptive and does not identify the cause of growth.",
+      "domain_value": "Could guide whether an operator investigates commute-period reliability or leisure-period capacity and outreach as the next service-planning priority.",
+      "known_basis_refs": [
+        "materials.case.unit",
+        "materials.official_documentation.variables:yr",
+        "materials.official_documentation.variables:casual",
+        "materials.official_documentation.variables:registered",
+        "materials.official_documentation.variables:hr",
+        "materials.official_documentation.variables:workingday",
+        "materials.data_profile"
+      ],
+      "assumptions": [
+        "The two years have sufficient matched calendar/hour cells for a descriptive comparison.",
+        "The rider categories are aggregate usage labels, not stable individual cohorts.",
+        "Season, weekday, hour, and weather composition may differ across years and require standardization or matched-cell reporting."
+      ],
+      "variables_and_units": {
+        "outcomes": "casual and registered rentals per system-hour",
+        "exposure": "year category 2011 versus 2012",
+        "strata": "hour, workingday/weekday, month or season, and weather category where supported",
+        "independent_unit_for_uncertainty": "date"
+      },
+      "testable_prediction": "Frozen proposal: after standardizing to shared calendar/hour cells, the proportional 2012 increase will be larger for registered rentals in working-day commute hours than for casual rentals in non-working leisure hours. No magnitude is asserted.",
+      "alternative": "Growth is broadly distributed across segments and periods, or the apparent difference disappears after calendar/weather standardization; system-level change may also reflect supply or program changes not recorded here.",
+      "discriminating_test": "Compare standardized year contrasts for prespecified commute and leisure cells, with date-level uncertainty and a decomposition that reports each segment-period contribution to total count change. Freeze cell definitions before seeing results.",
+      "feasible_with_current_data": "Yes for a descriptive two-year decomposition; no for attributing growth to membership policy, individual retention, service supply, or causal interventions.",
+      "required_new_data": "For causal service attribution: dated station inventory/capacity, station-level usage and membership starts/renewals, pricing or promotion exposure, and service changes, measured by station-week or station-hour.",
+      "failure_condition": "The proposed prioritization is unsupported if registered commute-hour growth is not larger than casual leisure-hour growth under the prespecified standardization, or if the contrast is dominated by unsupported cells or date-level uncertainty.",
+      "nearest_prior_query": "Search for work decomposing bike-share system growth across years by rider type and commute-versus-leisure time blocks, with an explicit service-planning decision."
+    },
+    {
+      "id": "I3",
+      "title": "Separate heat-humidity demand response from temperature-only planning",
+      "question": "At similar normalized temperature and calendar conditions, is the association between humidity and casual rentals stronger during warm hours than during cooler hours, enough to motivate a combined heat-humidity monitoring threshold?",
+      "new_claim": "Input increment: evaluate whether a combined warm-and-humid condition marks a different casual-rental composition response than temperature alone. This is an exploratory measurement and threshold question, not evidence that changing humidity or heat causes rentals to change.",
+      "domain_value": "Could inform whether demand monitoring uses a combined comfort indicator rather than temperature alone when planning leisure-oriented service coverage.",
+      "known_basis_refs": [
+        "materials.official_documentation.variables:temp",
+        "materials.official_documentation.variables:atemp",
+        "materials.official_documentation.variables:hum",
+        "materials.official_documentation.variables:casual",
+        "materials.official_documentation.variables:registered",
+        "materials.data_profile"
+      ],
+      "assumptions": [
+        "The normalized temperature and humidity values preserve enough variation to compare observed conditions, though they are not supplied in direct operational units.",
+        "Temperature and atemp are related measurements and should not both be treated as independent drivers without a defined measurement model.",
+        "Calendar, season, and hour need adjustment; severe warm-humid combinations may have limited support."
+      ],
+      "variables_and_units": {
+        "outcomes": "casual and registered rentals per system-hour",
+        "temperature": "temp normalized using documented Celsius bounds -8 to 39 C",
+        "humidity": "hum normalized by 100, unitless fraction",
+        "period": "hour of day and calendar strata",
+        "independent_unit_for_uncertainty": "date"
+      },
+      "testable_prediction": "Frozen proposal: in warm-hour strata, higher humidity will be associated with a lower casual-to-registered rental ratio than in cooler-hour strata at comparable calendar conditions. No threshold or effect size is asserted before analysis.",
+      "alternative": "Humidity adds no stable information beyond temperature, season, and time-of-week, or the apparent interaction is due to sparse support and correlated weather conditions.",
+      "discriminating_test": "Estimate a prespecified temperature-by-humidity interaction for the casual-versus-registered count contrast using only overlapping conditions; compare with temperature-only specification using date-clustered uncertainty and held-out-date stability. Treat any candidate threshold as exploratory until independently validated.",
+      "feasible_with_current_data": "Partly: observational interaction and support assessment are feasible. A real-time operational threshold, direct heat exposure, rider comfort, and policy impact need new measurements.",
+      "required_new_data": "Station-hour rentals, availability and denials; direct weather-station temperature in degrees Celsius, relative humidity in percent, heat index or a prespecified physiological comfort measure; and prospective decision/policy outcomes by station-hour.",
+      "failure_condition": "Reject the proposed combined-indicator direction if the interaction is unstable across held-out dates, absent under common support, or adds no reproducible segment-specific contrast over temperature-only adjustment.",
+      "nearest_prior_query": "Search for bike-share work testing whether humidity modifies temperature-associated demand differently across rider types and whether a combined comfort threshold changes an operational decision."
+    }
+  ],
+  "selected_id": "I1",
+  "method_ids": [
+    "M17",
+    "M21",
+    "M33"
+  ],
+  "task": {
+    "deliverable": "Tighten I1 into a falsifiable descriptive contrast and submit one computation request and one targeted Crossref search request. Preserve the observation-versus-intervention distinction.",
+    "acceptance": [
+      "Freeze leisure and commute proxy hours before analysis.",
+      "Use common year-month-weekday-hour support and date-level uncertainty; report support failures and category-specific weather counts.",
+      "Treat counts as observed rentals and the rider split as an aggregate proxy; do not claim causal effects or unmet demand.",
+      "Requests are pending and must not be reported as executed results."
+    ],
+    "proposed_computation": "Estimate the prespecified weather-by-segment-by-period contrast, date-clustered uncertainty, common-support strata, and adverse-weather category counts from complete DF. Do not interpret causally.",
+    "proposed_search": "Crossref query should cover bike-share weather effects by casual/registered segment and commute/leisure period, with the service-contingency decision link. A title-only match establishes topical overlap only."
+  },
+  "critique": [
+    "The leader left leisure versus commute undefined. Freeze it as non-working day hours 10-18 for a leisure proxy and working-day hours 7-9 or 16-18 for a commute proxy; exclude other hours. These bins are operational proxies, not verified trip purposes.",
+    "The selected contrast is feasible as an observational association, but common hour/calendar strata may have limited adverse-weather overlap. Report unsupported strata and category 3/4 counts; a combined 3-4 estimate can conceal category differences.",
+    "System-level rental counts do not reveal availability, failed attempts, station redistribution, or policy effects. Date clustering handles repeated hourly observations for uncertainty but does not remove time-varying confounding.",
+    "The operational contingency implication is a motivation for future testing, not a result that this dataset can establish. If the contrast is null, reversed, or unsupported, drop or redesign the proposed rule rather than reinterpret it as evidence for the idea."
+  ],
+  "requests": [
+    {
+      "type": "compute",
+      "id": "R1_weather_segment_period",
+      "idea_id": "I1",
+      "purpose": "Check whether the proposed descriptive segment-by-weather contrast differs between prespecified leisure-proxy and commute-proxy periods, while quantifying common-support and date-cluster uncertainty. This is a feasibility/premise check, not causal identification.",
+      "model_spec": "Use observed system-hour casual and registered counts. Define adverse weathersit 3-4 and reference 1-2. Define leisure proxy as workingday=0 and hr 10-18 inclusive; commute proxy as workingday=1 and hr in 7-9 or 16-18 inclusive; exclude other hours. Standardize within common year-month-weekday-hour strata. For each segment and period calculate log(adverse/reference standardized mean count); primary contrast is the leisure (casual minus registered) contrast minus the commute (casual minus registered) contrast. Resample whole dteday clusters for percentile uncertainty. Report support strata and counts by original weather category. This remains observational.",
+      "code": "import json\nimport numpy as np\nimport pandas as pd\n\nx=DF.copy()\nx[\"_w\"]=1.0\nx['period']=np.where((x.workingday.eq(0)) & x.hr.between(10,18),'leisure',np.where(x.workingday.eq(1) & (x.hr.between(7,9)|x.hr.between(16,18)),'commute','other'))\nx=x[x.period.ne('other')].copy()\nx['wx']=np.where(x.weathersit.isin([3,4]),1,np.where(x.weathersit.isin([1,2]),0,-1))\nx=x[x.wx.ge(0)].copy()\nkeys=['yr','mnth','weekday','hr']\ndef estimate(z):\n out={}\n for p in ['leisure','commute']:\n  q=z[z.period.eq(p)]\n  a=q.groupby(keys+['wx']).agg(n=('_w','sum'),c=('casual','sum'),r=('registered','sum')).reset_index()\n  wide=a.pivot_table(index=keys,columns='wx',values='n',fill_value=0)\n  if 0 not in wide.columns or 1 not in wide.columns: out[p]=None; continue\n  common=wide.index[(wide[0]>0)&(wide[1]>0)]\n  a=a.set_index(keys).loc[common].reset_index()\n  if len(common)==0: out[p]=None; continue\n  ns=a.groupby(keys).n.sum(); w=ns/ns.sum()\n  vals={}\n  for seg,col in [('casual','c'),('registered','r')]:\n   rates=[]\n   for wx in [0,1]:\n    b=a[a.wx.eq(wx)].set_index(keys)\n    rates.append(float((w*b[col].div(b.n)).sum()))\n   vals[seg]=float(np.log(rates[1]/rates[0]))\n  out[p]={'support_strata':int(len(common)),'casual_log_rr':vals['casual'],'registered_log_rr':vals['registered'],'segment_log_rr_difference':vals['casual']-vals['registered']}\n out['triple_contrast']=None if out['leisure'] is None or out['commute'] is None else out['leisure']['segment_log_rr_difference']-out['commute']['segment_log_rr_difference']\n return out\npoint=estimate(x)\ncat_counts=x.groupby(['period','weathersit']).size().rename('hour_rows').reset_index().to_dict('records')\ndates=x.dteday.unique(); rng=np.random.default_rng(731); boots=[]\nfor _ in range(300):\n draw=rng.choice(dates,size=len(dates),replace=True); mult=pd.Series(draw).value_counts(); z=x.copy(); z['_w']=z.dteday.map(mult).fillna(0); z=z[z._w.gt(0)].copy()\n z['casual']=z.casual*z._w; z['registered']=z.registered*z._w\n e=estimate(z)\n if e['triple_contrast'] is not None: boots.append(e['triple_contrast'])\nci=np.quantile(boots,[0.025,0.975]).tolist() if len(boots)>=30 else None\nprint(json.dumps({'n_rows':int(len(x)),'n_dates':int(x.dteday.nunique()),'weather_category_hour_rows':cat_counts,'estimate':point,'date_bootstrap_replicates_valid':len(boots),'triple_contrast_percentile_95_interval':ci},separators=(',',':')))"
+    },
+    {
+      "type": "search",
+      "id": "R1_crossref_weather_segments",
+      "idea_id": "I1",
+      "missing_relation": "Whether prior bike-share research jointly compares weather-associated rental changes by casual versus registered users and commute versus leisure periods, and connects that contrast to a service contingency decision.",
+      "query": "bike sharing weather casual registered users commute leisure demand service planning weather contingency",
+      "change_if_found": "If returned records directly cover the same segment-by-period weather comparison and operational decision link, narrow the contribution to a distinct test or decision context and withdraw any world-literature novelty implication. Titles alone indicate topical overlap, not the paper's results or exact method."
+    }
+  ],
+  "final": null
+}

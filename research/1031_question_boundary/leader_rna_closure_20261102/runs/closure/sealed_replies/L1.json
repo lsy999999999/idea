@@ -1,0 +1,120 @@
+{
+  "recognition": "uncertain; the input does not identify a specific target study or published explanation",
+  "summary": "C4 failed at the broker with a 30-second timeout and no stdout/stderr, so there is no actual q trajectory to adjudicate. The failure is procedural, not evidence for or against C1. The supplied C4 code required fine-step solve_ivp integration over a large grid and repeats; request C5 uses the exact x solution and the literal q switch for trajectories initialized at or below threshold. For such trajectories the pre-crossing q source is zero and the upward-crossing switch freezes q immediately, so q can only decay from q0 before crossing and cannot emerge. This algebraic consequence is a diagnostic, not physical support. Keep TQ open pending broker output.",
+  "candidates": [
+    {
+      "id": "C1",
+      "version": 15,
+      "target": "Delayed emergence and persistence of segmented internal cavity area in transcribing RNA droplets, with unresolved B/A cause.",
+      "known_relations": [
+        "E0 initial means at 0,4,8,12,24 h: A=.01487245,.00543899,.00443905,.00406419,.00445819; B=.01380909,.01591506,.02393311,.04027997,.08918347. Seven fields per condition over two preparations; fields are nested. This is segmented area, not concentration or free energy.",
+        "C3 is an executed x-only conditional calculation: at alpha=1,tau=5 h,xc=.5, equal integrated r=1 fast crosses x at 3.4657 h and reaches x=.6321 at 5 h; slow does not cross and reaches x=.2454 at 20 h. Not fitted and not a q result.",
+        "C4 broker computation failed with reason '30s timeout'; stdout and stderr are both 'None'. No C4 scientific result exists.",
+        "E1 aggregate B mobility has unequal track counts/durations and a selected high-displacement tail; no cavity-specific arrest is established.",
+        "E2 phase concentrations vary across reference/variant series but lack A/B and cavity mapping.",
+        "E3 identifies B DNA reads: reference fraction .9466, listed other classes total .0500, .0034 unitemized. Read fractions do not establish calibrated DNA fractions or RNA transcript fractions/concentrations.",
+        "E4 M/M+L/M+S field medians .00002785/.0444583/.0941248 with n=3/5/2 fields; category fractions, condition mapping, and independent-preparation structure are absent.",
+        "R1_S1 is a distinct simulated sticker-spacer condensate coalescence system; R3_S3 concerns oskar RNA kissing-loop interactions with Bruno. Neither provides target-specific cavity kinetics."
+      ],
+      "gaps": [
+        {"id":"GQ","status":"open","description":"C4 timed out without stdout/stderr. Need actual broker output evaluating literal q and x, including common-age equal-dose comparison, initial q, production stop and threshold behavior. A closed-form C5 request is pending; no numerical verdict can be claimed until it returns."},
+        {"id":"G1","status":"open","description":"Target-compatible loop exchange/connectivity, relaxation, cavity-specific arrest, and production parameters are unavailable."},
+        {"id":"G2","status":"open","description":"E3 assay provenance and E4 category labels/fractions/condition mapping remain unresolved; neither establishes transcript abundance or causality."},
+        {"id":"G3","status":"open","description":"No direct measurement establishes cavity identity, phase state, or kinetic arrest; E1/E2 do not close this gap."}
+      ],
+      "hypotheses": [
+        "H1, unconfirmed: connected RNA loop-mediated junction load may accumulate faster than relaxation and a path-dependent process may generate and retain internal solvent-rich domains.",
+        "H1a, unverified bridge: terminal loops act as reversible stickers with sufficient connectivity and slow exchange for arrest. R3_S3 supplies only architectural plausibility in a different system.",
+        "H2: composition/ionic conditions set equilibrium coexistence; after matched composition and equilibration cavity area converges regardless of production schedule.",
+        "H3: amplification-associated DNA population changes or reaction carryover alter transcription or imaging.",
+        "H4: segmentation, denominator, tracking, sample-label, or sequencing effects account for some apparent association."
+      ],
+      "equations": [
+        "Original model retained literally: xdot=alpha*r-x/tau.",
+        "For constant rate r over duration T: x(T)=x0*exp(-T/tau)+alpha*r*tau*(1-exp(-T/tau)); after shutoff x(t)=x(T)*exp(-(t-T)/tau).",
+        "Before arrest: qdot=kn*max(x-xc,0)-kd*q.",
+        "At the first upward crossing x>=xc, permanently impose qdot=0. No equation change or physical repair is proposed.",
+        "For x0<=xc and monotone x rising from below, qdot source is zero until crossing, and q is frozen at that crossing; therefore q(t)=q0*exp(-kd*min(t,tc)) if crossing occurs, otherwise q0*exp(-kd*t). This is a mathematical consequence of the original rule, pending C5 broker arithmetic."
+      ],
+      "variables_units": {
+        "t":"h", "r":"reduced production rate h^-1", "x":"unbounded dimensionless effective load", "alpha":"dimensionless", "tau":"h", "xc":"dimensionless", "q":"dimensionless cavity-area proxy", "kn":"h^-1", "kd":"h^-1", "y_area":"segmented dark area / filled droplet area, dimensionless"
+      },
+      "parameters_ranges": {
+        "alpha":"positive; .5-2 in prior illustrations only, not estimated", "tau":"positive; 1-20 h in prior illustrations only, unmeasured", "xc":".5 in prior illustration only, not estimated", "kn":"positive h^-1; .1 illustrative only, unmeasured", "kd":"nonnegative h^-1; 0 and .1 illustrative only, unmeasured"
+      },
+      "initial_boundary_conditions":"C3/C4 assume x0=0. q0=0 or observed A/B t=0 means .0148724491091024/.0138090880510916, with the observed values treated only as provisional model proxies. Compare fast r=.2 h^-1 for 5 h and slow r=.05 h^-1 for 20 h (both integral 1), then r=0 while x relaxes. For x0=xc, equality triggers an immediate crossing only if right-hand x derivative is positive. For x0>xc without a prior upward crossing, the original switching rule does not specify whether the system starts arrested; flag as underdetermined rather than silently choosing.",
+      "observation_mapping":"E0 is image-derived area fraction; using it for q0 is provisional. E1 motion, E2 phase concentrations, E3 DNA reads, and E4 undefined fraction labels do not measure x, tau, kn, kd, or cavity-specific arrest.",
+      "alternatives":["H2 equilibrium composition-driven demixing with convergence after composition match and equilibration.","H3 amplification-related DNA population or reaction carryover effects.","H4 measurement, segmentation, sample-label, or selection effects."],
+      "predictions":[
+        "At x0=0, the literal rule predicts no new q generation at the first upward threshold crossing: q is already at or below its pre-crossing value when frozen. If no crossing occurs, q decays for kd>0 and stays constant for kd=0. Thus this q rule cannot explain increasing area from similar initial values on a rising-x trajectory.",
+        "C3's x contrast is not a prediction of a q contrast under this literal switch. Equal total production does not imply matched composition.",
+        "Public means decrease for A from .014872 at 0 h to .004458 at 24 h, and increase for B from .013809 to .089183. The original rule with x0 below threshold predicts no generated q for either path; q0 proxy can decay or remain constant before freezing. It therefore fails to reproduce B's rising observable under the stated mapping.",
+        "A trajectory initialized above threshold exposes a missing initial-condition convention; it must not be used as an unannounced repair."
+      ],
+      "checks":[
+        "C4 actually failed: broker status failed, reason 30s timeout, stdout None, stderr None. No q result was produced.",
+        "C4 request used solve_ivp at .002 h max step across 108 grid/schedule/q0 combinations and a tighter repeat; a 30s timeout is consistent with excess workload, but no tool diagnostic proves the precise cause.",
+        "Dimensions: alpha*r and x/tau have h^-1; kn and kd are h^-1 and q is dimensionless, so qdot has h^-1.",
+        "For constant production from below, alpha*r*tau<=xc cannot cross; when equality holds the threshold is approached asymptotically, not reached in finite time.",
+        "No bound q<=1 is imposed; x is bounded for finite piecewise-constant production and tau>0, while q is bounded over finite intervals under the stated nonnegative coefficients."
+      ],
+      "evidence_conflicts":[
+        "E0 is compatible with H1-H4 and is not mechanism-specific.",
+        "E1's selected B high-displacement tail cautions against asserting all B cavities are immobile.",
+        "E2/E4 may indicate composition/group differences but lack condition mapping and provenance.",
+        "E3 is B DNA read data with unknown pipeline/calibration; it does not establish RNA product composition."
+      ],
+      "untested":["Broker execution of C5 exact calculation and numerical outputs.","Target loop exchange/connectivity, alpha/tau/xc/kn/kd, and q-to-area relation.","E3 sequencing provenance and E4 labels/fractions/replication.","Cavity identity, physical volume, postproduction persistence, and target-specific kinetic arrest."],
+      "dissent":"R0 correctly distinguishes its failed computation from scientific evidence and notes that C4 timed out. Its request is not an executed result. The literal q switch appears structurally unable to generate q from below threshold; however, this is a consequence to verify with actual broker arithmetic, not empirical evidence. No physical support for H1 is established.",
+      "ledger":[
+        {"version":1,"summary":"L1 proposed production-relaxation threshold and arrest model.","superseded":false},
+        {"version":2,"summary":"L2 added slow loop exchange/percolation bridge hypothesis and generic arrest analogies.","superseded":false},
+        {"version":3,"summary":"L3 requested conditional schedule computation and phase-composition evidence.","superseded":false},
+        {"version":4,"summary":"L4 revised x to unbounded effective load and added limited RNA kissing-loop analogy.","superseded":false},
+        {"version":5,"summary":"Executor interpreted C3/E2 and requested DNA population evidence.","superseded":false},
+        {"version":6,"summary":"L5 incorporated E3 DNA read fractions and weak phage-library analogy; provenance remained open.","superseded":false},
+        {"version":7,"summary":"Executor interpreted R4/E3; requested endpoint fractionation and direct amplification literature.","superseded":false},
+        {"version":8,"summary":"R5 interpretation and E4 endpoint field summaries; causal gaps remained open.","superseded":false},
+        {"version":9,"summary":"Leader retained H1 conditionally and kept G1-G3 open.","superseded":false},
+        {"version":10,"summary":"Executor confirmed C3 and E4/R5 evidence limitations.","superseded":false},
+        {"version":11,"summary":"Final executor C1 version with R6 assessment and dissent.","superseded":false},
+        {"version":12,"summary":"Frozen candidate before observable-closure audit.","superseded":false},
+        {"version":13,"summary":"L0 preserved original q rule and required observable consequences before replacement.","superseded":false},
+        {"version":14,"summary":"R0 submitted literal-equation C4 broker request; no result claimed.","superseded":false},
+        {"version":15,"summary":"C4 broker attempt timed out without output; leader requests lower-cost exact C5 evaluation and makes no model revision.","superseded":false}
+      ],
+      "next_task":"Broker executes C5 closed-form calculation. On return, leader verifies outputs and adjudicates mathematical correctness, internal validity, and physical support separately. No mechanism rewrite is authorized by the timeout."
+    }
+  ],
+  "tasks":[
+    {"id":"TQ","candidate_id":"C1","gap_id":"GQ","kind":"mechanism","status":"rework","deliverable":"Broker-executed C5 closed-form evaluation of the literal original equations, followed by leader audit.","acceptance":"Numeric x and q at common ages for q0=0 and both observed q0 proxies; crossing and threshold-neighborhood behavior; production shutoff relaxation; parameter conditions and comparison to visible 0-24 h area direction; separate computation, internal-validity, and physical-support verdicts.","evidence_refs":["C3","C4","initial_measurements.json"],"reason":"C4 failed at 30 seconds without stdout/stderr. Its large solve_ivp grid is replaced by an algebraic calculation that directly tests the original model consequence."}
+  ],
+  "requests":[
+    {
+      "type":"compute",
+      "id":"C5",
+      "candidate_id":"C1",
+      "gap_id":"GQ",
+      "purpose":"Produce actual numeric common-age x and q trajectories for the literal original model using exact formulas, after C4 timed out. Not a fit, revision, or evidence of physical support.",
+      "model_spec":"Use xdot=alpha*r-x/tau. Use the literal q rule: before the first upward crossing x>=xc, qdot=kn*max(x-xc,0)-kd*q; at crossing q is frozen permanently with qdot=0. Use x0=0, xc=.5; alpha=[.5,1,2], tau=[1,5,20] h; kn=.1 h^-1 and kd=[0,.1] h^-1; schedules fast r=.2 for 5 h and slow r=.05 for 20 h, both integrated r=1, then r=0 and x relaxes. Use q0=0,.0148724491091024,.0138090880510916. Report common ages [0,4,5,8,12,20,24,36,48] h, each schedule's shutoff, upward crossing time if finite, x/q at crossing, and q at all ages. Also evaluate initial x0=xc-1e-6,xc,xc+1e-6 at the anchor alpha=1,tau=5,fast schedule. At x0>xc report that the original initial-state/switch convention is undefined unless a prior crossing is specified; show the conditional distinction if useful. For x0<=xc derive q from its exact zero-source pre-crossing solution and freeze rule. State no-cross condition alpha*r*tau<=xc from below, units, bounds, and compare the result to public A-decrease/B-increase without fitting. Do not use solve_ivp or a time-step grid; formulas suffice. Print compact JSON with numeric values and named checks. Use only standard Python json/math; no I/O.",
+      "code":"import json, math\nAGES=[0.,4.,5.,8.,12.,20.,24.,36.,48.]\nXC=.5\nQ0S=[('zero',0.),('A_proxy',.0148724491091024),('B_proxy',.0138090880510916)]\ndef x_at(t,alpha,tau,r,dur,x0=0.):\n    if t<=dur: return x0*math.exp(-t/tau)+alpha*r*tau*(1-math.exp(-t/tau))\n    xd=x0*math.exp(-dur/tau)+alpha*r*tau*(1-math.exp(-dur/tau))\n    return xd*math.exp(-(t-dur)/tau)\ndef crossing(alpha,tau,r,dur,x0=0.):\n    # Only report an upward crossing from below or an equality with positive derivative.\n    if abs(x0-XC)<1e-14:\n        return 0. if alpha*r-x0/tau>0 else None\n    if x0>XC: return None\n    xs=alpha*r*tau\n    if xs<=XC: return None\n    tc=-tau*math.log((xs-XC)/(xs-x0))\n    return tc if tc<=dur+1e-12 else None\ndef trajectory(alpha,tau,kn,kd,r,dur,q0):\n    tc=crossing(alpha,tau,r,dur,0.)\n    # Starting below threshold, source is identically zero before tc; crossing freezes q.\n    vals=[]\n    for t in AGES:\n        q=q0*math.exp(-kd*min(t,tc)) if tc is not None else q0*math.exp(-kd*t)\n        vals.append({'time_h':t,'x':x_at(t,alpha,tau,r,dur),'q':q,'production_on':t<dur})\n    atcross=None if tc is None else {'time_h':tc,'x':XC,'q':q0*math.exp(-kd*tc),'q_before':q0*math.exp(-kd*max(0.,tc-1e-6)),'q_after':q0*math.exp(-kd*tc)}\n    return {'crossing':atcross,'shutoff':{'time_h':dur,'x':x_at(dur,alpha,tau,r,dur),'q':q0*math.exp(-kd*min(dur,tc)) if tc is not None else q0*math.exp(-kd*dur)},'observations':vals}\nrows=[]\nfor alpha in (.5,1.,2.):\n for tau in (1.,5.,20.):\n  for kd in (0.,.1):\n   for schedule,r,dur in (('fast',.2,5.),('slow',.05,20.)):\n    for label,q0 in Q0S:\n     rows.append({'alpha':alpha,'tau_h':tau,'xc':XC,'kn_per_h':.1,'kd_per_h':kd,'schedule':schedule,'r_per_h':r,'duration_h':dur,'dose':r*dur,'q0_case':label,'result':trajectory(alpha,tau,.1,kd,r,dur,q0)})\nnear=[]\nfor x0 in (XC-1e-6,XC,XC+1e-6):\n tc=crossing(1.,5.,.2,5.,x0)\n near.append({'x0':x0,'right_derivative_at_t0':.2-x0/5.,'crossing_time_h':tc,'status':'upward crossing from below' if x0<XC and tc is not None else ('immediate crossing at equality' if x0==XC and tc==0. else ('initial state above threshold; original switch convention underdetermined' if x0>XC else 'no upward crossing'))})\nprint(json.dumps({'status':'exact conditional calculation of literal equations; not fit or physical evidence','equations':'xdot=alpha*r-x/tau; pre-crossing qdot=kn*max(x-xc,0)-kd*q; at first upward crossing qdot=0 permanently','ages_h':AGES,'initial_x':0.,'xc':XC,'q0_proxy_values':Q0S,'kn_per_h':.1,'parameter_grid':{'alpha':[.5,1.,2.],'tau_h':[1.,5.,20.],'kd_per_h':[0.,.1]},'schedules':[{'name':'fast','r_per_h':.2,'duration_h':5.,'integrated_r':1.},{'name':'slow','r_per_h':.05,'duration_h':20.,'integrated_r':1.}],'rows':rows,'threshold_neighborhood':near,'named_checks':{'equal_dose':all(abs(z['dose']-1.)<1e-12 for z in rows),'x_formula':'exact constant-rate solution, followed by exponential relaxation after shutoff','q_formula_from_below':'q source is zero up to first upward crossing; q=q0*exp(-kd*t) until crossing, then q=q_at_cross forever; without crossing q=q0*exp(-kd*t)','post_crossing_growth':'none under the literal switch for a trajectory beginning at or below xc','no_finite_cross_from_below':'alpha*r*tau<=xc; equality is approached asymptotically','dimensions':'alpha*r and x/tau are h^-1; kn,kd are h^-1; qdot is h^-1 for dimensionless q','boundedness':'finite x under finite piecewise-constant production and tau>0; q bounded for finite time but no q<=1 bound is imposed','initial_above_threshold':'not specified by first-upward-crossing rule; do not infer arrest or non-arrest silently','observed_area_direction':'public A decreases .014872 to .004458 and B increases .013809 to .089183 over 0-24 h; compare without fitting; q from below cannot increase under this rule'}},sort_keys=True))"
+    }
+  ],
+  "literature_use":[],
+  "adjudication":{
+    "task_id":"TQ",
+    "decision":"rework",
+    "artifact_ids":["C3","C4"],
+    "checks":[
+      "C3 is an executed x-only calculation and cannot establish q behavior.",
+      "C4 broker result is failed with reason 30s timeout and stdout/stderr None; no actual computation output is available.",
+      "The C4 request's workload is large; exact closed-form C5 is submitted to reduce runtime while retaining the requested original-equation checks.",
+      "Analytically, for trajectories initialized below threshold, q has zero source until first crossing and is frozen at crossing, so the original rule cannot generate rising q from below; this is a model implication awaiting the broker's numeric C5 artifact for the requested audit."
+    ],
+    "remaining_gap":"GQ remains open pending actual C5 output and leader verification. G1-G3 remain physical evidence gaps.",
+    "reason":"C4 failed procedurally without usable output. The failure does not count as support or falsification. C5 is a concrete lower-cost exact calculation; total compute budget reports five remaining, so this retry is within budget. No model revision has been made.",
+    "scientific_verdict":"Calculation correctness: C4 cannot be assessed because it produced no output; the algebraic consequence for x0 below xc is clear but not yet broker-verified numerically. Internal validity: the literal freeze rule appears unable to produce increasing q from below and leaves initial states above threshold unspecified. Physical support: absent; no target-specific kinetics or cavity mapping is supplied.",
+    "required_next_product":"Broker returns C5 numeric JSON. Leader checks exact outputs against the formulas and, if correct, explicitly rejects the original C1 observable chain for failing the visible B area increase under its stated q mapping. Any alternative model would require a separately motivated revision within the remaining revision budget; no ungrounded rate change is acceptable."
+  },
+  "final":null
+}

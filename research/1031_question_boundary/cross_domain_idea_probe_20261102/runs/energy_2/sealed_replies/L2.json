@@ -1,0 +1,152 @@
+{
+  "recognition": "Recognize the supplied source as UCI Appliances Energy Prediction (UCI 374) and its listed 2017 Candanedo et al. paper from the provided documentation. No remembered study result is used as evidence.",
+  "summary": "Revise and retain I1 as a measurement-efficiency proposal. The broker computation supports aggregate schedule feasibility: a threshold frozen at 210 Wh from the first 60% of rows yields 697 next-interval held-out logging slots, 72.88% of which are at or above threshold, versus a mean 22.91% across 200 equal-count week/hour-matched random draws. This does not test circuit attribution or savings. The Crossref return did not identify a direct household circuit-submeter comparison; its limited, mostly title-only coverage cannot establish novelty.",
+  "candidates": [
+    {
+      "id": "I1",
+      "title": "Trigger temporary submeter logging after household load events",
+      "question": "With the same number of logged 10-minute intervals, does starting circuit-submeter logging immediately after a high aggregate Appliances interval capture more subsequent high-use intervals with a dominant measured circuit than week- and hour-matched random logging?",
+      "new_claim": "A two-stage monitoring policy may improve the yield of scarce circuit-level logging for characterizing persistent or recurring high-use episodes. This is a measurement-efficiency hypothesis, not a claim about reducing energy use.",
+      "input_delta": "The supplied data has whole-home Appliances Wh per completed 10-minute interval but no circuit readings. Add a prospective comparison of logging in the interval after an aggregate-load trigger versus equal-count, calendar-week and hour-of-day-matched random intervals, with synchronized circuit Wh evaluation labels.",
+      "domain_value": "A building-energy team could use limited temporary logger bandwidth to characterize circuits around recurring high-use episodes and prioritize later control or maintenance investigations.",
+      "known_basis_refs": ["UCI374_doc", "energy_case_unit", "energy_profile_Appliances"],
+      "assumptions": [
+        "The whole-home meter reports each 10-minute interval soon enough to start circuit logging in the next interval.",
+        "Circuit meters can be synchronized to the whole-home meter, and measured circuit Wh can be reconciled with aggregate Appliances Wh within a pre-specified tolerance.",
+        "Some high-use episodes persist or recur into the following interval; this is unverified.",
+        "A single-home pilot can establish feasibility and within-home utility only, not generalization across households."
+      ],
+      "variables_and_units": [
+        "Aggregate Appliances energy, Wh per completed 10-minute interval",
+        "Circuit-level energy, Wh per synchronized 10-minute interval",
+        "Logging effort, number of logged intervals",
+        "High-use capture yield, successful held-out intervals per 100 logging slots; success requires aggregate Appliances at or above the frozen threshold and a measured leading circuit contributing at least 50% of aggregate Appliances Wh",
+        "Calendar week and hour of day, matching strata"
+      ],
+      "testable_prediction": "Set the event threshold to the 90th percentile of Appliances Wh in the first 60% of chronologically ordered rows, before examining held-out outcomes. In the held-out period, log the interval immediately after each threshold-crossing interval. At equal logging-slot count, week/hour-matched random schedules will have lower high-use capture yield than event-triggered schedules. The percentile, 50% circuit-share criterion, interval lag, and equal-budget rule are prospective choices; the computation returned here audits aggregate schedule feasibility only.",
+      "alternative": "High loads may be brief and end before the next interval; alternatively, circuits may share load and no single circuit may contribute half. In either case, event-triggered logging may have no higher circuit-attribution yield than matched random logging.",
+      "discriminating_test": "In a prospective single-home pilot, collect synchronized whole-home and circuit-level Wh continuously as reference truth during held-out evaluation, while scoring two pre-registered schedules with equal numbers of 10-minute slots: (a) log interval t+1 when Appliances at t meets or exceeds the 90th percentile frozen from the first 60% chronological calibration period, and (b) randomly choose the same number of slots matched within calendar week and hour of day. Define a successful slot as one where Appliances Wh is at or above the frozen threshold and the measured leading circuit contributes at least 50% of aggregate Appliances Wh. Compare successful slots per 100 logging slots; report paired week-level differences and uncertainty, retaining weeks with zero eligible slots. Continuous reference truth is needed to score unlogged counterfactual slots during this validation pilot, so it tests monitoring-policy value under reference instrumentation rather than immediate meter-cost savings.",
+      "feasible_with_current_data": "Partly. Dates and aggregate Appliances Wh support a calibration-only trigger, next-interval timing audit, and aggregate high-use capture comparison. The returned audit supports aggregate enrichment in this one chronological split. No circuit attribution, 50% share outcome, causal saving, or actual temporary-meter performance can be assessed.",
+      "required_new_data": "For an initial home pilot, obtain synchronized whole-home Appliances Wh and circuit-level Wh for every 10-minute interval during calibration and held-out weeks, with meter reconciliation and schedule activation/logging flags. Continuous circuit measurements serve as reference truth for this test. Replicate across homes before claiming household-level generalization or cost savings.",
+      "failure_condition": "The aggregate feasibility premise fails if the trigger yields too few held-out next-interval slots or does not enrich logged slots for above-threshold aggregate Wh compared with the matched random schedule. The circuit-level prediction fails if, at equal slot count, event-triggered logging does not increase successful slots per 100 over matched random logging, or if the gain is confined to isolated weeks. A single-home result cannot support a population claim.",
+      "nearest_prior_query": "Crossref query: residential household event-triggered circuit submeter logging compared with equal-budget, time-matched random logging for identifying circuits contributing to persistent or recurring high-load intervals."
+    },
+    {
+      "id": "I2",
+      "title": "Use room thermal recovery traces to target ventilation checks",
+      "question": "After comparable outdoor-temperature changes, do room-specific temperature recovery traces identify periods when measured ventilation or air exchange is unusually high, beyond the information in airport weather alone?",
+      "new_claim": "A room-to-room thermal recovery signature could help schedule ventilation diagnostics, but only if it agrees with direct air-exchange measurement under controlled operating conditions.",
+      "input_delta": "The file supplies 10-minute room temperatures T1-T9, north-side outdoor T6, airport T_out, and weather, but no ventilation, window, or HVAC-state labels. Add direct air-exchange measurements and logged operating states to test a diagnostic use of thermal response traces.",
+      "domain_value": "A validated signature could prioritize building-envelope or ventilation checks when continuous airflow sensing is unavailable.",
+      "known_basis_refs": ["UCI374_doc", "energy_case_unit", "energy_profile_T6_T_out"],
+      "assumptions": [
+        "Room temperature response contains a measurable ventilation-related component.",
+        "Heating, solar gains, occupancy, and sensor placement can be measured or controlled sufficiently to distinguish competing causes.",
+        "A single-house observational trace is hypothesis-generating only."
+      ],
+      "variables_and_units": [
+        "Room and north-side temperatures T1-T9 and T6, degrees C per 10-minute interval",
+        "Airport outdoor temperature T_out, degrees C per 10-minute interval",
+        "Air-change rate, h^-1, measured by tracer-gas decay",
+        "Window/HVAC operating state, categorical with timestamps"
+      ],
+      "testable_prediction": "Within controlled, matched temperature-step trials, a pre-specified room-temperature recovery time will be shorter at higher directly measured air-change rates after accounting for logged HVAC and window states; the association should replicate across rooms or trial days.",
+      "alternative": "Thermal mass, internal gains, or control cycling may dominate recovery time, leaving no stable relationship with measured air-change rate.",
+      "discriminating_test": "Run repeated controlled trials in the same home with randomized window/ventilation settings, direct tracer-gas air-change measurements in h^-1, and synchronized 10-minute room/outdoor temperatures. Compare recovery-time slopes across settings within room and day; record HVAC state and reject trials with unmeasured operating changes. Use existing rows only to pre-specify candidate rooms and ranges, not as validation of ventilation.",
+      "feasible_with_current_data": "Exploratory thermal traces are available, but validation against ventilation and separation from HVAC, occupancy, and solar gains are not feasible.",
+      "required_new_data": "Repeated room-level tracer-gas air-change measurements in h^-1, window and HVAC state logs, and preferably occupancy/solar-gain proxies synchronized with room temperatures; replicate trials over multiple days and homes.",
+      "failure_condition": "The proposed diagnostic fails if recovery time does not change consistently with directly measured air-change rate within controlled matched trials, or if HVAC/window state explains the apparent signature better than air exchange.",
+      "nearest_prior_query": "Crossref query: residential room temperature decay or thermal recovery as an indicator of measured air change rate, validated with tracer gas under logged HVAC and window states."
+    },
+    {
+      "id": "I3",
+      "title": "Test occupancy-triggered feedback for flexible household loads",
+      "question": "Does brief, privacy-preserving feedback after a high appliance-load interval reduce energy in the next hour without worsening indoor comfort, compared with the same feedback delivered at matched non-event times?",
+      "new_claim": "A load-event-timed feedback intervention may shift flexible household appliance use; the timing effect is unknown and must be randomized rather than inferred from observational traces.",
+      "input_delta": "The dataset has aggregate Appliances and lights Wh, room climate, and dates, but no occupancy, appliance identity, feedback, or comfort ratings. Add a randomized feedback intervention with those measurements.",
+      "domain_value": "If effective and comfortable, an energy team could time low-cost prompts to moments when a household has a meaningful opportunity to defer flexible use.",
+      "known_basis_refs": ["UCI374_doc", "energy_case_unit", "energy_profile_Appliances_lights"],
+      "assumptions": [
+        "Some high-load intervals include deferrable use rather than fixed or essential loads.",
+        "A household can receive and act on a prompt.",
+        "A one-home trial estimates an individual response and cannot establish population effects."
+      ],
+      "variables_and_units": [
+        "Appliance energy, Wh per 10-minute interval and summed Wh over the next 60 minutes",
+        "Prompt assignment and delivery time, binary and timestamp",
+        "Indoor room temperatures, degrees C",
+        "Occupant comfort, pre-specified ordinal response scale"
+      ],
+      "testable_prediction": "Within-house randomized event-timed prompts will reduce next-hour appliance Wh relative to matched no-prompt event windows without increasing the pre-specified rate of comfort reports outside the acceptable range.",
+      "alternative": "Loads may be non-deferrable, prompts may be ignored, or reductions may be rebound into the following hours; event timing may offer no advantage over ordinary prompts.",
+      "discriminating_test": "After a baseline period, randomize eligible high-load events within household and time-of-day blocks to event-timed prompt or no prompt, and separately randomize matched non-event prompt windows if testing timing specificity. Measure whole-home appliance Wh continuously, occupancy only with consent, and comfort before and after the next hour. Pre-register the next-hour Wh contrast, rebound window, and comfort threshold.",
+      "feasible_with_current_data": "No. The series describes energy and climate but contains no prompt, occupancy, or comfort data and is observational.",
+      "required_new_data": "A consented randomized household pilot with prompt assignment/delivery logs, continuous appliance Wh, occupancy or response availability, and repeated comfort ratings; include several post-prompt hours to measure rebound.",
+      "failure_condition": "The intervention fails if event-timed prompts do not reduce next-hour Wh relative to randomized controls, if the effect is offset by rebound within the pre-specified follow-up period, or if comfort worsens beyond the registered limit.",
+      "nearest_prior_query": "Crossref query: randomized event-triggered residential energy feedback prompts versus time-matched prompts or control, measuring appliance energy, comfort, and rebound."
+    }
+  ],
+  "selected_id": "I1",
+  "method_ids": ["M01", "M33", "M34"],
+  "task": {
+    "deliverable": "Critique I1 and return a tightened prospective protocol that fixes trigger timing, equal logging budgets, circuit attribution, and the replication unit. Separate aggregate schedule feasibility from circuit-level evidence.",
+    "acceptance": [
+      "Retain or revise I1 with a concrete alternative and failure rule.",
+      "Use the 90th percentile of Appliances in the first 60% chronological calibration rows; trigger logging in the next interval because the current interval aggregate is available only after completion.",
+      "Compare equal-count slots with week/hour-matched random slots; define the result per 100 slots and report paired week-level uncertainty.",
+      "Define circuit-level success as held-out aggregate Appliances at or above the frozen threshold plus a measured leading circuit contributing at least 50% of aggregate Appliances Wh.",
+      "State that the current file can assess aggregate schedule feasibility only, not circuit attribution, savings, or intervention effects."
+    ],
+    "proposed_computation": "Completed by broker using supplied DF: chronological 60/40 split, calibration q90 threshold, event at t followed by logging at t+1, and 200 equal-count week/hour-matched random draws. This is aggregate schedule feasibility only.",
+    "proposed_search": "Completed by broker: Crossref query for residential household event-triggered circuit submetering versus equal-budget random or time-matched sampling. Returned titles/metadata are limited coverage and do not establish novelty."
+  },
+  "critique": [
+    "The initial wording implied that a completed interval's aggregate Wh could trigger logging during that same interval. The meter reports the interval total after its end; the revised policy triggers at t and starts at t+1. This targets persistent or recurring high-use episodes, while short events are an explicit alternative.",
+    "The initial outcome lacked a denominator and conflated capturing a high-use interval with attributing it to a circuit. The revised outcome requires both aggregate high use and a leading measured circuit contributing at least 50%, reported per 100 slots.",
+    "Equal numbers of sampled intervals are an operational budget proxy, not a complete cost model. Continuous circuit reference measurements are required to evaluate counterfactual schedules in an initial validation pilot; this does not demonstrate real deployment savings.",
+    "The 60/40 chronological split and q90 threshold are protocol choices, not evidence-derived optima. The one-home weeks are the repeated units available here; rows are not independent households."
+  ],
+  "requests": [],
+  "final": {
+    "status": "revised",
+    "final_idea": {
+      "id": "I1",
+      "title": "Trigger temporary submeter logging after household load events",
+      "question": "With the same number of logged 10-minute intervals, does starting circuit-submeter logging immediately after a high aggregate Appliances interval capture more subsequent high-use intervals with a dominant measured circuit than week- and hour-matched random logging?",
+      "new_claim": "A two-stage monitoring policy may improve the yield of scarce circuit-level logging for characterizing persistent or recurring high-use episodes. This is a measurement-efficiency hypothesis, not a claim about reducing energy use.",
+      "input_delta": "The supplied data has whole-home Appliances Wh per completed 10-minute interval but no circuit readings. Add a prospective comparison of logging in the interval after an aggregate-load trigger versus equal-count, calendar-week and hour-of-day-matched random intervals, with synchronized circuit Wh evaluation labels.",
+      "domain_value": "A building-energy team could use limited temporary logger bandwidth to characterize circuits around recurring high-use episodes and prioritize later control or maintenance investigations.",
+      "known_basis_refs": ["UCI374_doc", "energy_case_unit", "energy_profile_Appliances"],
+      "assumptions": [
+        "The whole-home meter reports each 10-minute interval soon enough to start circuit logging in the next interval.",
+        "Circuit meters can be synchronized to the whole-home meter, and measured circuit Wh can be reconciled with aggregate Appliances Wh within a pre-specified tolerance.",
+        "Some high-use episodes persist or recur into the following interval; this is unverified.",
+        "A single-home pilot can establish feasibility and within-home utility only, not generalization across households."
+      ],
+      "variables_and_units": [
+        "Aggregate Appliances energy, Wh per completed 10-minute interval",
+        "Circuit-level energy, Wh per synchronized 10-minute interval",
+        "Logging effort, number of logged intervals",
+        "High-use capture yield, successful held-out intervals per 100 logging slots; success requires aggregate Appliances at or above the frozen threshold and a measured leading circuit contributing at least 50% of aggregate Appliances Wh",
+        "Calendar week and hour of day, matching strata"
+      ],
+      "testable_prediction": "Set the event threshold to the 90th percentile of Appliances Wh in the first 60% of chronologically ordered rows, before examining held-out outcomes. In the held-out period, log the interval immediately after each threshold-crossing interval. At equal logging-slot count, week/hour-matched random schedules will have lower high-use capture yield than event-triggered schedules. The percentile, 50% circuit-share criterion, interval lag, and equal-budget rule are prospective choices; the computation returned here audits aggregate schedule feasibility only.",
+      "alternative": "High loads may be brief and end before the next interval; alternatively, circuits may share load and no single circuit may contribute half. In either case, event-triggered logging may have no higher circuit-attribution yield than matched random logging.",
+      "discriminating_test": "In a prospective single-home pilot, collect synchronized whole-home and circuit-level Wh continuously as reference truth during held-out evaluation, while scoring two pre-registered schedules with equal numbers of 10-minute slots: (a) log interval t+1 when Appliances at t meets or exceeds the 90th percentile frozen from the first 60% chronological calibration period, and (b) randomly choose the same number of slots matched within calendar week and hour of day. Define a successful slot as one where Appliances Wh is at or above the frozen threshold and the measured leading circuit contributes at least 50% of aggregate Appliances Wh. Compare successful slots per 100 logging slots; report paired week-level differences and uncertainty, retaining weeks with zero eligible slots. Continuous reference truth is needed to score unlogged counterfactual slots during this validation pilot, so it tests monitoring-policy value under reference instrumentation rather than immediate meter-cost savings.",
+      "feasible_with_current_data": "Partly. Dates and aggregate Appliances Wh support a calibration-only trigger, next-interval timing audit, and aggregate high-use capture comparison. The returned audit supports aggregate enrichment in this one chronological split. No circuit attribution, 50% share outcome, causal saving, or actual temporary-meter performance can be assessed.",
+      "required_new_data": "For an initial home pilot, obtain synchronized whole-home Appliances Wh and circuit-level Wh for every 10-minute interval during calibration and held-out weeks, with meter reconciliation and schedule activation/logging flags. Continuous circuit measurements serve as reference truth for this test. Replicate across homes before claiming household-level generalization or cost savings.",
+      "failure_condition": "The aggregate feasibility premise fails if the trigger yields too few held-out next-interval slots or does not enrich logged slots for above-threshold aggregate Wh compared with the matched random schedule. The circuit-level prediction fails if, at equal slot count, event-triggered logging does not increase successful slots per 100 over matched random logging, or if the gain is confined to isolated weeks. A single-home result cannot support a population claim.",
+      "nearest_prior_query": "Crossref query: residential household event-triggered circuit submeter logging compared with equal-budget, time-matched random logging for identifying circuits contributing to persistent or recurring high-load intervals."
+    },
+    "evidence_level": "computed_candidate",
+    "what_changed": "The interval trigger was corrected to start logging at t+1 after the completed aggregate interval t. The outcome now separates aggregate high-use capture from circuit attribution, fixes a 50% leading-circuit criterion and per-100-slot denominator, and specifies equal-count week/hour matching. The aggregate audit supports enrichment in this held-out split; the circuit-level claim remains untested. The literature search did not resolve novelty.",
+    "what_is_known": "The supplied file has 19,735 ten-minute observations from one home over about 4.5 months, aggregate Appliances Wh and room/weather measurements, but no circuit labels, occupancy, or intervention records. The completed broker computation used 11,841 calibration rows and 7,894 held-out rows, froze q90 at 210 Wh, generated 697 next-interval trigger slots, and found 72.8838% above threshold versus a 22.9075% mean over 200 equal-count week/hour-matched random draws. This is descriptive aggregate schedule feasibility for one split and one home, not independent-household evidence or circuit attribution. Crossref returned eight relevance-ordered records, mostly titles/metadata; none directly establishes the proposed household circuit-submeter comparison, and the search scope is limited.",
+    "what_is_new_hypothesis": "In a prospective pilot, using a prior-period q90 whole-home Appliances threshold to start circuit logging one interval later may yield more held-out high-use slots with a leading circuit contributing at least 50% of aggregate Appliances Wh per 100 logging slots than an equal-count week/hour-matched random schedule. This proposal adds a specific lagged monitoring policy, dominant-circuit outcome, and matched held-out comparison to the supplied information; world-literature novelty is undetermined.",
+    "falsifier": "The aggregate feasibility premise is falsified if next-interval trigger slots are too sparse or are not enriched for above-threshold Appliances relative to matched random slots. The circuit-level hypothesis is falsified if the event-trigger schedule does not increase the registered successful-slot yield over matched random logging, or any increase disappears across held-out weeks.",
+    "minimum_next_test": "Run a prospective single-home validation pilot with continuous synchronized whole-home Appliances Wh and per-circuit Wh at 10-minute resolution, using the first 60% chronologically only to freeze q90. On held-out weeks compare t+1 logging after threshold events with equal-count random slots matched by week and hour. Pre-register meter reconciliation tolerance, successful-slot definition (aggregate at/above q90 and leading circuit share at least 50%), per-100-slot yield, paired week-level uncertainty, and failure rule. Replicate homes before making population or cost-savings claims.",
+    "tool_evidence_refs": ["R1_I1_schedule_audit", "R1_I1_prior_search", "R1_I1_prior_search_S1", "R1_I1_prior_search_S2", "R1_I1_prior_search_S3", "R1_I1_prior_search_S4", "R1_I1_prior_search_S5", "R1_I1_prior_search_S6", "R1_I1_prior_search_S7", "R1_I1_prior_search_S8"],
+    "nearest_work_comparison": "The supplied UCI documentation and listed Candanedo et al. 2017 paper concern regression prediction of aggregate appliance energy. The Crossref results include general event-triggered control or sampling titles, not a verified direct comparison of household circuit-submeter event schedules for dominant-circuit attribution. The search is limited and title-only in most records; it does not support a world-literature novelty claim.",
+    "novelty_status": "Input-relative idea increment: the proposal specifies a lagged event-triggered circuit logging policy, equal-budget week/hour-matched comparator, and dominant-circuit yield outcome not present in the supplied dataset description. World-literature novelty: undetermined; the limited Crossref search found no direct match but is not an exhaustive or full-text review.",
+    "limitations": "Only aggregate Appliances Wh is available in the current dataset; no circuit attribution, intervention effect, energy saving, or household generalization can be inferred. The compute result is descriptive, tied to one chronological 60/40 split and one house, and the returned mean random yield has no reported uncertainty interval. Equal logged intervals proxy effort rather than full deployment cost. The Crossref index has limited coverage and mostly title/date/DOI metadata."
+  }
+}

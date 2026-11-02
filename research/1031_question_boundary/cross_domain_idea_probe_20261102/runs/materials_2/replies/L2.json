@@ -1,0 +1,121 @@
+{
+  "recognition": "Recognized from the supplied documentation as UCI dataset 165, Concrete Compressive Strength, associated with Yeh (1998). No remembered result is relied on.",
+  "summary": "Retain I1 as a revised, decision-linked hypothesis. The actual computation found 114 exact-formulation 7/28 pairs and a lower day-7/day-28 strength fraction for formulations with SCM share >0.30 than for cement-only formulations in the defined rectangular overlap subset. This is formulation-level observational support, not a batch-level or causal effect. The search returned related age-, binder- and strength-modeling records, so world novelty is unverified.",
+  "candidates": [
+    {
+      "id": "I1",
+      "title": "Batch-level calibration of 7-day strength for 28-day qualification",
+      "question": "In independently batched mixes designed for comparable 28-day strength and water/binder ratio, does the day-7/day-28 compressive-strength fraction differ between cement-only and SCM-containing binders, and does a pooled day-7 qualification cutoff produce binder-specific decision errors?",
+      "new_claim": "The input contributes a decision-linked, binder-family calibration question beyond single-row strength prediction. The supplied computation supports a lower early fraction for the specified SCM group descriptively; whether it generalizes to independent batches is a new hypothesis.",
+      "domain_value": "Determines whether a 7-day result can support a common early qualification rule or whether binder-specific calibration or later testing is needed.",
+      "known_basis_refs": ["UCI165.official_documentation.variables", "UCI165.data_profile.univariate_stats.Age", "UCI165.case.workflow", "R1_compute"],
+      "assumptions": ["SCM share is (Blast Furnace Slag + Fly Ash)/(Cement + Blast Furnace Slag + Fly Ash).", "Mixes can be designed in advance to comparable target 28-day strength and water/binder ranges; achieved 28-day strength is not used post hoc to define the experimental groups.", "The dataset's exact-formulation records do not establish same-batch repeated specimens or shared curing history."],
+      "variables_and_units": {
+        "experimental_unit": "independent concrete batch, with specimen identifiers nested within batch",
+        "age": "day; primary measurements at 7 and 28 days",
+        "strength": "compressive strength, MPa",
+        "SCM_share": "dimensionless mass fraction of slag plus fly ash in total cementitious binder",
+        "water_binder_ratio": "dimensionless Water / (Cement + Blast Furnace Slag + Fly Ash)",
+        "early_fraction": "dimensionless batch-level day-7 mean strength / day-28 mean strength",
+        "qualification_error": "proportion of batches misclassified by a prespecified day-7 rule against the prespecified day-28 MPa requirement"
+      },
+      "testable_prediction": "In independently batched mixes planned to the same target 28-day strength and comparable water/binder ratio, the median batch-level early_fraction will be lower for the prespecified SCM-containing group (SCM share >0.30) than for cement-only mixes. The current table's overlap-restricted estimate is -0.1131 in median early_fraction (SCM minus cement), with formulation-resampled 95% interval [-0.1589, -0.0582].",
+      "alternative": "The independent-batch contrast is near zero or reverses; alternatively, a difference in early_fraction does not produce a practically important binder-specific qualification error under the agreed 28-day threshold.",
+      "discriminating_test": "Before testing, specify the 28-day qualification requirement in MPa, target-strength and water/binder matching tolerances, SCM definition, minimum practically important early_fraction difference, and acceptable false-pass/false-fail rates. Produce independent batches in both binder groups, randomly allocate replicate specimens from each batch to 7- and 28-day tests under recorded curing conditions, and compare batch-level early_fraction. Evaluate one pooled day-7 cutoff against the 28-day decision separately by binder group; compare it with a prespecified binder-specific rule. Report batch-level uncertainty and all exclusions.",
+      "feasible_with_current_data": "Only as an exploratory exact-formulation contrast. There are 114 exact-formulation pairs at ages 7 and 28; groups before overlap restriction are 45 cement-only and 49 SCM-share >0.30. Rectangular common support on day-28 strength and water/binder ratio retains 40 and 48 formulations. Batch identity, curing history and specimen replication are unavailable, so neither independence nor qualification error rates can be established.",
+      "required_new_data": "Independent batch and specimen identifiers; matched mix designs selected prospectively for comparable target 28-day strength and water/binder ratio; replicate compressive tests at days 7 and 28; curing temperature and moisture history; an application-defined 28-day strength requirement and acceptable classification-error rates.",
+      "failure_condition": "Revise away from a binder-specific early-strength rule if the independent-batch early_fraction contrast is practically negligible or opposite under the prespecified comparison, or if the pooled cutoff meets the agreed decision-error limits in both groups. Treat the current-data pattern as non-generalizing if independent batches do not reproduce it.",
+      "nearest_prior_query": "Compare with work on 7-to-28-day strength development and binder-specific qualification or threshold calibration at matched target strength and water/binder ratio; distinguish those decision tests from age-dependent strength formulas and generic prediction models.",
+      "input_delta": "Adds a falsifiable, operational question about whether early-strength qualification is calibrated across binder families, including a decision-error endpoint; this goes beyond the supplied generic composition-age-strength regression framing."
+    },
+    {
+      "id": "I2",
+      "title": "Age-specific threshold crossing under alternative binder systems",
+      "question": "For an application-specified strength threshold, do cement-only and SCM-containing formulations with comparable 28-day strength first meet it at different sampled ages?",
+      "new_claim": "A binder-group difference in first sampled threshold age is a conjecture; the table samples 14 ages and lacks curing records.",
+      "domain_value": "Could inform test scheduling while distinguishing sampled-age attainment from the exact continuous-time crossing.",
+      "known_basis_refs": ["UCI165.official_documentation.variables", "UCI165.data_profile.univariate_stats.Age", "UCI165.case.workflow"],
+      "assumptions": ["The strength threshold is fixed by the application before analysis.", "Age rows are not known to be repeated measurements from one batch.", "First sampled attainment does not identify exact crossing time."],
+      "variables_and_units": {"age": "day", "strength": "MPa", "threshold": "prespecified MPa", "SCM_share": "dimensionless mass fraction"},
+      "testable_prediction": "At a prespecified threshold and among mixes with comparable 28-day strength, SCM-containing mixes more often first meet the threshold at a later sampled age.",
+      "alternative": "First sampled attainment is similar or the contrast depends on the threshold chosen.",
+      "discriminating_test": "With batch-linked observations at planned ages, tabulate first attainment by binder family at the fixed threshold, mark batches not attaining it as right-censored, and report uncertainty.",
+      "feasible_with_current_data": "Only if repeated formulation-age records and a meaningful application threshold are available; the table cannot establish continuous crossing time or batch-level trajectories.",
+      "required_new_data": "Application threshold, batch-linked tests bracketing attainment, and curing-condition measurements.",
+      "failure_condition": "No stable difference across a prespecified application-relevant threshold or inadequate longitudinal support.",
+      "nearest_prior_query": "Search binder-specific strength development curves used to schedule formwork removal or qualification and their validation conditions.",
+      "input_delta": "Turns the composition-age-strength relation into a discrete threshold-crossing and testing-schedule question."
+    },
+    {
+      "id": "I3",
+      "title": "Composition ambiguity in strength-based curing decisions",
+      "question": "Among mixes with similar strength at one sampled age, does binder composition distinguish subsequent strength gain enough that one reading is insufficient to rank later usability?",
+      "new_claim": "Composition-dependent future gain is a conjecture.",
+      "domain_value": "Could identify when a qualification decision based on one age and strength should require a later test or composition-aware interpretation.",
+      "known_basis_refs": ["UCI165.official_documentation.variables", "UCI165.data_profile.fixed_sample_rows", "UCI165.case.workflow"],
+      "assumptions": ["The same formulation needs measurements at both ages for descriptive gain.", "Similar initial strength does not make formulations exchangeable; composition and water/binder ratio remain relevant.", "Unrecorded batch and curing differences may explain contrasts."],
+      "variables_and_units": {"initial_age": "day", "later_age": "day", "initial_strength": "MPa", "later_strength_gain": "MPa", "SCM_share": "dimensionless mass fraction"},
+      "testable_prediction": "For pairs at days 7 and 28 with similar day-7 strength and overlapping water/binder ratio, SCM share is associated with larger 7-to-28-day MPa gain than cement-only composition.",
+      "alternative": "Composition adds no stable distinction after restrictions, or suitable pairs are absent.",
+      "discriminating_test": "Identify exact formulation pairs, restrict to overlap in initial strength and water/binder ratio, and compare paired MPa gain with formulation as the unit; report sparse support.",
+      "feasible_with_current_data": "Potentially as descriptive formulation-level contrasts; causal interpretation is unavailable without batch and curing metadata.",
+      "required_new_data": "Matched formulations, batch-linked repeated specimens at days 7 and 28, curing histories and sufficient replication.",
+      "failure_condition": "The contrast is absent or reverses in the common-support paired sample, or same-formulation pairs are unavailable.",
+      "nearest_prior_query": "Search whether early strength is sufficient for later strength-gain decisions across cement, slag and fly-ash binders.",
+      "input_delta": "Asks whether a measured strength state is a sufficient decision summary across compositions instead of fitting a global predictor."
+    }
+  ],
+  "selected_id": "I1",
+  "method_ids": ["M02", "M33", "M43"],
+  "task": {
+    "deliverable": "Final assessment of I1 using the returned computation and Crossref records; state the evidence level, update the idea as needed, and define the next falsifiable test.",
+    "acceptance": ["Report actual tool outcomes and limitations without claiming causal or batch-level evidence.", "Keep proposal novelty separate from world-literature novelty.", "Give a concrete independent-batch test with measurement, unit, comparison and decision rule."],
+    "proposed_computation": "Completed by R1; no further computation requested.",
+    "proposed_search": "Completed by R1; Crossref coverage is limited and is not an exhaustive novelty search."
+  },
+  "critique": [
+    "The day-28-strength overlap restriction conditions on the same value used as the early_fraction denominator, creating mathematical coupling and selection. Its contrast is descriptive and does not identify a binder-family effect.",
+    "An exact formulation observed at two ages is not a known same-batch repeated measurement. Nineteen formulation-age cells contained duplicate rows; these were aggregated to cell means for the returned calculation, but no batch or curing identifiers exist.",
+    "The result supports a more informative next experiment: preserve the early-fraction prediction, but test it using independently produced batches and evaluate qualification errors against a fixed 28-day requirement."
+  ],
+  "requests": [],
+  "final": {
+    "status": "revised",
+    "final_idea": {
+      "id": "I1",
+      "title": "Batch-level calibration of 7-day strength for 28-day qualification",
+      "question": "In independently batched mixes designed for comparable 28-day strength and water/binder ratio, does the day-7/day-28 compressive-strength fraction differ between cement-only and SCM-containing binders, and does a pooled day-7 qualification cutoff produce binder-specific decision errors?",
+      "new_claim": "The input contributes a decision-linked, binder-family calibration question beyond single-row strength prediction. The supplied computation supports a lower early fraction for the specified SCM group descriptively; whether it generalizes to independent batches is a new hypothesis.",
+      "domain_value": "Determines whether a 7-day result can support a common early qualification rule or whether binder-specific calibration or later testing is needed.",
+      "known_basis_refs": ["UCI165.official_documentation.variables", "UCI165.data_profile.univariate_stats.Age", "UCI165.case.workflow", "R1_compute"],
+      "assumptions": ["SCM share is (Blast Furnace Slag + Fly Ash)/(Cement + Blast Furnace Slag + Fly Ash).", "Mixes can be designed in advance to comparable target 28-day strength and water/binder ranges; achieved 28-day strength is not used post hoc to define the experimental groups.", "The dataset's exact-formulation records do not establish same-batch repeated specimens or shared curing history."],
+      "variables_and_units": {
+        "experimental_unit": "independent concrete batch, with specimen identifiers nested within batch",
+        "age": "day; primary measurements at 7 and 28 days",
+        "strength": "compressive strength, MPa",
+        "SCM_share": "dimensionless mass fraction of slag plus fly ash in total cementitious binder",
+        "water_binder_ratio": "dimensionless Water / (Cement + Blast Furnace Slag + Fly Ash)",
+        "early_fraction": "dimensionless batch-level day-7 mean strength / day-28 mean strength",
+        "qualification_error": "proportion of batches misclassified by a prespecified day-7 rule against the prespecified day-28 MPa requirement"
+      },
+      "testable_prediction": "In independently batched mixes planned to the same target 28-day strength and comparable water/binder ratio, the median batch-level early_fraction will be lower for the prespecified SCM-containing group (SCM share >0.30) than for cement-only mixes. The current table's overlap-restricted estimate is -0.1131 in median early_fraction (SCM minus cement), with formulation-resampled 95% interval [-0.1589, -0.0582].",
+      "alternative": "The independent-batch contrast is near zero or reverses; alternatively, a difference in early_fraction does not produce a practically important binder-specific qualification error under the agreed 28-day threshold.",
+      "discriminating_test": "Before testing, specify the 28-day qualification requirement in MPa, target-strength and water/binder matching tolerances, SCM definition, minimum practically important early_fraction difference, and acceptable false-pass/false-fail rates. Produce independent batches in both binder groups, randomly allocate replicate specimens from each batch to 7- and 28-day tests under recorded curing conditions, and compare batch-level early_fraction. Evaluate one pooled day-7 cutoff against the 28-day decision separately by binder group; compare it with a prespecified binder-specific rule. Report batch-level uncertainty and all exclusions.",
+      "feasible_with_current_data": "Only as an exploratory exact-formulation contrast. There are 114 exact-formulation pairs at ages 7 and 28; groups before overlap restriction are 45 cement-only and 49 SCM-share >0.30. Rectangular common support on day-28 strength and water/binder ratio retains 40 and 48 formulations. Batch identity, curing history and specimen replication are unavailable, so neither independence nor qualification error rates can be established.",
+      "required_new_data": "Independent batch and specimen identifiers; matched mix designs selected prospectively for comparable target 28-day strength and water/binder ratio; replicate compressive tests at days 7 and 28; curing temperature and moisture history; an application-defined 28-day strength requirement and acceptable classification-error rates.",
+      "failure_condition": "Revise away from a binder-specific early-strength rule if the independent-batch early_fraction contrast is practically negligible or opposite under the prespecified comparison, or if the pooled cutoff meets the agreed decision-error limits in both groups. Treat the current-data pattern as non-generalizing if independent batches do not reproduce it.",
+      "nearest_prior_query": "Compare with work on 7-to-28-day strength development and binder-specific qualification or threshold calibration at matched target strength and water/binder ratio; distinguish those decision tests from age-dependent strength formulas and generic prediction models.",
+      "input_delta": "Adds a falsifiable, operational question about whether early-strength qualification is calibrated across binder families, including a decision-error endpoint; this goes beyond the supplied generic composition-age-strength regression framing."
+    },
+    "evidence_level": "observational_support",
+    "what_changed": "R1's computation found 114 exact-formulation age pairs. Among groups with common support, 40 cement-only and 48 SCM-share >0.30 formulations remained. The median early_fraction was 0.6463 versus 0.5332 (SCM minus cement difference -0.1131; formulation-resampled 95% interval [-0.1589, -0.0582]). Median 28-minus-7 MPa gain was 10.70 versus 14.53 MPa. I retain the predicted direction as a descriptive signal but revise the next test to independent batches and explicit qualification errors. The search returned related work, so no world-novelty claim is made.",
+    "what_is_known": "For the full supplied table and R1's exact-key/group/overlap procedure, 114 formulations had observations at days 7 and 28; the groups had 45 and 49 formulations before overlap restriction. The restricted group summaries and bootstrap interval are as stated above. The computation aggregates duplicate formulation-age rows to cell means. The Crossref response includes an abstract describing an augmented Abrams-law strength relation for fly-ash concrete across replacement ratios and testing ages 14-120 days (R1_search_S2); other returned records address strength development or prediction. The index is relevance-ordered and limited in coverage.",
+    "what_is_new_hypothesis": "Across independently batched mixes prospectively designed for comparable target 28-day strength and water/binder ratio, SCM-containing mixes with SCM share >0.30 have a lower batch-level day-7/day-28 strength fraction than cement-only mixes, making a pooled day-7 qualification cutoff potentially yield binder-specific errors.",
+    "falsifier": "In a prespecified independent-batch study, the early_fraction contrast is within the predefined negligible range or reverses; or a pooled day-7 cutoff meets the agreed false-pass and false-fail limits in both binder groups. Either result would remove the rationale for binder-specific early calibration for that application and tested composition range.",
+    "minimum_next_test": "Set one application-specific 28-day MPa qualification threshold and matching tolerances before outcome collection. Produce independent cement-only and SCM-share >0.30 batches prospectively matched on target 28-day strength and water/binder ratio; record batch/specimen identifiers and curing temperature/moisture; randomly allocate replicate specimens to compression tests at days 7 and 28. Use batch means as the unit. Compare batch-level early_fraction and report its prespecified uncertainty interval; evaluate pooled and binder-specific day-7 rules against the 28-day pass/fail result using prespecified acceptable false-pass and false-fail rates.",
+    "tool_evidence_refs": ["R1_compute", "R1_search_S1", "R1_search_S2", "R1_search_S3", "R1_search_S4", "R1_search_S5", "R1_search_S6", "R1_search_S7", "R1_search_S8"],
+    "nearest_work_comparison": "The returned Crossref set includes a 2026 abstract on an augmented Abrams-law relation for fly-ash replacement ratio, effective water/binder ratio, and strength at 14-120 days (R1_search_S2), and records on strength development/modeling (R1_search_S5) and 28-day prediction (R1_search_S7). These establish topical overlap from returned metadata/abstracts, not whether the specific batch-level 7-day qualification-error comparison has been tested. No full-text review or exhaustive search was performed.",
+    "novelty_status": "The idea adds a specific qualification-calibration and decision-error test to the supplied input. Novelty in world literature is unverified; returned records overlap strength-age-binder modeling, and the limited title/abstract search cannot establish a literature gap.",
+    "limitations": "Rows are formulations, not documented independent batches or specimens. Curing environment is unavailable. Conditioning on observed 28-day strength, which is also the early_fraction denominator, creates selection and mathematical coupling; the restricted contrast is descriptive. The bootstrap resamples formulations and cannot repair missing batch structure. The interval is not a causal or population-level guarantee. Crossref coverage is limited."
+  }
+}

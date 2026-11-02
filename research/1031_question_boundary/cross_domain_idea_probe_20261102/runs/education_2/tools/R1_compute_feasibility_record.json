@@ -1,0 +1,21 @@
+{
+  "id": "R1_compute_feasibility",
+  "type": "compute",
+  "request": {
+    "type": "compute",
+    "id": "R1_compute_feasibility",
+    "idea_id": "I1",
+    "purpose": "Assess whether the supplied sample has enough students in provisional low-G1/high-absence strata to motivate a prospective trial and whether travel-time cross-strata are sparse. This is descriptive recruitment feasibility only; it cannot estimate an intervention effect.",
+    "model_spec": "No fitted model. Provisional screen G1<10; high absence absences>=6 (the supplied profile's 75th percentile); cross-tabulate traveltime categories 1-4. Report n and mean G2-G1 with a 95% t interval where n>=2. Do not select a threshold from outcome comparisons or call the result causal.",
+    "code": "import json\nimport math\nimport pandas as pd\nfrom scipy.stats import t\n\nd = DF.loc[:, ['G1', 'G2', 'absences', 'traveltime']].copy()\nd['eligible'] = d['G1'] < 10\nd['high_absence'] = d['absences'] >= 6\nd['change'] = d['G2'] - d['G1']\nrows = []\nfor high in (False, True):\n    for travel in (1, 2, 3, 4):\n        g = d[(d['eligible']) & (d['high_absence'] == high) & (d['traveltime'] == travel)]\n        n = int(len(g))\n        mean = float(g['change'].mean()) if n else None\n        if n >= 2:\n            se = float(g['change'].std(ddof=1) / math.sqrt(n))\n            half = float(t.ppf(0.975, n - 1) * se)\n            ci = [mean - half, mean + half]\n        else:\n            ci = None\n        rows.append({'high_absence': high, 'traveltime_category': travel, 'n': n, 'mean_G2_minus_G1': mean, 'ci95_t': ci})\nprint(json.dumps({'provisional_rules': {'G1_lt': 10, 'absences_gte': 6}, 'eligible_n': int(d['eligible'].sum()), 'strata': rows}, separators=(',', ':'), allow_nan=False))"
+  },
+  "result": {
+    "status": "executed",
+    "code_sha256": "057d276f4baf60a6afce35ec0dcf304c49fde992cbacfaab80f7e8626ae31289",
+    "data_sha256": "5be7b02f13f5800fddd66e2c8d834cd00ece14c552fb404def2397b31b63236b",
+    "returncode": 0,
+    "stdout": "{\"provisional_rules\":{\"G1_lt\":10,\"absences_gte\":6},\"eligible_n\":157,\"strata\":[{\"high_absence\":false,\"traveltime_category\":1,\"n\":43,\"mean_G2_minus_G1\":0.2558139534883721,\"ci95_t\":[-0.3338470514519827,0.8454749584287269]},{\"high_absence\":false,\"traveltime_category\":2,\"n\":43,\"mean_G2_minus_G1\":0.6046511627906976,\"ci95_t\":[-0.31895331129346216,1.5282556368748574]},{\"high_absence\":false,\"traveltime_category\":3,\"n\":18,\"mean_G2_minus_G1\":0.2222222222222222,\"ci95_t\":[-1.0143175649072762,1.4587620093517208]},{\"high_absence\":false,\"traveltime_category\":4,\"n\":3,\"mean_G2_minus_G1\":0.3333333333333333,\"ci95_t\":[-1.100884243249821,1.7675509099164874]},{\"high_absence\":true,\"traveltime_category\":1,\"n\":28,\"mean_G2_minus_G1\":0.6428571428571429,\"ci95_t\":[-0.0009420510840406626,1.2866563367983264]},{\"high_absence\":true,\"traveltime_category\":2,\"n\":17,\"mean_G2_minus_G1\":0.7647058823529411,\"ci95_t\":[0.17484572668472687,1.3545660380211553]},{\"high_absence\":true,\"traveltime_category\":3,\"n\":3,\"mean_G2_minus_G1\":2.0,\"ci95_t\":[2.0,2.0]},{\"high_absence\":true,\"traveltime_category\":4,\"n\":2,\"mean_G2_minus_G1\":1.0,\"ci95_t\":[-11.706204736174694,13.706204736174694]}]}\n",
+    "stderr": "",
+    "stdout_truncated": false
+  }
+}

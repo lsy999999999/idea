@@ -1,0 +1,162 @@
+{
+  "recognition": "Recognized as UCI Parkinson's Telemonitoring (UCI 189) from the supplied documentation. No remembered prior-study result is claimed or used.",
+  "summary": "Revise and retain I1 as a proposal for a repeatability-aware voice-change alert study. The supplied dataset contains 5,875 recordings from 42 people, but does not identify same-session replicates or provide an independently observed UPDRS score at every recording. The returned pair-gap count describes schedule density only; it cannot validate repeatability or clinical alerts. The limited Crossref results do not establish an exact prior match or world-literature novelty.",
+  "candidates": [
+    {
+      "id": "I1",
+      "title": "Replicate-aware voice change alerts",
+      "question": "For a remote-monitoring session, does averaging three standardized home voice recordings improve detection of clinically anchored within-person motor change compared with the first recording, at the same false-alert rate?",
+      "new_claim": "A replicate-based session estimate may separate short-term recording variability from persistent voice change enough to improve alert reliability. This is a proposal, not a finding in the supplied data.",
+      "input_delta": "Adds same-session repeats, a fixed aggregation rule, and a clinical alert comparison. Supplied rows lack replicate/session identifiers and a controlled repeat protocol.",
+      "domain_value": "Helps decide whether one voice capture is adequate or whether additional captures should be requested before acting on a change alert.",
+      "known_basis_refs": [
+        "materials.case.unit",
+        "materials.official_documentation.additional_info.summary",
+        "materials.official_documentation.variables",
+        "materials.data_profile.column_names",
+        "materials.data_profile.actual_rows"
+      ],
+      "assumptions": [
+        "Motor status is effectively unchanged during a replicate set collected minutes apart.",
+        "Prompt, microphone position, and recording procedure can be maintained at home.",
+        "The clinical comparison uses independently observed motor UPDRS assessments; interpolated labels are not independent clinical observations.",
+        "Clinicians prespecify the clinically meaningful score-change threshold, and alert cutoffs are selected using separate development participants before held-out evaluation."
+      ],
+      "variables_and_units": "Independent unit: participant, with sessions nested within participant. Collect three recordings minutes apart per session using the same task and setup; compare the first recording with the arithmetic mean of all three. Acoustic feature units are unspecified in the supplied documentation. Record follow-up time in days and independently observed clinician motor UPDRS in score points. Outcomes are within-session feature dispersion and held-out sensitivity for a prespecified clinically meaningful score change at a fixed false-alert rate.",
+      "testable_prediction": "In participant-held-out validation, the three-recording mean will have lower within-session acoustic dispersion and higher sensitivity for prespecified independently observed motor-UPDRS change than the first recording, at the same prespecified false-alert rate.",
+      "alternative": "Replicate differences mostly reflect real short-term symptom or medication-state fluctuation; averaging removes useful signal and does not improve or worsens detection of clinical change.",
+      "discriminating_test": "Collect three fixed-task recordings minutes apart at each home session, repeat sessions over follow-up, and obtain independently observed clinician motor-UPDRS assessments at prespecified visits. Prespecify the clinically meaningful score-change threshold with clinicians and fit the alert cutoff using separate development participants. In held-out participants compare the first recording with the three-recording mean at the same false-alert rate, with participant-level uncertainty. Record medication timing/state and setup conditions to assess alternative sources of within-session variation.",
+      "feasible_with_current_data": "Only a recording schedule-density check is feasible using subject# and test_time. No same-session repeatability, source attribution, or clinical alert validation is possible because replicate/session IDs and independent UPDRS labels at each recording are absent.",
+      "required_new_data": "Prospective sessions with three same-task recordings minutes apart, recording/session IDs, setup metadata, medication timing/state, repeated sessions per participant, and time-aligned independently observed clinician motor-UPDRS scores at clinical visits.",
+      "failure_condition": "The proposal is unsupported for this use if the mean fails to reduce within-session dispersion or improve held-out sensitivity at equal false-alert rate, or if any apparent benefit disappears under participant-held-out validation.",
+      "nearest_prior_query": "Crossref query for Parkinson home/remote voice studies directly comparing single recordings with same-session replicate aggregation for test-retest reliability or clinically anchored change alerts."
+    },
+    {
+      "id": "I2",
+      "title": "Separate medication-state response from progression",
+      "question": "Do within-person voice measurements distinguish acute clinician-confirmed medication ON/OFF motor state from slower progression?",
+      "new_claim": "A within-person voice signature might track acute motor-state changes separately from slower baseline trajectory; medication timing and ON/OFF status are absent from supplied variables.",
+      "input_delta": "Adds timed medication-state labels and paired clinical assessments, changing the target from interpolated-score prediction to separation of acute state response from longitudinal change.",
+      "domain_value": "Could prevent an acute medication fluctuation from being interpreted as disease progression and guide dose-aligned voice follow-up.",
+      "known_basis_refs": [
+        "materials.case.workflow",
+        "materials.case.unit",
+        "materials.official_documentation.variables",
+        "materials.data_profile.column_names"
+      ],
+      "assumptions": [
+        "Clinician-confirmed ON/OFF state can be measured alongside voice in the same participant.",
+        "Task, time of day, and setup can be held stable or recorded.",
+        "Any voice composite and its direction are frozen before participant-held-out validation."
+      ],
+      "variables_and_units": "Participant-level paired ON/OFF sessions; categorical clinician-confirmed medication state; elapsed time since dose in hours; acoustic features in documented units (unspecified); observed motor UPDRS in score points; follow-up time in days. Compare within-person ON/OFF voice-feature differences with matched same-state temporal pairs.",
+      "testable_prediction": "A composite defined in discovery participants will show a reproducible within-person association with observed motor-UPDRS difference across ON/OFF pairs in held-out participants, beyond matched same-state pairs and follow-up time.",
+      "alternative": "Voice variation is dominated by recording/task variation or slower disease differences and has no stable acute state signal after within-person pairing.",
+      "discriminating_test": "Collect repeated voice and observed motor-UPDRS assessments in confirmed ON/OFF states with fixed task/setup; match same-state comparisons by time of day and follow-up interval; validate the frozen composite by participant. The supplied dataset has no medication-state field and cannot test medication effects.",
+      "feasible_with_current_data": "No direct medication-state test: dose timing and ON/OFF labels are absent.",
+      "required_new_data": "Repeated voice captures paired with confirmed ON/OFF state, dose and elapsed-time metadata, observed motor scores, and standardized task/setup and time-of-day records.",
+      "failure_condition": "Fails if the frozen composite does not distinguish ON/OFF motor-score changes from matched same-state variation in held-out participants, or if association is accounted for by time or recording conditions.",
+      "nearest_prior_query": "Crossref query for paired Parkinson medication ON/OFF studies using repeated home/remote voice measurements and observed motor scores."
+    },
+    {
+      "id": "I3",
+      "title": "Use voice variability to trigger symptom check-ins",
+      "question": "Does within-day voice variability identify patient-reported motor-fluctuation episodes well enough to trigger an extra check-in more efficiently than fixed-time sampling?",
+      "new_claim": "Within-day acoustic dispersion may signal a fluctuating symptom day rather than only poor recording quality; a burden-matched trigger policy can test whether it helps remote follow-up.",
+      "input_delta": "Adds repeated daily recordings and contemporaneous symptom reports, evaluating a sampling decision rather than UPDRS score prediction.",
+      "domain_value": "Could request extra symptom assessment selectively on likely fluctuation days while preserving event detection at lower monitoring burden.",
+      "known_basis_refs": [
+        "materials.case.workflow",
+        "materials.case.unit",
+        "materials.official_documentation.additional_info.summary",
+        "materials.data_profile.column_names"
+      ],
+      "assumptions": [
+        "Patients can provide time-stamped fluctuation reports with adequate completion.",
+        "Recordings and reports can be scheduled within day; medication timing and setup are recorded.",
+        "Check-in burden can be represented by counts per participant-week."
+      ],
+      "variables_and_units": "Decision unit: participant-day, with recordings nested within participant and day. Collect morning and later-day samples; calculate within-day dispersion of a prespecified voice composite. Record fluctuation event as time-stamped categorical patient report and check-ins as counts. Compare event detection at equal check-in counts per participant-week.",
+      "testable_prediction": "At equal check-in count per participant-week, a frozen high-dispersion trigger will detect more patient-reported fluctuation days than fixed-time sampling in held-out participants.",
+      "alternative": "Dispersion is mostly caused by setup or medication timing and does not track reported fluctuations; fixed-time sampling performs as well or better.",
+      "discriminating_test": "Collect time-stamped repeated home recordings, brief symptom reports, medication timing, and setup metadata. Freeze a dispersion threshold in development data, then compare event sensitivity at matched check-in burden against fixed sampling in held-out participants; account for repeated participant-days.",
+      "feasible_with_current_data": "No direct policy test: the table has no same-day marker, symptom diary, medication timing, or check-in outcomes.",
+      "required_new_data": "Multiple daily recordings, contemporaneous fluctuation reports, medication timing/state, setup metadata, and check-in burden/outcome in a prospective cohort.",
+      "failure_condition": "Unsupported if the trigger does not detect more fluctuation days than fixed sampling at matched burden in participant-held-out evaluation, or if the signal is explained by setup or medication timing.",
+      "nearest_prior_query": "Crossref query for Parkinson home voice monitoring using within-day acoustic variability to trigger symptom assessment or adaptive sampling at matched monitoring burden."
+    }
+  ],
+  "selected_id": "I1",
+  "method_ids": [
+    "M01",
+    "M36",
+    "M33"
+  ],
+  "task": {
+    "deliverable": "Final-stage assessment of I1 using the executor critique and actual broker results; update the protocol if warranted, separate data-supported facts from hypotheses, and state the minimum next falsifiable study.",
+    "acceptance": [
+      "Report the pair-gap results only as schedule density, never as same-session replicate evidence.",
+      "Use independently observed clinical scores, a prespecified clinically meaningful change threshold, a development-set alert cutoff, participant-held-out validation, and an equal false-alert comparison.",
+      "Compare the returned Crossref records with the proposed relation while respecting title-only and limited-coverage evidence.",
+      "Label the idea proposal-only unless a returned result directly tests its core prediction."
+    ],
+    "proposed_computation": "Completed broker request R1_gap_counts: exhaustive within-person distinct-row pair counts at absolute test_time gaps <=1 day and <=7 days. It is descriptive schedule information only.",
+    "proposed_search": "Completed Crossref request R1_crossref_repeatability with query: (Parkinson OR Parkinson's) AND (voice OR speech) AND (home OR remote) AND (repeatability OR test-retest OR replicate) AND (clinical change OR motor score). Returned index coverage is limited; several records are reviews/decision letters, and most results provide titles and dates only."
+  },
+  "critique": [
+    "The clinically meaningful change threshold and alert-cutoff fitting rule were initially underspecified. The final protocol requires clinician prespecification and selection of the alert cutoff in separate development participants.",
+    "A session mean can average away genuine minute-scale symptom or medication variation. Same-session repeats minutes apart, medication timing/state, fixed task/setup, and an independent clinical anchor are needed to distinguish this alternative.",
+    "Nearby rows in the current table need not be same-session recordings. The returned gap counts establish schedule density only and cannot estimate measurement error or validate alert performance."
+  ],
+  "requests": [],
+  "final": {
+    "status": "revised",
+    "final_idea": {
+      "id": "I1",
+      "title": "Replicate-aware voice change alerts",
+      "question": "For a remote-monitoring session, does averaging three standardized home voice recordings improve detection of clinically anchored within-person motor change compared with the first recording, at the same false-alert rate?",
+      "new_claim": "A replicate-based session estimate may separate short-term recording variability from persistent voice change enough to improve alert reliability. This is a proposal, not a finding in the supplied data.",
+      "input_delta": "Adds same-session repeats, a fixed aggregation rule, and a clinical alert comparison. Supplied rows lack replicate/session identifiers and a controlled repeat protocol.",
+      "domain_value": "Helps decide whether one voice capture is adequate or whether additional captures should be requested before acting on a change alert.",
+      "known_basis_refs": [
+        "materials.case.unit",
+        "materials.official_documentation.additional_info.summary",
+        "materials.official_documentation.variables",
+        "materials.data_profile.column_names",
+        "materials.data_profile.actual_rows"
+      ],
+      "assumptions": [
+        "Motor status is effectively unchanged during a replicate set collected minutes apart.",
+        "Prompt, microphone position, and recording procedure can be maintained at home.",
+        "The clinical comparison uses independently observed motor UPDRS assessments; interpolated labels are not independent clinical observations.",
+        "Clinicians prespecify the clinically meaningful score-change threshold, and alert cutoffs are selected using separate development participants before held-out evaluation."
+      ],
+      "variables_and_units": "Independent unit: participant, with sessions nested within participant. Collect three recordings minutes apart per session using the same task and setup; compare the first recording with the arithmetic mean of all three. Acoustic feature units are unspecified in the supplied documentation. Record follow-up time in days and independently observed clinician motor UPDRS in score points. Outcomes are within-session feature dispersion and held-out sensitivity for a prespecified clinically meaningful score change at a fixed false-alert rate.",
+      "testable_prediction": "In participant-held-out validation, the three-recording mean will have lower within-session acoustic dispersion and higher sensitivity for prespecified independently observed motor-UPDRS change than the first recording, at the same prespecified false-alert rate.",
+      "alternative": "Replicate differences mostly reflect real short-term symptom or medication-state fluctuation; averaging removes useful signal and does not improve or worsens detection of clinical change.",
+      "discriminating_test": "Collect three fixed-task recordings minutes apart at each home session, repeat sessions over follow-up, and obtain independently observed clinician motor-UPDRS assessments at prespecified visits. Prespecify the clinically meaningful score-change threshold with clinicians and fit the alert cutoff using separate development participants. In held-out participants compare the first recording with the three-recording mean at the same false-alert rate, with participant-level uncertainty. Record medication timing/state and setup conditions to assess alternative sources of within-session variation.",
+      "feasible_with_current_data": "Only a recording schedule-density check is feasible using subject# and test_time. No same-session repeatability, source attribution, or clinical alert validation is possible because replicate/session IDs and independent UPDRS labels at each recording are absent.",
+      "required_new_data": "Prospective sessions with three same-task recordings minutes apart, recording/session IDs, setup metadata, medication timing/state, repeated sessions per participant, and time-aligned independently observed clinician motor-UPDRS scores at clinical visits.",
+      "failure_condition": "The proposal is unsupported for this use if the mean fails to reduce within-session dispersion or improve held-out sensitivity at equal false-alert rate, or if any apparent benefit disappears under participant-held-out validation.",
+      "nearest_prior_query": "Crossref query for Parkinson home/remote voice studies directly comparing single recordings with same-session replicate aggregation for test-retest reliability or clinically anchored change alerts."
+    },
+    "evidence_level": "proposal_only",
+    "what_changed": "The core candidate is retained but its protocol is revised: clinicians must define the meaningful score-change threshold, a separate participant development set must determine the alert cutoff, and final comparison is participant-held-out at an equal false-alert rate. The compute result changes only the schedule-feasibility description; it does not update the repeatability or clinical-validity prediction. Search results leave literature novelty unresolved.",
+    "what_is_known": "The dataset is UCI Parkinson's Telemonitoring (UCI 189), with 5,875 recordings from 42 participants over approximately six months and linearly interpolated motor_UPDRS and total_UPDRS targets. The broker counted 14,616 within-person distinct-row pairs at gaps <=1 day and 31,582 at gaps <=7 days; these are calendar-gap pairs, not verified same-session replicates. Crossref returned eight records: six review/decision-letter records for a hands-feet wireless-device test-retest paper, one unrelated pupillometry abstract, and one title-only record on self-perceptions of Parkinson speech, voice, and swallowing. No returned result establishes the proposed home voice replicate comparison.",
+    "what_is_new_hypothesis": "Beyond the supplied benchmark framing, the study tests an operational measurement choice: whether averaging three standardized captures minutes apart improves clinically anchored motor-change alert sensitivity over the first capture at the same false-alert rate, and whether any gain coincides with lower within-session acoustic dispersion.",
+    "falsifier": "The proposed use is unsupported if averaging three captures does not lower within-session dispersion or fails to improve held-out sensitivity at the same prespecified false-alert rate, or if the apparent gain disappears with participant-held-out validation.",
+    "minimum_next_test": "Run a prospective pilot with three same-task home voice captures minutes apart per session, repeated sessions per participant, setup and medication timing/state metadata, and time-aligned independently observed clinician motor-UPDRS visits. Prespecify the meaningful score-change threshold, choose alert cutoffs in separate development participants, then compare first-capture and three-capture-mean alerts in held-out participants at equal false-alert rate with participant-level uncertainty. Use pilot repeatability and outcome variability to size a later confirmatory cohort.",
+    "tool_evidence_refs": [
+      "R1_gap_counts",
+      "R1_crossref_repeatability"
+    ],
+    "nearest_work_comparison": "The supplied documentation already identifies regression prediction of interpolated UPDRS from voice measures as the dataset's main aim. The returned Crossref search includes a title concerning test-retest reliability of hands-feet wireless motor measures in Parkinson telemonitoring, but it does not establish a voice-replicate study; the remaining returned Parkinson speech/voice title is about self-perceptions, and the pupillometry result is outside this domain. Search relevance and coverage are limited, with title-only records and no full-text review, so no claim of world-literature novelty is supported.",
+    "novelty_status": "The idea adds a new measurement and decision comparison to the supplied input by testing one capture versus a three-capture mean for clinically anchored alerting. Novelty in published work is unverified; the limited Crossref results neither confirm nor rule out prior direct studies.",
+    "limitations": [
+      "The current dataset cannot test the central hypothesis because it lacks replicate/session identifiers, medication and setup metadata, and independent clinical labels at each recording.",
+      "The pair-gap calculation is a schedule-density check and says nothing about repeatability, biological fluctuation, or clinical performance.",
+      "The Crossref search is limited and several results are title-only or publication-process records; absence of a direct match is not evidence of absence.",
+      "The proposed comparison requires a prospectively collected cohort and does not establish causal benefit from averaging."
+    ]
+  }
+}

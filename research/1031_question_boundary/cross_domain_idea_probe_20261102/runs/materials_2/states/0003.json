@@ -1,0 +1,312 @@
+{
+  "version": 3,
+  "replies": [
+    {
+      "label": "L1",
+      "role": "leader",
+      "reply": {
+        "recognition": "Recognized from the supplied documentation as UCI dataset 165, Concrete Compressive Strength, associated with Yeh (1998). No remembered result is relied on.",
+        "summary": "The decision-relevant question is whether a 7-day strength result supports the same 28-day qualification decision across binder families. The supplied rows measure mix quantities, age, and compressive strength, but do not identify batches or curing environments. Treat any row-based contrast as exploratory observational evidence, not a causal effect or an independent clinical-style measurement.",
+        "candidates": [
+          {
+            "id": "I1",
+            "title": "Binder-family calibration of 7-day strength for 28-day qualification",
+            "question": "Among formulations with both 7-day and 28-day records, does the fraction of 28-day strength already reached at day 7 differ between SCM-containing and cement-only binders when comparing mixes in similar 28-day strength and water-to-binder ranges?",
+            "new_claim": "It proposes that a common 7-day proxy may be miscalibrated across binder families; this is a conjecture, not an established result.",
+            "domain_value": "Could show whether a 7-day test can support early mix qualification or whether the team should use a binder-family-specific threshold or wait for later testing. This affects testing schedule and qualification decisions, not just prediction error.",
+            "known_basis_refs": [
+              "UCI165.official_documentation.variables",
+              "UCI165.data_profile.column_names",
+              "UCI165.data_profile.univariate_stats.Age",
+              "UCI165.case.workflow"
+            ],
+            "assumptions": [
+              "Rows at the same seven ingredient quantities and different ages can be treated as formulation-level age contrasts, while still not being assumed to be the same batch or curing environment.",
+              "A day-7/day-28 strength ratio is interpretable only for positive strengths and is a descriptive proxy, not a causal hydration measure.",
+              "SCM share is defined as (Blast Furnace Slag + Fly Ash)/(Cement + Blast Furnace Slag + Fly Ash); binder mass is positive in the supplied domain."
+            ],
+            "variables_and_units": {
+              "formulation": "Exact vector of Cement, Blast Furnace Slag, Fly Ash, Water, Superplasticizer, Coarse Aggregate, Fine Aggregate (kg/m^3); no batch identifier is documented.",
+              "age": "day",
+              "strength": "Concrete compressive strength, MPa",
+              "SCM_share": "dimensionless mass fraction of slag plus fly ash in total cementitious binder",
+              "water_binder_ratio": "dimensionless Water / (Cement + Blast Furnace Slag + Fly Ash)",
+              "early_fraction": "dimensionless strength at 7 days / strength at 28 days"
+            },
+            "testable_prediction": "For formulations observed at both 7 and 28 days, SCM-containing mixes with SCM share above 0.30 will have a lower median early_fraction than cement-only mixes (SCM share 0), after restricting comparisons to overlapping 28-day strength and water_binder_ratio ranges. Freeze the direction before inspecting the calculation. This is a proposal-only prediction.",
+            "alternative": "The early_fraction distributions overlap without a practically meaningful difference, or any raw difference disappears within the common 28-day-strength and water_binder ranges; the available age rows may also lack enough exact formulation pairs to test it.",
+            "discriminating_test": "First count exact-formulation records at both ages 7 and 28. If support exists in both binder groups and overlapping covariate ranges, compare paired formulation-level early_fraction values across groups, report group counts and uncertainty, and check whether the directional contrast persists in the overlap subset. Do not treat repeated records as independent batches.",
+            "feasible_with_current_data": "Potentially, using the supplied full table if exact formulation repeats at ages 7 and 28 exist in both groups; feasibility is unknown until checked. No batch-level causal inference is feasible from the documented fields.",
+            "required_new_data": "If exact pairs or group overlap are insufficient: independently batched replicate specimens for matched mix formulations; measured curing temperature and moisture history; compressive tests at 7 and 28 days; record batch and specimen identifiers. Compare the early_fraction contrast between cement-only and SCM-containing mixes within matched target 28-day strength and water/binder strata.",
+            "failure_condition": "Withdraw the proposed directional difference if the overlap-restricted estimate is near zero or opposite with uncertainty excluding a meaningful lower SCM early_fraction; also withdraw current-data feasibility if the required paired ages or common support are absent.",
+            "nearest_prior_query": "Search for studies directly comparing early-age (especially 7-day) to 28-day compressive strength development in slag- or fly-ash-containing concrete versus cement-only mixes at comparable later-age strength and water/binder ratio, and whether they calibrate early qualification thresholds.",
+            "input_delta": "adds a testable, decision-linked hypothesis about age-dependent strength development by binder family, beyond predicting strength from a single row."
+          },
+          {
+            "id": "I2",
+            "title": "Age-specific threshold crossing under alternative binder systems",
+            "question": "For a prespecified usable-strength threshold, do the observed age schedules imply different earliest sampled qualification ages for cement-only and SCM-containing formulations with similar target-age strength?",
+            "new_claim": "The difference in crossing age is a conjecture; the dataset samples only 14 ages and lacks curing records.",
+            "domain_value": "Could help prioritize when to test a mix before use, while making clear that sparse sampled ages cannot establish the exact day strength became usable.",
+            "known_basis_refs": [
+              "UCI165.official_documentation.variables",
+              "UCI165.data_profile.univariate_stats.Age",
+              "UCI165.case.workflow"
+            ],
+            "assumptions": [
+              "A project-relevant threshold must be specified before analysis; the supplied data do not define one.",
+              "Observed sampled-age results can describe first sampled threshold attainment but not continuous-time attainment.",
+              "Age rows are not known to be repeated measurements from the same batch."
+            ],
+            "variables_and_units": {
+              "age": "day",
+              "strength": "MPa",
+              "threshold": "prespecified MPa requirement",
+              "binder_family": "SCM share from 0 to 1"
+            },
+            "testable_prediction": "At a threshold fixed before inspection and among mixes with overlapping 28-day strength, SCM-containing mixtures will more often first meet the threshold at a later sampled age than cement-only mixtures.",
+            "alternative": "First sampled threshold age is similar across groups, or the contrast changes across reasonable prespecified thresholds.",
+            "discriminating_test": "For a threshold supplied by the application, tabulate first sampled age meeting it by formulation and binder family among formulations with comparable 28-day strength; report right-censoring when no sampled age meets it and sensitivity across explicitly prespecified thresholds.",
+            "feasible_with_current_data": "Only if a meaningful threshold is provided and repeated formulations across ages support the tabulation; the exact continuous crossing age is not available.",
+            "required_new_data": "Application strength threshold, batch-linked tests at planned ages bracketing threshold attainment, and curing condition measurements.",
+            "failure_condition": "No stable difference across the prespecified threshold range, insufficient longitudinal formulation support, or evidence that age sampling rather than binder family determines the apparent crossing schedule.",
+            "nearest_prior_query": "Search for binder-specific strength development curves used to schedule concrete formwork removal or qualification, including threshold-based decision rules and their validation conditions.",
+            "input_delta": "turns the composition-age-strength relation into a discrete testing-schedule and threshold-crossing question."
+          },
+          {
+            "id": "I3",
+            "title": "Composition ambiguity in strength-based curing decisions",
+            "question": "Among mixes with similar measured strength at one sampled age, does binder composition distinguish subsequent observed strength gain enough that a single strength reading is insufficient to rank later usability?",
+            "new_claim": "Composition-dependent future gain is a conjecture.",
+            "domain_value": "Could reveal when a qualification decision based on one age and strength should request a later test or composition-aware interpretation.",
+            "known_basis_refs": [
+              "UCI165.official_documentation.variables",
+              "UCI165.data_profile.fixed_sample_rows",
+              "UCI165.case.workflow"
+            ],
+            "assumptions": [
+              "The same formulation must have records at an initial and later age for gain to be defined descriptively.",
+              "Similar initial strength does not make formulations exchangeable; water/binder ratio and other ingredient differences require restriction or matching.",
+              "Unrecorded batch and curing differences may explain contrasts."
+            ],
+            "variables_and_units": {
+              "initial_age": "day",
+              "later_age": "day",
+              "initial_strength": "MPa",
+              "later_strength_gain": "MPa difference between later and initial age",
+              "binder_composition": "kg/m^3 ingredient quantities and dimensionless SCM share"
+            },
+            "testable_prediction": "For formulation pairs observed at 7 and 28 days and similar 7-day strength, SCM share predicts a larger 7-to-28-day strength gain than cement-only composition after restricting to overlapping water/binder ratio.",
+            "alternative": "Composition adds no stable distinction in later gain after initial-strength and water/binder restrictions, or no suitable pairs exist.",
+            "discriminating_test": "Identify exact formulation pairs at 7 and 28 days, restrict to overlap in initial strength and water/binder ratio, then assess whether SCM share orders the paired MPa gain in the predicted direction. Preserve formulation as the unit and report sparse support.",
+            "feasible_with_current_data": "Potentially for descriptive formulation-level contrasts if exact age pairs and overlap exist; causal interpretation is not feasible without batch and curing metadata.",
+            "required_new_data": "Matched formulations with batch-linked repeated specimen measurements at 7 and 28 days, curing histories, and enough replicates to separate within-batch measurement variation from formulation differences.",
+            "failure_condition": "The composition contrast is absent or reverses in the common-support paired sample, or the available rows do not provide same-formulation age pairs.",
+            "nearest_prior_query": "Search for evidence on whether early compressive strength is a sufficient statistic for later strength gain across cement, slag, and fly ash binders, and for composition-conditioned gain models.",
+            "input_delta": "asks whether the same observed strength state is a sufficient decision summary across different mix compositions, rather than fitting a global strength predictor."
+          }
+        ],
+        "selected_id": "I1",
+        "method_ids": [
+          "M02",
+          "M33",
+          "M43"
+        ],
+        "task": {
+          "deliverable": "Critique I1, inspect whether the full DF contains exact formulation records at both 7 and 28 days in cement-only and SCM-containing groups, assess common support in 28-day strength and water/binder ratio, and return a compact descriptive comparison of early_fraction if estimable. State clearly if the data cannot support the planned comparison. Do not infer batch identity, curing conditions, or causality.",
+          "acceptance": [
+            "Preserve the frozen directional prediction in I1 before computing.",
+            "Report exact paired formulation counts by group and overlap counts; do not treat rows or ages as independent batches.",
+            "If estimable, report group summaries and uncertainty for the overlap-restricted early_fraction contrast, plus a clear feasibility limitation.",
+            "Identify whether a change to the idea is justified by the result; a null or infeasible result is acceptable."
+          ],
+          "proposed_computation": "Using DF only, derive exact formulation keys from the seven ingredient columns excluding Age and strength; count keys observed at both Age 7 and Age 28. Derive SCM_share and water_binder_ratio, calculate each paired formulation's 7-day/28-day strength ratio, and compare SCM_share=0 with SCM_share>0.30 only within common support of 28-day strength and water_binder_ratio. Return counts, summaries, and uncertainty; if the support is too sparse, report infeasibility without broadening thresholds post hoc.",
+          "proposed_search": "Search Crossref for direct prior work on early-age to 28-day strength ratios or calibration for slag/fly-ash concrete at comparable later-age strength, focusing on qualification thresholds rather than generic strength prediction. Report titles/metadata only as returned and do not infer findings from titles."
+        },
+        "critique": [],
+        "requests": [],
+        "final": null
+      },
+      "input_sha256": "ef154898a5eba4c07a564fb2d979e764b577abe50f4a1b17b5b73d1dd1521efe",
+      "reply_sha256": "e12068494a30e4b2e612e1fef4d053a0a8877bef51fea70b3947b51dce89d401"
+    },
+    {
+      "label": "R1",
+      "role": "executor",
+      "reply": {
+        "recognition": "Recognized from the supplied documentation as UCI dataset 165, Concrete Compressive Strength, associated with Yeh (1998). No remembered result is relied on.",
+        "summary": "I1 is a testable, decision-linked hypothesis about whether a day-7 result is comparably informative across binder families for 28-day qualification. The prediction remains frozen. The available table may support only exact-formulation descriptive contrasts, because batch identity and curing conditions are absent.",
+        "candidates": [
+          {
+            "id": "I1",
+            "title": "Binder-family calibration of 7-day strength for 28-day qualification",
+            "question": "Among formulations with both 7-day and 28-day records, does the fraction of 28-day strength already reached at day 7 differ between SCM-containing and cement-only binders when comparing mixes in similar 28-day strength and water-to-binder ranges?",
+            "new_claim": "It proposes that a common 7-day proxy may be miscalibrated across binder families; this is a conjecture, not an established result.",
+            "domain_value": "Could show whether a 7-day test can support early mix qualification or whether the team should use a binder-family-specific threshold or wait for later testing. This affects testing schedule and qualification decisions, not just prediction error.",
+            "known_basis_refs": [
+              "UCI165.official_documentation.variables",
+              "UCI165.data_profile.column_names",
+              "UCI165.data_profile.univariate_stats.Age",
+              "UCI165.case.workflow"
+            ],
+            "assumptions": [
+              "Rows at the same seven ingredient quantities and different ages can be treated as formulation-level age contrasts, while still not being assumed to be the same batch or curing environment.",
+              "A day-7/day-28 strength ratio is interpretable only for positive strengths and is a descriptive proxy, not a causal hydration measure.",
+              "SCM share is defined as (Blast Furnace Slag + Fly Ash)/(Cement + Blast Furnace Slag + Fly Ash); binder mass is positive in the supplied domain."
+            ],
+            "variables_and_units": {
+              "formulation": "Exact vector of Cement, Blast Furnace Slag, Fly Ash, Water, Superplasticizer, Coarse Aggregate, Fine Aggregate (kg/m^3); no batch identifier is documented.",
+              "age": "day",
+              "strength": "Concrete compressive strength, MPa",
+              "SCM_share": "dimensionless mass fraction of slag plus fly ash in total cementitious binder",
+              "water_binder_ratio": "dimensionless Water / (Cement + Blast Furnace Slag + Fly Ash)",
+              "early_fraction": "dimensionless strength at 7 days / strength at 28 days"
+            },
+            "testable_prediction": "For formulations observed at both 7 and 28 days, SCM-containing mixes with SCM share above 0.30 will have a lower median early_fraction than cement-only mixes (SCM share 0), after restricting comparisons to overlapping 28-day strength and water_binder_ratio ranges. Freeze the direction before inspecting the calculation. This is a proposal-only prediction.",
+            "alternative": "The early_fraction distributions overlap without a practically meaningful difference, or any raw difference disappears within the common 28-day-strength and water_binder ranges; the available age rows may also lack enough exact formulation pairs to test it.",
+            "discriminating_test": "First count exact-formulation records at both ages 7 and 28. If support exists in both binder groups and overlapping covariate ranges, compare paired formulation-level early_fraction values across groups, report group counts and uncertainty, and check whether the directional contrast persists in the overlap subset. Do not treat repeated records as independent batches.",
+            "feasible_with_current_data": "Potentially, using the supplied full table if exact formulation repeats at ages 7 and 28 exist in both groups; feasibility is unknown until checked. No batch-level causal inference is feasible from the documented fields.",
+            "required_new_data": "If exact pairs or group overlap are insufficient: independently batched replicate specimens for matched mix formulations; measured curing temperature and moisture history; compressive tests at 7 and 28 days; record batch and specimen identifiers. Compare the early_fraction contrast between cement-only and SCM-containing mixes within matched target 28-day strength and water/binder strata.",
+            "failure_condition": "Withdraw the proposed directional difference if the overlap-restricted estimate is near zero or opposite with uncertainty excluding a meaningful lower SCM early_fraction; also withdraw current-data feasibility if the required paired ages or common support are absent.",
+            "nearest_prior_query": "Search for studies directly comparing early-age (especially 7-day) to 28-day compressive strength development in slag- or fly-ash-containing concrete versus cement-only mixes at comparable later-age strength and water/binder ratio, and whether they calibrate early qualification thresholds.",
+            "input_delta": "adds a testable, decision-linked hypothesis about age-dependent strength development by binder family, beyond predicting strength from a single row."
+          },
+          {
+            "id": "I2",
+            "title": "Age-specific threshold crossing under alternative binder systems",
+            "question": "For a prespecified usable-strength threshold, do the observed age schedules imply different earliest sampled qualification ages for cement-only and SCM-containing formulations with similar target-age strength?",
+            "new_claim": "The difference in crossing age is a conjecture; the dataset samples only 14 ages and lacks curing records.",
+            "domain_value": "Could help prioritize when to test a mix before use, while making clear that sparse sampled ages cannot establish the exact day strength became usable.",
+            "known_basis_refs": [
+              "UCI165.official_documentation.variables",
+              "UCI165.data_profile.univariate_stats.Age",
+              "UCI165.case.workflow"
+            ],
+            "assumptions": [
+              "A project-relevant threshold must be specified before analysis; the supplied data do not define one.",
+              "Observed sampled-age results can describe first sampled threshold attainment but not continuous-time attainment.",
+              "Age rows are not known to be repeated measurements from the same batch."
+            ],
+            "variables_and_units": {
+              "age": "day",
+              "strength": "MPa",
+              "threshold": "prespecified MPa requirement",
+              "binder_family": "SCM share from 0 to 1"
+            },
+            "testable_prediction": "At a threshold fixed before inspection and among mixes with overlapping 28-day strength, SCM-containing mixtures will more often first meet the threshold at a later sampled age than cement-only mixtures.",
+            "alternative": "First sampled threshold age is similar across groups, or the contrast changes across reasonable prespecified thresholds.",
+            "discriminating_test": "For a threshold supplied by the application, tabulate first sampled age meeting it by formulation and binder family among formulations with comparable 28-day strength; report right-censoring when no sampled age meets it and sensitivity across explicitly prespecified thresholds.",
+            "feasible_with_current_data": "Only if a meaningful threshold is provided and repeated formulations across ages support the tabulation; the exact continuous crossing age is not available.",
+            "required_new_data": "Application strength threshold, batch-linked tests at planned ages bracketing threshold attainment, and curing condition measurements.",
+            "failure_condition": "No stable difference across the prespecified threshold range, insufficient longitudinal formulation support, or evidence that age sampling rather than binder family determines the apparent crossing schedule.",
+            "nearest_prior_query": "Search for binder-specific strength development curves used to schedule concrete formwork removal or qualification, including threshold-based decision rules and their validation conditions.",
+            "input_delta": "turns the composition-age-strength relation into a discrete testing-schedule and threshold-crossing question."
+          },
+          {
+            "id": "I3",
+            "title": "Composition ambiguity in strength-based curing decisions",
+            "question": "Among mixes with similar measured strength at one sampled age, does binder composition distinguish subsequent observed strength gain enough that a single strength reading is insufficient to rank later usability?",
+            "new_claim": "Composition-dependent future gain is a conjecture.",
+            "domain_value": "Could reveal when a qualification decision based on one age and strength should request a later test or composition-aware interpretation.",
+            "known_basis_refs": [
+              "UCI165.official_documentation.variables",
+              "UCI165.data_profile.fixed_sample_rows",
+              "UCI165.case.workflow"
+            ],
+            "assumptions": [
+              "The same formulation must have records at an initial and later age for gain to be defined descriptively.",
+              "Similar initial strength does not make formulations exchangeable; water/binder ratio and other ingredient differences require restriction or matching.",
+              "Unrecorded batch and curing differences may explain contrasts."
+            ],
+            "variables_and_units": {
+              "initial_age": "day",
+              "later_age": "day",
+              "initial_strength": "MPa",
+              "later_strength_gain": "MPa difference between later and initial age",
+              "binder_composition": "kg/m^3 ingredient quantities and dimensionless SCM share"
+            },
+            "testable_prediction": "For formulation pairs observed at 7 and 28 days and similar 7-day strength, SCM share predicts a larger 7-to-28-day strength gain than cement-only composition after restricting to overlapping water/binder ratio.",
+            "alternative": "Composition adds no stable distinction in later gain after initial-strength and water/binder restrictions, or no suitable pairs exist.",
+            "discriminating_test": "Identify exact formulation pairs at 7 and 28 days, restrict to overlap in initial strength and water/binder ratio, then assess whether SCM share orders the paired MPa gain in the predicted direction. Preserve formulation as the unit and report sparse support.",
+            "feasible_with_current_data": "Potentially for descriptive formulation-level contrasts if exact age pairs and overlap exist; causal interpretation is not feasible without batch and curing metadata.",
+            "required_new_data": "Matched formulations with batch-linked repeated specimen measurements at 7 and 28 days, curing histories, and enough replicates to separate within-batch measurement variation from formulation differences.",
+            "failure_condition": "The composition contrast is absent or reverses in the common-support paired sample, or the available rows do not provide same-formulation age pairs.",
+            "nearest_prior_query": "Search for evidence on whether early compressive strength is a sufficient statistic for later strength gain across cement, slag, and fly ash binders, and for composition-conditioned gain models.",
+            "input_delta": "asks whether the same observed strength state is a sufficient decision summary across different mix compositions, rather than fitting a global strength predictor."
+          }
+        ],
+        "selected_id": "I1",
+        "method_ids": [
+          "M02",
+          "M33",
+          "M43"
+        ],
+        "task": {
+          "deliverable": "Critique I1, inspect whether the full DF contains exact formulation records at both 7 and 28 days in cement-only and SCM-containing groups, assess common support in 28-day strength and water/binder ratio, and return a compact descriptive comparison of early_fraction if estimable. State clearly if the data cannot support the planned comparison. Do not infer batch identity, curing conditions, or causality.",
+          "acceptance": [
+            "Preserve the frozen directional prediction in I1 before computing.",
+            "Report exact paired formulation counts by group and overlap counts; do not treat rows or ages as independent batches.",
+            "If estimable, report group summaries and uncertainty for the overlap-restricted early_fraction contrast, plus a clear feasibility limitation.",
+            "Identify whether a change to the idea is justified by the result; a null or infeasible result is acceptable."
+          ],
+          "proposed_computation": "Using DF only, derive exact formulation keys from the seven ingredient columns excluding Age and strength; count keys observed at both Age 7 and Age 28. Derive SCM_share and water_binder_ratio, calculate each paired formulation's 7-day/28-day strength ratio, and compare SCM_share=0 with SCM_share>0.30 only within common support of 28-day strength and water_binder_ratio. Return counts, summaries, and uncertainty; if the support is too sparse, report infeasibility without broadening thresholds post hoc.",
+          "proposed_search": "Search Crossref for direct prior work on early-age to 28-day strength ratios or calibration for slag/fly-ash concrete at comparable later-age strength, focusing on qualification thresholds rather than generic strength prediction. Report titles/metadata only as returned and do not infer findings from titles."
+        },
+        "critique": [
+          "The selected endpoint conditions on observed day-28 strength while the early_fraction denominator is that same measurement. The resulting overlap-restricted contrast is descriptive and may be affected by mathematical coupling and selection; it does not identify a binder-family effect. Preserve the frozen direction but report formulation counts, the ratio contrast, and the paired 28-minus-7 MPa gain as a sensitivity diagnostic.",
+          "An exact ingredient vector repeated at days 7 and 28 establishes a formulation-level pair only; it does not establish that specimens came from the same batch or shared curing history. Aggregate duplicate formulation-age rows to one formulation-age mean and report their count rather than treating them as independent replicates."
+        ],
+        "requests": [
+          {
+            "type": "compute",
+            "id": "R1_compute",
+            "idea_id": "I1",
+            "purpose": "Check whether the proposed exact-formulation 7/28-day contrast is estimable in the full table, quantify the prespecified binder-group and common-support counts, and return formulation-level summaries with bootstrap uncertainty. Also report paired absolute strength gain as a descriptive sensitivity diagnostic; no batch-level or causal claim.",
+            "model_spec": "Exact key is the seven supplied ingredient quantities excluding Age and strength. If multiple rows share a formulation-age cell, aggregate strength to its mean and count such cells. Pair only formulations with observed ages 7 and 28. Compare SCM_share=0 with SCM_share>0.30; exclude intermediate shares. Common support is the intersection of the two groups ranges on day-28 MPa and Water/binder ratio, applied as a rectangular range restriction. Report medians of day-7/day-28 strength fraction and 28-minus-7 MPa gain, group counts, and a formulation-resampled percentile interval for the median-ratio difference when both groups have at least two formulations. Do not widen thresholds if support is absent.",
+            "code": "import json\nimport numpy as np\n\nkeys = [\"Cement\", \"Blast Furnace Slag\", \"Fly Ash\", \"Water\", \"Superplasticizer\", \"Coarse Aggregate\", \"Fine Aggregate\"]\nage = \"Age\"\ny = \"Concrete compressive strength\"\nd = DF[keys + [age, y]].copy()\ng = d.groupby(keys + [age], as_index=False, dropna=False).agg(strength=(y, \"mean\"), rows=(y, \"size\"))\np = g.pivot(index=keys, columns=age, values=\"strength\")\ncounts = g.pivot(index=keys, columns=age, values=\"rows\")\nout = {\"unit\": \"exact ingredient formulation; not batch\", \"duplicate_formulation_age_cells\": int((g[\"rows\"] > 1).sum()), \"paired_formulations\": 0, \"paired_by_group\": {\"cement_only\": 0, \"scm_share_gt_0_30\": 0}, \"overlap\": False, \"overlap_bounds\": {}, \"overlap_counts\": {\"cement_only\": 0, \"scm_share_gt_0_30\": 0}, \"summaries\": {}, \"median_ratio_difference_scm_minus_cement\": None, \"bootstrap_95pct_interval\": None, \"note\": \"No batch or curing identifiers are available; this is a formulation-level descriptive contrast.\"}\nif 7 in p.columns and 28 in p.columns:\n    z = p.dropna(subset=[7, 28]).reset_index()\n    out[\"paired_formulations\"] = int(len(z))\n    binder = z[\"Cement\"] + z[\"Blast Furnace Slag\"] + z[\"Fly Ash\"]\n    z[\"scm_share\"] = (z[\"Blast Furnace Slag\"] + z[\"Fly Ash\"]) / binder\n    z[\"water_binder_ratio\"] = z[\"Water\"] / binder\n    z[\"early_fraction\"] = z[7] / z[28]\n    z[\"strength_gain_mpa\"] = z[28] - z[7]\n    z[\"group\"] = np.where(z[\"scm_share\"] == 0, \"cement_only\", np.where(z[\"scm_share\"] > 0.30, \"scm_share_gt_0_30\", \"exclude\"))\n    a = z[z[\"group\"] == \"cement_only\"].copy()\n    b = z[z[\"group\"] == \"scm_share_gt_0_30\"].copy()\n    out[\"paired_by_group\"] = {\"cement_only\": int(len(a)), \"scm_share_gt_0_30\": int(len(b))}\n    if len(a) and len(b):\n        bounds = {}\n        for col in [28, \"water_binder_ratio\"]:\n            lo = max(float(a[col].min()), float(b[col].min()))\n            hi = min(float(a[col].max()), float(b[col].max()))\n            bounds[str(col)] = [lo, hi]\n        out[\"overlap_bounds\"] = bounds\n        out[\"overlap\"] = all(v[0] <= v[1] for v in bounds.values())\n        if out[\"overlap\"]:\n            def in_bounds(frame):\n                return frame[28].between(*bounds[\"28\"]) & frame[\"water_binder_ratio\"].between(*bounds[\"water_binder_ratio\"])\n            a = a[in_bounds(a)]\n            b = b[in_bounds(b)]\n            out[\"overlap_counts\"] = {\"cement_only\": int(len(a)), \"scm_share_gt_0_30\": int(len(b))}\n            if len(a) and len(b):\n                def stats(frame):\n                    return {\"n_formulations\": int(len(frame)), \"median_early_fraction\": float(frame[\"early_fraction\"].median()), \"median_strength_gain_mpa\": float(frame[\"strength_gain_mpa\"].median())}\n                out[\"summaries\"] = {\"cement_only\": stats(a), \"scm_share_gt_0_30\": stats(b)}\n                delta = float(b[\"early_fraction\"].median() - a[\"early_fraction\"].median())\n                out[\"median_ratio_difference_scm_minus_cement\"] = delta\n                if len(a) >= 2 and len(b) >= 2:\n                    rng = np.random.default_rng(20261102)\n                    av = a[\"early_fraction\"].to_numpy()\n                    bv = b[\"early_fraction\"].to_numpy()\n                    boot = np.empty(5000)\n                    for i in range(len(boot)):\n                        boot[i] = np.median(rng.choice(bv, len(bv), replace=True)) - np.median(rng.choice(av, len(av), replace=True))\n                    q = np.quantile(boot, [0.025, 0.975])\n                    out[\"bootstrap_95pct_interval\"] = [float(q[0]), float(q[1])]\nprint(json.dumps(out, allow_nan=False, separators=(\",\", \":\")))"
+          },
+          {
+            "type": "search",
+            "id": "R1_search",
+            "idea_id": "I1",
+            "missing_relation": "Whether early-age, especially 7-day, strength calibration or 7-to-28-day strength development has been compared across slag/fly-ash and cement-only binders at comparable later-age strength and water/binder ratio for qualification decisions.",
+            "query": "Crossref search for concrete compressive strength 7-day 28-day slag fly ash cement-only binder early strength ratio qualification threshold comparable 28-day strength water binder ratio",
+            "change_if_found": "If retrieved records directly study this same comparison and qualification use, narrow I1 to a clearly distinct population, measurement, or decision rule and withdraw any world-novelty implication. Titles or metadata alone will establish overlap of topic only, not study findings. If no direct record is returned, retain novelty as unverified rather than treating search absence as proof."
+          }
+        ],
+        "final": null
+      },
+      "input_sha256": "52088bbc97d3b4acbe9f5c76be492b743865b63ac4a806265e6d597808afc8f8",
+      "reply_sha256": "0427baac68adba8ca174675d4549d1617fa744d844ce2f607a3bd62c1ad646a4"
+    }
+  ],
+  "tools": [
+    {
+      "id": "R1_compute",
+      "type": "compute",
+      "request": {
+        "type": "compute",
+        "id": "R1_compute",
+        "idea_id": "I1",
+        "purpose": "Check whether the proposed exact-formulation 7/28-day contrast is estimable in the full table, quantify the prespecified binder-group and common-support counts, and return formulation-level summaries with bootstrap uncertainty. Also report paired absolute strength gain as a descriptive sensitivity diagnostic; no batch-level or causal claim.",
+        "model_spec": "Exact key is the seven supplied ingredient quantities excluding Age and strength. If multiple rows share a formulation-age cell, aggregate strength to its mean and count such cells. Pair only formulations with observed ages 7 and 28. Compare SCM_share=0 with SCM_share>0.30; exclude intermediate shares. Common support is the intersection of the two groups ranges on day-28 MPa and Water/binder ratio, applied as a rectangular range restriction. Report medians of day-7/day-28 strength fraction and 28-minus-7 MPa gain, group counts, and a formulation-resampled percentile interval for the median-ratio difference when both groups have at least two formulations. Do not widen thresholds if support is absent.",
+        "code": "import json\nimport numpy as np\n\nkeys = [\"Cement\", \"Blast Furnace Slag\", \"Fly Ash\", \"Water\", \"Superplasticizer\", \"Coarse Aggregate\", \"Fine Aggregate\"]\nage = \"Age\"\ny = \"Concrete compressive strength\"\nd = DF[keys + [age, y]].copy()\ng = d.groupby(keys + [age], as_index=False, dropna=False).agg(strength=(y, \"mean\"), rows=(y, \"size\"))\np = g.pivot(index=keys, columns=age, values=\"strength\")\ncounts = g.pivot(index=keys, columns=age, values=\"rows\")\nout = {\"unit\": \"exact ingredient formulation; not batch\", \"duplicate_formulation_age_cells\": int((g[\"rows\"] > 1).sum()), \"paired_formulations\": 0, \"paired_by_group\": {\"cement_only\": 0, \"scm_share_gt_0_30\": 0}, \"overlap\": False, \"overlap_bounds\": {}, \"overlap_counts\": {\"cement_only\": 0, \"scm_share_gt_0_30\": 0}, \"summaries\": {}, \"median_ratio_difference_scm_minus_cement\": None, \"bootstrap_95pct_interval\": None, \"note\": \"No batch or curing identifiers are available; this is a formulation-level descriptive contrast.\"}\nif 7 in p.columns and 28 in p.columns:\n    z = p.dropna(subset=[7, 28]).reset_index()\n    out[\"paired_formulations\"] = int(len(z))\n    binder = z[\"Cement\"] + z[\"Blast Furnace Slag\"] + z[\"Fly Ash\"]\n    z[\"scm_share\"] = (z[\"Blast Furnace Slag\"] + z[\"Fly Ash\"]) / binder\n    z[\"water_binder_ratio\"] = z[\"Water\"] / binder\n    z[\"early_fraction\"] = z[7] / z[28]\n    z[\"strength_gain_mpa\"] = z[28] - z[7]\n    z[\"group\"] = np.where(z[\"scm_share\"] == 0, \"cement_only\", np.where(z[\"scm_share\"] > 0.30, \"scm_share_gt_0_30\", \"exclude\"))\n    a = z[z[\"group\"] == \"cement_only\"].copy()\n    b = z[z[\"group\"] == \"scm_share_gt_0_30\"].copy()\n    out[\"paired_by_group\"] = {\"cement_only\": int(len(a)), \"scm_share_gt_0_30\": int(len(b))}\n    if len(a) and len(b):\n        bounds = {}\n        for col in [28, \"water_binder_ratio\"]:\n            lo = max(float(a[col].min()), float(b[col].min()))\n            hi = min(float(a[col].max()), float(b[col].max()))\n            bounds[str(col)] = [lo, hi]\n        out[\"overlap_bounds\"] = bounds\n        out[\"overlap\"] = all(v[0] <= v[1] for v in bounds.values())\n        if out[\"overlap\"]:\n            def in_bounds(frame):\n                return frame[28].between(*bounds[\"28\"]) & frame[\"water_binder_ratio\"].between(*bounds[\"water_binder_ratio\"])\n            a = a[in_bounds(a)]\n            b = b[in_bounds(b)]\n            out[\"overlap_counts\"] = {\"cement_only\": int(len(a)), \"scm_share_gt_0_30\": int(len(b))}\n            if len(a) and len(b):\n                def stats(frame):\n                    return {\"n_formulations\": int(len(frame)), \"median_early_fraction\": float(frame[\"early_fraction\"].median()), \"median_strength_gain_mpa\": float(frame[\"strength_gain_mpa\"].median())}\n                out[\"summaries\"] = {\"cement_only\": stats(a), \"scm_share_gt_0_30\": stats(b)}\n                delta = float(b[\"early_fraction\"].median() - a[\"early_fraction\"].median())\n                out[\"median_ratio_difference_scm_minus_cement\"] = delta\n                if len(a) >= 2 and len(b) >= 2:\n                    rng = np.random.default_rng(20261102)\n                    av = a[\"early_fraction\"].to_numpy()\n                    bv = b[\"early_fraction\"].to_numpy()\n                    boot = np.empty(5000)\n                    for i in range(len(boot)):\n                        boot[i] = np.median(rng.choice(bv, len(bv), replace=True)) - np.median(rng.choice(av, len(av), replace=True))\n                    q = np.quantile(boot, [0.025, 0.975])\n                    out[\"bootstrap_95pct_interval\"] = [float(q[0]), float(q[1])]\nprint(json.dumps(out, allow_nan=False, separators=(\",\", \":\")))"
+      },
+      "result": {
+        "status": "executed",
+        "code_sha256": "032e09e7577086801d9d4aa0f6cdd353864cd2b1047967c7faeba602eaaa0530",
+        "data_sha256": "8d4b15b6fc68cd932d745cbd663d5ceae66dd54422e99c1e4865f2936ab7e2af",
+        "returncode": 0,
+        "stdout": "{\"unit\":\"exact ingredient formulation; not batch\",\"duplicate_formulation_age_cells\":19,\"paired_formulations\":114,\"paired_by_group\":{\"cement_only\":45,\"scm_share_gt_0_30\":49},\"overlap\":true,\"overlap_bounds\":{\"28\":[17.28,74.7],\"water_binder_ratio\":[0.26689252776209305,0.7529411764705882]},\"overlap_counts\":{\"cement_only\":40,\"scm_share_gt_0_30\":48},\"summaries\":{\"cement_only\":{\"n_formulations\":40,\"median_early_fraction\":0.6463385588683106,\"median_strength_gain_mpa\":10.7},\"scm_share_gt_0_30\":{\"n_formulations\":48,\"median_early_fraction\":0.5332057524457408,\"median_strength_gain_mpa\":14.53}},\"median_ratio_difference_scm_minus_cement\":-0.11313280642256984,\"bootstrap_95pct_interval\":[-0.15888694894603517,-0.05817553398429276],\"note\":\"No batch or curing identifiers are available; this is a formulation-level descriptive contrast.\"}\n",
+        "stderr": "",
+        "stdout_truncated": false
+      }
+    }
+  ],
+  "counters": {
+    "replies": 2,
+    "compute": 1,
+    "search": 0
+  },
+  "final": null
+}

@@ -1,0 +1,21 @@
+{
+  "id": "R1_I1_schedule_audit",
+  "type": "compute",
+  "request": {
+    "type": "compute",
+    "id": "R1_I1_schedule_audit",
+    "idea_id": "I1",
+    "purpose": "Audit the aggregate-only premise that a frozen calibration threshold can produce next-interval trigger slots enriched for held-out above-threshold Appliances intervals, and check whether week/hour strata support an equal-count random comparison. This is descriptive feasibility only, not circuit attribution or causal evidence.",
+    "model_spec": "Chronologically sort supplied DF by parsed date. Use the first floor(0.60*n) rows as calibration and the remainder as held-out evaluation. Freeze threshold q90 of calibration Appliances. Define a held-out logging slot at t+1 when Appliances at t is at least that threshold. Compare trigger slots with repeated week/hour-matched random slots of equal count, and report compact JSON aggregate metrics. Do not infer independent household replication.",
+    "code": "import json\nimport numpy as np\nimport pandas as pd\n\nd = DF[['date', 'Appliances']].copy()\nd['ts'] = pd.to_datetime(d['date'], format='%Y-%m-%d%H:%M:%S')\nd = d.sort_values('ts').reset_index(drop=True)\ncut = int(len(d) * 0.60)\ncal = d.iloc[:cut].copy()\ntest = d.iloc[cut:].copy()\nthreshold = float(cal['Appliances'].quantile(0.90))\nd['trigger_next'] = d['Appliances'].shift(1).ge(threshold).fillna(False)\ntest['trigger'] = d.loc[test.index, 'trigger_next'].to_numpy()\ntest['high'] = test['Appliances'].ge(threshold)\ntest['week'] = test['ts'].dt.strftime('%G-%V')\ntest['hour'] = test['ts'].dt.hour\ntrigger = test[test['trigger']]\nstrata = [(key, len(g)) for key, g in trigger.groupby(['week', 'hour'], sort=True)]\nrng = np.random.default_rng(20261102)\ndraw_means = []\nmatched_slots = 0\nfor key, n_slots in strata:\n    pool_mask = (test['week'].eq(key[0]) & test['hour'].eq(key[1]))\n    pool = test.loc[pool_mask]\n    matched_slots += min(n_slots, len(pool))\nfor _ in range(200):\n    chosen = []\n    for key, n_slots in strata:\n        pool_mask = (test['week'].eq(key[0]) & test['hour'].eq(key[1]))\n        pool = test.loc[pool_mask]\n        n = min(n_slots, len(pool))\n        if n:\n            chosen.extend(rng.choice(pool.index.to_numpy(), size=n, replace=False).tolist())\n    sample = test.loc[chosen]\n    draw_means.append(float(sample['high'].mean()) if len(sample) else None)\nout = {\n    'calibration_rows': int(len(cal)),\n    'heldout_rows': int(len(test)),\n    'threshold_wh_per_10min': threshold,\n    'trigger_slots': int(len(trigger)),\n    'trigger_high_share': float(trigger['high'].mean()) if len(trigger) else None,\n    'matched_random_slots_per_draw': int(matched_slots),\n    'matched_random_high_share_mean_200_draws': float(np.mean([x for x in draw_means if x is not None])) if any(x is not None for x in draw_means) else None,\n    'random_draws': 200,\n    'interpretation': 'Aggregate schedule feasibility only; no circuit labels or causal savings.'\n}\nprint(json.dumps(out, separators=(',', ':')))"
+  },
+  "result": {
+    "status": "executed",
+    "code_sha256": "53e12c79d0c3eeb677041a675784053727769373d59f103ad2d5c6f76845ad4a",
+    "data_sha256": "df49e914acd72504f1109bd9fdb4a6970cb0effc8c7e977c92f95295af350e24",
+    "returncode": 0,
+    "stdout": "{\"calibration_rows\":11841,\"heldout_rows\":7894,\"threshold_wh_per_10min\":210.0,\"trigger_slots\":697,\"trigger_high_share\":0.7288378766140603,\"matched_random_slots_per_draw\":697,\"matched_random_high_share_mean_200_draws\":0.22907460545193686,\"random_draws\":200,\"interpretation\":\"Aggregate schedule feasibility only; no circuit labels or causal savings.\"}\n",
+    "stderr": "",
+    "stdout_truncated": false
+  }
+}

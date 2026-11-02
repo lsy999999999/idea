@@ -1,0 +1,138 @@
+{
+  "version": 1,
+  "replies": [
+    {
+      "label": "L1",
+      "role": "leader",
+      "reply": {
+        "recognition": "Recognize the supplied source as the public UCI Appliances Energy Prediction dataset (UCI 374), with the listed 2017 Candanedo et al. paper. I recognize the dataset and its stated prediction purpose; I do not rely on a remembered result beyond the supplied documentation.",
+        "summary": "Three candidate additions address operational measurement or intervention rather than another aggregate load predictor. Select I1: test whether aggregate-load-triggered temporary submetering identifies the contributors to high-use intervals more efficiently than equal-budget random submetering. The file supports defining aggregate event windows and time strata, but it contains no appliance-circuit labels, occupancy, or interventions, so it cannot establish attribution or savings.",
+        "candidates": [
+          {
+            "id": "I1",
+            "title": "Trigger temporary submetering on household load events",
+            "question": "At equal metering time, does activating synchronized circuit submeters during aggregate appliance-load events reveal the circuits responsible for more high-use energy than activating them in randomly selected intervals?",
+            "new_claim": "A two-stage monitoring policy may improve the yield of scarce circuit-level metering for identifying contributors to high-use intervals; this is a measurement-efficiency hypothesis, not an energy-saving mechanism.",
+            "input_delta": "The supplied data contains aggregate Appliances Wh every 10 minutes but no appliance-level readings. Add a prospective comparison of event-triggered and equal-budget random windows with synchronized circuit-level Wh labels.",
+            "domain_value": "A building-energy team could use limited portable or temporary submeters to find which circuits merit follow-up control or maintenance, instead of collecting circuit data continuously.",
+            "known_basis_refs": [
+              "UCI374_doc",
+              "energy_case_unit",
+              "energy_profile_Appliances"
+            ],
+            "assumptions": [
+              "Aggregate Appliance Wh is available promptly enough to trigger the next measurement window.",
+              "Circuit submeters can be synchronized to the 10-minute whole-home meter.",
+              "A high-use interval may have a more concentrated or otherwise more actionable circuit contribution than a typical interval; this is unverified."
+            ],
+            "variables_and_units": [
+              "Aggregate Appliances energy, Wh per 10-minute interval",
+              "Circuit-level energy, Wh per synchronized 10-minute interval",
+              "Metering effort, number of monitored intervals",
+              "Peak-contributor yield, share of metered high-use intervals where the leading circuit and its Wh are recovered"
+            ],
+            "testable_prediction": "Using a trigger threshold fixed from an initial calibration period and the same number of monitored intervals, event-triggered sampling will identify a leading circuit accounting for at least half of aggregate appliance Wh in more held-out aggregate high-use intervals per metered interval than random sampling. The 50% criterion and trigger rule must be fixed before collection.",
+            "alternative": "High aggregate intervals may combine many circuits or have unstable contributors, so targeted sampling may not identify a dominant circuit more often than random sampling; any apparent gain may also be confined to particular times or seasons.",
+            "discriminating_test": "In a prospective single-home pilot, collect synchronized aggregate and circuit-level Wh continuously as evaluation truth, but score two pre-registered equal-budget sampling schedules: (a) activate the limited analysis/inspection budget in intervals triggered by aggregate Appliances exceeding a threshold learned only from the prior calibration period, and (b) activate it in randomly selected intervals matched by calendar week and time-of-day. On held-out weeks, compare the fraction of aggregate top-decile intervals for which the sampled circuit data identifies the leading circuit and whether it contributes at least 50% of appliance Wh. Report paired week-level differences and uncertainty; do not treat 10-minute rows as independent homes.",
+            "feasible_with_current_data": "Partly. The supplied 10-minute aggregate series and dates can define candidate trigger windows and matched time strata, but cannot evaluate circuit attribution or the 50% criterion.",
+            "required_new_data": "For one or more homes, collect synchronized whole-home Appliances Wh and circuit-level Wh (one value per circuit per 10-minute interval) over calibration and held-out weeks; retain the full circuit record during the pilot as evaluation truth, plus activation flags for each schedule. Multiple homes are needed before claiming generalization across households.",
+            "failure_condition": "The idea fails its primary prediction if equal-budget event-triggered sampling does not increase the held-out fraction of high-use intervals with a correctly identified leading circuit relative to week/time-matched random sampling, or if the advantage disappears across held-out weeks. A result in one home would still not support household-wide generalization.",
+            "nearest_prior_query": "Crossref query: household residential energy monitoring event-triggered submetering sampling versus random or uniform circuit-level metering, evaluated for identification of high-load appliance contributors."
+          },
+          {
+            "id": "I2",
+            "title": "Use room thermal recovery traces to target ventilation checks",
+            "question": "After comparable outdoor-temperature changes, do room-specific temperature recovery traces identify periods when measured ventilation or air exchange is unusually high, beyond the information in airport weather alone?",
+            "new_claim": "A room-to-room thermal recovery signature could help schedule ventilation diagnostics, but only if it agrees with direct air-exchange measurement under controlled operating conditions.",
+            "input_delta": "The file supplies 10-minute room temperatures T1-T9, north-side outdoor T6, airport T_out, and weather, but no ventilation, window, or HVAC-state labels. Add direct air-exchange measurements and logged operating states to test a diagnostic use of thermal response traces.",
+            "domain_value": "A validated signature could prioritize building-envelope or ventilation checks when continuous airflow sensing is unavailable.",
+            "known_basis_refs": [
+              "UCI374_doc",
+              "energy_case_unit",
+              "energy_profile_T6_T_out"
+            ],
+            "assumptions": [
+              "Room temperature response contains a measurable ventilation-related component.",
+              "Heating, solar gains, occupancy, and sensor placement can be measured or controlled sufficiently to distinguish competing causes.",
+              "A single-house observational trace is hypothesis-generating only."
+            ],
+            "variables_and_units": [
+              "Room and north-side temperatures T1-T9 and T6, degrees C per 10-minute interval",
+              "Airport outdoor temperature T_out, degrees C per 10-minute interval",
+              "Air-change rate, h^-1, measured by tracer-gas decay",
+              "Window/HVAC operating state, categorical with timestamps"
+            ],
+            "testable_prediction": "Within controlled, matched temperature-step trials, a pre-specified room-temperature recovery time will be shorter at higher directly measured air-change rates after accounting for logged HVAC and window states; the association should replicate across rooms or trial days.",
+            "alternative": "Thermal mass, internal gains, or control cycling may dominate recovery time, leaving no stable relationship with measured air-change rate.",
+            "discriminating_test": "Run repeated controlled trials in the same home with randomized window/ventilation settings, direct tracer-gas air-change measurements in h^-1, and synchronized 10-minute room/outdoor temperatures. Compare recovery-time slopes across settings within room and day; record HVAC state and reject trials with unmeasured operating changes. Use existing rows only to pre-specify candidate rooms and ranges, not as validation of ventilation.",
+            "feasible_with_current_data": "Exploratory thermal traces are available, but validation against ventilation and separation from HVAC, occupancy, and solar gains are not feasible.",
+            "required_new_data": "Repeated room-level tracer-gas air-change measurements in h^-1, window and HVAC state logs, and preferably occupancy/solar-gain proxies synchronized with room temperatures; replicate trials over multiple days and homes.",
+            "failure_condition": "The proposed diagnostic fails if recovery time does not change consistently with directly measured air-change rate within controlled matched trials, or if HVAC/window state explains the apparent signature better than air exchange.",
+            "nearest_prior_query": "Crossref query: residential room temperature decay or thermal recovery as an indicator of measured air change rate, validated with tracer gas under logged HVAC and window states."
+          },
+          {
+            "id": "I3",
+            "title": "Test occupancy-triggered feedback for flexible household loads",
+            "question": "Does brief, privacy-preserving feedback after a high appliance-load interval reduce energy in the next hour without worsening indoor comfort, compared with the same feedback delivered at matched non-event times?",
+            "new_claim": "A load-event-timed feedback intervention may shift flexible household appliance use; the timing effect is unknown and must be randomized rather than inferred from observational traces.",
+            "input_delta": "The dataset has aggregate Appliances and lights Wh, room climate, and dates, but no occupancy, appliance identity, feedback, or comfort ratings. Add a randomized feedback intervention with those measurements.",
+            "domain_value": "If effective and comfortable, an energy team could time low-cost prompts to moments when a household has a meaningful opportunity to defer flexible use.",
+            "known_basis_refs": [
+              "UCI374_doc",
+              "energy_case_unit",
+              "energy_profile_Appliances_lights"
+            ],
+            "assumptions": [
+              "Some high-load intervals include deferrable use rather than fixed or essential loads.",
+              "A household can receive and act on a prompt.",
+              "A one-home trial estimates an individual response and cannot establish population effects."
+            ],
+            "variables_and_units": [
+              "Appliance energy, Wh per 10-minute interval and summed Wh over the next 60 minutes",
+              "Prompt assignment and delivery time, binary and timestamp",
+              "Indoor room temperatures, degrees C",
+              "Occupant comfort, pre-specified ordinal response scale"
+            ],
+            "testable_prediction": "Within-house randomized event-timed prompts will reduce next-hour appliance Wh relative to matched no-prompt event windows without increasing the pre-specified rate of comfort reports outside the acceptable range.",
+            "alternative": "Loads may be non-deferrable, prompts may be ignored, or reductions may be rebound into the following hours; event timing may offer no advantage over ordinary prompts.",
+            "discriminating_test": "After a baseline period, randomize eligible high-load events within household and time-of-day blocks to event-timed prompt or no prompt, and separately randomize matched non-event prompt windows if testing timing specificity. Measure whole-home appliance Wh continuously, occupancy only with consent, and comfort before and after the next hour. Pre-register the next-hour Wh contrast, rebound window, and comfort threshold.",
+            "feasible_with_current_data": "No. The series describes energy and climate but contains no prompt, occupancy, or comfort data and is observational.",
+            "required_new_data": "A consented randomized household pilot with prompt assignment/delivery logs, continuous appliance Wh, occupancy or response availability, and repeated comfort ratings; include several post-prompt hours to measure rebound.",
+            "failure_condition": "The intervention fails if event-timed prompts do not reduce next-hour Wh relative to randomized controls, if the effect is offset by rebound within the pre-specified follow-up period, or if comfort worsens beyond the registered limit.",
+            "nearest_prior_query": "Crossref query: randomized event-triggered residential energy feedback prompts versus time-matched prompts or control, measuring appliance energy, comfort, and rebound."
+          }
+        ],
+        "selected_id": "I1",
+        "method_ids": [
+          "M01",
+          "M33",
+          "M34"
+        ],
+        "task": {
+          "deliverable": "Critique I1 and return a tightened prospective protocol that fixes the trigger calculation, equal-budget comparator, evaluation outcome, and analysis unit before any data return. Distinguish what the supplied aggregate series can check from what requires new circuit-level labels. If useful, request at most one broker computation and one Crossref search under the run rules; do not treat either as completed evidence.",
+          "acceptance": [
+            "Retain or explicitly revise the I1 hypothesis and its alternative.",
+            "Specify a calibration-only aggregate trigger and an equal-count random schedule matched by week and time of day.",
+            "Define the circuit-level outcome, 50% threshold, held-out evaluation, and week-level uncertainty without treating rows as independent homes.",
+            "State whether the current data can check only event-window coverage or can test attribution; do not claim causal savings or validated attribution from this file.",
+            "If requesting search, state what finding would change the protocol; if requesting computation, make it a descriptive feasibility check using supplied DF only."
+          ],
+          "proposed_computation": "A broker may compare the date/time distribution and aggregate Appliances Wh captured by a calibration-only threshold schedule versus an equal-count, week/time-matched random schedule using the supplied rows. This checks schedule feasibility and temporal coverage only; it cannot estimate which circuit contributed or validate the attribution hypothesis.",
+          "proposed_search": "If a focused Crossref search is available, check whether household event-triggered submeter schedules have already been compared with equal-budget random sampling for circuit-level identification of high-use contributors. A close prior comparison would narrow the claimed addition to the pre-registered leading-circuit outcome and matched held-out-week protocol; a title alone is not evidence of a result."
+        },
+        "critique": [],
+        "requests": [],
+        "final": null
+      },
+      "input_sha256": "1afcfa8636583502ae91c84214c9d92b54000b544136f208db1227da6fb89513",
+      "reply_sha256": "a0b9efd4253aa194afa2720e3728035f1996e5911d553a86d7b94f4c445609ea"
+    }
+  ],
+  "tools": [],
+  "counters": {
+    "replies": 1,
+    "compute": 0,
+    "search": 0
+  },
+  "final": null
+}

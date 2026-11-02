@@ -1,0 +1,174 @@
+{
+  "recognition": "Recognized from the supplied input as UCI Beijing PM2.5 (UCI 381), with the listed 2015 introduction paper. No independent remembered study result is asserted.",
+  "summary": "The frozen I1 entry-hour direction-transition prediction was not supported by the returned exploratory computation: the crude clearance rates were 10.23% with a transition and 9.98% without; standardized increments were positive only in 2010 and negative in 2011-2014; pooled Brier and log-loss were both worse after adding transition. The Crossref results are limited and do not settle literature priority. I revise I1 to a proposal-only, within-episode one-hour-ahead timing question that the computation did not test.",
+  "candidates": [
+    {
+      "id": "I1",
+      "title": "Do recorded wind-direction transitions add information about episode clearance?",
+      "question": "Among high-PM2.5 episode entries, is a change in recorded wind direction at entry associated with sustained clearance within six hours, beyond recent concentration, calendar timing, and recorded Iws?",
+      "new_claim": "Input delta: the supplied materials list PM2.5, cbwd, and Iws but do not define sustained episode clearance as an outcome or pose the incremental direction-transition contrast. This is a testable question added to the input, not a claim of novelty in the literature.",
+      "domain_value": "Could inform whether an episode-monitoring alert should include a coarse wind-direction transition feature alongside concentration history. A positive result would support only an observational, single-series alert feature.",
+      "known_basis_refs": [
+        "official_documentation.variables.pm2.5",
+        "official_documentation.variables.cbwd",
+        "official_documentation.variables.Iws",
+        "data_profile.univariate_stats.pm2.5",
+        "official_documentation.intro_paper_432"
+      ],
+      "assumptions": [
+        "Keep the leader's proposed thresholds fixed for this test: an entry is an observed PM2.5 value >=150 ug/m^3 immediately following an observed value <150 ug/m^3; clearance is three consecutive observed hourly PM2.5 values <75 ug/m^3, completed within the next six hours.",
+        "Use one episode-entry row as the analysis unit. Do not create additional entries during an uninterrupted run above 150; a later new entry requires an observed value below 150 first.",
+        "A direction transition is cbwd at entry different from cbwd in the immediately preceding hour. It is a coarse recorded category change, not a wind-vector or source-origin measurement.",
+        "Any missing PM2.5 before a qualifying clearance makes that entry's outcome censored/unclassifiable, not a non-clearance. Require contiguous hourly row numbers for the entry, recent history, and outcome window.",
+        "Iws is documented as cumulated wind speed (m/s); controlling for it does not amount to adjustment for instantaneous wind speed."
+      ],
+      "variables_and_units": {
+        "episode_entry": "PM2.5 >=150 ug/m^3 following an observed hourly value <150 ug/m^3",
+        "sustained_clearance": "Three consecutive observed hourly PM2.5 values <75 ug/m^3, with the run ending no later than 6 hours after entry",
+        "direction_transition": "Indicator that cbwd_t differs from cbwd_(t-1), categorical transition",
+        "baseline_predictors": "Entry PM2.5 and the preceding 1-3 hourly PM2.5 values (ug/m^3), month, hour, and recorded Iws (documented m/s)",
+        "analysis_unit": "One episode entry; validation held out by calendar year"
+      },
+      "testable_prediction": "Frozen positive prediction: in held-out calendar years, the adjusted/standardized clearance probability for entries with a cbwd transition will exceed that for entries without one after conditioning on entry and recent PM2.5, month/hour, and recorded Iws.",
+      "alternative": "The transition adds no stable held-out information after the baseline predictors; any apparent contrast reflects episode history, calendar composition, temporal dependence, or missingness.",
+      "discriminating_test": "Construct entries and six-hour outcomes using the fixed rules above. Compare a prespecified logistic baseline using entry PM2.5, the prior three hourly PM2.5 values, month, hour, and Iws against the same model plus the transition indicator. Generate out-of-year predictions by holding out each calendar year, report complete and censored entry counts, outcome rates by transition, fold-level standardized probability increments, and held-out Brier/log-loss differences. Do not treat the five years as broad independent replication or split nearby observations across folds.",
+      "feasible_with_current_data": "The requested feasibility computation is possible from the supplied columns if enough complete entries and both transition states exist. Its effective sample size is the number of episode entries in one station series, not 43,824 independent hours.",
+      "required_new_data": "For transport or causal-response interpretation, obtain concurrent wind vectors, multi-site/upwind-downwind PM2.5, source/emissions information, and intervention timing. These are unnecessary for the narrow historical association test.",
+      "failure_condition": "The out-of-year standardized transition increment is not positive, is unstable in sign across held-out years, or the incremental held-out prediction does not improve over baseline; also treat the test as infeasible if complete entries or exposure overlap are insufficient.",
+      "nearest_prior_query": "Search Crossref for studies testing whether wind-direction changes or shifts add predictive information for PM2.5 episode termination/clearance after concentration persistence and wind speed are considered. A close match would narrow or withdraw the novelty framing; title/metadata alone cannot establish the study's exact design or result."
+    },
+    {
+      "id": "I2",
+      "title": "Does rain onset change short-term episode decay?",
+      "question": "When the recorded cumulative-rain-hours field first increases during a high-PM2.5 episode, is the subsequent six-hour PM2.5 change more negative than in comparable no-increase windows?",
+      "new_claim": "Input delta: the input supplies Ir and PM2.5 but does not define rain onset from changes in Ir or compare post-onset episode decay against matched dry windows. This tests an observed contrast, not a causal rain effect.",
+      "domain_value": "Could clarify whether the available precipitation proxy is useful for episode monitoring and alert updates.",
+      "known_basis_refs": [
+        "official_documentation.variables.Ir",
+        "official_documentation.variables.pm2.5",
+        "data_profile.univariate_stats.Ir"
+      ],
+      "assumptions": [
+        "Use a positive one-hour change in Ir, documented as cumulated hours of rain, only as a rain-hour proxy; it is not rainfall amount or intensity.",
+        "Compare windows with similar starting PM2.5, recent trend, month/hour, cbwd, and Iws; residual weather and emissions confounding remain."
+      ],
+      "variables_and_units": {
+        "rain_proxy": "Ir_t - Ir_(t-1) > 0, hours",
+        "outcome": "PM2.5 at t+6 minus PM2.5 at t, ug/m^3",
+        "matching": "starting PM2.5 and recent trend in ug/m^3; month/hour; cbwd; Iws in documented m/s"
+      },
+      "testable_prediction": "Matched windows with a positive Ir increment have a more negative median six-hour PM2.5 change than windows without an increment.",
+      "alternative": "The contrast is absent after matching or reflects co-occurring wind/calendar changes rather than precipitation scavenging.",
+      "discriminating_test": "Identify positive Ir increments during qualifying episodes and match to complete dry windows on starting concentration, recent slope, season/hour, cbwd, and Iws; compare six-hour changes using episode-level held-out blocks.",
+      "feasible_with_current_data": "Exploratory test is feasible if Ir increments and complete PM2.5 windows are sufficiently frequent; availability and interpretation of increments must be checked.",
+      "required_new_data": "Rainfall amount/intensity and an independent precipitation gauge for mechanism interpretation; emissions or intervention data for causal attribution.",
+      "failure_condition": "No more negative held-out six-hour change after matching, an unstable sign across blocks, or too few eligible rain-onset windows.",
+      "nearest_prior_query": "Search for observational and intervention studies comparing PM2.5 episode decay after rainfall onset with matched dry periods, especially work using cumulative rain-hour proxies."
+    },
+    {
+      "id": "I3",
+      "title": "Does humid stagnation amplify observed episode persistence?",
+      "question": "During high-PM2.5 episodes, is persistence greater when small dewpoint depression coincides with low recorded Iws than expected from the separate associations of these conditions?",
+      "new_claim": "Input delta: the input contains TEMP, DEWP, Iws, and PM2.5 but does not pose their joint condition as a test of episode persistence. The proposed interaction is a hypothesis; the dataset cannot distinguish true dry-aerosol persistence from humidity-related monitor response.",
+      "domain_value": "Could reveal whether meteorological context changes the reliability of a persistence-based episode alert and motivate a targeted measurement study.",
+      "known_basis_refs": [
+        "official_documentation.variables.TEMP",
+        "official_documentation.variables.DEWP",
+        "official_documentation.variables.Iws",
+        "official_documentation.variables.pm2.5"
+      ],
+      "assumptions": [
+        "TEMP-DEWP in degrees C is a dewpoint-depression proxy, not a direct relative-humidity measure.",
+        "Low Iws is only a proxy based on the recorded field and its cumulative definition limits a stagnation interpretation.",
+        "An observed PM2.5 interaction cannot establish hygroscopic growth or emissions mechanisms."
+      ],
+      "variables_and_units": {
+        "dewpoint_depression": "TEMP - DEWP, degrees C",
+        "wind_proxy": "Iws, documented m/s",
+        "outcome": "persistence of PM2.5 >=150 ug/m^3 over subsequent observed hours",
+        "analysis_unit": "episode"
+      },
+      "testable_prediction": "The joint small-dewpoint-depression/low-Iws condition is associated with longer held-out high-PM2.5 episode persistence than predicted by additive dewpoint-depression and Iws terms.",
+      "alternative": "No positive interaction remains after season, hour, prior concentration, and episode history are controlled; any interaction may be measurement response rather than increased dry-particle loading.",
+      "discriminating_test": "Fit prespecified additive and interaction contrasts for episode persistence, evaluate on contiguous held-out blocks, and report episode counts and missingness. A separate co-located dry-reference PM measurement would distinguish ambient persistence from humidity-sensitive measurement response.",
+      "feasible_with_current_data": "The observational interaction is testable if there are enough episodes spanning both conditions, but mechanism attribution is not feasible with current measurements.",
+      "required_new_data": "Co-located humidity, wind speed/direction vectors, and dry-reference PM2.5; emissions data would help interpret sources.",
+      "failure_condition": "No positive held-out interaction or insufficient episode overlap across joint meteorological conditions.",
+      "nearest_prior_query": "Search for studies separating humidity-related optical or mass-monitor response from true PM2.5 episode persistence under stagnant conditions."
+    }
+  ],
+  "selected_id": "I1",
+  "method_ids": [
+    "M02",
+    "M33",
+    "M43"
+  ],
+  "task": {
+    "deliverable": "Final evidence update and next falsifiable test for I1.",
+    "acceptance": [
+      "Keep the original entry-hour result separate from the revised post-entry proposal.",
+      "Report counts, censoring, fold-level effects, and predictive metrics from C1 without causal interpretation.",
+      "Treat Crossref as limited metadata/abstract evidence and make no world-novelty claim."
+    ],
+    "proposed_computation": "C1 was executed and returned. The revised episode-hour hazard contrast is a next test only; no new computation request is issued in this final turn.",
+    "proposed_search": "S1 was returned with limited relevance-ordered Crossref coverage. A broader full-text search is a future priority check, not a new request in this final turn."
+  },
+  "critique": [
+    "The candidate is concrete and adds an episode-clearance question to the supplied task, but the numerical entry/clearance thresholds are analyst-chosen and should be treated as an operational pilot definition, not a health or regulatory standard.",
+    "cbwd transition and Iws are weak transport proxies here: the input provides categorical combined direction and a cumulated wind-speed field, not contemporaneous vectors, source location, or emissions. The contrast cannot identify why clearance occurs.",
+    "Same-hour transition at entry may be useful for a six-hour alert update, but it does not establish advance warning before the high episode begins. The question and interpretation should remain conditional association at episode entry.",
+    "Missing PM2.5 can censor outcome classification, and the 43,824 rows are serially dependent. Count only episode entries as units, retain contiguous time blocks, and make the five-year single-series limit explicit.",
+    "The L1 request proposed held-out blocks or years but left the outcome censoring rule and comparison metric open. The revised record fixes those choices before any broker return; it does not retrofit a result."
+  ],
+  "requests": [],
+  "final": {
+    "status": "revised",
+    "final_idea": {
+      "id": "I1",
+      "title": "Do post-entry wind-direction shifts precede sustained episode clearance?",
+      "question": "Among hours within an entered high-PM2.5 episode that has not yet cleared, does a change in recorded cbwd at hour t predict that a sustained-clearance run starts at t+1, beyond current and recent PM2.5, time since entry, calendar timing, and recorded Iws?",
+      "new_claim": "Input delta: the supplied task and fields do not define a within-episode, one-hour-ahead clearance-onset question. The returned computation only tested a transition at episode entry. This revised temporal contrast is a proposal, not a demonstrated effect or a world-literature novelty claim.",
+      "domain_value": "If replicated, the result could tell an air-quality team whether a newly observed direction shift merits updating a short-horizon episode-clearance alert. It would remain a predictive association, not evidence that wind change caused clearance.",
+      "known_basis_refs": [
+        "official_documentation.variables.pm2.5",
+        "official_documentation.variables.cbwd",
+        "official_documentation.variables.Iws",
+        "data_profile.univariate_stats.pm2.5",
+        "tool_evidence.C1"
+      ],
+      "assumptions": [
+        "Retain episode entry at PM2.5 >=150 ug/m^3 immediately after an observed value below 150, and clearance as three consecutive observed hourly values below 75 ug/m^3 within six hours of entry; these are pilot definitions, not regulatory thresholds.",
+        "Use one episode-hour still at risk as the analysis unit. Exposure is cbwd_t != cbwd_(t-1); outcome is a new three-reading below-75 run beginning at t+1. Stop an episode after clearance or six hours.",
+        "A missing PM2.5 value before clearance censors that episode-hour sequence; require consecutive hourly rows. Account for repeated risk hours within an episode and evaluate on held-out calendar years.",
+        "cbwd and Iws are coarse recorded meteorology fields; neither directly measures a wind vector, source, emissions, or intervention."
+      ],
+      "variables_and_units": {
+        "episode_entry": "PM2.5 >=150 ug/m^3 after an observed value <150",
+        "clearance_onset": "A run of three consecutive observed hourly PM2.5 readings <75 ug/m^3, with its first reading at t+1; ug/m^3",
+        "exposure": "Indicator cbwd_t differs from cbwd_(t-1); categorical direction transition",
+        "adjustment": "PM2.5 at t and preceding three hours (ug/m^3), hours since episode entry (h), month, hour, and recorded Iws (documented m/s)",
+        "analysis_unit": "Episode-hour at risk, clustered by episode; calendar year held out for validation"
+      },
+      "testable_prediction": "Proposal-only positive prediction: among eligible episode-hours, a transition at t is associated with higher held-out probability of a sustained-clearance run starting at t+1 after adjustment for the listed history and timing variables. Compare with a prespecified no-transition alternative.",
+      "alternative": "The post-entry transition adds no stable one-hour-ahead information once episode history, calendar timing, and recorded Iws are considered; any apparent signal is episode dependence, missingness, or year-specific composition.",
+      "discriminating_test": "Build the at-risk episode-hour table using the fixed thresholds and censoring rules. Compare a prespecified discrete-time hazard baseline with the same model plus cbwd transition; use episode-clustered uncertainty and leave-one-calendar-year-out predictions. Report episode and risk-hour counts, censoring, transition-stratified event rates, fold-level standardized probability increments, and Brier/log-loss differences. Treat repeated intervals as dependent and do not interpret this as causal.",
+      "feasible_with_current_data": "Yes, as a new retrospective predictive analysis from the supplied series, subject to enough eligible at-risk intervals and transition overlap. This analysis was not run in this turn.",
+      "required_new_data": "For transport interpretation, collect synchronized wind vectors and upwind/downwind PM2.5 at multiple sites, with source/emissions and intervention timing. For operational validation, use an independent station series and prespecify alert costs.",
+      "failure_condition": "No positive held-out one-hour probability increment, unstable sign across held-out years, no improvement in held-out prediction, or inadequate uncensored event/exposure overlap. Any of these rejects this operational feature for this dataset.",
+      "nearest_prior_query": "Crossref search returned limited records for episode studies, but did not establish whether this precise post-entry, one-hour-ahead clearance contrast has been tested. Search full text and broader scholarly indexes for wind shifts as time-varying predictors of PM2.5 episode-clearance onset conditional on concentration history."
+    },
+    "evidence_level": "negative_result",
+    "what_changed": "The leader froze a positive prediction that a cbwd transition at episode entry would add held-out clearance information. C1 did not support that prediction, so the entry-hour feature is withdrawn for this dataset. The revised proposal changes the timing question to whether a transition during an ongoing episode predicts clearance onset at the next hour; it is uncomputed and proposal-only.",
+    "what_is_known": "C1 executed on the supplied 43,824-row series. Of 900 candidate entries with complete three-hour history, 17 outcomes were censored and 883 were complete. Clearance occurred in 36/352 transition entries (10.23%) and 53/531 non-transition entries (9.98%). Leave-one-year-out standardized increments were 0.0024 (2010), -0.0140 (2011), -0.0028 (2012), -0.0117 (2013), and -0.0281 (2014). Pooled out-of-year Brier score changed from 0.08953 to 0.08999 and log loss from 0.34732 to 0.34881, both worse with the entry-hour transition. These are exploratory single-series predictive results; no uncertainty interval was returned. S1 returned five review records for the same northern-India source, one Thailand PM10/AOT exposure-mapping abstract mentioning stagnant conditions, one Ox/NO2 episode-model title, and a 2025 northern-India episode-driver abstract. None establishes the exact conditional clearance-transition contrast.",
+    "what_is_new_hypothesis": "The proposed input increment is a time-localized, one-hour-ahead clearance-onset question using a post-entry direction transition as a time-varying marker. The current computation tested only transition at entry and therefore neither supports nor refutes this revised hypothesis.",
+    "falsifier": "The revised proposal fails if the transition has no positive held-out next-hour clearance-onset increment after the prespecified history and timing adjustment, if its direction varies across held-out years, or if it does not improve predictive scores.",
+    "minimum_next_test": "On the same series, create an episode-hour risk set after entry and before clearance, apply the fixed thresholds and censoring rule, and compare leave-one-year-out predictions from the stated baseline hazard against that baseline plus the current-hour cbwd transition. Cluster uncertainty by episode and report transition overlap, censoring, fold-level standardized increments, and Brier/log-loss differences. If any positive signal survives, validate the prespecified feature on an independent station before operational use.",
+    "tool_evidence_refs": [
+      "C1",
+      "S1"
+    ],
+    "nearest_work_comparison": "The retrieved metadata includes work on haze exposure mapping with synoptic meteorology and an abstract on northern-India episode drivers and stagnation, but the returned material does not show a study of this specific episode-hour clearance-onset prediction conditional on concentration history. The Ox/NO2 title concerns another pollutant outcome. Search coverage was limited, so the literature comparison is inconclusive.",
+    "novelty_status": "Input novelty: the revised temporal clearance-onset question is not posed in the supplied task or documentation. World-literature novelty: unestablished; the targeted Crossref return was limited and did not verify a gap.",
+    "limitations": "One station series, five calendar years, serial dependence, 17 censored outcomes in C1, analyst-selected thresholds, and incomplete meteorology/source measurements limit generalization and mechanism interpretation. The revised test has not been run; current numerical evidence applies only to the entry-hour contrast."
+  }
+}

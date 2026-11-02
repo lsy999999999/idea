@@ -1,0 +1,618 @@
+{
+  "case": {
+    "id": "transport",
+    "uci_id": 275,
+    "domain": "交通",
+    "workflow": "A shared-mobility team wants a researchable demand or service-design idea using recorded rental counts and conditions, beyond another aggregate count predictor.",
+    "unit": "Hourly system-level bike rentals from 2011-2012, repeated over days. Records describe observed rentals; station inventory and individual unmet requests are not supplied."
+  },
+  "official_documentation": {
+    "uci_id": 275,
+    "name": "Bike Sharing",
+    "repository_url": "https://archive.ics.uci.edu/dataset/275/bike+sharing+dataset",
+    "data_url": "https://archive.ics.uci.edu/static/public/275/data.csv",
+    "abstract": "This dataset contains the hourly and daily count of rental bikes between years 2011 and 2012 in Capital bikeshare system with the corresponding weather and seasonal information.",
+    "area": "Social Science",
+    "tasks": [
+      "Regression"
+    ],
+    "characteristics": [
+      "Multivariate"
+    ],
+    "num_instances": 17389,
+    "num_features": 13,
+    "feature_types": [
+      "Integer",
+      "Real"
+    ],
+    "demographics": [],
+    "target_col": [
+      "cnt"
+    ],
+    "index_col": [
+      "instant"
+    ],
+    "has_missing_values": "no",
+    "missing_values_symbol": null,
+    "year_of_dataset_creation": 2013,
+    "last_updated": "Sun Mar 10 2024",
+    "dataset_doi": "10.24432/C5W894",
+    "creators": [
+      "Hadi Fanaee-T"
+    ],
+    "intro_paper": {
+      "ID": 422,
+      "type": "NATIVE",
+      "title": "Event labeling combining ensemble detectors and background knowledge",
+      "authors": "Hadi Fanaee-T, João Gama",
+      "venue": "Progress in Artificial Intelligence",
+      "year": 2013,
+      "journal": null,
+      "DOI": "10.1007/s13748-013-0040-3",
+      "URL": "https://www.semanticscholar.org/paper/bc42899f599d31a5d759f3e0a3ea8b52479d6423",
+      "sha": null,
+      "corpus": null,
+      "arxiv": null,
+      "mag": null,
+      "acl": null,
+      "pmid": null,
+      "pmcid": null
+    },
+    "variables": [
+      {
+        "name": "instant",
+        "role": "ID",
+        "type": "Integer",
+        "demographic": null,
+        "description": "record index",
+        "units": null,
+        "missing_values": "no"
+      },
+      {
+        "name": "dteday",
+        "role": "Feature",
+        "type": "Date",
+        "demographic": null,
+        "description": "date",
+        "units": null,
+        "missing_values": "no"
+      },
+      {
+        "name": "season",
+        "role": "Feature",
+        "type": "Categorical",
+        "demographic": null,
+        "description": "1:winter, 2:spring, 3:summer, 4:fall",
+        "units": null,
+        "missing_values": "no"
+      },
+      {
+        "name": "yr",
+        "role": "Feature",
+        "type": "Categorical",
+        "demographic": null,
+        "description": "year (0: 2011, 1: 2012)",
+        "units": null,
+        "missing_values": "no"
+      },
+      {
+        "name": "mnth",
+        "role": "Feature",
+        "type": "Categorical",
+        "demographic": null,
+        "description": "month (1 to 12)",
+        "units": null,
+        "missing_values": "no"
+      },
+      {
+        "name": "hr",
+        "role": "Feature",
+        "type": "Categorical",
+        "demographic": null,
+        "description": "hour (0 to 23)",
+        "units": null,
+        "missing_values": "no"
+      },
+      {
+        "name": "holiday",
+        "role": "Feature",
+        "type": "Binary",
+        "demographic": null,
+        "description": "weather day is holiday or not (extracted from http://dchr.dc.gov/page/holiday-schedule)",
+        "units": null,
+        "missing_values": "no"
+      },
+      {
+        "name": "weekday",
+        "role": "Feature",
+        "type": "Categorical",
+        "demographic": null,
+        "description": "day of the week",
+        "units": null,
+        "missing_values": "no"
+      },
+      {
+        "name": "workingday",
+        "role": "Feature",
+        "type": "Binary",
+        "demographic": null,
+        "description": "if day is neither weekend nor holiday is 1, otherwise is 0",
+        "units": null,
+        "missing_values": "no"
+      },
+      {
+        "name": "weathersit",
+        "role": "Feature",
+        "type": "Categorical",
+        "demographic": null,
+        "description": "- 1: Clear, Few clouds, Partly cloudy, Partly cloudy",
+        "units": null,
+        "missing_values": "no"
+      },
+      {
+        "name": "temp",
+        "role": "Feature",
+        "type": "Continuous",
+        "demographic": null,
+        "description": "Normalized temperature in Celsius. The values are derived via (t-t_min)/(t_max-t_min), t_min=-8, t_max=+39 (only in hourly scale)",
+        "units": "C",
+        "missing_values": "no"
+      },
+      {
+        "name": "atemp",
+        "role": "Feature",
+        "type": "Continuous",
+        "demographic": null,
+        "description": "Normalized feeling temperature in Celsius. The values are derived via (t-t_min)/(t_max-t_min), t_min=-16, t_max=+50 (only in hourly scale)",
+        "units": "C",
+        "missing_values": "no"
+      },
+      {
+        "name": "hum",
+        "role": "Feature",
+        "type": "Continuous",
+        "demographic": null,
+        "description": "Normalized humidity. The values are divided to 100 (max)",
+        "units": null,
+        "missing_values": "no"
+      },
+      {
+        "name": "windspeed",
+        "role": "Feature",
+        "type": "Continuous",
+        "demographic": null,
+        "description": "Normalized wind speed. The values are divided to 67 (max)",
+        "units": null,
+        "missing_values": "no"
+      },
+      {
+        "name": "casual",
+        "role": "Other",
+        "type": "Integer",
+        "demographic": null,
+        "description": "count of casual users",
+        "units": null,
+        "missing_values": "no"
+      },
+      {
+        "name": "registered",
+        "role": "Other",
+        "type": "Integer",
+        "demographic": null,
+        "description": "count of registered users",
+        "units": null,
+        "missing_values": "no"
+      },
+      {
+        "name": "cnt",
+        "role": "Target",
+        "type": "Integer",
+        "demographic": null,
+        "description": "count of total rental bikes including both casual and registered",
+        "units": null,
+        "missing_values": "no"
+      }
+    ],
+    "additional_info": {
+      "summary": "Bike sharing systems are new generation of traditional bike rentals where whole process from membership, rental and return back has become automatic. Through these systems, user is able to easily rent a bike from a particular position and return back at another position. Currently, there are about over 500 bike-sharing programs around the world which is composed of over 500 thousands bicycles. Today, there exists great interest in these systems due to their important role in traffic, environmental and health issues. \r\n\r\nApart from interesting real world applications of bike sharing systems, the characteristics of data being generated by these systems make them attractive for the research. Opposed to other transport services such as bus or subway, the duration of travel, departure and arrival position is explicitly recorded in these systems. This feature turns bike sharing system into a virtual sensor network that can be used for sensing mobility in the city. Hence, it is expected that most of important events in the city could be detected via monitoring these data.",
+      "purpose": null,
+      "funded_by": null,
+      "instances_represent": null,
+      "recommended_data_splits": null,
+      "sensitive_data": null,
+      "preprocessing_description": null,
+      "variable_info": "Both hour.csv and day.csv have the following fields, except hr which is not available in day.csv\r\n\t\r\n\t- instant: record index\r\n\t- dteday : date\r\n\t- season : season (1:winter, 2:spring, 3:summer, 4:fall)\r\n\t- yr : year (0: 2011, 1:2012)\r\n\t- mnth : month ( 1 to 12)\r\n\t- hr : hour (0 to 23)\r\n\t- holiday : weather day is holiday or not (extracted from http://dchr.dc.gov/page/holiday-schedule)\r\n\t- weekday : day of the week\r\n\t- workingday : if day is neither weekend nor holiday is 1, otherwise is 0.\r\n\t+ weathersit : \r\n\t\t- 1: Clear, Few clouds, Partly cloudy, Partly cloudy\r\n\t\t- 2: Mist + Cloudy, Mist + Broken clouds, Mist + Few clouds, Mist\r\n\t\t- 3: Light Snow, Light Rain + Thunderstorm + Scattered clouds, Light Rain + Scattered clouds\r\n\t\t- 4: Heavy Rain + Ice Pallets + Thunderstorm + Mist, Snow + Fog\r\n\t- temp : Normalized temperature in Celsius. The values are derived via (t-t_min)/(t_max-t_min), t_min=-8, t_max=+39 (only in hourly scale)\r\n\t- atemp: Normalized feeling temperature in Celsius. The values are derived via (t-t_min)/(t_max-t_min), t_min=-16, t_max=+50 (only in hourly scale)\r\n\t- hum: Normalized humidity. The values are divided to 100 (max)\r\n\t- windspeed: Normalized wind speed. The values are divided to 67 (max)\r\n\t- casual: count of casual users\r\n\t- registered: count of registered users\r\n\t- cnt: count of total rental bikes including both casual and registered\r\n",
+      "citation": null
+    }
+  },
+  "data_profile": {
+    "actual_rows": 17379,
+    "official_reported_instances": 17389,
+    "column_names": [
+      "instant",
+      "dteday",
+      "season",
+      "yr",
+      "mnth",
+      "hr",
+      "holiday",
+      "weekday",
+      "workingday",
+      "weathersit",
+      "temp",
+      "atemp",
+      "hum",
+      "windspeed",
+      "casual",
+      "registered",
+      "cnt"
+    ],
+    "univariate_stats": {
+      "instant": {
+        "dtype": "int64",
+        "missing": 0,
+        "unique": 17379,
+        "quantiles": {
+          "0.0": 1.0,
+          "0.25": 4345.5,
+          "0.5": 8690.0,
+          "0.75": 13034.5,
+          "1.0": 17379.0
+        }
+      },
+      "dteday": {
+        "dtype": "str",
+        "missing": 0,
+        "unique": 731,
+        "top_values": {
+          "2011-01-01": 24,
+          "2011-01-08": 24,
+          "2011-01-09": 24,
+          "2011-01-10": 24,
+          "2011-01-13": 24,
+          "2011-01-15": 24,
+          "2011-01-16": 24,
+          "2011-01-17": 24
+        }
+      },
+      "season": {
+        "dtype": "int64",
+        "missing": 0,
+        "unique": 4,
+        "quantiles": {
+          "0.0": 1.0,
+          "0.25": 2.0,
+          "0.5": 3.0,
+          "0.75": 3.0,
+          "1.0": 4.0
+        }
+      },
+      "yr": {
+        "dtype": "int64",
+        "missing": 0,
+        "unique": 2,
+        "quantiles": {
+          "0.0": 0.0,
+          "0.25": 0.0,
+          "0.5": 1.0,
+          "0.75": 1.0,
+          "1.0": 1.0
+        }
+      },
+      "mnth": {
+        "dtype": "int64",
+        "missing": 0,
+        "unique": 12,
+        "quantiles": {
+          "0.0": 1.0,
+          "0.25": 4.0,
+          "0.5": 7.0,
+          "0.75": 10.0,
+          "1.0": 12.0
+        }
+      },
+      "hr": {
+        "dtype": "int64",
+        "missing": 0,
+        "unique": 24,
+        "quantiles": {
+          "0.0": 0.0,
+          "0.25": 6.0,
+          "0.5": 12.0,
+          "0.75": 18.0,
+          "1.0": 23.0
+        }
+      },
+      "holiday": {
+        "dtype": "int64",
+        "missing": 0,
+        "unique": 2,
+        "quantiles": {
+          "0.0": 0.0,
+          "0.25": 0.0,
+          "0.5": 0.0,
+          "0.75": 0.0,
+          "1.0": 1.0
+        }
+      },
+      "weekday": {
+        "dtype": "int64",
+        "missing": 0,
+        "unique": 7,
+        "quantiles": {
+          "0.0": 0.0,
+          "0.25": 1.0,
+          "0.5": 3.0,
+          "0.75": 5.0,
+          "1.0": 6.0
+        }
+      },
+      "workingday": {
+        "dtype": "int64",
+        "missing": 0,
+        "unique": 2,
+        "quantiles": {
+          "0.0": 0.0,
+          "0.25": 0.0,
+          "0.5": 1.0,
+          "0.75": 1.0,
+          "1.0": 1.0
+        }
+      },
+      "weathersit": {
+        "dtype": "int64",
+        "missing": 0,
+        "unique": 4,
+        "quantiles": {
+          "0.0": 1.0,
+          "0.25": 1.0,
+          "0.5": 1.0,
+          "0.75": 2.0,
+          "1.0": 4.0
+        }
+      },
+      "temp": {
+        "dtype": "float64",
+        "missing": 0,
+        "unique": 50,
+        "quantiles": {
+          "0.0": 0.02,
+          "0.25": 0.34,
+          "0.5": 0.5,
+          "0.75": 0.66,
+          "1.0": 1.0
+        }
+      },
+      "atemp": {
+        "dtype": "float64",
+        "missing": 0,
+        "unique": 65,
+        "quantiles": {
+          "0.0": 0.0,
+          "0.25": 0.3333,
+          "0.5": 0.4848,
+          "0.75": 0.6212,
+          "1.0": 1.0
+        }
+      },
+      "hum": {
+        "dtype": "float64",
+        "missing": 0,
+        "unique": 89,
+        "quantiles": {
+          "0.0": 0.0,
+          "0.25": 0.48,
+          "0.5": 0.63,
+          "0.75": 0.78,
+          "1.0": 1.0
+        }
+      },
+      "windspeed": {
+        "dtype": "float64",
+        "missing": 0,
+        "unique": 30,
+        "quantiles": {
+          "0.0": 0.0,
+          "0.25": 0.1045,
+          "0.5": 0.194,
+          "0.75": 0.2537,
+          "1.0": 0.8507
+        }
+      },
+      "casual": {
+        "dtype": "int64",
+        "missing": 0,
+        "unique": 322,
+        "quantiles": {
+          "0.0": 0.0,
+          "0.25": 4.0,
+          "0.5": 17.0,
+          "0.75": 48.0,
+          "1.0": 367.0
+        }
+      },
+      "registered": {
+        "dtype": "int64",
+        "missing": 0,
+        "unique": 776,
+        "quantiles": {
+          "0.0": 0.0,
+          "0.25": 34.0,
+          "0.5": 115.0,
+          "0.75": 220.0,
+          "1.0": 886.0
+        }
+      },
+      "cnt": {
+        "dtype": "int64",
+        "missing": 0,
+        "unique": 869,
+        "quantiles": {
+          "0.0": 1.0,
+          "0.25": 40.0,
+          "0.5": 142.0,
+          "0.75": 281.0,
+          "1.0": 977.0
+        }
+      }
+    },
+    "fixed_sample_rows": [
+      {
+        "instant": 1,
+        "dteday": "2011-01-01",
+        "season": 1,
+        "yr": 0,
+        "mnth": 1,
+        "hr": 0,
+        "holiday": 0,
+        "weekday": 6,
+        "workingday": 0,
+        "weathersit": 1,
+        "temp": 0.24,
+        "atemp": 0.2879,
+        "hum": 0.81,
+        "windspeed": 0.0,
+        "casual": 3,
+        "registered": 13,
+        "cnt": 16
+      },
+      {
+        "instant": 2483,
+        "dteday": "2011-04-18",
+        "season": 2,
+        "yr": 0,
+        "mnth": 4,
+        "hr": 8,
+        "holiday": 0,
+        "weekday": 1,
+        "workingday": 1,
+        "weathersit": 1,
+        "temp": 0.46,
+        "atemp": 0.4545,
+        "hum": 0.63,
+        "windspeed": 0.0,
+        "casual": 20,
+        "registered": 277,
+        "cnt": 297
+      },
+      {
+        "instant": 4966,
+        "dteday": "2011-07-30",
+        "season": 3,
+        "yr": 0,
+        "mnth": 7,
+        "hr": 19,
+        "holiday": 0,
+        "weekday": 6,
+        "workingday": 0,
+        "weathersit": 1,
+        "temp": 0.74,
+        "atemp": 0.6515,
+        "hum": 0.33,
+        "windspeed": 0.2239,
+        "casual": 101,
+        "registered": 155,
+        "cnt": 256
+      },
+      {
+        "instant": 7448,
+        "dteday": "2011-11-11",
+        "season": 4,
+        "yr": 0,
+        "mnth": 11,
+        "hr": 22,
+        "holiday": 1,
+        "weekday": 5,
+        "workingday": 0,
+        "weathersit": 1,
+        "temp": 0.32,
+        "atemp": 0.3182,
+        "hum": 0.39,
+        "windspeed": 0.194,
+        "casual": 13,
+        "registered": 78,
+        "cnt": 91
+      },
+      {
+        "instant": 9931,
+        "dteday": "2012-02-23",
+        "season": 1,
+        "yr": 1,
+        "mnth": 2,
+        "hr": 19,
+        "holiday": 0,
+        "weekday": 4,
+        "workingday": 1,
+        "weathersit": 1,
+        "temp": 0.5,
+        "atemp": 0.4848,
+        "hum": 0.39,
+        "windspeed": 0.0896,
+        "casual": 20,
+        "registered": 349,
+        "cnt": 369
+      },
+      {
+        "instant": 12413,
+        "dteday": "2012-06-06",
+        "season": 2,
+        "yr": 1,
+        "mnth": 6,
+        "hr": 9,
+        "holiday": 0,
+        "weekday": 3,
+        "workingday": 1,
+        "weathersit": 1,
+        "temp": 0.56,
+        "atemp": 0.5303,
+        "hum": 0.6,
+        "windspeed": 0.0896,
+        "casual": 35,
+        "registered": 268,
+        "cnt": 303
+      },
+      {
+        "instant": 14896,
+        "dteday": "2012-09-17",
+        "season": 3,
+        "yr": 1,
+        "mnth": 9,
+        "hr": 20,
+        "holiday": 0,
+        "weekday": 1,
+        "workingday": 1,
+        "weathersit": 2,
+        "temp": 0.62,
+        "atemp": 0.5909,
+        "hum": 0.73,
+        "windspeed": 0.1343,
+        "casual": 32,
+        "registered": 308,
+        "cnt": 340
+      },
+      {
+        "instant": 17379,
+        "dteday": "2012-12-31",
+        "season": 1,
+        "yr": 1,
+        "mnth": 12,
+        "hr": 23,
+        "holiday": 0,
+        "weekday": 1,
+        "workingday": 1,
+        "weathersit": 1,
+        "temp": 0.26,
+        "atemp": 0.2727,
+        "hum": 0.65,
+        "windspeed": 0.1343,
+        "casual": 12,
+        "registered": 37,
+        "cnt": 49
+      }
+    ],
+    "row_count_note": "Actual parsed row count governs computation; metadata discrepancy retained."
+  },
+  "data_sha256": "e03de4ee4ef4dc376ac6e04bf829673c6269e8eba5c60fa121640fa2f829504f",
+  "metadata_sha256": "ddae1c6bc628001a5c48ea53892f62e30dbbd6c4931ba00915adfdc520f9227b",
+  "method_index": "# 方法索引：44张卡\n\nleader每轮按当前缺口取1–3张完整卡；下列不是必须依次执行的清单。可以提出库外方法。\n\n## A 观察与问题构造\n\n| ID | 方法 | 何时调用 |\n|---|---|---|\n| M01 | 观测量与潜在状态分开 | 同一个图像或汇总指标可以由不同变化产生。 |\n| M02 | 因果图与替代路径 | 条件A/B有差异，但处理同时改变多种因素。 |\n| M03 | 把复合现象拆成可分别解释的子问题 | 一句话同时要求解释出现、持续、大小和运动等多个现象。 |\n| M04 | 把现象整理成约束集 | 已有多项观察，但假说只解释其中一项。 |\n## B 约束、降维与初步推导\n\n| ID | 方法 | 何时调用 |\n|---|---|---|\n| M05 | 从守恒与收支写方程 | 解释只有作用名称，没有状态如何变化。 |\n| M06 | 量纲分析与无量纲组合 | 变量很多，拟议方程单位混乱，或想比较不同尺度。 |\n| M07 | 竞争时间尺度与长度尺度 | 稳态直觉解释不了滞后、持续或空间差异。 |\n| M08 | 极限、边界和退化情形推导 | 新方程看似合理，但尚无简单一致性检查。 |\n| M09 | 对称性、坐标与不变量 | 不同表述可能等价，或关联依赖坐标定义。 |\n| M10 | 可分解性与标度折叠 | 高维函数难以推导，但可能由较低维关系组成。 |\n## C 知识获取与跨领域迁移\n\n| ID | 方法 | 何时调用 |\n|---|---|---|\n| M11 | 按缺失知识检索 | 不知道一个过程的成立条件、测量方法或本构关系。 |\n| M12 | 按功能或关系寻找外领域知识 | 本领域搜索反复返回同样解释。 |\n| M13 | 结构类比映射 | 找到了灵感，但不知道如何用于当前系统。 |\n| M14 | 把论文知识提取为可连接模块 | 文献很多，却无法据此建立模型。 |\n## D 机制组合与表示修订\n\n| ID | 方法 | 何时调用 |\n|---|---|---|\n| M15 | 机制图补桥与串联组合 | 分别知道A影响B、C影响D，却解释不了从处理到结果的整条链。 |\n| M16 | 并行过程的竞争与耦合收支 | 两个机制可能同时存在，而非非此即彼。 |\n| M17 | 交互项与非加性机制 | 两个因素单独影响弱，合并后出现异常响应。 |\n| M18 | 反馈与延迟组合 | 现象有振荡、过冲、适应或长时间滞后。 |\n| M19 | 隐藏状态、记忆与路径依赖 | 相同当前输入对应不同结果，误差依赖历史。 |\n| M20 | 从整体模型扩展到空间模型 | 整体平均解释不了不同位置的差异。 |\n| M21 | 异质性、随机性与群体混合 | 均值变化可能来自个体动力学，也可能来自群体组成。 |\n| M22 | 尺度约化与有效变量 | 组合模型过大，无法估计或计算。 |\n## E 推导、计算与参数\n\n| ID | 方法 | 何时调用 |\n|---|---|---|\n| M23 | 方程闭合与计算依赖检查 | 出现未定义g/h、成核规则、力或通量，无法实际计算。 |\n| M24 | 稳态、局部稳定性与阈值推导 | 需要解释何时出现新状态、何时保持或消失。 |\n| M25 | 前向计算与观测预测 | 解释已有公式但还没有可对照数据的数值预测。 |\n| M26 | 符号回归与方程骨架搜索 | 变量已知，关系形式未知，且有足够数值样本。 |\n| M27 | 稀疏动力学与空间方程识别 | 有足够时间或时空测量，且合理假设动力学在候选库中稀疏。 |\n| M28 | 结构与参数分离拟合 | 研究者凭文字选参数，或把优化失败当成结构错误。 |\n| M29 | 参数与机制的可识别性 | 不同参数/机制拟合相近，却得出不同解释。 |\n| M30 | 敏感度与不确定性传播 | 已有模型，但不知道哪些参数决定结论。 |\n## F 模型批评与区分实验\n\n| ID | 方法 | 何时调用 |\n|---|---|---|\n| M31 | 残差结构与后验预测检查 | 总体误差可接受，但局部条件或分布特征不对。 |\n| M32 | 针对反例做最小结构修改 | 已有一次明确失败，但新提案只是换词。 |\n| M33 | 选择能区分候选的实验 | 多个模型都解释现有数据。 |\n| M34 | 阻断、匹配与因子组合实验 | 几个原因随处理一起变化，或怀疑交互作用。 |\n| M35 | 边界探测与外推条件 | 候选在已见范围相近，需要检验其适用域。 |\n| M36 | 测量伪影与替代观测模型 | 结论依赖阈值、共享分母、坐标、轨迹长度或筛选规则。 |\n## G 修订与证据管理\n\n| ID | 方法 | 何时调用 |\n|---|---|---|\n| M37 | 把失败变成后续生成约束 | 模型承认失败，下一轮却原样再提。 |\n| M38 | 证据强弱、反证与停止 | 证据越来越多，但混入重复信息或反复挑选检验。 |\n| M39 | 模型等价、去重与结构差异 | 候选越来越多，但只是变量改名或重参数化。 |\n| M40 | 旧证据回归与局部适用范围 | 修订解释了新反例，却破坏旧规律。 |\n## H 研究调度与交付\n\n| ID | 方法 | 何时调用 |\n|---|---|---|\n| M41 | 模型空间扩展 | 可靠观测超出现有所有候选，参数重拟合也不能解释。 |\n| M42 | 从目标倒排推导依赖 | 知道最终想预测什么，但 agent 不断泛泛讨论。 |\n| M43 | 按真实重复单位做独立预测 | 拟合很好，但数据切分可能把同一轨迹或批次分到两边。 |\n| M44 | 最小交付与预算停止 | 工作不断扩展，始终没有可审查结果。 |\n"
+}

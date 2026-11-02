@@ -1,0 +1,106 @@
+{
+  "recognition": "Recognized from the supplied documentation as the public UCI Student Performance dataset (UCI 320), with Portuguese-language records and the cited Cortez and Silva 2008 introduction. This recognition comes from the input; no external source or remembered result is being used as evidence.",
+  "summary": "Goal: choose support at the end of period 1 for students whose G1 result indicates academic risk, and evaluate learning by the period-2 grade G2 (0-20 points) and attendance during the intervening period. The input describes 649 student records from two Portuguese schools, including G1/G2, absences, travel-time category, study-time category, and existing school/family/paid support indicators. It documents temporal grades and notes that support was not randomized; survey timing is limited. New increment proposed here: distinguish an access-to-instruction bottleneck from a subject-mastery bottleneck by comparing equal-contact attendance-recovery support with tutoring in a prospective randomized school pilot. The dataset can motivate and help scope the question, but cannot identify causal effects or verify the proposed mechanism.",
+  "candidates": [
+    {
+      "id": "I1",
+      "title": "Separate attendance-access support from tutoring at the first-period decision point",
+      "question": "Among students below the school's predeclared Portuguese pass threshold at G1, does an equal-contact attendance-access and missed-lesson recovery package improve G2 more than subject tutoring, especially for students with high period-1 absence counts or long travel times?",
+      "new_claim": "A useful support decision may depend on whether missed instructional time or difficulty mastering attended lessons is the more important bottleneck. This is a testable mechanism hypothesis, not a finding in the supplied data.",
+      "input_delta": "The input provides period grades, absence counts, a coarse travel-time category, and existing support indicators, but does not compare support types under random assignment or measure dated attendance and instructional exposure. The proposal adds a direct equal-contact comparison and an attendance mediator.",
+      "domain_value": "A school could direct limited added support toward access and catch-up when absence is the binding constraint, and use tutoring when attendance is adequate but mastery remains low.",
+      "known_basis_refs": [
+        "official_documentation.additional_info: G1/G2 are first/second-period grades and G3 is final grade; G1/G2 correlate with G3",
+        "official_documentation.variables: absences, traveltime, schoolsup, G1, G2",
+        "case.workflow: support allocation beyond final-grade prediction",
+        "case.unit: two Portuguese schools; no randomized support assignment; limited survey timing metadata"
+      ],
+      "assumptions": [
+        "The school's existing pass threshold can be specified before enrollment and is meaningful for this course.",
+        "Schools can deliver two added-support options with the same scheduled contact time without replacing legally or ethically required support.",
+        "Attendance-access support can be operationalized consistently, and individual attendance and intervention exposure can be recorded during the period.",
+        "Randomization can be conducted within school and baseline-risk strata, with analysis accounting for classroom or teacher clustering."
+      ],
+      "variables_and_units": "Eligibility: G1 below a school-predeclared Portuguese pass threshold (grade points, 0-20). Baseline risk: scheduled class periods missed during period 1 (count) and travel time in minutes, newly measured rather than relying only on the input's 1-4 bins. Randomized added-support offer: access-and-catch-up package versus subject tutoring, with equal scheduled contact minutes per student. Intermediate outcome: attended scheduled Portuguese lessons during period 2 (count and proportion). Primary outcome: G2 Portuguese grade points (0-20). Unit: student, with school/classroom clustering in assignment or inference.",
+      "testable_prediction": "Frozen before any tool return: relative to equal-contact tutoring, the access-and-catch-up offer will produce a larger period-2 attendance increase and a larger mean G2 gain among eligible students in the predeclared high-absence stratum than among eligible students with low absence. If it improves attendance but not G2, the claim that access recovery is a more useful learning support is not supported.",
+      "alternative": "The main bottleneck is subject mastery rather than missed instruction, or both packages work only through attention and contact time; tutoring will match or exceed the access package on G2, and attendance changes will not explain any difference.",
+      "discriminating_test": "Run a preregistered, equal-contact randomized comparison among eligible students at the end of period 1, stratified by school and predeclared absence-risk stratum. Record dated scheduled and attended lessons, package delivery, G1, and G2. Estimate intention-to-treat differences in attendance and G2 and the treatment-by-baseline-absence interaction, with uncertainty intervals and classroom-aware inference. Set a school-relevant minimum G2 difference and analysis rule before enrollment. An attendance advantage without a G2 advantage favors the alternative that access alone is insufficient; a G2 advantage concentrated among high-absence students and accompanied by attendance improvement supports the proposed routing hypothesis, but mediation itself needs additional assumptions.",
+      "feasible_with_current_data": "Only exploratory feasibility checks: determine whether G1/G2, absences, and traveltime have usable variation and whether a proposed high-absence subgroup is large enough to motivate prospective recruitment. Existing observational support comparisons cannot estimate the randomized contrast.",
+      "required_new_data": "Prospective student-level eligibility and baseline G1; dated period-1 and period-2 scheduled/attended lesson counts; actual commute minutes or a validated travel-barrier measure; randomized offer and assignment stratum; delivered contact minutes and package fidelity; G2; school/class identifiers; and a predeclared pass threshold, minimum relevant grade difference, and analysis plan.",
+      "failure_condition": "The proposal is not supported if, in a sufficiently precise randomized comparison, access-and-catch-up does not improve G2 relative to equal-contact tutoring in the high-absence stratum, or if the predicted attendance increase is absent. If attendance rises without a meaningful G2 difference, reject the stronger claim that attendance recovery alone is the more effective academic support.",
+      "nearest_prior_query": "Search for secondary-school randomized or quasi-randomized comparisons of attendance or transport-barrier interventions with missed-instruction recovery versus equal-dose subject tutoring, testing baseline-absence moderation and attendance as a mediator of period-grade outcomes."
+    },
+    {
+      "id": "I2",
+      "title": "Test whether a brief student-led needs check improves support matching",
+      "question": "At the end of period 1, does a brief structured student conversation that identifies the main barrier and routes the student to the matching existing support improve period-2 support uptake and G2 compared with usual referral among students below the school's predeclared threshold?",
+      "new_claim": "The value of a support offer may depend on matching it to a student's stated barrier; collecting a brief barrier assessment could improve the match even without increasing total support minutes.",
+      "input_delta": "The input contains broad support indicators and household or school-context variables, but no student-stated need, referral pathway, support-match quality, uptake timing, or randomized test of routing.",
+      "domain_value": "Schools could improve the use of existing tutoring, attendance, or family-contact resources by reducing referrals to supports that students do not need or cannot use.",
+      "known_basis_refs": [
+        "official_documentation.variables: schoolsup, famsup, paid, absences, G1, G2",
+        "case.workflow: useful support understanding or allocation",
+        "case.unit: no randomized support assignment; limited survey timing metadata"
+      ],
+      "assumptions": [
+        "Students can report a useful primary barrier in a short, non-stigmatizing conversation.",
+        "The school has at least two actionable support routes and can record offers and uptake.",
+        "A usual-referral comparison is ethically acceptable and does not withhold standard support."
+      ],
+      "variables_and_units": "At-risk eligibility by predeclared G1 threshold (0-20 grade points); student-reported primary barrier (categorical, collected at period-1 end); routing offer and uptake (categorical and yes/no, with dates); support contact time (minutes); G2 (0-20 grade points). Unit: student, clustered by school or class.",
+      "testable_prediction": "Compared with usual referral, the needs-check group will have a higher proportion accepting and attending the support route matched to the reported barrier, with a larger G2 gain if matching improves effective support exposure.",
+      "alternative": "The conversation adds attention but does not improve actual match or uptake; any G2 difference is explained by contact time or novelty rather than barrier-specific routing.",
+      "discriminating_test": "Randomize eligible students to structured needs-check and routing or usual referral, keep available support minutes the same, preregister matched-route uptake as the proximal outcome and G2 as the academic outcome, and compare intention-to-treat effects. Collect reasons for non-uptake and test whether the proposed route was actually delivered.",
+      "feasible_with_current_data": "No causal or matching test is feasible. The input may describe existing support prevalence, but not needs, offers, uptake, or temporal support routing.",
+      "required_new_data": "Student-reported barrier at the decision time, referral and offer dates, support type and delivered minutes, uptake and attendance at support, G1 and G2, school/class identifiers, and randomized assignment or a defensible rollout design.",
+      "failure_condition": "Reject the matching claim if the needs-check does not improve matched-support uptake, or if any uptake improvement fails to yield a prespecified meaningful G2 improvement under adequate precision.",
+      "nearest_prior_query": "Search for randomized school-based student-needs assessment or diagnostic advising interventions that route adolescents to different support types, reporting matched uptake and subsequent course grades."
+    },
+    {
+      "id": "I3",
+      "title": "Compare structured retrieval practice with additional study time",
+      "question": "For students with low G1 but adequate attendance, does a short subject-specific retrieval-practice routine improve G2 more than an equal-duration recommendation to add independent study time?",
+      "new_claim": "When attendance is adequate, the organization and feedback of study may matter more than reported weekly study-time category; an equal-time strategy comparison can separate study method from additional time.",
+      "input_delta": "The input records an ordinal weekly study-time category and period grades but not study strategy, actual time, practice completion, or randomized method assignment. The proposal adds an equal-time strategy contrast and direct exposure measures.",
+      "domain_value": "If effective, schools can offer a concrete low-cost study routine rather than relying on broad advice to study longer.",
+      "known_basis_refs": [
+        "official_documentation.variables: studytime, absences, G1, G2",
+        "case.workflow: understanding or allocating student support beyond generic final-grade prediction"
+      ],
+      "assumptions": [
+        "A retrieval routine can be delivered for the same time as the comparison study period.",
+        "Students can complete short practice and report or log duration reliably.",
+        "The period-2 assessment covers material practiced during the intervention."
+      ],
+      "variables_and_units": "Eligibility: G1 below predeclared threshold (0-20) and attendance above a predeclared school threshold. Randomized study strategy: retrieval practice with feedback versus equal-duration independent study (categorical). Exposure: completed minutes and practice items (minutes and count). Outcome: G2 (0-20 grade points). Unit: student, with class-aware assignment or inference.",
+      "testable_prediction": "At equal scheduled study minutes, retrieval practice with feedback will yield a larger mean G2 gain than independent study, without requiring a larger total study-time dose.",
+      "alternative": "Additional structured attention or time, rather than retrieval practice, drives any improvement; under equal delivered minutes the G2 difference will be negligible.",
+      "discriminating_test": "Randomize eligible students to supervised retrieval practice with feedback or equal-duration independent study, record delivered minutes and completion, use a common period-2 assessment, and compare intention-to-treat G2 with a prespecified minimum meaningful difference.",
+      "feasible_with_current_data": "No strategy effect can be assessed in the supplied data because study method, intervention exposure, and randomized assignment are absent. Studytime categories can inform recruitment only.",
+      "required_new_data": "Prospective study-strategy assignment, actual session duration and completion, aligned common G2 assessment, baseline G1 and attendance, and school/class identifiers.",
+      "failure_condition": "Reject the strategy-specific claim if the retrieval group does not exceed equal-time study on G2 by the prespecified meaningful difference, or if delivered exposure is too unequal to interpret the contrast.",
+      "nearest_prior_query": "Search for secondary-school randomized retrieval-practice interventions compared with equal-time independent study, with period-grade outcomes and attendance-conditioned effects."
+    }
+  ],
+  "selected_id": "I1",
+  "method_ids": [
+    "M02",
+    "M33",
+    "M34"
+  ],
+  "task": {
+    "deliverable": "Critique I1 and return one compact feasibility and discrimination note for the proposed equal-contact randomized comparison. Use the supplied input only. If helpful, request at most one broker computation and one Crossref search; do not claim results before they are returned.",
+    "acceptance": [
+      "State whether current fields can assess subgroup size or only motivate the trial, and explain why they cannot identify support effects.",
+      "Specify the primary contrast, outcome, subgroup moderator, alternative, and one result that would falsify the frozen prediction.",
+      "Identify the minimum new measurements and address contact-time equality, support fidelity, classroom clustering, and ethical standard-support constraints.",
+      "If requesting computation, provide complete executable code using DF, no I/O, under 30 seconds, printing compact valid JSON under 40k characters; define the calculation and how its output could change or constrain I1.",
+      "If requesting literature search, state the missing relation and a focused Crossref query; explain how an overlapping intervention would change the novelty claim."
+    ],
+    "proposed_computation": "One exploratory broker calculation, if needed: tabulate counts of students below a predeclared G1 threshold crossed with a predeclared high-absence rule and traveltime category, and summarize G2-G1 by these strata with uncertainty intervals. This only checks recruitment/subgroup feasibility and whether there is descriptive signal; it must not be interpreted as a treatment effect, a mediated effect, or a prospective prediction.",
+    "proposed_search": "Crossref search for secondary-school randomized comparisons of attendance/access or missed-instruction recovery support versus equal-contact subject tutoring, emphasizing baseline absence moderation, attendance measurement, and course-grade outcomes. A close prior comparison would narrow the contribution to the specific setting, intervention components, or decision rule; title-only hits must not be treated as evidence of study results."
+  },
+  "critique": [],
+  "requests": [],
+  "final": null
+}

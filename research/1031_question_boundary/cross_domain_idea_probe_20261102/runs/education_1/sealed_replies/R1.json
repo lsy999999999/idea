@@ -1,0 +1,52 @@
+{
+  "recognition": "Recognize the public UCI Student Performance dataset (UCI 320), Portuguese-course records, and the Cortez and Silva 2008 study named in the supplied documentation. The data and its documented grade-prediction context are known; neither is claimed as new.",
+  "summary": "I retain the leader's I1 as a proposal about whether pre-G1 attendance burden modifies the effect of an offer of tutoring after G1 on G2-G1. The current data can only assess a confounded descriptive contrast: absence timing is unspecified, schoolsup timing and dose are unknown, and support was not randomized. I request one adjusted descriptive feasibility calculation and one focused Crossref search; no results are available yet.",
+  "candidates": [],
+  "selected_id": "I1",
+  "method_ids": ["M02", "M33", "M34"],
+  "task": {
+    "deliverable": "Critique and develop I1 while preserving the pre-tool prediction as frozen and labeling every uncomputed claim proposal-only.",
+    "acceptance": [
+      "Report the supplied-data schoolsup contrast as descriptive only; absence and support timing are unknown, and observed support is not an intervention effect.",
+      "Show support-by-absence cell counts, overlap, and an adjusted interaction estimate with uncertainty, while noting small or sparse cells and model limitations.",
+      "Specify a student-level randomized offer after G1, with pre-G1 absence measured and stratified, G2-G1 as outcome, intention-to-treat comparison, and a pre-registered practically useful interaction threshold and failure rule.",
+      "Compare returned Crossref records only to the extent their metadata or returned abstracts support; do not claim literature novelty from a limited search."
+    ],
+    "proposed_computation": "On all rows of DF, describe schoolsup yes/no by absences >=3 versus <3, then fit OLS for G2-G1 with schoolsup, high-absence indicator, their interaction, G1, failures, studytime, school and age. Return cell counts, the interaction coefficient, and HC3 standard error and 95% interval. This checks only a pre-specified descriptive premise; adjustment cannot recover temporal ordering or remove unmeasured confounding.",
+    "proposed_search": "Crossref search for secondary-school tutoring or academic-support randomized/encouragement evaluations that report baseline absenteeism as an effect moderator for subsequent grades. Compare the closest records and indicate whether metadata/abstract actually establishes this relation."
+  },
+  "critique": [
+    "The supplied schoolsup variable is a binary report of extra educational support, not a dated offer of the structured tutoring intervention in I1. Its association with grade change cannot estimate tutoring efficacy.",
+    "Absences are an undated total count, so absences >=3 cannot be interpreted as a pre-G1 moderator in these rows. The requested calculation is therefore a feasibility check on coding and overlap only.",
+    "G2-G1 adjusted for G1 is interpretable as a conditional descriptive contrast, but grade-change measurement and adjustment for its baseline component can introduce regression-to-the-mean coupling. Report the model as exploratory and do not read the interaction causally.",
+    "The randomized follow-up should define the eligibility/flagging rule before assignment, record pre-G1 absence days over a fixed window, randomize tutoring offer within absence strata, and measure offer, uptake, session dose, and dated G1/G2 grades. The allocation claim is supported only if the intention-to-treat offer-by-absence interaction is positive and its interval excludes zero and a predeclared minimum useful benefit; if it does not, do not prioritize by attendance burden, though an overall tutoring effect may remain."
+  ],
+  "requests": [
+    {
+      "type": "compute",
+      "id": "c1",
+      "idea_id": "I1",
+      "purpose": "Check the frozen descriptive feasibility prediction and whether the binary absence split has support in each schoolsup group. This is not a treatment-effect estimate.",
+      "model_spec": {
+        "unit": "student record",
+        "outcome": "G2 minus G1 grade points",
+        "exposure_proxy": "schoolsup=yes indicator; timing and dose unknown",
+        "moderator_proxy": "absences >=3 versus <3; observation window unknown",
+        "adjustment": ["G1", "failures", "studytime", "school", "age"],
+        "estimand": "OLS coefficient on schoolsup-by-high-absence interaction, a conditional descriptive contrast in grade change",
+        "uncertainty": "HC3 heteroskedasticity-robust standard error and normal-approximation 95% interval",
+        "report": ["four exposure-by-stratum cell counts", "interaction estimate", "standard error", "95% interval", "design-matrix rank"]
+      },
+      "code": "import json\nimport numpy as np\nimport pandas as pd\n\nd = DF.copy()\nd['high_abs'] = (d['absences'] >= 3).astype(float)\nd['sup'] = (d['schoolsup'] == 'yes').astype(float)\nd['gain'] = d['G2'] - d['G1']\nX = pd.DataFrame({\n    'intercept': np.ones(len(d)),\n    'sup': d['sup'],\n    'high_abs': d['high_abs'],\n    'sup_x_high': d['sup'] * d['high_abs'],\n    'G1': d['G1'].astype(float),\n    'failures': d['failures'].astype(float),\n    'studytime': d['studytime'].astype(float),\n    'age': d['age'].astype(float)\n})\nX = pd.concat([X, pd.get_dummies(d['school'], drop_first=True, dtype=float)], axis=1)\nA = X.to_numpy(dtype=float)\ny = d['gain'].to_numpy(dtype=float)\nbeta = np.linalg.lstsq(A, y, rcond=None)[0]\nresid = y - A @ beta\nbread = np.linalg.pinv(A.T @ A)\nh = np.einsum('ij,jk,ik->i', A, bread, A)\nadj = resid / np.maximum(1.0 - h, 1e-12)\nmeat = (A.T * (adj ** 2)) @ A\ncov = bread @ meat @ bread\nj = list(X.columns).index('sup_x_high')\nest = float(beta[j])\nse = float(np.sqrt(max(cov[j, j], 0.0)))\ncells = {}\nfor hi, hlabel in [(0.0, 'abs_lt_3'), (1.0, 'abs_ge_3')]:\n    for su, slabel in [(0.0, 'support_no'), (1.0, 'support_yes')]:\n        cells[hlabel + '_' + slabel] = int(((d['high_abs'] == hi) & (d['sup'] == su)).sum())\nprint(json.dumps({\n    'n': int(len(d)),\n    'cells': cells,\n    'interaction_grade_points': est,\n    'hc3_se': se,\n    'ci95_normal': [est - 1.96 * se, est + 1.96 * se],\n    'design_rank': int(np.linalg.matrix_rank(A)),\n    'design_columns': int(A.shape[1]),\n    'interpretation': 'descriptive_conditional_association_only_unknown_timing_and_confounding'\n}, separators=(',', ':')))"
+    },
+    {
+      "type": "search",
+      "id": "s1",
+      "idea_id": "I1",
+      "missing_relation": "Whether baseline absenteeism has been tested as a moderator of randomized or encouragement-based secondary-school tutoring/support effects on subsequent grades, distinct from observational allocation and grade prediction.",
+      "query": "secondary school tutoring academic support randomized trial baseline absenteeism moderator effect grades attendance subgroup",
+      "change_if_found": "If a close study tests this same moderator and outcome, narrow I1 to a distinct intervention, absence window, or decision context and cite it as prior work. If returned records only cover general tutoring effects or absenteeism prediction, retain the question as a candidate but make no world-literature novelty claim."
+    }
+  ],
+  "final": null
+}

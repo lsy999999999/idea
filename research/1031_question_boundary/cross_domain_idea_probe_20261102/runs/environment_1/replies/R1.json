@@ -1,0 +1,86 @@
+{
+  "recognition": "Recognized as UCI Beijing PM2.5 (UCI 381), an hourly US Embassy PM2.5 series paired with Beijing Capital Airport meteorology, 2010-2014. The supplied documentation cites Liang et al. (2015); no remembered result is claimed as new.",
+  "summary": "I1 is a useful episode-response question, but its original index and comparison were underspecified: repeated episode-hours can inflate support, and six-hour completeness can select episodes based on observed coverage. I refine it to one prespecified index per episode and a narrow observational contrast. No computation or literature search has run in this turn; both are requested below.",
+  "candidates": [
+    {
+      "id": "I1",
+      "title": "Do calm-to-wind transitions at a high-PM2.5 episode index predict six-hour persistence?",
+      "question": "For each observed episode of consecutive hourly PM2.5 >=150 ug/m^3, at its first hour with six subsequent consecutive observed hours, is six-hour all-hours-above-threshold continuation less frequent when the preceding row is calm (cbwd=cv), the index row has a named direction, and Iws rises, than in comparable episodes without that transition?",
+      "new_claim": "Adds an episode-level six-hour continuation estimand and a specific calm-to-named-direction plus rising-Iws contrast to the supplied regression task. This is a testable observational pattern, not a causal wind effect or proven response rule.",
+      "input_delta": "Thresholded episodes, one index per episode, the transition exposure, six-hour all-hours continuation, and a matched episode-level contrast are proposed additions; the input only supplies hourly concentrations and meteorology.",
+      "domain_value": "A reproducible persistence contrast could help determine whether wind-regime observations merit prospective monitoring or response-rule evaluation during high-pollution episodes.",
+      "known_basis_refs": [
+        "official_documentation.variables",
+        "official_documentation.additional_info.summary",
+        "data_profile.univariate_stats.pm2.5",
+        "data_profile.univariate_stats.cbwd",
+        "data_profile.univariate_stats.Iws"
+      ],
+      "assumptions": [
+        "No increments in No indicate consecutive hourly observations, as implied by the time-series record.",
+        "Recorded cv and Iws change are proxies for wind regime, not direct measures of transport, dilution, or local wind at the PM monitor.",
+        "The 150 ug/m^3 threshold, six-hour horizon, first eligible index, matching strata, and complete follow-up restriction are operational choices, not known physical thresholds.",
+        "Episodes interrupted by missing PM2.5 are split in the observed definition and can distort episode boundaries and eligibility."
+      ],
+      "variables_and_units": {
+        "PM2.5": "ug/m^3; observed hourly concentration",
+        "Iws": "m/s; recorded cumulative wind-speed field",
+        "cbwd": "recorded combined wind-direction category",
+        "episode": "consecutive rows with consecutive No and observed PM2.5 >=150 ug/m^3",
+        "index": "first episode hour with six subsequent rows consecutive in No and with observed PM2.5",
+        "exposure": "previous row cbwd=cv, index cbwd!=cv, and index Iws>previous-row Iws",
+        "outcome": "binary; all six subsequent observed hourly PM2.5 values >=150 ug/m^3",
+        "independent_unit": "episode; calendar-month block bootstrap is exploratory with only five years available"
+      },
+      "testable_prediction": "Among eligible episodes with covariate overlap, matched continuation will be lower for exposed index hours than for controls.",
+      "alternative": "The matched contrast is near zero, positive, unstable by year, or disappears under reasonable missing-follow-up rules; measured wind and calendar variables may not distinguish transport from synoptic conditions, source changes, or episode selection.",
+      "discriminating_test": "Freeze episode/index/exposure/outcome rules, quarter and six-hour clock matching strata, continuous matching covariates (index PM2.5, previous-hour PM2.5, TEMP, DEWP, PRES, Iws), greedy 1:1 no-replacement matching, and calendar-month block resampling before examining results. Report eligible, exposed, control and matched episode counts, continuation rates, matched risk difference and uncertainty. Report overlap failure rather than extrapolate. Missingness can split episodes and select complete follow-up; the contrast remains observational. Check year-specific support/sign only if adequate.",
+      "feasible_with_current_data": true,
+      "required_new_data": "For causal attribution or a transferable rule: co-located monitor-level wind speed/direction and boundary-layer height, multiple PM2.5 sites, emissions/intervention timestamps, monitor status logs, and prospective validation.",
+      "failure_condition": "Weaken or withdraw the pattern if eligible transition or matched support is inadequate, the matched difference is not negative or uncertainty includes no meaningful reduction, its sign is unstable across years, or reasonable missing-hour handling reverses it.",
+      "nearest_prior_query": "Search for studies of Beijing or comparable urban PM2.5 episode duration/persistence conditioned on calm-to-directional wind transitions or rising wind speed, distinguishing this episode-level conditional estimand from generic concentration prediction and meteorological association."
+    }
+  ],
+  "selected_id": "I1",
+  "method_ids": [
+    "M19",
+    "M33",
+    "M43"
+  ],
+  "task": {
+    "deliverable": "Critique and refine I1; request a support/matched-contrast computation and targeted Crossref search. Freeze definitions before results return.",
+    "acceptance": [
+      "Address confounding, episode selection, serial dependence, and missing follow-up; available covariates cannot establish causal identification.",
+      "Use one index per observed episode and explicit incomplete-window rules.",
+      "Report support, overlap, matched contrast, and block uncertainty only if computation returns successfully.",
+      "Use literature results only to adjust novelty framing; titles alone do not establish methods or findings."
+    ],
+    "proposed_computation": "Using complete DF, segment observed episodes, select one eligible index per episode, count exposed/control/matched units, and estimate the prespecified descriptive matched continuation contrast with calendar-month block resampling. No causal interpretation.",
+    "proposed_search": "Crossref search for prior Beijing PM2.5 episode persistence/duration studies involving calm-to-wind-direction transitions or rising wind speed. Close work would narrow the contribution to a measurement, missingness, or temporal-transfer test; title-only hits are leads only."
+  },
+  "critique": [
+    "The original candidate did not say whether exposure occurred at episode onset or any episode hour; repeated eligible hours could count one episode many times and create pseudoreplication. The revised estimand uses one index per episode.",
+    "Conditioning on six complete future labels excludes hours near missingness and may select a nonrepresentative subset; missingness can also split episodes. Do not treat missing follow-up as a negative outcome.",
+    "Matching measured weather and recent PM2.5 does not address emissions, boundary-layer height, spatial transport, or monitor mismatch. One series cannot establish causal effect or transferable response decisions.",
+    "Month-block resampling with five calendar years is fragile; its interval is exploratory. Show year-specific signs/support rather than imply independent replication."
+  ],
+  "requests": [
+    {
+      "type": "compute",
+      "id": "C1",
+      "idea_id": "I1",
+      "purpose": "Check whether the transition and continuation contrast has usable episode-level support and estimate its prespecified matched descriptive contrast; report weak overlap honestly.",
+      "model_spec": "Observed episodes are contiguous rows with No increments of one and observed PM2.5 >=150. Per episode, take the first index with six subsequent consecutive observed rows; exclude if previous row is unavailable. Exposure: previous cbwd=cv, index cbwd non-cv, index Iws greater than previous Iws. Outcome: all six future PM2.5 values >=150. Controls have no such transition at the index or during follow-up. Greedy 1:1 matching without replacement within calendar quarter and six-hour clock band, nearest standardized Euclidean distance on index PM2.5, previous-hour PM2.5, TEMP, DEWP, PRES, Iws. Report counts, unmatched rates, matched risk difference, and 95% percentile interval from calendar-month block resampling. Descriptive only.",
+      "code": "import json, numpy as np, pandas as pd\nx=DF.sort_values(\"No\").reset_index(drop=True).copy()\nrequired={\"No\",\"year\",\"month\",\"hour\",\"pm2.5\",\"cbwd\",\"Iws\",\"DEWP\",\"TEMP\",\"PRES\"}\nassert required.issubset(x.columns)\nx[\"episode\"]=-1; eid=0; i=0\nwhile i<len(x):\n    if pd.isna(x.at[i,\"pm2.5\"]) or x.at[i,\"pm2.5\"]<150: i+=1; continue\n    x.at[i,\"episode\"]=eid; j=i+1\n    while j<len(x) and x.at[j,\"No\"]==x.at[j-1,\"No\"]+1 and pd.notna(x.at[j,\"pm2.5\"]) and x.at[j,\"pm2.5\"]>=150:\n        x.at[j,\"episode\"]=eid; j+=1\n    eid+=1; i=j\nrows=[]\nfor eid,g in x[x.episode>=0].groupby(\"episode\",sort=True):\n    inds=g.index.to_list()\n    anchor=next((k for k in inds if k+6<len(x) and all(x.at[q,\"No\"]==x.at[q-1,\"No\"]+1 and pd.notna(x.at[q,\"pm2.5\"]) for q in range(k+1,k+7))),None)\n    if anchor is None or anchor==0 or x.at[anchor-1,\"No\"]!=x.at[anchor,\"No\"]-1: continue\n    ev=x.at[anchor-1,\"cbwd\"]==\"cv\" and x.at[anchor,\"cbwd\"]!=\"cv\" and x.at[anchor,\"Iws\"]>x.at[anchor-1,\"Iws\"]\n    clean=not any(x.at[q-1,\"cbwd\"]==\"cv\" and x.at[q,\"cbwd\"]!=\"cv\" and x.at[q,\"Iws\"]>x.at[q-1,\"Iws\"] for q in range(anchor,anchor+7))\n    if not ev and not clean: continue\n    z=x.loc[anchor]; prev=x.at[anchor-1,\"pm2.5\"]\n    if pd.isna(prev): continue\n    rows.append({\"episode\":int(eid),\"year\":int(z.year),\"month\":int(z.month),\"hour\":int(z.hour),\"treated\":int(ev),\"y\":int(all(x.at[q,\"pm2.5\"]>=150 for q in range(anchor+1,anchor+7))),\"pm\":float(z[\"pm2.5\"]),\"lag1\":float(prev),\"temp\":float(z.TEMP),\"dewp\":float(z.DEWP),\"pres\":float(z.PRES),\"iws\":float(z.Iws)})\na=pd.DataFrame(rows)\nr={\"eligible_episodes\":len(a),\"treated_episodes\":int(a.treated.sum()) if len(a) else 0,\"control_episodes\":int((1-a.treated).sum()) if len(a) else 0,\"unmatched_continuation_rates\":{},\"matched_pairs\":0,\"matched_difference_treated_minus_control\":None,\"month_block_bootstrap_95pct\":None}\nif len(a):\n    r[\"unmatched_continuation_rates\"]={str(k):float(v) for k,v in a.groupby(\"treated\").y.mean().items()}\n    cols=[\"pm\",\"lag1\",\"temp\",\"dewp\",\"pres\",\"iws\"]; mu=a[cols].mean(); sd=a[cols].std().replace(0,1).fillna(1); a[cols]=(a[cols]-mu)/sd\n    tr=a[a.treated==1].sort_values([\"year\",\"month\",\"hour\"]); co=a[a.treated==0].copy(); pairs=[]\n    for _,t in tr.iterrows():\n        pool=co[(co.month.sub(1)//3)==((t.month-1)//3)]; pool=pool[(pool.hour//6)==(t.hour//6)]\n        if pool.empty: continue\n        cidx=((pool[cols]-t[cols])**2).sum(axis=1).idxmin(); c=co.loc[cidx]\n        pairs.append({\"delta\":float(t.y-c.y),\"block\":str(int(t.year))+\"-\"+str(int(t.month))}); co=co.drop(cidx)\n    r[\"matched_pairs\"]=len(pairs)\n    if pairs:\n        r[\"matched_difference_treated_minus_control\"]=float(np.mean([p[\"delta\"] for p in pairs]))\n        rng=np.random.default_rng(381); blocks=sorted(set(p[\"block\"] for p in pairs)); boots=[]\n        for _ in range(1000):\n            sampled=rng.choice(blocks,size=len(blocks),replace=True); vals=[p[\"delta\"] for b in sampled for p in pairs if p[\"block\"]==b]\n            if vals: boots.append(float(np.mean(vals)))\n        r[\"month_block_bootstrap_95pct\"]=[float(np.quantile(boots,.025)),float(np.quantile(boots,.975))] if boots else None\nprint(json.dumps(r,separators=(\",\",\":\")))"
+    },
+    {
+      "type": "search",
+      "id": "S1",
+      "idea_id": "I1",
+      "missing_relation": "Whether prior work has studied episode-level PM2.5 persistence conditional on calm-to-directional wind transitions or rising wind speed, especially in Beijing hourly observations.",
+      "query": "(Beijing OR China) AND (PM2.5 OR fine particulate) AND (episode duration OR persistence OR pollution episode) AND (calm OR wind direction OR wind speed OR transition)",
+      "change_if_found": "If a close study uses essentially this conditional episode-persistence contrast, do not claim world novelty; narrow I1 to a distinct exposure definition, missingness-aware measurement test, or prospective temporal-transfer test. With titles alone, record a lead and make no detailed comparison."
+    }
+  ],
+  "final": null
+}

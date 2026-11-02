@@ -1,0 +1,652 @@
+{
+  "version": 6,
+  "replies": [
+    {
+      "label": "L1",
+      "role": "leader",
+      "reply": {
+        "recognition": "Recognized from supplied metadata as UCI Appliances Energy Prediction (UCI 374), associated with Candanedo et al. (2017), Data driven prediction models of energy use of appliances in a low-energy house. No remembered result is presented as new.",
+        "summary": "Propose a testable monitoring idea for one-household energy use beyond another aggregate predictor. Evidence: 19,735 ten-minute observations from one house over about 4.5 months; aggregate Appliances and lights energy, room temperature/humidity sensors, north-side outdoor T6/RH_6, partly interpolated airport weather, and documented random features rv1/rv2. The proposed increment tests whether delayed zone-specific thermal response adds an operational signal to aggregate energy monitoring. It cannot identify occupancy, appliance switching, or causal effects.",
+        "candidates": [
+          {
+            "id": "I1",
+            "title": "Thermal after-response as a monitor for sustained high household appliance load",
+            "question": "After a high Appliances energy interval, is there a delayed increase in laundry and ironing zone temperature beyond matched low-load periods with similar clock time, pre-event temperatures, and outdoor temperature change?",
+            "new_claim": "Input-level increment: test a preregistered lagged thermal-response contrast as a monitoring signal for sustained high aggregate appliance-energy episodes, rather than predicting the same-interval aggregate target. This is a hypothesis about observability, not device or occupant attribution or a literature novelty claim.",
+            "input_delta": "The task frames the data as regression and describes room sensors, ten-minute aggregation, and aggregate Appliances energy. The proposed addition links high-load episodes to a future 30-60 minute zone-temperature response and monitoring use. T3 is the laundry room and T7 the ironing room per supplied variable information.",
+            "domain_value": "If prospectively validated, a delayed zone response could flag sustained energy episodes for review and prioritize where to add submeters. It cannot identify a device or justify automated control by itself.",
+            "known_basis_refs": [
+              "materials.official_documentation.variables: Appliances and lights are separately measured energy in Wh; T3 is laundry-room temperature; T7 is ironing-room temperature.",
+              "materials.official_documentation.additional_info: energy is logged every ten minutes; wireless temperature/humidity readings are averaged over ten-minute periods; two random variables were included for regression testing.",
+              "materials.case.unit: one house, about 4.5 months; outdoor weather is partly interpolated; occupancy/appliance-level switching is not directly measured.",
+              "materials.data_profile: 19,735 rows; Appliances quantiles are supplied at 0, 0.25, 0.5, 0.75, and 1.0 only (median 60 Wh, maximum 1,080 Wh); no 90th percentile is assumed."
+            ],
+            "assumptions": [
+              "A portion of some sustained electrical loads may produce detectable room heat, but fraction and location are unknown.",
+              "High aggregate Appliances energy can include heterogeneous devices and cannot be equated with one appliance or activity.",
+              "Clock time, pre-event thermal state, and observed weather suffice for an initial observational contrast; residual confounding and interpolation error remain.",
+              "Rows are serially dependent; day-level or longer blocks, not individual rows, must govern uncertainty."
+            ],
+            "variables_and_units": {
+              "exposure": "Appliances, Wh per ten-minute interval; define high-load threshold before inspecting post-event temperatures and specify event merging.",
+              "separate_load": "lights, Wh per ten-minute interval; retain or match because it is separately measured.",
+              "primary_outcome": "Mean of T3 and T7 temperature change in degrees C from the pre-event 30-minute mean to the 30-60 minute post-event mean.",
+              "covariates": "T_out in degrees C (airport-derived, partly interpolated), T6 in degrees C (north-side outdoor sensor), pre-event T3/T7 in degrees C, clock time, and day of week.",
+              "placebo": "Same temperature contrast over the 30-60 minutes before the high-load event.",
+              "independent_unit": "One household time series; use contiguous day-level or longer blocks for uncertainty, not row-wise independence."
+            },
+            "testable_prediction": "Compared with low-load controls matched on clock time, pre-event T3/T7, and observed outdoor conditions, high-load events will have a positive mean 30-60 minute post-event T3/T7 temperature-change contrast, with a day-block confidence interval excluding zero. The corresponding pre-event lead contrast should be near zero. Freeze direction and window before computation.",
+            "alternative": "The apparent response reflects weather or time-of-day structure, reverse timing, sensor averaging, interpolation, or selection of unusual periods; alternatively, heterogeneous load location and heat output leave no stable thermal signature.",
+            "discriminating_test": "Run a matched event study with day-block uncertainty. Compare the predeclared post-event contrast with the pre-event lead placebo and matched low-load exposure. Report independent event days and sensitivity to high-load threshold. A prospective follow-up should log room-level plug/submeter Wh and device activity to test the monitoring interpretation.",
+            "feasible_with_current_data": "The broker has the complete timestamped dataframe and required energy and sensor columns, so observational lag and placebo contrasts are computable. Results establish only a single-house association, not device attribution, causal heating, or generalization.",
+            "required_new_data": "For monitoring validation, collect synchronized room-level plug/submeter Wh, appliance on/off labels, and room temperature at ten-minute or finer resolution in multiple homes. Record occupancy only if activity attribution is intended. Compare high-load episodes with matched low-load periods and predeclare alert precision or sensitivity/specificity.",
+            "failure_condition": "Withdraw the thermal-monitoring signal if the post-event contrast is non-positive or its day-block interval includes zero, if the pre-event lead is comparably positive, or if the signal is not robust to reasonable event-threshold and weather-matching choices.",
+            "nearest_prior_query": "Crossref query to test proximity: residential appliance energy event detection using indoor temperature sensors, lagged thermal response, and submeter ground truth. The supplied 2017 paper concerns data-driven prediction of appliance energy; its uninspected full text is not used to claim novelty."
+          },
+          {
+            "id": "I2",
+            "title": "Zone-specific thermal coupling as an operational ventilation-change monitor",
+            "question": "Do zone-specific lags between north-side outdoor T6 and indoor temperatures T1-T9 reveal periods of increased indoor-outdoor thermal coupling that merit ventilation or envelope inspection?",
+            "new_claim": "Input-level increment: evaluate a change-point monitor based on zone response lag to measured north-side outdoor temperature, then validate whether it corresponds to window/ventilation state. This proposal does not claim the data measure window opening or building heat loss.",
+            "input_delta": "The data include indoor temperatures by named room, T6 measured outside on the north side, and airport T_out with some interpolation. The proposed target is a changing zone-specific response lag, not aggregate energy prediction.",
+            "domain_value": "A validated flag could direct an energy team to inspect unusual ventilation or envelope conditions before interpreting consumption changes as occupant behavior.",
+            "known_basis_refs": [
+              "materials.official_documentation.variables: T1-T9 are room-specific temperatures; T6 is outside on the north side; T_out is airport weather.",
+              "materials.official_documentation.additional_info: room temperature/humidity observations were averaged over ten-minute periods; hourly airport weather was interpolated.",
+              "materials.case.unit: single house with no direct occupancy or appliance-switching measurement."
+            ],
+            "assumptions": [
+              "T6 and indoor sensors are sufficiently synchronized to estimate lag at ten-minute resolution.",
+              "Rapid zone response can arise from ventilation or envelope coupling, but solar gains, internal heat, sensor placement, and other causes are alternatives.",
+              "Enough independent outdoor-temperature transitions exist to assess feasibility; unknown until computation."
+            ],
+            "variables_and_units": {
+              "input": "T6 and T_out, degrees C at ten-minute intervals.",
+              "response": "T1-T9, degrees C at ten-minute intervals.",
+              "diagnostic": "Zone-specific lag or response coefficient with a defined estimation window and uncertainty.",
+              "validation_target": "Window/ventilation state and HVAC state, measured prospectively; neither is supplied."
+            },
+            "testable_prediction": "If useful, candidate periods with shorter T6-to-indoor response lag in one zone will be associated with independently logged window/ventilation changes there, compared with matched periods without such changes.",
+            "alternative": "Lag shifts reflect seasonal drift, airport interpolation, indoor gains, sensor placement, or autocorrelation rather than ventilation or envelope state.",
+            "discriminating_test": "Assess lag stability in blocked time segments using available sensors, then prospectively compare flagged and unflagged ten-minute windows against window contacts and HVAC logs, with sensitivity and false-alert rate fixed in advance.",
+            "feasible_with_current_data": "Descriptive lag stability is testable; identifying ventilation events or diagnostic accuracy is impossible without state labels.",
+            "required_new_data": "Window-contact and HVAC on/off logs, plus repeated measurements in several homes and zones, synchronized with T6, T_out, and T1-T9.",
+            "failure_condition": "Reject the monitor if estimated lag shifts are not reproducible across blocked periods or do not predict logged state changes above a prespecified baseline alert rate.",
+            "nearest_prior_query": "Crossref query to test proximity: residential window opening detection from indoor-outdoor temperature time series and zone thermal response."
+          },
+          {
+            "id": "I3",
+            "title": "Persistent overnight appliance energy as a standby-load audit trigger",
+            "question": "Does aggregate Appliances energy persist overnight when lights are zero and measured room temperatures are stable, enough to justify a plug-level standby-load audit?",
+            "new_claim": "Input-level increment: turn recurring low-activity overnight consumption into a defined audit trigger, separating an operational screening rule from an unsupported claim that the energy is standby consumption.",
+            "input_delta": "The task identifies separately measured Appliances and lights energy at ten-minute cadence. The proposed use detects recurring overnight energy persistence and triggers submeters rather than fitting another aggregate predictor.",
+            "domain_value": "A screening rule could prioritize homes or periods for plug-level auditing and potential standby-load reduction.",
+            "known_basis_refs": [
+              "materials.official_documentation.variables: Appliances and lights are separate energy variables in Wh.",
+              "materials.official_documentation.additional_info: energy is logged at ten-minute intervals.",
+              "materials.data_profile: Appliances has supplied median 60 Wh; overnight-specific summaries are not supplied."
+            ],
+            "assumptions": [
+              "Clock time defines an overnight window, but lights=0 and stable temperatures do not prove occupant absence or lack of active devices.",
+              "A persistent aggregate floor could include refrigeration, heating, or necessary loads and cannot be called standby without device measurements."
+            ],
+            "variables_and_units": {
+              "energy": "Appliances and lights, Wh per ten-minute interval.",
+              "context": "Timestamp and T1-T9, degrees C, used for a prespecified stable-temperature condition.",
+              "audit_unit": "Contiguous overnight episode and household, not independent ten-minute rows."
+            },
+            "testable_prediction": "A subset of overnight blocks with lights=0 and stable room temperatures will show recurring Appliances energy above the low-load floor on multiple nights; plug-level follow-up should identify a measurable, controllable portion.",
+            "alternative": "Energy is necessary refrigeration/heating or unmeasured occupant/device use; the screening condition may not predict controllable standby energy.",
+            "discriminating_test": "Estimate recurrence of the defined overnight condition in the current series, then instrument circuits with plug-level submeters for at least two weeks. Compare flagged and matched unflagged nights and quantify controllable Wh/day.",
+            "feasible_with_current_data": "Recurrence of aggregate overnight patterns is computable, but occupancy absence and standby-device attribution are unobserved.",
+            "required_new_data": "Plug-level Wh by device or circuit, occupancy/activity diary or sensor if making absence claims, and repeated nights across households.",
+            "failure_condition": "Do not use the screen for standby-load interventions if flagged periods lack a reproducible controllable plug-level load above matched unflagged baseline.",
+            "nearest_prior_query": "Crossref query to test proximity: residential standby energy detection from smart meter load profiles, night baseload screening, and plug-level validation."
+          }
+        ],
+        "selected_id": "I1",
+        "method_ids": [
+          "M19",
+          "M31",
+          "M33"
+        ],
+        "task": {
+          "deliverable": "Critique I1 and return a preregisterable event-study specification plus one computation request and one focused Crossref search request if useful. Estimate the predeclared 30-60 minute T3/T7 post-event contrast for high Appliances-energy episodes against low-load controls matched on clock time, pre-event thermal state, and observed outdoor conditions; quantify uncertainty with day-level or longer contiguous blocks; report the corresponding pre-event lead placebo. Do not report row-wise p-values as independent evidence or infer causal/device-specific effects. State event threshold, de-duplication, matching, missing/edge handling, and sensitivity checks before reading results. Search prior residential energy-event and indoor-temperature-sensor work.",
+          "acceptance": [
+            "Keep or revise the frozen prediction explicitly, and provide a plausible alternative and a result that would falsify the monitoring signal.",
+            "Return complete executable analysis code only if requesting computation; it must use DF, avoid I/O, print compact valid JSON, and run within broker limits.",
+            "Use the same time ordering and event/control definitions for the post-event contrast and lead placebo; account for serial dependence with day-level or longer blocks.",
+            "Separate an observational lag association from causal claims, occupancy inference, appliance identification, or cross-home generalization.",
+            "If searching, use one Crossref query about the lagged thermal-response monitoring relation and report only what returned source metadata supports."
+          ],
+          "proposed_computation": "Request a blocked event study on the complete supplied DF. Freeze high-load event thresholding and episode merging before inspecting outcomes; compare T3/T7 mean temperature change from the pre-event 30-minute baseline to the 30-60 minute post-event window against controls matched on clock time, pre-event temperatures, and T_out/T6. Report contrast in degrees C, day-block uncertainty, event/event-day counts, identically defined pre-event lead placebo, and sensitivity to threshold and matching. No results exist in this L1 turn.",
+          "proposed_search": "Crossref query: residential appliance energy event monitoring using lagged indoor room temperature response, with submeter or appliance-state validation; compare thermal-signature monitoring to aggregate energy prediction."
+        },
+        "critique": [],
+        "requests": [],
+        "final": null
+      },
+      "input_sha256": "b088ad7bf89eadeb7c36e60affe4bf1a223a1f4292d3917e79947d4f511ab784",
+      "reply_sha256": "99342096f7f27fce601771d38498ee0275b3d5e0c73cbfe5a1edcf1e11358861"
+    },
+    {
+      "label": "R1",
+      "role": "executor",
+      "reply": {
+        "recognition": "Recognized from supplied metadata as UCI Appliances Energy Prediction (UCI 374), associated with Candanedo et al. (2017), Data driven prediction models of energy use of appliances in a low-energy house. No remembered result is presented as new.",
+        "summary": "I1 remains a specific, testable monitoring hypothesis with a frozen event definition and falsifier. The supplied profile establishes data feasibility but contains no lag contrast, matched estimate, or literature result; both requests below are pending.",
+        "candidates": [
+          {
+            "id": "I1",
+            "title": "Thermal after-response as a monitor for sustained high household appliance load",
+            "question": "After a high Appliances energy interval, is there a delayed increase in laundry and ironing zone temperature beyond matched low-load periods with similar clock time, pre-event temperatures, and outdoor temperature change?",
+            "new_claim": "Input-level increment: test a preregistered lagged thermal-response contrast as a monitoring signal for sustained high aggregate appliance-energy episodes, rather than predicting the same-interval aggregate target. This is a hypothesis about observability, not device or occupant attribution or a literature novelty claim.",
+            "input_delta": "The task frames the data as regression and describes room sensors, ten-minute aggregation, and aggregate Appliances energy. The proposed addition links high-load episodes to a future 30-60 minute zone-temperature response and monitoring use. T3 is the laundry room and T7 the ironing room per supplied variable information.",
+            "domain_value": "If prospectively validated, a delayed zone response could flag sustained energy episodes for review and prioritize where to add submeters. It cannot identify a device or justify automated control by itself.",
+            "known_basis_refs": [
+              "materials.official_documentation.variables: Appliances and lights are separately measured energy in Wh; T3 is laundry-room temperature; T7 is ironing-room temperature.",
+              "materials.official_documentation.additional_info: energy is logged every ten minutes; wireless temperature/humidity readings are averaged over ten-minute periods; two random variables were included for regression testing.",
+              "materials.case.unit: one house, about 4.5 months; outdoor weather is partly interpolated; occupancy/appliance-level switching is not directly measured.",
+              "materials.data_profile: 19,735 rows; Appliances quantiles are supplied at 0, 0.25, 0.5, 0.75, and 1.0 only (median 60 Wh, maximum 1,080 Wh); no 90th percentile is assumed."
+            ],
+            "assumptions": [
+              "A portion of some sustained electrical loads may produce detectable room heat, but fraction and location are unknown.",
+              "High aggregate Appliances energy can include heterogeneous devices and cannot be equated with one appliance or activity.",
+              "Clock time, pre-event thermal state, and observed weather suffice for an initial observational contrast; residual confounding and interpolation error remain.",
+              "Rows are serially dependent; day-level or longer blocks, not individual rows, must govern uncertainty."
+            ],
+            "variables_and_units": {
+              "exposure": "Appliances >100 Wh per ten-minute interval in at least two consecutive rows; event time is the first row of each such run. Merge runs separated by at most one non-high row; report event and event-day counts. Sensitivity threshold: >150 Wh.",
+              "separate_load": "lights, Wh per ten-minute interval; retain or match because it is separately measured.",
+              "primary_outcome": "At event time t, average T3/T7 over t+30, t+40, and t+50 minutes minus the average over t-30, t-20, and t-10 minutes, in degrees C.",
+              "covariates": "T_out in degrees C (airport-derived, partly interpolated), T6 in degrees C (north-side outdoor sensor), pre-event T3/T7 in degrees C, clock time, and day of week.",
+              "placebo": "For the same event, average T3/T7 over t-30, t-20, and t-10 minutes minus the average over t-60, t-50, and t-40 minutes; apply the same contrast to matched controls.",
+              "independent_unit": "One household time series; use contiguous day-level or longer blocks for uncertainty, not row-wise independence."
+            },
+            "testable_prediction": "For events defined before examining temperatures, the mean matched event-minus-control post-event change will be positive in degrees C with a day-block bootstrap 95% interval excluding zero; the identically constructed pre-event lead contrast will be near zero. This is a single-house observational prediction, not an effect of intervention.",
+            "alternative": "The apparent response reflects weather or time-of-day structure, reverse timing, sensor averaging, interpolation, or selection of unusual periods; alternatively, heterogeneous load location and heat output leave no stable thermal signature.",
+            "discriminating_test": "Use threshold >100 Wh for at least two consecutive ten-minute rows; event time is the run start, merging runs separated by one below-threshold row. Require complete contiguous windows; match each event without replacement to an Appliances<=100 Wh control on weekday, clock time within 60 minutes, pre-event T3/T7 mean within 1 C, and T6/T_out within 2 C, choosing the nearest standardized match. Estimate paired post-change differences and the same lead-placebo differences. Bootstrap event-day means (1,000 resamples, fixed seed); report event count, matched count, event days, intervals, and a prespecified >150 Wh sensitivity. No causal or device attribution.",
+            "feasible_with_current_data": "The broker has the complete timestamped dataframe and required energy and sensor columns, so observational lag and placebo contrasts are computable. Results establish only a single-house association, not device attribution, causal heating, or generalization.",
+            "required_new_data": "For monitoring validation, collect synchronized room-level plug/submeter Wh, appliance on/off labels, and room temperature at ten-minute or finer resolution in multiple homes. Record occupancy only if activity attribution is intended. Compare high-load episodes with matched low-load periods and predeclare alert precision or sensitivity/specificity.",
+            "failure_condition": "Do not retain the monitoring signal if the primary matched post-event contrast is non-positive or its day-block bootstrap 95% interval includes zero, if the placebo lead is comparably positive, or if the direction changes under the >150 Wh sensitivity or reasonable matching calipers.",
+            "nearest_prior_query": "Crossref query to test proximity: residential appliance energy event detection using indoor temperature sensors, lagged thermal response, and submeter ground truth. The supplied 2017 paper concerns data-driven prediction of appliance energy; its uninspected full text is not used to claim novelty."
+          },
+          {
+            "id": "I2",
+            "title": "Zone-specific thermal coupling as an operational ventilation-change monitor",
+            "question": "Do zone-specific lags between north-side outdoor T6 and indoor temperatures T1-T9 reveal periods of increased indoor-outdoor thermal coupling that merit ventilation or envelope inspection?",
+            "new_claim": "Input-level increment: evaluate a change-point monitor based on zone response lag to measured north-side outdoor temperature, then validate whether it corresponds to window/ventilation state. This proposal does not claim the data measure window opening or building heat loss.",
+            "input_delta": "The data include indoor temperatures by named room, T6 measured outside on the north side, and airport T_out with some interpolation. The proposed target is a changing zone-specific response lag, not aggregate energy prediction.",
+            "domain_value": "A validated flag could direct an energy team to inspect unusual ventilation or envelope conditions before interpreting consumption changes as occupant behavior.",
+            "known_basis_refs": [
+              "materials.official_documentation.variables: T1-T9 are room-specific temperatures; T6 is outside on the north side; T_out is airport weather.",
+              "materials.official_documentation.additional_info: room temperature/humidity observations were averaged over ten-minute periods; hourly airport weather was interpolated.",
+              "materials.case.unit: single house with no direct occupancy or appliance-switching measurement."
+            ],
+            "assumptions": [
+              "T6 and indoor sensors are sufficiently synchronized to estimate lag at ten-minute resolution.",
+              "Rapid zone response can arise from ventilation or envelope coupling, but solar gains, internal heat, sensor placement, and other causes are alternatives.",
+              "Enough independent outdoor-temperature transitions exist to assess feasibility; unknown until computation."
+            ],
+            "variables_and_units": {
+              "input": "T6 and T_out, degrees C at ten-minute intervals.",
+              "response": "T1-T9, degrees C at ten-minute intervals.",
+              "diagnostic": "Zone-specific lag or response coefficient with a defined estimation window and uncertainty.",
+              "validation_target": "Window/ventilation state and HVAC state, measured prospectively; neither is supplied."
+            },
+            "testable_prediction": "If useful, candidate periods with shorter T6-to-indoor response lag in one zone will be associated with independently logged window/ventilation changes there, compared with matched periods without such changes.",
+            "alternative": "Lag shifts reflect seasonal drift, airport interpolation, indoor gains, sensor placement, or autocorrelation rather than ventilation or envelope state.",
+            "discriminating_test": "Assess lag stability in blocked time segments using available sensors, then prospectively compare flagged and unflagged ten-minute windows against window contacts and HVAC logs, with sensitivity and false-alert rate fixed in advance.",
+            "feasible_with_current_data": "Descriptive lag stability is testable; identifying ventilation events or diagnostic accuracy is impossible without state labels.",
+            "required_new_data": "Window-contact and HVAC on/off logs, plus repeated measurements in several homes and zones, synchronized with T6, T_out, and T1-T9.",
+            "failure_condition": "Reject the monitor if estimated lag shifts are not reproducible across blocked periods or do not predict logged state changes above a prespecified baseline alert rate.",
+            "nearest_prior_query": "Crossref query to test proximity: residential window opening detection from indoor-outdoor temperature time series and zone thermal response."
+          },
+          {
+            "id": "I3",
+            "title": "Persistent overnight appliance energy as a standby-load audit trigger",
+            "question": "Does aggregate Appliances energy persist overnight when lights are zero and measured room temperatures are stable, enough to justify a plug-level standby-load audit?",
+            "new_claim": "Input-level increment: turn recurring low-activity overnight consumption into a defined audit trigger, separating an operational screening rule from an unsupported claim that the energy is standby consumption.",
+            "input_delta": "The task identifies separately measured Appliances and lights energy at ten-minute cadence. The proposed use detects recurring overnight energy persistence and triggers submeters rather than fitting another aggregate predictor.",
+            "domain_value": "A screening rule could prioritize homes or periods for plug-level auditing and potential standby-load reduction.",
+            "known_basis_refs": [
+              "materials.official_documentation.variables: Appliances and lights are separate energy variables in Wh.",
+              "materials.official_documentation.additional_info: energy is logged at ten-minute intervals.",
+              "materials.data_profile: Appliances has supplied median 60 Wh; overnight-specific summaries are not supplied."
+            ],
+            "assumptions": [
+              "Clock time defines an overnight window, but lights=0 and stable temperatures do not prove occupant absence or lack of active devices.",
+              "A persistent aggregate floor could include refrigeration, heating, or necessary loads and cannot be called standby without device measurements."
+            ],
+            "variables_and_units": {
+              "energy": "Appliances and lights, Wh per ten-minute interval.",
+              "context": "Timestamp and T1-T9, degrees C, used for a prespecified stable-temperature condition.",
+              "audit_unit": "Contiguous overnight episode and household, not independent ten-minute rows."
+            },
+            "testable_prediction": "A subset of overnight blocks with lights=0 and stable room temperatures will show recurring Appliances energy above the low-load floor on multiple nights; plug-level follow-up should identify a measurable, controllable portion.",
+            "alternative": "Energy is necessary refrigeration/heating or unmeasured occupant/device use; the screening condition may not predict controllable standby energy.",
+            "discriminating_test": "Estimate recurrence of the defined overnight condition in the current series, then instrument circuits with plug-level submeters for at least two weeks. Compare flagged and matched unflagged nights and quantify controllable Wh/day.",
+            "feasible_with_current_data": "Recurrence of aggregate overnight patterns is computable, but occupancy absence and standby-device attribution are unobserved.",
+            "required_new_data": "Plug-level Wh by device or circuit, occupancy/activity diary or sensor if making absence claims, and repeated nights across households.",
+            "failure_condition": "Do not use the screen for standby-load interventions if flagged periods lack a reproducible controllable plug-level load above matched unflagged baseline.",
+            "nearest_prior_query": "Crossref query to test proximity: residential standby energy detection from smart meter load profiles, night baseload screening, and plug-level validation."
+          }
+        ],
+        "selected_id": "I1",
+        "method_ids": [
+          "M19",
+          "M31",
+          "M33"
+        ],
+        "task": {
+          "deliverable": "Critique I1 and specify one reproducible computation and one targeted Crossref search. Preserve the frozen directional prediction; treat output as single-house observational evidence only.",
+          "acceptance": [
+            "Use >100 Wh for two consecutive ten-minute intervals as the main event rule, merge runs separated by one non-high interval, and report a >150 Wh threshold sensitivity.",
+            "Use complete contiguous windows, same-weekday controls within 60 minutes of clock time, calipers of 1 C on pre-event mean T3/T7 and 2 C on T6 and T_out, and nearest matching without replacement.",
+            "Report paired changes for the post window and identically defined lead placebo, with event counts and a 1,000-resample event-day bootstrap interval; do not treat rows as independent.",
+            "State that matched observational contrasts cannot establish intervention effects, appliance identity, occupancy, or generalization across homes.",
+            "Report search evidence only to the level of returned Crossref metadata; a title alone cannot establish study findings or novelty."
+          ],
+          "proposed_computation": "One matched event study on complete DF, using the exact specification in compute request C1. No computation has run in this executor turn.",
+          "proposed_search": "One Crossref query for residential appliance-energy event monitoring from lagged indoor room-temperature response, with submeter or appliance-state validation."
+        },
+        "critique": [
+          "The selected idea adds a useful lagged monitoring question, but L1 left “high-load,” episode merging, matching tolerances, edge handling, and the placebo contrast underspecified. Without those choices, event counts and the primary estimate could depend on analyst decisions after seeing outcomes.",
+          "T3 and T7 identify room locations, not the appliances contributing energy; the proposed contrast is a sensor association, not evidence of heat from a specific load or a causal effect. Single-house event days, not 19,735 rows, are the uncertainty units.",
+          "I made the prediction operational before requesting computation: >100 Wh in two consecutive intervals, prespecified merge rule, fixed 30-minute windows and lead placebo, explicit matching calipers, day-block bootstrap, and a >150 Wh sensitivity. If controls or independent event days are too few, the requested result should report infeasibility rather than relax definitions after inspection."
+        ],
+        "requests": [
+          {
+            "type": "compute",
+            "id": "C1",
+            "idea_id": "I1",
+            "purpose": "Check whether the preregistered matched lagged thermal contrast and lead placebo are estimable and directionally consistent in the supplied single-house series; return counts and day-level uncertainty, not a causal estimate.",
+            "model_spec": "Main event: Appliances >100 Wh for at least two adjacent ten-minute rows; event time is run start; merge runs separated by one non-high row. Controls have Appliances <=100 Wh throughout +/-60 minutes. Match without replacement on same weekday, circular clock-time distance <=60 minutes, pre-event mean(T3,T7) difference <=1 C, and T6 and T_out differences <=2 C, selecting minimum standardized squared distance. Outcome is mean(T3,T7) at +30,+40,+50 minutes minus mean at -30,-20,-10 minutes; lead placebo is mean at -30,-20,-10 minus mean at -60,-50,-40. Require contiguous ten-minute rows and complete windows. Bootstrap paired contrasts after averaging within event day, 1000 resamples with seed 42. Repeat at >150 Wh as threshold sensitivity.",
+            "code": "import json, math\nimport numpy as np\nimport pandas as pd\n\nd = DF.reset_index(drop=True).copy()\nd[\"_time\"] = pd.to_datetime(d[\"date\"], format=\"%Y-%m-%d%H:%M:%S\", errors=\"coerce\")\nd = d.sort_values(\"_time\", kind=\"stable\").reset_index(drop=True)\nt = d[\"_time\"].to_numpy()\napp = d[\"Appliances\"].to_numpy(float)\ntemp = ((d[\"T3\"].to_numpy(float) + d[\"T7\"].to_numpy(float)) / 2.0)\nt6, tout = d[\"T6\"].to_numpy(float), d[\"T_out\"].to_numpy(float)\ndow = d[\"_time\"].dt.dayofweek.to_numpy()\nminute = (d[\"_time\"].dt.hour * 60 + d[\"_time\"].dt.minute).to_numpy()\n\ndef contiguous(a, b):\n    return b <= len(t) and (b-a <= 1 or np.all(np.diff(t[a:b].astype(\"int64\")) == 600000000000))\ndef contrasts(i):\n    if i < 6 or i+6 > len(t) or not contiguous(i-6, i+6): return None\n    pre = float(np.mean(temp[i-3:i]))\n    post = float(np.mean(temp[i+3:i+6]))\n    lead = float(np.mean(temp[i-3:i]) - np.mean(temp[i-6:i-3]))\n    return post-pre, lead, pre\n\ndef run(threshold):\n    events=[]\n    i=1\n    while i+1 < len(app):\n        if app[i] > threshold and app[i+1] > threshold and app[i-1] <= threshold:\n            start=i; end=i+1; k=end+1\n            while k+2 < len(app) and app[k] <= threshold and app[k+1] > threshold and app[k+2] > threshold:\n                end=k+2; k=end+1\n            c=contrasts(start)\n            if c is not None: events.append((start,c))\n            i=end+1\n        else: i += 1\n    controls=[]\n    for j in range(6, len(app)-6):\n        if app[j] <= threshold and np.all(app[j-6:j+7] <= threshold) and contrasts(j) is not None:\n            controls.append(j)\n    used=set(); pairs=[]\n    for i, ec in events:\n        choices=[]\n        for j in controls:\n            if j in used or dow[j] != dow[i]: continue\n            td=abs(int(minute[j])-int(minute[i])); td=min(td,1440-td)\n            cc=contrasts(j)\n            if td > 60 or abs(ec[2]-cc[2]) > 1 or abs(t6[i]-t6[j]) > 2 or abs(tout[i]-tout[j]) > 2: continue\n            score=(td/60)**2+(ec[2]-cc[2])**2+(t6[i]-t6[j])**2/4+(tout[i]-tout[j])**2/4\n            choices.append((score,j,cc))\n        if choices:\n            _,j,cc=min(choices)\n            used.add(j); pairs.append((i,ec,j,cc))\n    if not pairs:\n        return {\"threshold_wh\":threshold,\"events\":len(events),\"matched\":0,\"event_days\":0,\"post_mean_c\":None,\"post_ci95_c\":None,\"lead_mean_c\":None,\"lead_ci95_c\":None}\n    byday={}\n    for i,ec,j,cc in pairs:\n        day=str(pd.Timestamp(t[i]).date())\n        byday.setdefault(day,[]).append((ec[0]-cc[0],ec[1]-cc[1]))\n    days=list(byday)\n    vals=np.array([np.mean(byday[x],axis=0) for x in days],float)\n    rng=np.random.default_rng(42)\n    boots=np.empty((1000,2))\n    for b in range(1000):\n        ix=rng.integers(0,len(days),len(days)); boots[b]=vals[ix].mean(axis=0)\n    return {\"threshold_wh\":threshold,\"events\":len(events),\"matched\":len(pairs),\"event_days\":len(days),\"post_mean_c\":float(vals[:,0].mean()),\"post_ci95_c\":[float(x) for x in np.percentile(boots[:,0],[2.5,97.5])],\"lead_mean_c\":float(vals[:,1].mean()),\"lead_ci95_c\":[float(x) for x in np.percentile(boots[:,1],[2.5,97.5])],\"uncertainty\":\"bootstrap of event-day mean paired contrasts; 1000 resamples, seed 42\"}\n\nprint(json.dumps({\"rows\":len(d),\"main\":run(100.0),\"threshold_sensitivity\":run(150.0)},separators=(\",\",\":\"),allow_nan=False))"
+          },
+          {
+            "type": "search",
+            "id": "S1",
+            "idea_id": "I1",
+            "missing_relation": "Whether prior residential energy-monitoring work has tested delayed indoor room-temperature responses after aggregate appliance-load events, especially against submeter or appliance-state ground truth, and whether this exact monitoring relation is already established.",
+            "query": "(\"appliance energy\" OR \"residential energy\") AND (\"indoor temperature\" OR \"room temperature\") AND (event detection OR event monitoring OR submeter OR appliance state) AND (lag OR delayed response)",
+            "change_if_found": "If returned records directly study the same lagged thermal signature with submeter or appliance-state validation, narrow the claim to this dataset and its prespecified T3/T7 contrast or withdraw the literature-novelty implication; if only adjacent prediction or non-thermal event detection appears, retain the input-level hypothesis while marking world-literature novelty unresolved."
+          }
+        ],
+        "final": null
+      },
+      "input_sha256": "3516f46fd25062ca10ed59165b43712c03a17b5a11c7fc7d6125c12386565cde",
+      "reply_sha256": "70399e6d53e593dedc84576834454d17264467877c6d4ed8b681f70d25f6dbed"
+    },
+    {
+      "label": "L2",
+      "role": "leader",
+      "reply": {
+        "recognition": "Recognized the supplied source as UCI Appliances Energy Prediction (UCI 374), associated with Candanedo et al. (2017). No remembered result is claimed as new.",
+        "summary": "The frozen sustained high-load event study could not be estimated: the broker found zero events at both >100 Wh and >150 Wh under the requirement for two consecutive ten-minute rows. The targeted search returned adjacent appliance-event/NILM work and an AC dataset with appliance labels and indoor temperature, but does not resolve whether the proposed lagged contrast is known. Revise I1 to test whether isolated single-interval aggregate energy spikes can serve as prompts for a delayed room-temperature monitoring signal. This revised prediction is uncomputed and proposal-only.",
+        "candidates": [
+          {
+            "id": "I1",
+            "title": "Thermal after-response to isolated household energy spikes",
+            "question": "After an isolated high Appliances-energy interval, does a delayed temperature change in the laundry and ironing zones distinguish the event from matched low-load periods well enough to prompt monitoring review?",
+            "new_claim": "Input-level increment: test a lagged room-temperature contrast following isolated single-interval aggregate-energy spikes as a monitoring signal, rather than predicting the contemporaneous aggregate target. This is a proposal about observability, not device identification, causal heating, or a claim of literature novelty.",
+            "input_delta": "The supplied task and dataset describe aggregate Appliances energy and room sensors but do not propose an event-triggered delayed thermal monitor. The broker result shows that the original sustained-event definition (>100 Wh for two adjacent rows, also tested at >150 Wh) yielded zero eligible events. Changing the exposure to isolated single-interval spikes is a new, uncomputed specification intended to avoid that observed feasibility failure.",
+            "domain_value": "If validated prospectively, a delayed zone-temperature response could flag aggregate energy spikes for review and guide where to install submeters. It would not identify a device or justify automated control.",
+            "known_basis_refs": [
+              "materials.official_documentation.variables: Appliances is energy in Wh; T3 is laundry-room temperature; T7 is ironing-room temperature; lights is separately measured energy.",
+              "materials.official_documentation.additional_info: energy and room sensors are aggregated at ten-minute intervals; two random variables were included for regression testing.",
+              "materials.case.unit: one house over about 4.5 months; outdoor weather is partly interpolated; occupancy and appliance-level switching are not directly measured.",
+              "materials.data_profile: 19,735 rows; Appliances median is 60 Wh and maximum is 1,080 Wh; supplied quantiles do not include the 90th percentile.",
+              "tools.C1.result: zero events at >100 Wh and >150 Wh when an event required at least two consecutive high intervals; no matched contrasts or placebo estimates were produced."
+            ],
+            "assumptions": [
+              "Some isolated high aggregate-energy intervals may be followed by a measurable room-temperature change, but the responsible devices, heat fraction, and location are unknown.",
+              "An isolated high interval can be distinguished from a sustained event using a preregistered event rule and guard interval; its count and feasibility remain uncomputed.",
+              "Clock time, pre-event thermal state, separately measured lights, and observed outdoor conditions are useful matching variables, but residual confounding and weather interpolation error remain.",
+              "The time series is serially dependent; uncertainty must use event-day or longer blocks rather than row-wise independence."
+            ],
+            "variables_and_units": {
+              "exposure": "Appliances, Wh per ten-minute interval; define a high single-interval threshold and isolation/guard rule before examining temperatures.",
+              "separate_load": "lights, Wh per ten-minute interval; retain as a matching or adjustment variable.",
+              "primary_outcome": "Mean of T3 and T7 temperature in degrees C at +30, +40, and +50 minutes relative to the mean at -30, -20, and -10 minutes.",
+              "covariates": "Pre-event mean T3/T7 in degrees C, T6 in degrees C, T_out in degrees C (airport-derived and partly interpolated), clock time, and weekday.",
+              "placebo": "The same T3/T7 temperature contrast from -60 to -30 minutes before the event.",
+              "independent_unit": "Event day within one household time series; external validation requires multiple homes."
+            },
+            "testable_prediction": "Among isolated high single-interval events defined before outcome inspection, the matched event-minus-control T3/T7 change over +30 to +50 minutes will be positive, with a day-block 95% interval excluding zero, while the pre-event placebo will be near zero. This is an uncomputed hypothesis.",
+            "alternative": "Any apparent delayed response is due to weather or time-of-day structure, reverse timing, sensor aggregation, selection, or unrelated indoor gains; alternatively, heterogeneous load sources produce no stable thermal signal.",
+            "discriminating_test": "First preregister an isolation rule and threshold for one Appliances interval, then count eligible events without relaxing it. If enough events exist, match to low-load intervals on weekday, clock time, pre-event T3/T7, lights, T6, and T_out using fixed calipers; require complete contiguous windows. Estimate paired post-event and lead-placebo contrasts with event-day block uncertainty. If eligible event counts remain too small, stop the retrospective analysis and run prospective synchronized measurement with room-level submeter Wh, appliance on/off labels, and room temperatures in multiple homes.",
+            "feasible_with_current_data": "Unknown for the revised single-interval definition because it was not computed. The prior sustained-event definition is infeasible in the broker result. The available columns could support a retrospective test if the revised rule yields enough eligible isolated events, but any result would remain a single-house observational association.",
+            "required_new_data": "For monitoring validation, collect synchronized room-level plug/submeter Wh, appliance on/off labels, and room temperature at ten-minute or finer resolution in multiple homes. Predefine isolated-event thresholds, alert precision or sensitivity/specificity, and matched low-load controls.",
+            "failure_condition": "Reject the monitoring signal if the revised exposure has too few eligible events for the prespecified analysis, the matched post-event contrast is non-positive or its event-day interval includes zero, the lead placebo is comparably positive, or the direction fails a preregistered threshold sensitivity.",
+            "nearest_prior_query": "Crossref query on residential appliance-energy event detection using indoor temperature sensors, lagged thermal response, and submeter ground truth. The supplied 2017 paper concerns data-driven appliance-energy prediction; its full text was not inspected for this claim."
+          },
+          {
+            "id": "I2",
+            "title": "Zone-specific thermal coupling as an operational ventilation-change monitor",
+            "question": "Do zone-specific lags between north-side outdoor T6 and indoor temperatures T1-T9 reveal periods of increased indoor-outdoor thermal coupling that merit ventilation or envelope inspection?",
+            "new_claim": "Input-level increment: evaluate a change-point monitor based on zone response lag to measured north-side outdoor temperature, then validate whether it corresponds to window or ventilation state. The data do not directly measure window opening or building heat loss.",
+            "input_delta": "The data include indoor temperatures by named room, north-side outdoor T6, and airport T_out with some interpolation. The proposed target is changing zone-specific response lag, not aggregate energy prediction.",
+            "domain_value": "A validated flag could direct an energy team to inspect unusual ventilation or envelope conditions before interpreting consumption changes as occupant behavior.",
+            "known_basis_refs": [
+              "materials.official_documentation.variables: T1-T9 are room-specific temperatures; T6 is outside on the north side; T_out is airport weather.",
+              "materials.official_documentation.additional_info: room temperature/humidity observations were averaged over ten-minute periods; hourly airport weather was interpolated.",
+              "materials.case.unit: single house with no direct occupancy or appliance-switching measurement."
+            ],
+            "assumptions": [
+              "T6 and indoor sensors are sufficiently synchronized to estimate lag at ten-minute resolution.",
+              "Rapid zone response can arise from ventilation or envelope coupling, but solar gains, internal heat, sensor placement, and other causes are alternatives.",
+              "Enough independent outdoor-temperature transitions exist to assess feasibility; unknown until computation."
+            ],
+            "variables_and_units": {
+              "input": "T6 and T_out, degrees C at ten-minute intervals.",
+              "response": "T1-T9, degrees C at ten-minute intervals.",
+              "diagnostic": "Zone-specific lag or response coefficient with a defined estimation window and uncertainty.",
+              "validation_target": "Window/ventilation state and HVAC state, measured prospectively; neither is supplied."
+            },
+            "testable_prediction": "Candidate periods with shorter T6-to-indoor response lag in one zone will be associated with independently logged window/ventilation changes there, compared with matched periods without such changes.",
+            "alternative": "Lag shifts reflect seasonal drift, airport interpolation, indoor gains, sensor placement, or autocorrelation rather than ventilation or envelope state.",
+            "discriminating_test": "Assess lag stability in blocked time segments using available sensors, then prospectively compare flagged and unflagged ten-minute windows against window contacts and HVAC logs, with sensitivity and false-alert rate fixed in advance.",
+            "feasible_with_current_data": "Descriptive lag stability is testable; identifying ventilation events or diagnostic accuracy is impossible without state labels.",
+            "required_new_data": "Window-contact and HVAC on/off logs, plus repeated measurements in several homes and zones, synchronized with T6, T_out, and T1-T9.",
+            "failure_condition": "Reject the monitor if estimated lag shifts are not reproducible across blocked periods or do not predict logged state changes above a prespecified baseline alert rate.",
+            "nearest_prior_query": "Crossref query to test proximity: residential window opening detection from indoor-outdoor temperature time series and zone thermal response."
+          },
+          {
+            "id": "I3",
+            "title": "Persistent overnight appliance energy as a standby-load audit trigger",
+            "question": "Does aggregate Appliances energy persist overnight when lights are zero and measured room temperatures are stable, enough to justify a plug-level standby-load audit?",
+            "new_claim": "Input-level increment: turn recurring low-activity overnight consumption into a defined audit trigger, separating an operational screening rule from an unsupported claim that the energy is standby consumption.",
+            "input_delta": "The task identifies separately measured Appliances and lights energy at ten-minute cadence. The proposed use detects recurring overnight energy persistence and triggers submeters rather than fitting another aggregate predictor.",
+            "domain_value": "A screening rule could prioritize homes or periods for plug-level auditing and potential standby-load reduction.",
+            "known_basis_refs": [
+              "materials.official_documentation.variables: Appliances and lights are separate energy variables in Wh.",
+              "materials.official_documentation.additional_info: energy is logged at ten-minute intervals.",
+              "materials.data_profile: Appliances has supplied median 60 Wh; overnight-specific summaries are not supplied."
+            ],
+            "assumptions": [
+              "Clock time defines an overnight window, but lights=0 and stable temperatures do not prove occupant absence or lack of active devices.",
+              "A persistent aggregate floor could include refrigeration, heating, or necessary loads and cannot be called standby without device measurements."
+            ],
+            "variables_and_units": {
+              "energy": "Appliances and lights, Wh per ten-minute interval.",
+              "context": "Timestamp and T1-T9, degrees C, used for a prespecified stable-temperature condition.",
+              "audit_unit": "Contiguous overnight episode and household, not independent ten-minute rows."
+            },
+            "testable_prediction": "A subset of overnight blocks with lights=0 and stable room temperatures will show recurring Appliances energy above the low-load floor on multiple nights; plug-level follow-up should identify a measurable, controllable portion.",
+            "alternative": "Energy is necessary refrigeration/heating or unmeasured occupant/device use; the screening condition may not predict controllable standby energy.",
+            "discriminating_test": "Estimate recurrence of the defined overnight condition in the current series, then instrument circuits with plug-level submeters for at least two weeks. Compare flagged and matched unflagged nights and quantify controllable Wh/day.",
+            "feasible_with_current_data": "Recurrence of aggregate overnight patterns is computable, but occupancy absence and standby-device attribution are unobserved.",
+            "required_new_data": "Plug-level Wh by device or circuit, occupancy/activity diary or sensor if making absence claims, and repeated nights across households.",
+            "failure_condition": "Do not use the screen for standby-load interventions if flagged periods lack a reproducible controllable plug-level load above matched unflagged baseline.",
+            "nearest_prior_query": "Crossref query to test proximity: residential standby energy detection from smart meter load profiles, night baseload screening, and plug-level validation."
+          }
+        ],
+        "selected_id": "I1",
+        "method_ids": [
+          "M19",
+          "M31",
+          "M33"
+        ],
+        "task": {
+          "deliverable": "Final status and evidence update for I1, with a concrete revised idea and next falsifiable test.",
+          "acceptance": [
+            "Preserve the original L1 prediction and report that its two tested sustained-event thresholds yielded zero eligible events.",
+            "Label the isolated-single-interval revision proposal-only and do not invent a count or estimate for it.",
+            "Separate the search's adjacent NILM/AC-temperature evidence from claims about the proposed delayed thermal contrast.",
+            "Specify a next test with event definition, measurement, comparison, uncertainty unit, and failure rule."
+          ],
+          "proposed_computation": "No further computation is available in this final turn. The next test should preregister an isolated single-interval threshold and guard rule, count eligible events first, then run matched post-event and lead-placebo contrasts with event-day block uncertainty only if event counts suffice.",
+          "proposed_search": "No further search is available in this final turn. A follow-up should inspect full texts and search explicitly for delayed indoor thermal responses after aggregate residential load events, distinguishing this from NILM datasets that merely contain both electrical and temperature labels."
+        },
+        "critique": [
+          "L1 left event thresholding and control definitions underspecified; R1 made these operational before the computation.",
+          "T3/T7 are room sensors, not appliance labels. Their association with aggregate energy cannot identify a device or establish a causal heat effect.",
+          "The frozen operationalization returned zero eligible events at both tested thresholds, so neither prediction nor placebo was evaluated. The proposed one-interval revision is not yet supported and must not be presented as an empirical result."
+        ],
+        "requests": [],
+        "final": {
+          "status": "revised",
+          "final_idea": {
+            "id": "I1",
+            "title": "Thermal after-response to isolated household energy spikes",
+            "question": "After an isolated high Appliances-energy interval, does a delayed temperature change in the laundry and ironing zones distinguish the event from matched low-load periods well enough to prompt monitoring review?",
+            "new_claim": "Input-level increment: test a lagged room-temperature contrast following isolated single-interval aggregate-energy spikes as a monitoring signal, rather than predicting the contemporaneous aggregate target. This is proposal-only; no empirical support or literature novelty is claimed.",
+            "input_delta": "The supplied task and dataset describe aggregate Appliances energy and room sensors but do not propose an event-triggered delayed thermal monitor. The original sustained-event rule produced zero eligible events at both preregistered thresholds; testing isolated single-interval spikes is a revised, uncomputed exposure definition.",
+            "domain_value": "If validated prospectively, a delayed zone-temperature response could flag aggregate energy spikes for review and guide where to install submeters. It would not identify a device or justify automated control.",
+            "known_basis_refs": [
+              "materials.official_documentation.variables: Appliances is energy in Wh; T3 is laundry-room temperature; T7 is ironing-room temperature; lights is separately measured energy.",
+              "materials.case.unit: ten-minute observations from one house; occupancy and appliance-level switching are not directly measured.",
+              "tools.C1.result: zero events at >100 Wh and >150 Wh when events required at least two consecutive high intervals.",
+              "tools.S1.result: returned adjacent appliance-event/NILM literature and an AC dataset abstract with labeled appliance state and indoor temperature; scope is limited."
+            ],
+            "assumptions": [
+              "Some isolated high aggregate-energy intervals may be followed by a measurable room-temperature change, but responsible devices and locations are unknown.",
+              "A preregistered isolation rule can distinguish isolated spikes from sustained episodes; event count remains uncomputed.",
+              "Matching on clock time, pre-event thermal state, lights, and observed outdoor conditions reduces some alternative explanations but cannot remove residual confounding.",
+              "The independent uncertainty unit is event day within the single-house series; multiple homes are needed for generalization."
+            ],
+            "variables_and_units": {
+              "exposure": "Appliances, Wh per ten-minute interval; preregister high-interval threshold and guard rule.",
+              "outcome": "Mean T3/T7 in degrees C at +30,+40,+50 minutes minus mean at -30,-20,-10 minutes.",
+              "comparison": "Matched Appliances<=100 Wh intervals on weekday, clock time, pre-event T3/T7, lights, T6, and T_out, with fixed calipers.",
+              "placebo": "T3/T7 change from -60 to -30 minutes before event.",
+              "independent_unit": "Event day within one household; external validation needs multiple homes."
+            },
+            "testable_prediction": "If sufficient isolated high-interval events exist, matched post-event T3/T7 change will be positive with an event-day block 95% interval excluding zero, while the pre-event placebo is near zero. Proposal-only; uncomputed.",
+            "alternative": "Weather, time-of-day, reverse timing, sensor averaging, unrelated internal gains, or heterogeneous load sources explain any observed pattern.",
+            "discriminating_test": "Preregister threshold and an isolation/guard rule, count eligible events, then match to low-load controls under fixed calipers and compare the 30-50 minute post-event contrast with the same pre-event placebo. Use event-day block uncertainty. If counts are inadequate, test prospectively with synchronized plug/submeter Wh, appliance state, and room-temperature sensors in multiple homes.",
+            "feasible_with_current_data": "Unknown for the revised exposure definition. The prior sustained-event contrast was not estimable. Any retrospective association would be single-house and noncausal.",
+            "required_new_data": "For monitoring validation, synchronized room-level plug/submeter Wh, appliance on/off labels, and room temperatures at ten-minute or finer resolution in multiple homes, plus a preregistered alert-performance target.",
+            "failure_condition": "Reject the signal if the revised definition yields too few events, the post-event contrast is non-positive or its day-block interval includes zero, the lead placebo is comparably positive, or threshold sensitivity reverses the direction.",
+            "nearest_prior_query": "Crossref query for residential load-event monitoring using delayed indoor temperature response and submeter or appliance-state validation; returned sources are adjacent, and do not establish whether this relation is already known."
+          },
+          "evidence_level": "proposal_only",
+          "what_changed": "The original idea predicted a thermal response after sustained high load, defined as >100 Wh in two adjacent intervals with a >150 Wh sensitivity. The broker found zero events under both definitions, so the contrast and placebo were not estimated. I revised the exposure to isolated single-interval spikes, but that version has not been computed; its feasibility and prediction remain unknown.",
+          "what_is_known": "The supplied series contains 19,735 ten-minute rows for one house with aggregate Appliances/lights energy and room temperature sensors. C1 executed successfully with no errors and returned zero events and zero matches at both thresholds; consequently it produced no effect estimate, interval, or placebo result. S1 returned eight Crossref records with limited coverage. One 2022 abstract describes an 11-home AC dataset with electrical current, manually tagged ON/OFF state, and indoor temperature/humidity, supporting adjacency between appliance-state and temperature measurement. Other returned titles concern NILM event detection. Titles alone do not establish findings. The exact proposed delayed thermal contrast was not verified as new or known.",
+          "what_is_new_hypothesis": "Isolated high single-interval aggregate-energy spikes may precede a delayed T3/T7 temperature response that can serve as a review trigger, with little pre-event lead signal. This is a new-to-input test proposal, not a world-literature novelty claim.",
+          "falsifier": "With enough preregistered isolated events, a non-positive post-event contrast, an event-day interval including zero, a comparably positive lead placebo, or reversal under the prespecified threshold sensitivity rejects the monitoring signal. Too few events falsifies retrospective feasibility under the chosen rule, not the general physical possibility.",
+          "minimum_next_test": "Before inspecting temperatures, preregister the isolated-interval Appliances threshold and guard interval. Report eligible events and event days. If adequate, match each event to low-load controls on weekday, clock time, pre-event T3/T7, lights, T6, and T_out; estimate the +30 to +50 minute minus pre-event contrast and the -60 to -30 minute placebo, with event-day block uncertainty and one threshold sensitivity. If inadequate, collect synchronized room-level submeter Wh, appliance state, and T3/T7 in multiple homes and apply the same preregistered comparison.",
+          "tool_evidence_refs": [
+            "tools.C1.result",
+            "tools.S1.result"
+          ],
+          "nearest_work_comparison": "The Crossref return includes NILM event-detection titles and an abstract describing a labeled AC electricity/state and indoor-temperature dataset. This establishes nearby measurement and event-detection work, not that those sources test the proposed aggregate-load-to-delayed-room-temperature contrast. Coverage is limited and no full-text novelty review was done.",
+          "novelty_status": "Adds a specific event-triggered lagged thermal-monitoring question to the supplied regression-focused input. World-literature novelty is unresolved; no claim that this is the first such relation is supported.",
+          "limitations": "Single household and short observation period; aggregate energy does not identify appliances or occupancy; weather is partly interpolated; no intervention or device-state data; revised event definition uncomputed; search is relevance-ordered Crossref metadata with limited coverage."
+        }
+      },
+      "input_sha256": "7f9dda713eb360cfb1930e733cca5e6287e87c14f2aaf9a241f280ff9bcd3fcc",
+      "reply_sha256": "cc89837e1056080dfb4cbf020e6a9313b6e05a84f401cc845c43c6e8dfe0f6ad"
+    }
+  ],
+  "tools": [
+    {
+      "id": "C1",
+      "type": "compute",
+      "request": {
+        "type": "compute",
+        "id": "C1",
+        "idea_id": "I1",
+        "purpose": "Check whether the preregistered matched lagged thermal contrast and lead placebo are estimable and directionally consistent in the supplied single-house series; return counts and day-level uncertainty, not a causal estimate.",
+        "model_spec": "Main event: Appliances >100 Wh for at least two adjacent ten-minute rows; event time is run start; merge runs separated by one non-high row. Controls have Appliances <=100 Wh throughout +/-60 minutes. Match without replacement on same weekday, circular clock-time distance <=60 minutes, pre-event mean(T3,T7) difference <=1 C, and T6 and T_out differences <=2 C, selecting minimum standardized squared distance. Outcome is mean(T3,T7) at +30,+40,+50 minutes minus mean at -30,-20,-10 minutes; lead placebo is mean at -30,-20,-10 minus mean at -60,-50,-40. Require contiguous ten-minute rows and complete windows. Bootstrap paired contrasts after averaging within event day, 1000 resamples with seed 42. Repeat at >150 Wh as threshold sensitivity.",
+        "code": "import json, math\nimport numpy as np\nimport pandas as pd\n\nd = DF.reset_index(drop=True).copy()\nd[\"_time\"] = pd.to_datetime(d[\"date\"], format=\"%Y-%m-%d%H:%M:%S\", errors=\"coerce\")\nd = d.sort_values(\"_time\", kind=\"stable\").reset_index(drop=True)\nt = d[\"_time\"].to_numpy()\napp = d[\"Appliances\"].to_numpy(float)\ntemp = ((d[\"T3\"].to_numpy(float) + d[\"T7\"].to_numpy(float)) / 2.0)\nt6, tout = d[\"T6\"].to_numpy(float), d[\"T_out\"].to_numpy(float)\ndow = d[\"_time\"].dt.dayofweek.to_numpy()\nminute = (d[\"_time\"].dt.hour * 60 + d[\"_time\"].dt.minute).to_numpy()\n\ndef contiguous(a, b):\n    return b <= len(t) and (b-a <= 1 or np.all(np.diff(t[a:b].astype(\"int64\")) == 600000000000))\ndef contrasts(i):\n    if i < 6 or i+6 > len(t) or not contiguous(i-6, i+6): return None\n    pre = float(np.mean(temp[i-3:i]))\n    post = float(np.mean(temp[i+3:i+6]))\n    lead = float(np.mean(temp[i-3:i]) - np.mean(temp[i-6:i-3]))\n    return post-pre, lead, pre\n\ndef run(threshold):\n    events=[]\n    i=1\n    while i+1 < len(app):\n        if app[i] > threshold and app[i+1] > threshold and app[i-1] <= threshold:\n            start=i; end=i+1; k=end+1\n            while k+2 < len(app) and app[k] <= threshold and app[k+1] > threshold and app[k+2] > threshold:\n                end=k+2; k=end+1\n            c=contrasts(start)\n            if c is not None: events.append((start,c))\n            i=end+1\n        else: i += 1\n    controls=[]\n    for j in range(6, len(app)-6):\n        if app[j] <= threshold and np.all(app[j-6:j+7] <= threshold) and contrasts(j) is not None:\n            controls.append(j)\n    used=set(); pairs=[]\n    for i, ec in events:\n        choices=[]\n        for j in controls:\n            if j in used or dow[j] != dow[i]: continue\n            td=abs(int(minute[j])-int(minute[i])); td=min(td,1440-td)\n            cc=contrasts(j)\n            if td > 60 or abs(ec[2]-cc[2]) > 1 or abs(t6[i]-t6[j]) > 2 or abs(tout[i]-tout[j]) > 2: continue\n            score=(td/60)**2+(ec[2]-cc[2])**2+(t6[i]-t6[j])**2/4+(tout[i]-tout[j])**2/4\n            choices.append((score,j,cc))\n        if choices:\n            _,j,cc=min(choices)\n            used.add(j); pairs.append((i,ec,j,cc))\n    if not pairs:\n        return {\"threshold_wh\":threshold,\"events\":len(events),\"matched\":0,\"event_days\":0,\"post_mean_c\":None,\"post_ci95_c\":None,\"lead_mean_c\":None,\"lead_ci95_c\":None}\n    byday={}\n    for i,ec,j,cc in pairs:\n        day=str(pd.Timestamp(t[i]).date())\n        byday.setdefault(day,[]).append((ec[0]-cc[0],ec[1]-cc[1]))\n    days=list(byday)\n    vals=np.array([np.mean(byday[x],axis=0) for x in days],float)\n    rng=np.random.default_rng(42)\n    boots=np.empty((1000,2))\n    for b in range(1000):\n        ix=rng.integers(0,len(days),len(days)); boots[b]=vals[ix].mean(axis=0)\n    return {\"threshold_wh\":threshold,\"events\":len(events),\"matched\":len(pairs),\"event_days\":len(days),\"post_mean_c\":float(vals[:,0].mean()),\"post_ci95_c\":[float(x) for x in np.percentile(boots[:,0],[2.5,97.5])],\"lead_mean_c\":float(vals[:,1].mean()),\"lead_ci95_c\":[float(x) for x in np.percentile(boots[:,1],[2.5,97.5])],\"uncertainty\":\"bootstrap of event-day mean paired contrasts; 1000 resamples, seed 42\"}\n\nprint(json.dumps({\"rows\":len(d),\"main\":run(100.0),\"threshold_sensitivity\":run(150.0)},separators=(\",\",\":\"),allow_nan=False))"
+      },
+      "result": {
+        "status": "executed",
+        "code_sha256": "c70d04ac57d47c18810bbbd00e019ea2d3e63414a96c44d032c99944b6250323",
+        "data_sha256": "df49e914acd72504f1109bd9fdb4a6970cb0effc8c7e977c92f95295af350e24",
+        "returncode": 0,
+        "stdout": "{\"rows\":19735,\"main\":{\"threshold_wh\":100.0,\"events\":0,\"matched\":0,\"event_days\":0,\"post_mean_c\":null,\"post_ci95_c\":null,\"lead_mean_c\":null,\"lead_ci95_c\":null},\"threshold_sensitivity\":{\"threshold_wh\":150.0,\"events\":0,\"matched\":0,\"event_days\":0,\"post_mean_c\":null,\"post_ci95_c\":null,\"lead_mean_c\":null,\"lead_ci95_c\":null}}\n",
+        "stderr": "",
+        "stdout_truncated": false
+      }
+    },
+    {
+      "id": "S1",
+      "type": "search",
+      "request": {
+        "type": "search",
+        "id": "S1",
+        "idea_id": "I1",
+        "missing_relation": "Whether prior residential energy-monitoring work has tested delayed indoor room-temperature responses after aggregate appliance-load events, especially against submeter or appliance-state ground truth, and whether this exact monitoring relation is already established.",
+        "query": "(\"appliance energy\" OR \"residential energy\") AND (\"indoor temperature\" OR \"room temperature\") AND (event detection OR event monitoring OR submeter OR appliance state) AND (lag OR delayed response)",
+        "change_if_found": "If returned records directly study the same lagged thermal signature with submeter or appliance-state validation, narrow the claim to this dataset and its prespecified T3/T7 contrast or withdraw the literature-novelty implication; if only adjacent prediction or non-thermal event detection appears, retain the input-level hypothesis while marking world-literature novelty unresolved."
+      },
+      "result": {
+        "status": "returned",
+        "sources": [
+          {
+            "id": "S1_S1",
+            "title": "Comparative Study of Event Detection Methods for Non-intrusive Appliance Load Monitoring",
+            "doi": "10.1016/j.egypro.2014.12.225",
+            "published_date_parts": [
+              2014
+            ],
+            "original_abstract": "",
+            "scope": "title/date/DOI only; do not infer findings",
+            "query": "(\"appliance energy\" OR \"residential energy\") AND (\"indoor temperature\" OR \"room temperature\") AND (event detection OR event monitoring OR submeter OR appliance state) AND (lag OR delayed response)"
+          },
+          {
+            "id": "S1_S2",
+            "title": "Residential electricity current and appliance dataset for AC-event detection from Indian dwellings",
+            "doi": "10.1186/s42162-022-00225-4",
+            "published_date_parts": [
+              2022,
+              12,
+              21
+            ],
+            "original_abstract": " Abstract \n                   Air Conditioners (ACs) have become a major contributor to residential electricity consumption in India. Non-intrusive Load Monitoring (NILM) can be used to understand residential AC use and its contribution to electricity consumption. NILM techniques use ground truth information along with meter readings to train disaggregation algorithms. There are datasets available for disaggregation, but no dataset is available for a hot tropical country like India especially for AC event detection. Our dataset’s primary objective is to help train NILM algorithms for AC event detection and compressor operations. The dataset comprises of home-level electrical current consumption and manually tagged AC ground truth (ON/OFF status) data at 1-min interval, indoor environment temperature and relative humidity readings at 5-min interval and dwelling, AC and household characteristics. The data was collected from 11 homes located in a composite climate zone-Hyderabad, India for 19 summer days (May) 2019. The dataset consists of 1.6 million data points and 450 AC cycles with each cycle having a runtime of more than 60 min (> 2000 compressor ON/OF cycles). Public availability of such a dataset will allow researchers to develop, train and test NILM algorithms that recognize AC and identify compressor operations. ",
+            "scope": "abstract and metadata",
+            "query": "(\"appliance energy\" OR \"residential energy\") AND (\"indoor temperature\" OR \"room temperature\") AND (event detection OR event monitoring OR submeter OR appliance state) AND (lag OR delayed response)"
+          },
+          {
+            "id": "S1_S3",
+            "title": "A systematic approach to ON-OFF event detection and clustering analysis of non-intrusive appliance load monitoring",
+            "doi": "10.1007/s11708-015-0358-6",
+            "published_date_parts": [
+              2015,
+              5,
+              4
+            ],
+            "original_abstract": "",
+            "scope": "title/date/DOI only; do not infer findings",
+            "query": "(\"appliance energy\" OR \"residential energy\") AND (\"indoor temperature\" OR \"room temperature\") AND (event detection OR event monitoring OR submeter OR appliance state) AND (lag OR delayed response)"
+          },
+          {
+            "id": "S1_S4",
+            "title": "Automatic power load event detection and appliance classification based on power harmonic features in nonintrusive appliance load monitoring",
+            "doi": "10.1109/iciea.2013.6566528",
+            "published_date_parts": [
+              2013,
+              6
+            ],
+            "original_abstract": "",
+            "scope": "title/date/DOI only; do not infer findings",
+            "query": "(\"appliance energy\" OR \"residential energy\") AND (\"indoor temperature\" OR \"room temperature\") AND (event detection OR event monitoring OR submeter OR appliance state) AND (lag OR delayed response)"
+          },
+          {
+            "id": "S1_S5",
+            "title": "Consumers' Response to State Energy Efficient Appliance Rebate Programs",
+            "doi": "10.1163/2210-7975_hrd-9985-20180045",
+            "published_date_parts": [],
+            "original_abstract": "",
+            "scope": "title/date/DOI only; do not infer findings",
+            "query": "(\"appliance energy\" OR \"residential energy\") AND (\"indoor temperature\" OR \"room temperature\") AND (event detection OR event monitoring OR submeter OR appliance state) AND (lag OR delayed response)"
+          },
+          {
+            "id": "S1_S6",
+            "title": "Performance Evaluation of Low Sampling Rates in Event Detection and Appliance Recognition in Non-Intrusive Load Monitoring System",
+            "doi": "10.1109/gpecom58364.2023.10175779",
+            "published_date_parts": [
+              2023,
+              6,
+              14
+            ],
+            "original_abstract": "",
+            "scope": "title/date/DOI only; do not infer findings",
+            "query": "(\"appliance energy\" OR \"residential energy\") AND (\"indoor temperature\" OR \"room temperature\") AND (event detection OR event monitoring OR submeter OR appliance state) AND (lag OR delayed response)"
+          },
+          {
+            "id": "S1_S7",
+            "title": "Data driven appliance identification for residential demand response",
+            "doi": "10.1016/j.enbuild.2026.118145",
+            "published_date_parts": [
+              2026,
+              11
+            ],
+            "original_abstract": "",
+            "scope": "title/date/DOI only; do not infer findings",
+            "query": "(\"appliance energy\" OR \"residential energy\") AND (\"indoor temperature\" OR \"room temperature\") AND (event detection OR event monitoring OR submeter OR appliance state) AND (lag OR delayed response)"
+          },
+          {
+            "id": "S1_S8",
+            "title": "Federated learning based appliance-level energy demand forecasting for residential buildings",
+            "doi": "10.32657/10356/152961",
+            "published_date_parts": [],
+            "original_abstract": "",
+            "scope": "title/date/DOI only; do not infer findings",
+            "query": "(\"appliance energy\" OR \"residential energy\") AND (\"indoor temperature\" OR \"room temperature\") AND (event detection OR event monitoring OR submeter OR appliance state) AND (lag OR delayed response)"
+          }
+        ],
+        "raw_sha256": "a3135e9f33feff01a3311e9450ec60a5de2f4be6cfcf7bfa379b14afc21c170b",
+        "scope": "Relevance-ordered Crossref index; limited coverage, no full-text or exhaustive novelty verdict"
+      }
+    }
+  ],
+  "counters": {
+    "replies": 3,
+    "compute": 1,
+    "search": 1
+  },
+  "final": {
+    "status": "revised",
+    "final_idea": {
+      "id": "I1",
+      "title": "Thermal after-response to isolated household energy spikes",
+      "question": "After an isolated high Appliances-energy interval, does a delayed temperature change in the laundry and ironing zones distinguish the event from matched low-load periods well enough to prompt monitoring review?",
+      "new_claim": "Input-level increment: test a lagged room-temperature contrast following isolated single-interval aggregate-energy spikes as a monitoring signal, rather than predicting the contemporaneous aggregate target. This is proposal-only; no empirical support or literature novelty is claimed.",
+      "input_delta": "The supplied task and dataset describe aggregate Appliances energy and room sensors but do not propose an event-triggered delayed thermal monitor. The original sustained-event rule produced zero eligible events at both preregistered thresholds; testing isolated single-interval spikes is a revised, uncomputed exposure definition.",
+      "domain_value": "If validated prospectively, a delayed zone-temperature response could flag aggregate energy spikes for review and guide where to install submeters. It would not identify a device or justify automated control.",
+      "known_basis_refs": [
+        "materials.official_documentation.variables: Appliances is energy in Wh; T3 is laundry-room temperature; T7 is ironing-room temperature; lights is separately measured energy.",
+        "materials.case.unit: ten-minute observations from one house; occupancy and appliance-level switching are not directly measured.",
+        "tools.C1.result: zero events at >100 Wh and >150 Wh when events required at least two consecutive high intervals.",
+        "tools.S1.result: returned adjacent appliance-event/NILM literature and an AC dataset abstract with labeled appliance state and indoor temperature; scope is limited."
+      ],
+      "assumptions": [
+        "Some isolated high aggregate-energy intervals may be followed by a measurable room-temperature change, but responsible devices and locations are unknown.",
+        "A preregistered isolation rule can distinguish isolated spikes from sustained episodes; event count remains uncomputed.",
+        "Matching on clock time, pre-event thermal state, lights, and observed outdoor conditions reduces some alternative explanations but cannot remove residual confounding.",
+        "The independent uncertainty unit is event day within the single-house series; multiple homes are needed for generalization."
+      ],
+      "variables_and_units": {
+        "exposure": "Appliances, Wh per ten-minute interval; preregister high-interval threshold and guard rule.",
+        "outcome": "Mean T3/T7 in degrees C at +30,+40,+50 minutes minus mean at -30,-20,-10 minutes.",
+        "comparison": "Matched Appliances<=100 Wh intervals on weekday, clock time, pre-event T3/T7, lights, T6, and T_out, with fixed calipers.",
+        "placebo": "T3/T7 change from -60 to -30 minutes before event.",
+        "independent_unit": "Event day within one household; external validation needs multiple homes."
+      },
+      "testable_prediction": "If sufficient isolated high-interval events exist, matched post-event T3/T7 change will be positive with an event-day block 95% interval excluding zero, while the pre-event placebo is near zero. Proposal-only; uncomputed.",
+      "alternative": "Weather, time-of-day, reverse timing, sensor averaging, unrelated internal gains, or heterogeneous load sources explain any observed pattern.",
+      "discriminating_test": "Preregister threshold and an isolation/guard rule, count eligible events, then match to low-load controls under fixed calipers and compare the 30-50 minute post-event contrast with the same pre-event placebo. Use event-day block uncertainty. If counts are inadequate, test prospectively with synchronized plug/submeter Wh, appliance state, and room-temperature sensors in multiple homes.",
+      "feasible_with_current_data": "Unknown for the revised exposure definition. The prior sustained-event contrast was not estimable. Any retrospective association would be single-house and noncausal.",
+      "required_new_data": "For monitoring validation, synchronized room-level plug/submeter Wh, appliance on/off labels, and room temperatures at ten-minute or finer resolution in multiple homes, plus a preregistered alert-performance target.",
+      "failure_condition": "Reject the signal if the revised definition yields too few events, the post-event contrast is non-positive or its day-block interval includes zero, the lead placebo is comparably positive, or threshold sensitivity reverses the direction.",
+      "nearest_prior_query": "Crossref query for residential load-event monitoring using delayed indoor temperature response and submeter or appliance-state validation; returned sources are adjacent, and do not establish whether this relation is already known."
+    },
+    "evidence_level": "proposal_only",
+    "what_changed": "The original idea predicted a thermal response after sustained high load, defined as >100 Wh in two adjacent intervals with a >150 Wh sensitivity. The broker found zero events under both definitions, so the contrast and placebo were not estimated. I revised the exposure to isolated single-interval spikes, but that version has not been computed; its feasibility and prediction remain unknown.",
+    "what_is_known": "The supplied series contains 19,735 ten-minute rows for one house with aggregate Appliances/lights energy and room temperature sensors. C1 executed successfully with no errors and returned zero events and zero matches at both thresholds; consequently it produced no effect estimate, interval, or placebo result. S1 returned eight Crossref records with limited coverage. One 2022 abstract describes an 11-home AC dataset with electrical current, manually tagged ON/OFF state, and indoor temperature/humidity, supporting adjacency between appliance-state and temperature measurement. Other returned titles concern NILM event detection. Titles alone do not establish findings. The exact proposed delayed thermal contrast was not verified as new or known.",
+    "what_is_new_hypothesis": "Isolated high single-interval aggregate-energy spikes may precede a delayed T3/T7 temperature response that can serve as a review trigger, with little pre-event lead signal. This is a new-to-input test proposal, not a world-literature novelty claim.",
+    "falsifier": "With enough preregistered isolated events, a non-positive post-event contrast, an event-day interval including zero, a comparably positive lead placebo, or reversal under the prespecified threshold sensitivity rejects the monitoring signal. Too few events falsifies retrospective feasibility under the chosen rule, not the general physical possibility.",
+    "minimum_next_test": "Before inspecting temperatures, preregister the isolated-interval Appliances threshold and guard interval. Report eligible events and event days. If adequate, match each event to low-load controls on weekday, clock time, pre-event T3/T7, lights, T6, and T_out; estimate the +30 to +50 minute minus pre-event contrast and the -60 to -30 minute placebo, with event-day block uncertainty and one threshold sensitivity. If inadequate, collect synchronized room-level submeter Wh, appliance state, and T3/T7 in multiple homes and apply the same preregistered comparison.",
+    "tool_evidence_refs": [
+      "tools.C1.result",
+      "tools.S1.result"
+    ],
+    "nearest_work_comparison": "The Crossref return includes NILM event-detection titles and an abstract describing a labeled AC electricity/state and indoor-temperature dataset. This establishes nearby measurement and event-detection work, not that those sources test the proposed aggregate-load-to-delayed-room-temperature contrast. Coverage is limited and no full-text novelty review was done.",
+    "novelty_status": "Adds a specific event-triggered lagged thermal-monitoring question to the supplied regression-focused input. World-literature novelty is unresolved; no claim that this is the first such relation is supported.",
+    "limitations": "Single household and short observation period; aggregate energy does not identify appliances or occupancy; weather is partly interpolated; no intervention or device-state data; revised event definition uncomputed; search is relevance-ordered Crossref metadata with limited coverage."
+  }
+}

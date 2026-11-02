@@ -1,0 +1,229 @@
+{
+  "version": 4,
+  "replies": [
+    {
+      "label": "L1",
+      "role": "leader",
+      "reply": {
+        "recognition": "Recognize this as the UCI Concrete Compressive Strength dataset (1030 rows; Yeh, 1998 introduction paper). This familiarity is disclosed and is not evidence that any proposed relation is new.",
+        "summary": "Question: among formulations observed at multiple curing ages, does replacing part of Portland cement with slag and/or fly ash change the early-to-later strength development relevant to deciding when a mix reaches a usable strength threshold? The available rows measure formulation inputs, age in days, and compressive strength in MPa; they do not identify batches, specimens, curing conditions, or independent replication. Predictions below are frozen as hypotheses, not findings.",
+        "candidates": [
+          {
+            "id": "I1",
+            "title": "Supplementary binder and time to usable strength",
+            "question": "For otherwise comparable concrete formulations, is the strength-development curve from early curing to 28 days, and from 28 to 56 days, different when a larger share of binder is blast-furnace slag and/or fly ash rather than Portland cement, in a way that changes the age at which a specified strength threshold is reached?",
+            "new_claim": "Input increment: shifts the task from predicting a single strength value to testing whether binder composition changes the age trajectory and threshold-crossing decision. Hypothesis: at similar total binder and water-to-binder ratio, higher slag-plus-fly-ash share is associated with less early strength per MPa threshold progress by day 7 and a larger later gain from day 7 to day 56 than a zero-SCM reference. This is a conjecture, not a causal or literature-novelty claim.",
+            "domain_value": "Could inform whether a formulation should be released, kept curing, or reformulated when early strength matters, instead of treating age as a generic predictor.",
+            "known_basis_refs": [
+              "UCI documentation: concrete strength is a nonlinear function of age and ingredients; Age is recorded in days and strength in MPa.",
+              "Yeh (1998), Modeling of strength of high-performance concrete using artificial neural networks, DOI 10.1016/S0008-8846(98)00165-3, listed as the dataset introduction paper; no specific result is inferred here."
+            ],
+            "assumptions": [
+              "Exact ingredient vectors at different ages are potentially comparable formulations, but not proven to be specimens from the same batch.",
+              "Higher slag-plus-fly-ash fraction can be treated as an operational composition contrast only after accounting for total binder and water-to-binder ratio; it is not a randomized substitution.",
+              "A decision threshold is specified by the application before collecting decision data; no universal threshold is assumed."
+            ],
+            "variables_and_units": "Inputs: Cement, Blast Furnace Slag, Fly Ash, Water, Superplasticizer, Coarse Aggregate and Fine Aggregate, each kg/m^3; Age, days; outcome Concrete compressive strength, MPa. Derived candidate exposure: (Blast Furnace Slag + Fly Ash)/(Cement + Blast Furnace Slag + Fly Ash), dimensionless. Candidate trajectory outcomes: strength difference in MPa over stated age intervals and first sampled age reaching a prespecified threshold in MPa.",
+            "testable_prediction": "Before seeing any broker output: among comparable formulations represented at multiple ages, the higher-SCM-share group will have a smaller 1-to-7-day strength gain or lower 7-day strength and a larger 7-to-56-day gain than the zero-SCM group; consequently its threshold-reaching age will be later for a threshold that is reached by both groups. The current table may not contain enough paired age observations to test all intervals.",
+            "alternative": "After matching or restricting on total binder and water-to-binder ratio, the apparent age-by-SCM contrast is small or absent; composition differences, sparse repeated formulations, or unrecorded curing/batch conditions explain the crude pattern. A second alternative is that SCM share changes strength level but not the age trajectory.",
+            "discriminating_test": "First establish how many exact or tightly prespecified near-matched recipes have observations at each age pair, then compare within-recipe age changes and the age-by-SCM contrast against a between-recipe-only comparison. For a causal follow-up, cast replicated specimens from predeclared matched recipes, vary SCM replacement while holding total binder, water-to-binder ratio, aggregate proportions and curing conditions fixed, test at 1, 7, 28 and 56 days, and compare interval gains and prespecified threshold age. A flat interaction supports the alternative; a repeatable interaction in the predicted direction supports the conjecture.",
+            "feasible_with_current_data": "Partly. Current rows can assess whether repeated ingredient vectors at different ages exist and whether an observational age-by-SCM contrast is estimable. They cannot establish same-batch trajectories, causal substitution effects, curing-condition effects, or a general qualification threshold.",
+            "required_new_data": "For a causal decision test: mix/batch and specimen IDs; replicated specimens; controlled curing temperature and moisture history; documented mix proportions; compressive-strength test age and MPa; and an application-specific threshold and release decision. Sample matched zero-SCM and SCM formulations at 1, 7, 28 and 56 days.",
+            "failure_condition": "The current-data premise fails if few or no formulations recur across the relevant ages, or if the predicted age-by-SCM contrast is absent/reversed in adequate matched observations. The causal hypothesis fails if a replicated controlled study finds no practically meaningful interval-gain or threshold-age difference under a predeclared margin.",
+            "nearest_prior_query": "Search for studies measuring age-dependent compressive-strength development or threshold age in matched concrete formulations with blast-furnace slag and/or fly-ash replacement, including comparisons controlling total binder and water-to-binder ratio. Determine whether the specific paired-trajectory/qualification decision is already established; do not infer findings from titles alone."
+          },
+          {
+            "id": "I2",
+            "title": "Water reduction and superplasticizer substitution at fixed binder",
+            "question": "At a fixed binder composition and total binder, can increased superplasticizer accompany lower water content while preserving 28-day compressive strength, and is the feasible water-reduction range different for SCM-containing mixes?",
+            "new_claim": "Input increment: frames the composition-strength relation as a constrained mix-design tradeoff (water reduction subject to a strength requirement), with a possible SCM interaction, rather than a general prediction task. Hypothesis: at similar binder and aggregate proportions, higher superplasticizer supports lower water-to-binder ratio without loss of 28-day strength over some range; the range may depend on SCM share.",
+            "domain_value": "Could guide mix qualification toward water-reduction candidates that maintain a specified strength, subject to later workability and durability checks.",
+            "known_basis_refs": [
+              "UCI documentation lists Water, Superplasticizer, binder ingredients, Age and compressive strength with units; it does not report workability or durability."
+            ],
+            "assumptions": [
+              "Observed recipes with differing water and admixture are not randomized and may differ in unrecorded workability targets or production context.",
+              "Compressive strength alone cannot establish pumpability, slump, durability, or overall mix acceptability."
+            ],
+            "variables_and_units": "Water and Superplasticizer, kg/m^3; Cement, Blast Furnace Slag and Fly Ash, kg/m^3; derived water-to-binder ratio, dimensionless; age, days; compressive strength, MPa. A decision requires a prespecified minimum strength and, in new data, workability measurement.",
+            "testable_prediction": "For formulations compared at similar binder and aggregate composition, lower water-to-binder ratio paired with higher superplasticizer will not reduce 28-day strength beyond a prespecified practical margin in at least some observed composition range; the size of that range may differ by SCM share.",
+            "alternative": "The apparent tradeoff is not identifiable from these rows because formulation selection and admixture use confound the comparison, or strength preservation does not hold once matched formulations are tested.",
+            "discriminating_test": "Use current data only to assess recipe overlap and define candidate water/admixture ranges. Then run a randomized matched-batch factorial varying water-to-binder ratio and superplasticizer at fixed binder and aggregate composition, measuring slump and 28-day MPa; test whether the prespecified strength margin is met while reporting workability.",
+            "feasible_with_current_data": "Only observational overlap and hypothesis feasibility are assessable; workability is absent and the causal tradeoff is not identifiable.",
+            "required_new_data": "Matched or randomized batches, replication, slump/workability, controlled curing, and 28-day compressive strength, with mixture proportions and batch IDs.",
+            "failure_condition": "No overlapping water-to-binder/admixture recipes make the current-data contrast unsupported; the proposed benefit fails if controlled mixes cannot lower water while meeting both the stated strength margin and workability requirement.",
+            "nearest_prior_query": "Search controlled concrete mix-design studies of water-to-binder reduction with superplasticizer at fixed binder content, stratified by slag/fly-ash replacement, and whether strength and workability constraints are jointly evaluated."
+          },
+          {
+            "id": "I3",
+            "title": "Threshold reliability under unrecorded batch variation",
+            "question": "For a candidate mix and curing age, how many independent batches and specimens are needed to make a defensible probability-of-passing-strength-threshold decision, rather than relying on a point prediction?",
+            "new_claim": "Input increment: turns strength qualification into a reliability and sampling-design question. Hypothesis: accounting for batch-level variation may change pass/fail decisions for mixes whose predicted mean lies near the threshold; the needed replication depends on between-batch variation, which the supplied table does not identify.",
+            "domain_value": "Could prevent a mean-strength estimate from being mistaken for reliable qualification and yield an actionable sampling plan.",
+            "known_basis_refs": [
+              "UCI documentation reports individual compressive-strength rows but no batch/specimen identifiers, curing environment, or replicate structure in the supplied case brief."
+            ],
+            "assumptions": [
+              "Independent batches, not individual cylinders from a single batch, are the relevant generalization unit for production qualification.",
+              "A project must define the strength threshold and acceptable false-acceptance risk."
+            ],
+            "variables_and_units": "Strength in MPa at a prespecified curing age in days; batch ID and specimen ID; target threshold in MPa; batch-level and within-batch variation in MPa; decision quantity is probability of a future independent batch meeting threshold.",
+            "testable_prediction": "For mixes with mean strength near the threshold, a decision based on replicated independent batches will produce wider uncertainty and potentially different pass/fail classification than a point estimate based on ungrouped rows; required batch count rises as between-batch variance increases.",
+            "alternative": "For the targeted mixes, between-batch variation is small relative to the distance from the threshold, so an uncertainty-aware sampling plan does not change the operational classification.",
+            "discriminating_test": "Collect repeated specimens nested in independently prepared batches at a fixed recipe and age; estimate separate within-batch and between-batch variance, then prospectively compare the chosen replication plan's threshold classification with a larger holdout batch series under a stated error tolerance.",
+            "feasible_with_current_data": "No. The rows do not document independent batch or specimen units, so the variance components and pass probability are unavailable.",
+            "required_new_data": "Recipe, independent batch ID, specimen ID, curing conditions, age in days, strength in MPa, threshold, and a prospective holdout series of independently made batches.",
+            "failure_condition": "The hypothesis is unsupported if batch-level variance is negligible for the chosen mixes and threshold, or the planned sample size does not achieve its predeclared classification error target in holdout batches.",
+            "nearest_prior_query": "Search concrete compressive-strength acceptance and mix qualification literature for batch-level reliability, nested specimen/batch variance, and sample-size rules near a specified strength threshold."
+          }
+        ],
+        "selected_id": "I1",
+        "method_ids": [
+          "M33",
+          "M43",
+          "M11"
+        ],
+        "task": {
+          "deliverable": "Assess whether the selected matched-formulation age-trajectory question has empirical support in the supplied rows, and check the nearest prior relation. Return actual broker outputs separately from interpretation. Do not claim causal evidence or novelty from dataset-level patterns or search titles.",
+          "acceptance": [
+            "Report counts of exact ingredient vectors observed at multiple ages and the available paired age intervals; state if the proposed comparison is infeasible or sparse.",
+            "If feasible, report an explicitly observational within-exact-recipe comparison of age gains against SCM share, with recipe counts, age pairs, units, and a clear limitation that row/batch identity is undocumented; do not treat rows as independent replicates.",
+            "Report the literature search coverage and whether it identifies work directly testing SCM-related age trajectories or threshold-age qualification; distinguish title-level retrieval from verified findings.",
+            "Keep the frozen directional prediction visible and state whether evidence supports, weakens, or cannot test it."
+          ],
+          "proposed_computation": "Using only supplied DF, count ingredient-vector recurrence across ages (ingredients exclude Age and target), tabulate distinct recipe count and row count at each age, then, only if overlap supports it, compare paired within-recipe strength changes for prespecified intervals such as 1-to-7, 7-to-28, and 28-to-56 days against the derived SCM fraction. Report missing pair counts and no inferential p-values that treat recipe rows as independent batch replication. Preserve the predeclared prediction: higher SCM share is hypothesized to show weaker early and larger later interval gain than zero-SCM references.",
+          "proposed_search": "Search the exact relation: controlled or matched concrete mix studies comparing age-dependent compressive-strength development across blast-furnace-slag and/or fly-ash replacement fractions at comparable total binder and water-to-binder ratio, especially studies translating trajectories into a specified strength-threshold age or release decision. Change the claim to a narrower operational question or withdraw a novelty implication if direct prior work already establishes that relation; titles alone do not establish its results."
+        },
+        "critique": [],
+        "requests": [],
+        "final": null
+      },
+      "input_sha256": "5fdf8d7fa03ea3084b88bf7942c652279326b3bbe5ad29f8c3e91879c6a1e995",
+      "reply_sha256": "ca9627bd1d45328e97f058797884fa050b53ccec0f1f56b8c92024081c4c14c4"
+    },
+    {
+      "label": "R1",
+      "role": "executor",
+      "reply": {
+        "recognition": "Recognize the UCI Concrete Compressive Strength dataset (1030 rows; Yeh, 1998 introduction paper). Familiarity disclosed; it is not evidence that the proposed relation is new.",
+        "summary": "I1 is a worthwhile operational question, but the candidate should be framed as a recipe-level observational feasibility probe followed by a controlled age-series study. The table has no batch/specimen or curing identifiers, so exact recipe recurrence does not establish a physical longitudinal trajectory. No computation or search has yet been run; all predictions remain frozen hypotheses.",
+        "candidates": [
+          {
+            "id": "I1",
+            "title": "Supplementary binder and age to usable strength",
+            "question": "Among comparable concrete formulations, does supplementary cementitious material (SCM) share alter strength development over curing age enough to change the age at which a project-specific strength threshold is reached?",
+            "new_claim": "Input increment: recasts point prediction as an age-trajectory and qualification-decision question. Proposal-only hypothesis: at similar total binder and water-to-binder ratio, larger slag-plus-fly-ash share is associated with less early (1-to-7-day) strength gain and more later (7-to-56-day) gain than a zero-SCM formulation. This is an observational conjecture, not a causal or world-novelty claim.",
+            "domain_value": "Could inform whether to release, continue curing, or reformulate a candidate mix when early strength matters.",
+            "known_basis_refs": [
+              "UCI documentation: compressive strength is described as a nonlinear function of age and ingredients; age is in days and strength in MPa.",
+              "Yeh (1998), Modeling of strength of high-performance concrete using artificial neural networks, DOI 10.1016/S0008-8846(98)00165-3; listed as dataset introduction paper, without inferring a specific result."
+            ],
+            "assumptions": [
+              "Repeated exact ingredient vectors can be compared as recipe-level observations, but are not known to be specimens from a shared batch.",
+              "SCM share is (slag + fly ash)/(cement + slag + fly ash); comparison requires overlap in total binder and water-to-binder ratio and is not randomized.",
+              "A project-specific strength threshold must be selected before a qualification study; the dataset supplies no universal threshold."
+            ],
+            "variables_and_units": "Cement, slag, fly ash, water, superplasticizer, coarse aggregate and fine aggregate in kg/m^3; age in days; strength in MPa. Derived covariates: SCM share (dimensionless), total binder (kg/m^3), water-to-binder ratio (dimensionless). Outcomes: within-recipe mean strength change (MPa) over prespecified age intervals and first observed threshold age (days).",
+            "testable_prediction": "Frozen before tool returns: in adequately overlapping repeated recipes, higher SCM share will correspond to smaller 1-to-7-day and larger 7-to-56-day within-recipe strength gains than zero-SCM recipes. The available data may not contain enough repeated exact recipes or age pairs to assess this.",
+            "alternative": "The interaction is small, absent, or reversed after restricting to comparable binder and water-to-binder ranges; or apparent differences reflect between-recipe selection and undocumented batch or curing conditions. SCM share may shift strength level without changing its age trajectory.",
+            "discriminating_test": "First count exact ingredient-vector recurrence and recipe-level coverage of 1-to-7, 7-to-28 and 28-to-56-day pairs. If sparse, do not estimate a trajectory effect from unmatched rows. A causal follow-up casts replicated zero-SCM and SCM mixes at matched total binder, water-to-binder ratio and aggregate proportions under controlled curing, tests at 1, 7, 28 and 56 days, and compares interval gains and prespecified threshold age.",
+            "feasible_with_current_data": "Partly: assess exact-recipe recurrence and descriptive recipe-level age contrasts. Cannot establish same-batch trajectories, causal substitution effects, curing effects, or qualification reliability.",
+            "required_new_data": "Mix/batch and specimen IDs; replicate specimens; controlled curing temperature and moisture history; documented proportions; strength test age and MPa; an application-specific threshold and release decision. Sample matched zero-SCM and SCM formulations at 1, 7, 28 and 56 days.",
+            "failure_condition": "Current-data feasibility fails if few exact recipes cover prespecified age pairs or there is inadequate composition overlap. The directional conjecture is weakened if adequately represented descriptive recipe contrasts are absent or reversed. The causal claim fails if a replicated controlled study excludes a predeclared practically meaningful interval-gain or threshold-age difference.",
+            "nearest_prior_query": "Find studies directly comparing age-dependent compressive-strength trajectories across blast-furnace-slag and/or fly-ash replacement fractions at comparable total binder and water-to-binder ratio, especially studies translating trajectories into a specified strength-threshold age or release decision."
+          }
+        ],
+        "selected_id": "I1",
+        "method_ids": [
+          "M33",
+          "M43",
+          "M11"
+        ],
+        "task": {
+          "deliverable": "Return one broker computation and one Crossref search as pending requests. Interpret only actual tool returns in the leader's final turn; distinguish descriptive recipe-level evidence from batch-level or causal evidence.",
+          "acceptance": [
+            "Count exact ingredient-vector recurrence and distinct recipes/rows at each age; report available prespecified paired intervals and absent pairs.",
+            "If data permit, compare recipe-level mean strength gains by SCM share and clearly mark estimates descriptive; do not treat same-recipe rows as independent batch replicates.",
+            "Report actual search coverage and distinguish title-level retrieval from verified findings.",
+            "Preserve the frozen direction and say whether available evidence supports, weakens, or cannot test it."
+          ],
+          "proposed_computation": "For exact ingredient vectors only, first report recipe recurrence and age coverage; then calculate within-recipe mean strength differences for 1-to-7, 7-to-28 and 28-to-56 days where both ages exist. The main directional comparison is recipe-level gain by SCM share, with zero-SCM versus nonzero-SCM counts and descriptive association; avoid inferential p-values or row-level independence claims.",
+          "proposed_search": "Search Crossref for work on matched/controlled concrete mixes comparing age-dependent compressive-strength development by blast-furnace-slag or fly-ash replacement at comparable total binder and water-to-binder ratio, including threshold-age qualification or release decisions. A result will narrow novelty framing if it directly addresses the operational question; titles alone cannot establish results."
+        },
+        "critique": [
+          "The leader's candidate bundles trajectory estimation and threshold-age decisions, but no threshold is specified and the dataset has no batch linkage. Treat threshold age as a prospective application outcome, not a current-data result.",
+          "Exact ingredient vectors may repeat as separate observations rather than a shared physical mix. Summarize age duplicates within recipe before contrasts and report recipe counts; this still cannot recover batch-level trajectories.",
+          "The frozen 1-to-7 and 7-to-56 directional prediction is testable only if sufficient exact recipes cover those pairs and composition overlap exists. A computation should be allowed to conclude infeasible rather than relaxing to post hoc recipe matches."
+        ],
+        "requests": [
+          {
+            "type": "compute",
+            "id": "C1",
+            "idea_id": "I1",
+            "purpose": "Check exact-recipe age-pair feasibility and produce descriptive recipe-level contrasts for the frozen SCM trajectory prediction.",
+            "model_spec": "Use supplied pandas DataFrame DF. Recipe key is exact tuple of the seven ingredient columns (exclude Age and target). For duplicate rows sharing recipe and age, use their mean strength solely as a recipe-age summary. SCM share=(Blast Furnace Slag+Fly Ash)/(Cement+Blast Furnace Slag+Fly Ash). Report JSON with n_rows, n_recipes, recipes_repeated_across_ages, rows and distinct recipes per age, plus for each of intervals 1-7, 7-28, 28-56: number recipes with both endpoint ages, zero-SCM and nonzero-SCM recipe counts, mean and median within-recipe gain in each group, and Pearson correlation of recipe SCM share with gain where computable. State missing-pair counts relative to all recipes and explicitly mark sparse/empty comparisons. No inferential p-values. Output only compact valid JSON.",
+            "code": "import json\nimport numpy as np\ncols=['Cement','Blast Furnace Slag','Fly Ash','Water','Superplasticizer','Coarse Aggregate','Fine Aggregate']\ntarget='Concrete compressive strength'\nd=DF.copy()\nkeys=d[cols].apply(lambda r: tuple(r.tolist()),axis=1)\nd['_recipe']=keys\nd['_scm']=(d['Blast Furnace Slag']+d['Fly Ash'])/(d['Cement']+d['Blast Furnace Slag']+d['Fly Ash'])\nrecipe_age=d.groupby(['_recipe','Age'],sort=False).agg(strength=(target,'mean'),scm=('_scm','first')).reset_index()\nages=sorted(int(x) for x in d['Age'].unique())\ncounts={str(a):{'rows':int((d['Age']==a).sum()),'recipes':int(recipe_age.loc[recipe_age.Age==a,'_recipe'].nunique())} for a in ages}\nwide=recipe_age.pivot(index='_recipe',columns='Age',values='strength')\nscm=recipe_age.groupby('_recipe').scm.first()\nout={'n_rows':int(len(d)),'n_recipes':int(len(scm)),'recipes_repeated_across_ages':int((recipe_age.groupby('_recipe').Age.nunique()>1).sum()),'age_counts':counts,'intervals':{}}\nfor a,b in [(1,7),(7,28),(28,56)]:\n name=f'{a}-{b}'\n if a in wide.columns and b in wide.columns:\n  gain=(wide[b]-wide[a]).dropna(); s=scm.loc[gain.index]; zero=gain[s==0]; nonzero=gain[s>0]\n  corr=float(np.corrcoef(s.to_numpy(),gain.to_numpy())[0,1]) if len(gain)>1 and np.std(s)>0 and np.std(gain)>0 else None\n  def stats(x): return {'n_recipes':int(len(x)),'mean_MPa':float(x.mean()) if len(x) else None,'median_MPa':float(x.median()) if len(x) else None}\n  out['intervals'][name]={'n_with_pair':int(len(gain)),'missing_pairs_of_all_recipes':int(len(scm)-len(gain)),'zero_SCM':stats(zero),'nonzero_SCM':stats(nonzero),'SCM_share_gain_Pearson_r':corr,'status':'descriptive; recipe recurrence is not verified batch linkage'}\n else:\n  out['intervals'][name]={'n_with_pair':0,'missing_pairs_of_all_recipes':int(len(scm)),'zero_SCM':{'n_recipes':0,'mean_MPa':None,'median_MPa':None},'nonzero_SCM':{'n_recipes':0,'mean_MPa':None,'median_MPa':None},'SCM_share_gain_Pearson_r':None,'status':'endpoint age absent; comparison infeasible'}\nprint(json.dumps(out,separators=(',',':'),allow_nan=False))"
+          },
+          {
+            "type": "search",
+            "id": "S1",
+            "idea_id": "I1",
+            "missing_relation": "Whether matched or controlled concrete mix studies already connect SCM replacement fraction to age-dependent compressive-strength trajectories at comparable total binder and water-to-binder ratio, particularly for threshold-age qualification decisions.",
+            "query": "(concrete OR cement) AND (blast furnace slag OR fly ash) AND (strength development OR age-dependent compressive strength) AND (water-to-binder ratio OR matched mix OR replacement fraction) AND (threshold age OR strength acceptance OR release)",
+            "change_if_found": "If retrieved work directly tests the specific matched age-trajectory and threshold qualification relation, remove any world-novelty implication and narrow I1 to a distinct operational population, decision rule, or unresolved comparison. Crossref title matches alone are leads and do not establish paper findings."
+          }
+        ],
+        "final": null
+      },
+      "input_sha256": "89d574f6eb7a8d80621482914e095b870605c770388d6c168c5a9a60ff2797ed",
+      "reply_sha256": "9b6b11e3a184259710e2bd29d71fb067ab7944e20fbfd0b2853fde1cd016e028"
+    }
+  ],
+  "tools": [
+    {
+      "id": "C1",
+      "type": "compute",
+      "request": {
+        "type": "compute",
+        "id": "C1",
+        "idea_id": "I1",
+        "purpose": "Check exact-recipe age-pair feasibility and produce descriptive recipe-level contrasts for the frozen SCM trajectory prediction.",
+        "model_spec": "Use supplied pandas DataFrame DF. Recipe key is exact tuple of the seven ingredient columns (exclude Age and target). For duplicate rows sharing recipe and age, use their mean strength solely as a recipe-age summary. SCM share=(Blast Furnace Slag+Fly Ash)/(Cement+Blast Furnace Slag+Fly Ash). Report JSON with n_rows, n_recipes, recipes_repeated_across_ages, rows and distinct recipes per age, plus for each of intervals 1-7, 7-28, 28-56: number recipes with both endpoint ages, zero-SCM and nonzero-SCM recipe counts, mean and median within-recipe gain in each group, and Pearson correlation of recipe SCM share with gain where computable. State missing-pair counts relative to all recipes and explicitly mark sparse/empty comparisons. No inferential p-values. Output only compact valid JSON.",
+        "code": "import json\nimport numpy as np\ncols=['Cement','Blast Furnace Slag','Fly Ash','Water','Superplasticizer','Coarse Aggregate','Fine Aggregate']\ntarget='Concrete compressive strength'\nd=DF.copy()\nkeys=d[cols].apply(lambda r: tuple(r.tolist()),axis=1)\nd['_recipe']=keys\nd['_scm']=(d['Blast Furnace Slag']+d['Fly Ash'])/(d['Cement']+d['Blast Furnace Slag']+d['Fly Ash'])\nrecipe_age=d.groupby(['_recipe','Age'],sort=False).agg(strength=(target,'mean'),scm=('_scm','first')).reset_index()\nages=sorted(int(x) for x in d['Age'].unique())\ncounts={str(a):{'rows':int((d['Age']==a).sum()),'recipes':int(recipe_age.loc[recipe_age.Age==a,'_recipe'].nunique())} for a in ages}\nwide=recipe_age.pivot(index='_recipe',columns='Age',values='strength')\nscm=recipe_age.groupby('_recipe').scm.first()\nout={'n_rows':int(len(d)),'n_recipes':int(len(scm)),'recipes_repeated_across_ages':int((recipe_age.groupby('_recipe').Age.nunique()>1).sum()),'age_counts':counts,'intervals':{}}\nfor a,b in [(1,7),(7,28),(28,56)]:\n name=f'{a}-{b}'\n if a in wide.columns and b in wide.columns:\n  gain=(wide[b]-wide[a]).dropna(); s=scm.loc[gain.index]; zero=gain[s==0]; nonzero=gain[s>0]\n  corr=float(np.corrcoef(s.to_numpy(),gain.to_numpy())[0,1]) if len(gain)>1 and np.std(s)>0 and np.std(gain)>0 else None\n  def stats(x): return {'n_recipes':int(len(x)),'mean_MPa':float(x.mean()) if len(x) else None,'median_MPa':float(x.median()) if len(x) else None}\n  out['intervals'][name]={'n_with_pair':int(len(gain)),'missing_pairs_of_all_recipes':int(len(scm)-len(gain)),'zero_SCM':stats(zero),'nonzero_SCM':stats(nonzero),'SCM_share_gain_Pearson_r':corr,'status':'descriptive; recipe recurrence is not verified batch linkage'}\n else:\n  out['intervals'][name]={'n_with_pair':0,'missing_pairs_of_all_recipes':int(len(scm)),'zero_SCM':{'n_recipes':0,'mean_MPa':None,'median_MPa':None},'nonzero_SCM':{'n_recipes':0,'mean_MPa':None,'median_MPa':None},'SCM_share_gain_Pearson_r':None,'status':'endpoint age absent; comparison infeasible'}\nprint(json.dumps(out,separators=(',',':'),allow_nan=False))"
+      },
+      "result": {
+        "status": "executed",
+        "code_sha256": "275ae89dcc2ce3d9c88d0e9d445b1b784c070ce1af9cd425a014611bb2f8b1f6",
+        "data_sha256": "8d4b15b6fc68cd932d745cbd663d5ceae66dd54422e99c1e4865f2936ab7e2af",
+        "returncode": 0,
+        "stdout": "{\"n_rows\":1030,\"n_recipes\":427,\"recipes_repeated_across_ages\":181,\"age_counts\":{\"1\":{\"rows\":2,\"recipes\":2},\"3\":{\"rows\":134,\"recipes\":126},\"7\":{\"rows\":126,\"recipes\":118},\"14\":{\"rows\":62,\"recipes\":62},\"28\":{\"rows\":425,\"recipes\":416},\"56\":{\"rows\":91,\"recipes\":83},\"90\":{\"rows\":54,\"recipes\":54},\"91\":{\"rows\":22,\"recipes\":17},\"100\":{\"rows\":52,\"recipes\":52},\"120\":{\"rows\":3,\"recipes\":3},\"180\":{\"rows\":26,\"recipes\":26},\"270\":{\"rows\":13,\"recipes\":13},\"360\":{\"rows\":6,\"recipes\":6},\"365\":{\"rows\":14,\"recipes\":14}},\"intervals\":{\"1-7\":{\"n_with_pair\":2,\"missing_pairs_of_all_recipes\":425,\"zero_SCM\":{\"n_recipes\":2,\"mean_MPa\":18.759999999999998,\"median_MPa\":18.759999999999998},\"nonzero_SCM\":{\"n_recipes\":0,\"mean_MPa\":null,\"median_MPa\":null},\"SCM_share_gain_Pearson_r\":null,\"status\":\"descriptive; recipe recurrence is not verified batch linkage\"},\"7-28\":{\"n_with_pair\":114,\"missing_pairs_of_all_recipes\":313,\"zero_SCM\":{\"n_recipes\":45,\"mean_MPa\":10.740666666666666,\"median_MPa\":10.59},\"nonzero_SCM\":{\"n_recipes\":69,\"mean_MPa\":14.23852657004831,\"median_MPa\":14.019999999999996},\"SCM_share_gain_Pearson_r\":0.33843596096164585,\"status\":\"descriptive; recipe recurrence is not verified batch linkage\"},\"28-56\":{\"n_with_pair\":83,\"missing_pairs_of_all_recipes\":344,\"zero_SCM\":{\"n_recipes\":3,\"mean_MPa\":3.1233333333333326,\"median_MPa\":2.6400000000000006},\"nonzero_SCM\":{\"n_recipes\":80,\"mean_MPa\":6.628291666666667,\"median_MPa\":6.52},\"SCM_share_gain_Pearson_r\":0.4178193822632121,\"status\":\"descriptive; recipe recurrence is not verified batch linkage\"}}}\n",
+        "stderr": "",
+        "stdout_truncated": false
+      }
+    },
+    {
+      "id": "S1",
+      "type": "search",
+      "request": {
+        "type": "search",
+        "id": "S1",
+        "idea_id": "I1",
+        "missing_relation": "Whether matched or controlled concrete mix studies already connect SCM replacement fraction to age-dependent compressive-strength trajectories at comparable total binder and water-to-binder ratio, particularly for threshold-age qualification decisions.",
+        "query": "(concrete OR cement) AND (blast furnace slag OR fly ash) AND (strength development OR age-dependent compressive strength) AND (water-to-binder ratio OR matched mix OR replacement fraction) AND (threshold age OR strength acceptance OR release)",
+        "change_if_found": "If retrieved work directly tests the specific matched age-trajectory and threshold qualification relation, remove any world-novelty implication and narrow I1 to a distinct operational population, decision rule, or unresolved comparison. Crossref title matches alone are leads and do not establish paper findings."
+      },
+      "result": {
+        "status": "waiting_external",
+        "url": "https://api.crossref.org/works?query=%28concrete+OR+cement%29+AND+%28blast+furnace+slag+OR+fly+ash%29+AND+%28strength+development+OR+age-dependent+compressive+strength%29+AND+%28water-to-binder+ratio+OR+matched+mix+OR+replacement+fraction%29+AND+%28threshold+age+OR+strength+acceptance+OR+release%29&rows=8&select=DOI%2Ctitle%2Cpublished%2Cabstract",
+        "output_path": "/Applications/ideas/research/1031_question_boundary/cross_domain_idea_probe_20261102/runs/materials_1/tools/S1/raw.json",
+        "scope": "Crossref metadata; original abstracts only when present"
+      }
+    }
+  ],
+  "counters": {
+    "replies": 2,
+    "compute": 1,
+    "search": 1
+  },
+  "final": null
+}

@@ -1,0 +1,90 @@
+{
+  "recognition":"uncertain; no target study or published explanation is identified in the supplied input",
+  "summary":"C6 executed successfully (returncode 0, empty stderr) and its x/q arrays agree with the exact formulas for the stated parameter grid. The original C1 observable chain is rejected as written: for the modeled initial state x0=0, q has no source before the upward crossing and is frozen at that crossing, so it cannot generate the observed rise in B area. This closes TQ by rejection of this model, not by identifying the physical mechanism. H1 remains unsupported; H2-H4 remain alternatives. Earlier 36/48 h forecasts remain unchanged as historical frozen commitments and are not rescored here.",
+  "candidates":[
+    {
+      "id":"C1",
+      "version":18,
+      "status":"rejected_as_written",
+      "target":"Delayed emergence and persistence of segmented internal cavity area in transcribing RNA droplets, with unresolved B/A cause.",
+      "known_relations":[
+        "E0: A area means at 0,4,8,12,24 h are .01487245,.00543899,.00443905,.00406419,.00445819; B means are .01380909,.01591506,.02393311,.04027997,.08918347. Seven fields per condition across two preparations; fields are nested. These are segmented image-area fractions, not concentrations or free energies.",
+        "C3 executed x-only conditional schedule calculation: alpha=1,tau=5 h,xc=.5 gives fast crossing 3.4657359 h and x(5)=.6321206; slow has no crossing and x(20)=.2454211. This is not fitted and is not a q prediction.",
+        "C4 failed with a 30s timeout and stdout/stderr None. C5 failed syntax clarification at line 29 with mismatched ')' and '{'. These failures produced no scientific results.",
+        "C6 executed with returncode 0 and empty stderr. Code SHA256 7ebd6a6aa90e4c92d11ee3ef06051a8c069e7c77d9570c4948f52b457ab7c5e5; conditional arithmetic, not fit or physical evidence.",
+        "E1 aggregate mobility summaries have unequal counts/durations and a selected B high-displacement tail; no cavity-specific arrest is established.",
+        "E2 phase concentrations vary across reference/variant series but lack A/B and cavity mapping. E3 identifies B DNA reads but does not establish calibrated template or transcript fractions. E4 fraction labels and A/B mapping are undefined.",
+        "R1_S1 and R3_S3 are limited analogies in different systems; neither provides target-specific cavity kinetics."
+      ],
+      "hypotheses":[
+        "H1, unconfirmed and not retained as an explanation: connected RNA loop-mediated load accumulates faster than relaxation and creates trapped cavities. C6 rejects the submitted observable chain under its stated q mapping; it does not rule out every possible path-dependent mechanism.",
+        "H1a bridge remains unverified: terminal loops behave as reversible stickers with enough connectivity and slow exchange for arrest. R3_S3 gives architectural plausibility only in a different setting.",
+        "H2 remains viable: composition/ionic conditions set equilibrium coexistence; cavity area converges after matched composition and equilibration.",
+        "H3 remains viable: amplification-associated DNA population changes or reaction carryover alter transcription or imaging.",
+        "H4 remains viable: segmentation, denominator, tracking, sample-label, or sequencing effects contribute to the association."
+      ],
+      "gaps":[
+        {"id":"GQ","status":"closed_by_rejection","description":"The literal original q observable chain has been evaluated with actual C6 output and rejected as written because it cannot generate increasing q from x0=0. No replacement equation or supported physical mechanism is supplied."},
+        {"id":"G1","status":"open","description":"Target-compatible loop exchange/connectivity, network relaxation, cavity-specific arrest, and production parameters remain unmeasured."},
+        {"id":"G2","status":"open","description":"E3 assay provenance and E4 category labels/fractions/condition mapping remain unresolved; these data do not establish transcript abundance or causal attribution."},
+        {"id":"G3","status":"open","description":"No direct measurement establishes cavity identity, phase state, or kinetic arrest; causal mechanism remains unresolved."}
+      ],
+      "equations":[
+        "Rejected original model, preserved for audit: xdot=alpha*r-x/tau.",
+        "For constant production: x(t)=x0*exp(-t/tau)+alpha*r*tau*(1-exp(-t/tau)); after production stops at T, x(t)=x(T)*exp(-(t-T)/tau).",
+        "Before arrest: qdot=kn*max(x-xc,0)-kd*q. At first upward crossing x>=xc, qdot=0 permanently.",
+        "For trajectories starting x0=0 below xc, qdot source is zero up to crossing; hence q(t)=q0*exp(-kd*t) before crossing, and q(t)=q0*exp(-kd*tc) after crossing. If no crossing, q=q0*exp(-kd*t) throughout. This exact consequence is independent of kn."
+      ],
+      "variables_units":{"t":"h","r":"reduced production rate h^-1","x":"unbounded dimensionless effective load","alpha":"dimensionless","tau":"h","xc":"dimensionless","q":"dimensionless model cavity-area proxy","kn":"h^-1","kd":"h^-1","y_area":"segmented internal dark area / filled droplet area, dimensionless"},
+      "parameters_ranges":{"alpha":"positive; C6 grid .5,1,2 is illustrative, not estimated","tau":"positive; C6 grid 1,5,20 h is illustrative, not measured","xc":".5 illustrative only","kn":".1 h^-1 in C6, illustrative only; it does not affect q from below under the freeze rule","kd":"0 or .1 h^-1 in C6, illustrative only"},
+      "initial_boundary_conditions":"C6 uses x0=0 and q0=0 or observed t=0 A/B area means .0148724491091024/.0138090880510916 as provisional numerical proxies only. Fast schedule r=.2 h^-1 for 5 h; slow r=.05 h^-1 for 20 h; both integrated r=1. Production then ceases and x relaxes. Equality x0=xc is an immediate crossing only if right-hand dx/dt>0. Initial x0>xc without a prior upward crossing remains undefined by the original rule.",
+      "observation_mapping":"E0 is segmented area fraction. q0=E0 is provisional only. No supplied measurement directly maps x, tau, kn, kd, or arrested q to cavity identity or physical cavity volume. E1-E4 do not close that mapping.",
+      "alternatives":["H2 equilibrium composition-driven demixing and convergence after composition matching/equilibration.","H3 amplification-associated template-population or reaction-carryover effects.","H4 segmentation, denominator, tracking, sample-label, or sequencing effects."],
+      "predictions":[
+        "REJECTED: original C1 predicts no generated q from x0=0 before/at threshold, and then freezes q. For q0=0 it predicts q=0 at every age. For positive q0, q only decays before crossing when kd>0, otherwise remains constant; after crossing it stays at the crossing value.",
+        "C6 anchor alpha=1,tau=5,xc=.5: fast x at ages [0,4,5,8,12,20,24,36,48] h is [0,.5506710,.6321206,.3469151,.1558790,.0314714,.0141410,.00128284,.00011638], with crossing at 3.4657359 h. Slow x is [0,.1376678,.1580301,.1995259,.2273205,.2454211,.1102748,.0100039,.00090753], with no crossing. Both doses are 1; composition matching is not implied.",
+        "At the same anchor with kd=.1 h^-1, q0=A proxy: fast q freezes at .01051641 after crossing; slow q continues decaying, reaching .00134920 at 24 h and .00012240 at 48 h. For q0=B proxy, fast freezes at .00976450; slow reaches .00125273 at 24 h and .00011365 at 48 h. For kd=0 these q0 values stay fixed; for q0=0 q remains zero.",
+        "C6 sensitivity confirms the same q logic across alpha/tau grid. At alpha=1,tau=20 h, both schedules cross (fast 2.6706279 h, slow 13.8629436 h), yet q still never grows: with kd=.1, q freezes only after decaying to .01138672/.00371811 of the A proxy for fast/slow respectively.",
+        "Public 0-24 h means show A declining .014872 to .004458 and B rising .013809 to .089183. The original model with x0=0 and q mapped to area cannot account for B's rise. H1's specific original observable prediction is withdrawn. The previously committed heldout forecast is preserved unchanged as a historical frozen commitment; no late measurements or organizer score are supplied here, so it is not rescored or claimed as support."
+      ],
+      "checks":[
+        "C6 actual status executed, returncode 0, empty stderr; output declares exact conditional arithmetic, not fit or physical evidence.",
+        "Independent formula check at alpha=1,tau=5: fast x(4)=.5506710, x(5)=.6321206, then x(8)=.3469151; slow x(20)=.2454211 and x(24)=.1102748, matching the returned arrays.",
+        "Fast anchor crossing solves .2*5*(1-exp(-t/5))=.5, giving t=5*ln(2)=3.4657359 h. Slow steady x=.25<.5, so there is no crossing.",
+        "For kd=.1, fast q proxy freeze is q0*exp(-.1*3.4657359); slow no-cross q(24)=q0*exp(-2.4). Returned values match these expressions.",
+        "Threshold neighborhood from C6: x0=.499999 crosses at 9.99999e-6 h; x0=.5 crosses immediately with positive right derivative .1 h^-1; x0=.500001 has no defined switch convention.",
+        "Equal dose check true. Dimensions are consistent. For constant production from below, alpha*r*tau<=xc precludes finite-time crossing; x is bounded for finite piecewise-constant production and tau>0. q is finite over finite time but no q<=1 bound is specified.",
+        "C4 timeout and C5 syntax failure are execution errors, not scientific evidence; C6 supersedes them for the literal numerical audit."
+      ],
+      "evidence_conflicts":["E0 is not mechanism-specific but directly conflicts with the model's predicted absence of generated q from below.","E1 does not establish cavity-specific arrest and includes selected high-displacement B tracks.","E2/E4 lack condition mapping and provenance.","E3 DNA reads do not establish RNA products or transcript fractions."],
+      "untested":["Whether any separate, physically motivated replacement can explain the B rise.","Target loop exchange/connectivity, network relaxation, and cavity-specific arrest.","E3/E4 provenance and composition mapping.","Cavity identity, physical volume, and independent preparation-level causal evidence."],
+      "dissent":"The executor appropriately labeled C6 conditional arithmetic and did not claim physical support. The original q equations fail the requested observable chain. Existing literature analogies and non-specific measurements do not establish a replacement mechanism.",
+      "ledger":[
+        {"version":1,"summary":"L1 proposed production-relaxation threshold and arrest model.","superseded":false},
+        {"version":2,"summary":"L2 added slow loop exchange/percolation bridge hypothesis and generic arrest analogies.","superseded":false},
+        {"version":3,"summary":"L3 requested conditional schedule computation and phase-composition evidence.","superseded":false},
+        {"version":4,"summary":"L4 revised x to unbounded effective load and added limited RNA kissing-loop analogy.","superseded":false},
+        {"version":5,"summary":"Executor interpreted C3/E2 and requested DNA population evidence.","superseded":false},
+        {"version":6,"summary":"L5 incorporated E3 DNA read fractions and weak phage-library analogy; provenance remained open.","superseded":false},
+        {"version":7,"summary":"Executor interpreted R4/E3; requested endpoint fractionation and direct amplification literature.","superseded":false},
+        {"version":8,"summary":"R5 interpretation and E4 endpoint field summaries; causal gaps remained open.","superseded":false},
+        {"version":9,"summary":"Leader retained H1 conditionally and kept G1-G3 open.","superseded":false},
+        {"version":10,"summary":"Executor confirmed C3 and E4/R5 evidence limitations.","superseded":false},
+        {"version":11,"summary":"Final executor C1 version with R6 assessment and dissent.","superseded":false},
+        {"version":12,"summary":"Frozen candidate before observable-closure audit.","superseded":false},
+        {"version":13,"summary":"L0 preserved original q rule and required observable consequences before replacement.","superseded":false},
+        {"version":14,"summary":"R0 submitted literal-equation C4 request.","superseded":false},
+        {"version":15,"summary":"C4 timed out; L1 requested exact C5 calculation without model revision.","superseded":false},
+        {"version":16,"summary":"R1 submitted C5; no result claimed.","superseded":false},
+        {"version":17,"summary":"C5 syntax clarification; L2 requested simpler C6 code without model revision.","superseded":false},
+        {"version":18,"summary":"C6 successfully computed the literal observable chain. Leader rejects original C1 q mechanism as written; no replacement or physical explanation is supported.","superseded":false}
+      ],
+      "next_task":"None in this frozen run. C1 as written is rejected; physical causation and any replacement mechanism remain unresolved."
+    }
+  ],
+  "tasks":[{"id":"TQ","candidate_id":"C1","gap_id":"GQ","kind":"mechanism","status":"complete","deliverable":"Audit the original mechanism-to-observable chain and make an explicit scientific decision.","acceptance":"Actual q and x outputs at common ages, threshold and shutoff behavior, comparison to visible trend, and separate calculation/internal-validity/physical-support verdicts.","evidence_refs":["C3","C4","C5","C6","initial_measurements.json"],"reason":"C6 satisfies the diagnostic calculation requirements; the literal candidate is rejected for failure to generate the observed rise in q from below threshold. This completes the audit by rejection, not by confirming a mechanism."}],
+  "requests":[],
+  "literature_use":[],
+  "adjudication":{"task_id":"TQ","decision":"complete","artifact_ids":["C3","C4","C5","C6","E0"],"checks":["Calculation correctness: C6 executed successfully and anchor x/q outputs match exact formulas; equal-dose and threshold-neighborhood outputs are internally consistent.","Internal validity: original C1 is rejected as written. With x0=0, q has no positive source before the first upward crossing and freezes at crossing; it cannot produce rising cavity area. Initial x0>xc is unspecified. The q-to-area mapping is itself only provisional.","Physical support: absent. C6 is conditional arithmetic, not evidence for RNA loop-mediated arrest. E0 is compatible with multiple alternatives and supplies no direct kinetic or causal measurements.","Original 36/48 h forecast is retained unchanged as a historical frozen commitment, not rescored in this turn; late measurements and organizer score are not supplied."],"remaining_gap":"The B/A physical cause, cavity identity, phase behavior, amplification effects, and any valid replacement model remain unresolved. G1-G3 stay open; no new request is issued in this frozen run.","reason":"The required observable calculation is now available and its consequence contradicts the original model's proposed B area growth. A justified rejection completes TQ. Repeated failed execution attempts have been superseded by successful C6; no further compute or model revision is warranted within this frozen final turn.","scientific_verdict":"Reject original C1 as an explanation of the observed cavity-area trajectory. Retain H1 only as an unsupported broad possibility, not as a selected candidate. No alternative is selected. The actual mechanism remains unknown.","required_next_product":"None in this frozen run; terminal decision recorded."},
+  "final":{"selected_candidate":null,"actual_derivation_or_computation":"C6 used exact x dynamics. At alpha=1,tau=5 h,xc=.5, fast production crosses at 3.4657359 h and has x(5)=.6321206; after shutoff x(24)=.0141410. Slow production has x(20)=.2454211, no crossing, and x(24)=.1102748. Both schedules have integrated r=1. From x0=0, q is q0 exp(-kd*t) until crossing and then frozen; it is never generated. With kd=.1, fast q0 proxies freeze at .01051641 (A) and .00976450 (B); slow q decays to .00134920 and .00125273 at 24 h. q0=0 stays zero. Values match C6 output.","discriminating_prediction":"The original equations predict no rising q from x0=0 for any kn or listed alpha/tau regime. This contradicts the visible B area increase from .013809 at 0 h to .089183 at 24 h under the provisional q-to-area mapping. The calculation does not discriminate among H2-H4 or establish a replacement mechanism.","decision":"Reject original C1 as written and stop the mechanism claim in this run. TQ diagnostic is complete by rejection; the physical cause remains unresolved and no candidate is selected.","dissent":"C6 establishes a conditional mathematical consequence only. The executor made no physical-support claim, appropriately. The original heldout 36/48 h commitment remains historically frozen and unscored here; it is not reinterpreted as validation.","limitations":"Parameters are illustrative, q0-to-area mapping is provisional, composition is not matched by equal dose, and the initial x0>xc switch state is undefined. E0 is nested field data across two preparations and non-specific. No target-specific exchange, cavity-identity, or causal evidence and no valid replacement equation were supplied."}
+}
