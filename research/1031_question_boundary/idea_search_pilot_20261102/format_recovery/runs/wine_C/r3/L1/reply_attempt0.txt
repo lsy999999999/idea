@@ -1,0 +1,109 @@
+{
+  "recognition": "This is the UCI Wine Quality dataset: red and white Portuguese Vinho Verde samples with physicochemical measurements and sensory quality scores. The bundle does not provide producer, batch, vintage, or panel identifiers. Dataset recognition and its metadata are not discoveries.",
+  "candidates": [
+    {
+      "id": "I1",
+      "title": "Does volatile acidity relate differently to low and high quality-score thresholds?",
+      "question": "Within each wine color, does volatile_acidity have a stronger adjusted association with crossing the low-score threshold (quality <= 5 versus > 5) than with reaching the high-score threshold (quality >= 7 versus < 7), after adjustment for the other measured chemistry?",
+      "core": {
+        "object": "Wine samples, their measured chemistry, and ordinal quality scores",
+        "relation_or_action": "Compare the volatile_acidity association across prespecified cumulative quality thresholds",
+        "contrast": "Adjusted association at quality <= 5 versus > 5 compared with quality >= 7 versus < 7, within color",
+        "prediction": "I predict a stronger association with the low-score threshold than with the high-score threshold in at least one color. Similar threshold associations, or the opposite ordering, would count against this prediction.",
+        "independent_unit": "One wine sample; dependence by producer, batch, or sensory panel is unknown."
+      },
+      "failure_condition": "The prespecified difference between threshold-specific associations is near zero or reverses under reasonable ordinal-model and common-support checks.",
+      "assumptions": [
+        "The thresholds are useful operational contrasts, not natural or validated sensory cutoffs.",
+        "Measured-chemistry adjustment does not remove unmeasured confounding.",
+        "Row-level uncertainty assumes independent samples, which the supplied metadata cannot verify."
+      ],
+      "required_new_data": "None for an exploratory association test. To validate score-threshold interpretation, obtain item-level blinded ratings from independent wine lots, with lot and panel identifiers.",
+      "feasible_with_current_data": true,
+      "domain_value": "Could distinguish chemistry associated with avoiding low ratings from chemistry associated with attaining high ratings, informing whether one pooled ordinal association is an adequate summary.",
+      "history_match": "round 2 I1",
+      "history_relation": "new_family",
+      "discriminating_delta": "The prior candidate tested a volatile_acidity-by-citric_acid interaction in the score association. This candidate tests whether one predictor's association changes across prespecified outcome thresholds, without that chemical interaction.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    },
+    {
+      "id": "I2",
+      "title": "Does free sulfur dioxide add a distinct score association beyond total sulfur dioxide?",
+      "question": "Within each color, does free_sulfur_dioxide retain an adjusted association with ordinal quality when total_sulfur_dioxide and the other measured chemistry are included, and does that association differ from the total sulfur dioxide association?",
+      "core": {
+        "object": "Wine samples with free and total sulfur dioxide measurements and quality scores",
+        "relation_or_action": "Compare the conditional associations of free and total sulfur dioxide with quality",
+        "contrast": "Free versus total sulfur dioxide coefficients in a within-color ordinal model",
+        "prediction": "I predict the free and total sulfur dioxide associations differ in at least one color; similar estimates with adequate precision would count against this distinction.",
+        "independent_unit": "One wine sample; producer and batch clustering are unknown."
+      },
+      "failure_condition": "The two associations are similar or unstable within the joint measurement support.",
+      "assumptions": [
+        "The measurements do not directly establish sulfur speciation or sensory exposure.",
+        "Correlated chemistry may make conditional coefficients unstable.",
+        "Observational associations do not identify effects of changing sulfur dioxide."
+      ],
+      "required_new_data": "None for the exploratory association comparison. Mechanistic interpretation would require direct sulfur speciation and blinded repeated ratings from independent lots.",
+      "feasible_with_current_data": true,
+      "domain_value": "Could assess whether the free and total measurements provide distinct information about sensory scores, motivating or deprioritizing direct speciation work.",
+      "history_match": "round 1 I2",
+      "history_relation": "refinement",
+      "discriminating_delta": "The prior candidate tested whether the total sulfur dioxide association varied with the free fraction. This candidate compares the two measurements' conditional associations directly.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    },
+    {
+      "id": "I3",
+      "title": "Is the residual-sugar association with quality distinct from its association through alcohol?",
+      "question": "Within each color, does residual_sugar remain associated with ordinal quality after adjustment for alcohol and the other measured chemistry, and is that conditional association different from its unadjusted association?",
+      "core": {
+        "object": "Wine samples, residual sugar, alcohol, other measured chemistry, and quality scores",
+        "relation_or_action": "Compare the marginal and chemistry-adjusted residual_sugar–quality associations",
+        "contrast": "Residual-sugar association before versus after adjustment for alcohol and other measured chemistry",
+        "prediction": "I predict adjustment will attenuate the residual-sugar association in at least one color; little change or an increase would count against this prediction.",
+        "independent_unit": "One wine sample; sample-level dependence is unobserved."
+      },
+      "failure_condition": "The estimated attenuation is small, uncertain, or sensitive to model scale and overlapping chemistry support.",
+      "assumptions": [
+        "Attenuation after adjustment is descriptive and does not establish mediation or confounding.",
+        "Quality is an ordinal sensory score, not a direct measure of consumer preference.",
+        "Unknown sample clustering may make row-level uncertainty too narrow."
+      ],
+      "required_new_data": "None for the descriptive comparison. To establish a production pathway, collect controlled lot-level measurements and blinded repeated sensory ratings.",
+      "feasible_with_current_data": true,
+      "domain_value": "Could show whether the observed sugar-score association is largely shared with measured alcohol and chemistry, clarifying what a later controlled study needs to separate.",
+      "history_match": "round 1 I1",
+      "history_relation": "refinement",
+      "discriminating_delta": "The prior candidate tested an alcohol-by-sugar interaction. This candidate compares marginal and adjusted sugar associations and makes no interaction claim.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    }
+  ],
+  "selected_id": "I1",
+  "selection_reason": "All three candidates pass the self-assessed gates and are feasible for exploratory analysis with the supplied data. I1 is a new family relative to the prior candidates' chemistry interactions and color comparisons; I2 and I3 refine earlier sulfur and alcohol-sugar questions. Under the broker's ordering, I1 ranks first. Before any tool return, I predict a stronger volatile_acidity association at the low-score threshold than at the high-score threshold in at least one color. This is a hypothesis, not a result.",
+  "method_ids": [
+    "M01",
+    "M36",
+    "M38"
+  ],
+  "task": {
+    "deliverable": "Within each color, estimate and compare prespecified volatile_acidity associations at the quality <= 5 versus > 5 and quality >= 7 versus < 7 thresholds, using an ordinal approach that allows threshold-specific effects. Report uncertainty, joint chemistry support, and sensitivity to the threshold and model specification.",
+    "acceptance": "State the threshold-specific estimand and predictor scale before interpreting results; report whether the predicted difference is supported, contradicted, or inconclusive; address sparse threshold groups and unknown sample clustering; distinguish observational association from intervention effects."
+  }
+}

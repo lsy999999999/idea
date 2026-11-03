@@ -1,0 +1,1183 @@
+[
+  {
+    "case": "wine",
+    "arm": "A",
+    "round": 1,
+    "proposed": "I1",
+    "effective": "I1",
+    "titles": [
+      "Does residual sugar modify the alcohol–quality association within wine color?",
+      "Does free sulfur dioxide fraction add a within-color quality association?",
+      "Test sugar–alcohol balance with randomized sensory samples"
+    ],
+    "final": {
+      "status": "blocked",
+      "candidate": {
+        "id": "I1",
+        "title": "Does residual sugar modify the alcohol–quality association within wine color?",
+        "question": "Within red and white wines separately, is the association between alcohol and sensory quality more positive at higher residual sugar, after accounting for the other measured physicochemical variables and restricting comparisons to overlapping composition ranges?",
+        "core": {
+          "object": "Row-level quality scores and physicochemical measurements for red and white vinho verde samples",
+          "relation_or_action": "Estimate alcohol-by-residual-sugar interaction in an ordinal quality model, with color-specific terms and adjustment for the other measured chemistry",
+          "contrast": "Alcohol–quality slope at higher versus lower residual sugar within each color, compared with a model lacking the interaction",
+          "prediction": "The alcohol–quality association will be more positive at higher residual sugar in at least one color; this is an observational prediction, not a sugar intervention effect",
+          "independent_unit": "Wine sample row; whether rows represent independent lots is unknown"
+        },
+        "failure_condition": "The interaction is negligible or inconsistent across colors, lacks support within common composition ranges, or disappears under reasonable model and influence checks.",
+        "assumptions": [
+          "The quality score has an ordinal interpretation.",
+          "Measured covariates and common-support restriction address only measured composition; unmeasured style and producer effects may remain.",
+          "A row is a suitable analysis unit, though independence across rows is unverified."
+        ],
+        "required_new_data": "None for an observational test. Causal interpretation would require randomized sugar and alcohol manipulations with blinded panel ratings.",
+        "feasible_with_current_data": true,
+        "domain_value": "A reproducible interaction could motivate testing whether composition-specific sensory guidance differs by wine style; a null result would discourage treating a pooled alcohol association as a balance rule.",
+        "history_match": "none",
+        "history_relation": "no_history",
+        "discriminating_delta": "Tests a specific non-additive alcohol–sugar relation within color, rather than predicting quality from a list of variables or assuming an intervention effect.",
+        "quality_gate": {
+          "specific": true,
+          "testable": true,
+          "coherent_feasible": true,
+          "worth_testing": true
+        },
+        "next_action": "test"
+      },
+      "evidence_level": "proposal_only",
+      "what_changed": "The proposed observational comparison remains untested. Compute C1 failed during JSON serialization because quality_levels contained a NumPy int64; it returned no model estimates, fit comparison, or row counts. Search S1 failed on two SSL connection attempts and returned no literature evidence. These failures block empirical and nearest-work assessment; they do not support or refute the forecast.",
+      "what_is_known": "The supplied dataset has 6,497 rows and includes red and white samples, quality scores, and 11 measured chemistry variables. Its metadata reports no missing values and notes that producer and other provenance information are unavailable. No result from C1 or S1 is available.",
+      "new_hypothesis": "None; retain the original observational interaction hypothesis without treating it as supported.",
+      "next_falsifiable_test": "Rerun the prespecified proportional-odds comparison after converting NumPy scalar outputs to native JSON types. Report optimizer status, color-specific interaction estimates and uncertainty, row counts, and sensitivity to influence and support definitions. Retry a targeted literature search before making a novelty claim.",
+      "nearest_work_comparison": "The bundle identifies the dataset and its associated 2009 paper, but does not establish whether that or other work tested this color-specific alcohol-by-residual-sugar interaction. The targeted search failed, so the nearest-work comparison is unresolved.",
+      "novelty_status": "Unverified. The dataset is recognized; metadata is not a discovery, and the failed search cannot establish novelty.",
+      "feedback_type": "uncertainty"
+    },
+    "tools": [
+      {
+        "type": "compute",
+        "id": "C1",
+        "status": "failed"
+      },
+      {
+        "type": "search",
+        "id": "S1",
+        "status": "failed"
+      }
+    ]
+  },
+  {
+    "case": "wine",
+    "arm": "A",
+    "round": 2,
+    "proposed": "I1",
+    "effective": "I1",
+    "titles": [
+      "Does alcohol–sugar interaction persist under flexible response curves?",
+      "Does free sulfur dioxide add information beyond total concentration and pH?",
+      "Does a randomized sugar–alcohol interaction generalize across wine lots?"
+    ],
+    "final": {
+      "status": "revised",
+      "candidate": {
+        "id": "I1",
+        "title": "Do alcohol–sugar interaction terms improve ordinal quality fit within wine color?",
+        "question": "Within the supplied wine samples, do prespecified nonlinear alcohol-by-residual_sugar terms improve proportional-odds model fit beyond linear chemistry terms and quadratic alcohol and residual_sugar main effects, allowing the interaction surface to differ by color?",
+        "core": {
+          "object": "Row-level quality scores and physicochemical measurements for red and white vinho verde samples",
+          "relation_or_action": "Compare proportional-odds models with the same linear chemistry terms and quadratic alcohol and residual_sugar terms, with or without six color-specific interaction terms",
+          "contrast": "In-sample ordinal log likelihood for the expanded interaction model versus the additive quadratic model on rows within each color's marginal 5th–95th percentile ranges",
+          "prediction": "The expanded model will improve in-sample fit, but this comparison alone will not establish a positive interaction over a well-supported region or a causal sensory effect.",
+          "independent_unit": "Wine sample row; independent lot or panelist structure is unknown"
+        },
+        "failure_condition": "The interaction model fails to converge or does not improve fit under a prespecified, dependence-aware validation and sensitivity analysis.",
+        "assumptions": [
+          "Quality is treated as ordinal under a proportional-odds model.",
+          "The quadratic specification is an approximation, not a general flexible surface.",
+          "Marginal percentile filtering does not guarantee joint composition support.",
+          "Row-level observations may be dependent, and measured chemistry does not control unmeasured production or style factors."
+        ],
+        "required_new_data": "None for a further row-level model comparison; independent lots and blinded sensory ratings are needed for lot-level or causal claims.",
+        "feasible_with_current_data": true,
+        "domain_value": "Tests whether a specific nonlinear interaction adds conditional fit beyond curvature in the two main effects, informing whether a separately designed sensory experiment is warranted.",
+        "history_match": "I1",
+        "history_relation": "refinement",
+        "discriminating_delta": "Replaces a directional claim about a positive association in a post hoc region with a prespecified comparison of nonlinear interaction terms against quadratic main effects.",
+        "quality_gate": {
+          "specific": true,
+          "testable": true,
+          "coherent_feasible": true,
+          "worth_testing": true
+        },
+        "next_action": "test"
+      },
+      "evidence_level": "observational_support",
+      "what_changed": "C2 successfully fit both models on 5,432 rows (4,107 white; 1,325 red); both optimizers reported convergence. The expanded model had nll 5761.204 versus 5786.665 for the additive model, giving a nominal 6-df likelihood-ratio statistic of 50.922 (approximate p=3.07e-9). This is in-sample model-fit evidence for the specified added terms, not evidence that the alcohol–quality association shifts positively in a particular region. The forecast about a positive shift and weaker interaction after nonlinear adjustment is therefore unresolved. S2 failed twice with SSL errors and supplied no literature evidence.",
+      "what_is_known": "C2 reports quality levels 3–9 and a within-color marginal 5th–95th percentile filter for alcohol and residual_sugar. The filter does not establish joint support. The model comparison is observational, has no independent-lot metadata, and provides no coefficient uncertainty or dependence-aware validation. The supplied dataset documentation notes missing producer and other provenance information.",
+      "new_hypothesis": "The six specified interaction terms may improve conditional ordinal fit in these rows, but the direction and stability of the implied alcohol–quality association shift across residual_sugar remain unknown.",
+      "next_falsifiable_test": "Evaluate the prespecified interaction surface with uncertainty over a declared joint-support region, then check it under row-influence and dependence-aware sensitivity analyses. For causal interpretation, randomize alcohol and sugar levels across independent base wine lots and collect blinded repeated panel ratings.",
+      "nearest_work_comparison": "The bundle identifies the dataset and its associated 2009 paper, but does not establish whether prior work tested this nonlinear, color-specific interaction. S2 failed, so comparison of outcome, interaction specification, color stratification, and sampling unit remains unresolved.",
+      "novelty_status": "Unverified. Recognition of the dataset and the computed fit difference do not establish novelty; the targeted search returned no evidence.",
+      "feedback_type": "uncertainty"
+    },
+    "tools": [
+      {
+        "type": "compute",
+        "id": "C2",
+        "status": "executed"
+      },
+      {
+        "type": "search",
+        "id": "S2",
+        "status": "failed"
+      }
+    ]
+  },
+  {
+    "case": "wine",
+    "arm": "A",
+    "round": 3,
+    "proposed": "I1",
+    "effective": "I1",
+    "titles": [
+      "Does volatile acidity have threshold-specific associations with quality?",
+      "Does visible wine color shift ratings of the same wine?",
+      "Does free sulfur dioxide add a conditional association beyond total sulfur dioxide?"
+    ],
+    "final": {
+      "status": "blocked",
+      "candidate": {
+        "id": "I1",
+        "title": "Does the volatile_acidity association vary across quality thresholds?",
+        "question": "Among the supplied wine samples, does the adjusted volatile_acidity association with quality vary across cumulative score thresholds, and is it weaker at thresholds for higher scores?",
+        "core": {
+          "object": "Row-level ordinal quality scores and measured chemistry for red and white wine samples",
+          "relation_or_action": "Estimate threshold-specific volatile_acidity slopes with a prespecified partial proportional-odds model, retaining common slopes for other covariates",
+          "contrast": "A common volatile_acidity slope versus threshold-varying slopes on identical rows and covariates",
+          "prediction": "The negative association may attenuate at higher quality thresholds; the supplied exploratory fits show this pattern descriptively, but do not establish it.",
+          "independent_unit": "Wine sample row; lot, producer, and panelist dependence are unknown"
+        },
+        "failure_condition": "A converged, prespecified model finds no meaningful threshold variation, or the pattern is unstable under influence and color-stratified sensitivity checks.",
+        "assumptions": [
+          "Quality scores have an ordinal interpretation, but their panel measurement process is undocumented.",
+          "The model handles cumulative probabilities without crossing and uses the same rows and covariates across comparisons.",
+          "Row-level estimates do not establish intervention effects or independent-lot generalization."
+        ],
+        "required_new_data": "None for a row-level model comparison. Panelist and lot identifiers are needed to assess dependence and generalization; causal claims require randomized acidity manipulation and blinded ratings.",
+        "feasible_with_current_data": true,
+        "domain_value": "Could distinguish whether volatile_acidity relates similarly to avoiding low ratings and reaching high ratings, rather than relying on one average ordinal association.",
+        "history_match": "none",
+        "history_relation": "new_family",
+        "discriminating_delta": "Examines whether a measured chemical association changes across outcome thresholds, a different question from the prior alcohol–residual_sugar interaction.",
+        "quality_gate": {
+          "specific": true,
+          "testable": true,
+          "coherent_feasible": true,
+          "worth_testing": true
+        },
+        "next_action": "repair"
+      },
+      "evidence_level": "computed_feasibility",
+      "what_changed": "C3 returned six separate cumulative-logit estimates on 6,497 rows. The volatile_acidity coefficients became less negative from lower to higher thresholds: -0.854 at quality >3, -0.903 at >4, -0.787 at >5, -0.603 at >6, -0.292 at >7, and -0.213 at >8. This descriptively opposes the forecast of a more negative association at higher thresholds. Five fits reported precision loss; the threshold >8 fit had only five observations above the threshold and a model-based SE of 0.865. These exploratory fits do not provide a formal test of threshold variation. Search S3 returned general ordinal-model references, not wine-specific evidence about volatile_acidity or this dataset.",
+      "what_is_known": "The data contain 6,497 rows and quality levels 3–9. C3's six threshold fits reuse the same rows, and their reported standard errors assume independent rows. The dataset lacks panelist, producer, vintage, and lot identifiers. S3's scope is Crossref metadata and is not exhaustive.",
+      "new_hypothesis": "The negative volatile_acidity association may attenuate at higher quality thresholds, but sparse upper categories and optimization precision loss could produce an unstable pattern.",
+      "next_falsifiable_test": "Fit a converged partial proportional-odds model with only the volatile_acidity slope varying by threshold, check cumulative-probability ordering, report threshold-specific uncertainty and category counts, and assess influence and color-stratified sensitivity. If convergence or category sparsity prevents reliable estimation, report that limitation rather than treating separate threshold fits as confirmation.",
+      "nearest_work_comparison": "S3 found general methods on partial proportional odds and proportionality assessment, including DOI 10.2307/2532457, but no returned wine-specific study. Comparison by wine outcome, volatile_acidity relation, threshold model, and sampling unit remains unresolved.",
+      "novelty_status": "Unverified. Dataset recognition and the returned general-method references do not establish novelty.",
+      "feedback_type": "uncertainty"
+    },
+    "tools": [
+      {
+        "type": "compute",
+        "id": "C3",
+        "status": "executed"
+      },
+      {
+        "type": "search",
+        "id": "S3",
+        "status": "returned"
+      }
+    ]
+  },
+  {
+    "case": "wine",
+    "arm": "B",
+    "round": 1,
+    "proposed": "I1",
+    "effective": "I1",
+    "titles": [
+      "Does residual sugar modify the alcohol-quality association?",
+      "Does sulfur dioxide composition matter beyond total concentration?",
+      "Does chemical overlap account for the red-white quality-score gap?"
+    ],
+    "final": {
+      "status": "revised",
+      "candidate": {
+        "id": "I1",
+        "title": "Does residual sugar modify the alcohol-quality association?",
+        "question": "Within each wine color, among samples inside the intersection of the two colors' marginal 5th–95th percentile ranges for alcohol and residual_sugar, does the alcohol-quality slope differ between the color-specific 5th and 95th percentiles of residual_sugar?",
+        "core": {
+          "object": "Observed quality score for a wine sample",
+          "relation_or_action": "Within-color association between alcohol and quality as a function of residual_sugar",
+          "contrast": "Alcohol-quality slope at the 95th versus 5th percentile of residual_sugar within the prespecified overlap subset",
+          "prediction": "The alcohol-quality slope is less positive at the higher residual_sugar contrast in each color.",
+          "independent_unit": "One dataset row representing a wine sample; lot, producer, and panel dependence are unknown."
+        },
+        "failure_condition": "The high-sugar slope is not less positive in either color, or uncertainty is too wide to distinguish the prespecified contrast.",
+        "assumptions": [
+          "Quality scores are comparable within each color.",
+          "The specified marginal overlap subset contains adequate joint support for the contrast.",
+          "Rows may be treated as independent only for exploratory row-level uncertainty; clustering cannot be assessed from supplied fields.",
+          "A numeric-score OLS analysis is a diagnostic and does not settle ordinal-scale sensitivity."
+        ],
+        "required_new_data": "For confirmatory follow-up, independently sampled wines with lot or producer identifiers, measured composition, and repeated blinded sensory ratings under a prespecified protocol.",
+        "feasible_with_current_data": true,
+        "domain_value": "Provides a defined observational contrast that could motivate a controlled sensory follow-up; it does not estimate the effect of changing sugar.",
+        "history_match": "I1",
+        "history_relation": "refinement",
+        "discriminating_delta": "Prespecifies the sugar contrast and marginal overlap rule, and requires reporting both unadjusted and chemistry-adjusted associations rather than relying on an unspecified interaction.",
+        "quality_gate": {
+          "specific": true,
+          "testable": true,
+          "coherent_feasible": true,
+          "worth_testing": true
+        },
+        "next_action": "test"
+      },
+      "evidence_level": "proposal_only",
+      "what_changed": "I clarified the sugar contrast and overlap rule in response to the critique. The requested computation did not run: tool compute_0 returned a clarification with invalid syntax, so it provides no estimates or feasibility evidence.",
+      "what_is_known": "The bundle supplies 6,497 rows, including 4,898 white and 1,599 red samples, and reports no missing values in the listed variables. It does not provide lot, producer, or panel identifiers. No result about the proposed interaction is established.",
+      "new_hypothesis": "The alcohol-quality association may be weaker at higher residual_sugar within each color in the defined overlap subset; this remains an untested observational hypothesis.",
+      "next_falsifiable_test": "Rerun the requested overlap analysis with valid complete code. Report retained counts and overlap bounds, unadjusted and adjusted interaction estimates with uncertainty for each color, and an ordinal-outcome sensitivity analysis. Treat row-level bootstrap intervals as exploratory given unknown clustering; do not infer intervention effects.",
+      "nearest_work_comparison": "The supplied UCI description frames the data as physicochemical modeling of quality and notes feature relevance as an open question. This proposal instead tests a prespecified alcohol-by-sugar association within color and overlap. The bundle provides no literature search or evidence that this contrast is novel.",
+      "novelty_status": "Unverified; the bundle supports only a distinction from its stated general modeling objective, not a literature-level novelty claim.",
+      "feedback_type": "uncertainty",
+      "tool_return_ids": [
+        "compute_0"
+      ]
+    },
+    "tools": [
+      {
+        "type": "compute",
+        "id": "I1_overlap_interaction_diagnostic",
+        "status": "clarification"
+      }
+    ]
+  },
+  {
+    "case": "wine",
+    "arm": "B",
+    "round": 2,
+    "proposed": "I1",
+    "effective": "I1",
+    "titles": [
+      "How much quality disagreement remains among chemically similar wines?",
+      "Does chemical rarity distinguish high-scoring wines from typical wines?",
+      "Does residual sugar buffer the sensory effect of volatile acidity?"
+    ],
+    "final": {
+      "status": "retained",
+      "candidate": {
+        "id": "I1",
+        "title": "How much quality disagreement remains among chemically similar wines?",
+        "question": "Within each color, do wines paired by nearest-neighbor distance across the 11 measured physicochemical variables have smaller absolute quality-score differences than a reference formed by permuting quality within coarse chemistry strata?",
+        "core": {
+          "object": "Absolute difference in observed quality scores between paired wine samples",
+          "relation_or_action": "Relate multivariate physicochemical similarity to quality-score agreement",
+          "contrast": "Observed mean absolute quality difference for unique nearest-neighbor pairs versus within-stratum quality-permutation values",
+          "prediction": "Nearest-neighbor pairs show smaller score differences than the permutation reference in both colors, while their mean score difference remains above zero.",
+          "independent_unit": "A wine row; pairs share rows, and lot, producer, and panel identifiers are unavailable."
+        },
+        "failure_condition": "Nearest-neighbor disagreement is not lower than the permutation reference in either color, or the result depends strongly on the chosen distance or strata.",
+        "assumptions": [
+          "Z-scaled Euclidean distance across the 11 measured variables is a useful chemistry-similarity measure.",
+          "Permuting quality within the 16 PCA-quartile strata provides a descriptive reference; its interpretation depends on within-stratum exchangeability.",
+          "The dataset does not identify sampling clusters or sources of score variation."
+        ],
+        "required_new_data": "For validation, independently sampled wines with lot and producer identifiers, repeated blinded sensory ratings, and the same physicochemical measurements.",
+        "feasible_with_current_data": true,
+        "domain_value": "Estimates whether measured chemistry is locally associated with quality scores and whether appreciable score disagreement remains among chemically similar samples.",
+        "history_match": "round1:I1",
+        "history_relation": "new_family",
+        "discriminating_delta": "Tests local chemistry-score concordance against a conditional permutation reference, rather than a specific chemical interaction or a red-white score gap.",
+        "quality_gate": {
+          "specific": true,
+          "testable": true,
+          "coherent_feasible": true,
+          "worth_testing": true
+        },
+        "next_action": "measure"
+      },
+      "evidence_level": "observational_support",
+      "what_changed": "The requested computation ran successfully. In both colors, observed nearest-neighbor score disagreement was below the 500-permutation reference interval: red 0.381 versus mean 0.631 (95% permutation interval 0.602–0.661), and white 0.373 versus mean 0.714 (0.695–0.732). None of the 500 permutations was as favorable as the observed value in either color. The forecasted direction was observed. The search returned broad wine sensory-analysis and instrumental-assessment sources, but its Crossref metadata scope is not exhaustive and does not resolve whether this exact question has been studied.",
+      "what_is_known": "For the specified scaling, nearest-neighbor rule, and PCA-quartile strata, chemically nearest pairs had lower mean absolute quality-score differences than the permutation references. Their observed disagreement was still nonzero. Pair counts were 1,350 red and 4,241 white; the 16 strata per color had minimum sizes 66 and 269, respectively. Pair counts are not independent replication. The permutation comparison assumes within-stratum exchangeability and does not account for unknown lot, producer, or panel structure. These results describe association in this dataset; they do not show that chemistry is sufficient, explain disagreement, or establish sensory-rating reliability.",
+      "new_hypothesis": "Measured chemistry contains local information about quality scores beyond the coarse PCA-quartile permutation reference, while additional unmeasured factors or score variation may contribute to the remaining disagreement. This dataset cannot distinguish those explanations.",
+      "next_falsifiable_test": "Evaluate the prespecified distance and reference on independently sampled wines with lot and producer identifiers and repeated blinded ratings. Before collection, specify the chemistry-distance rule, score-disagreement outcome, and comparison; test whether the lower disagreement among nearest neighbors replicates and estimate how much variation is attributable to batches and raters.",
+      "nearest_work_comparison": "The supplied dataset documentation describes physicochemical modeling of quality and mentions feature relevance and outlier detection. The returned sources include general sensory analysis and instrumental assessment of wine, but no abstracts establishing whether they test local multivariate chemistry similarity against score disagreement. The result therefore distinguishes this question from the supplied general modeling objective only; it does not establish a literature gap.",
+      "novelty_status": "Unverified. The search was limited to Crossref metadata and returned broad sources without enough detail to establish overlap or novelty.",
+      "feedback_type": "uncertainty",
+      "tool_return_ids": [
+        "compute_0",
+        "search_1"
+      ]
+    },
+    "tools": [
+      {
+        "type": "compute",
+        "id": "I1_local_score_concordance",
+        "status": "executed"
+      },
+      {
+        "type": "search",
+        "id": "I1_nearest_work",
+        "status": "returned"
+      }
+    ]
+  },
+  {
+    "case": "wine",
+    "arm": "B",
+    "round": 3,
+    "proposed": "I1",
+    "effective": "I1",
+    "titles": [
+      "Do chemical associations shift every adjacent quality threshold in the same way?",
+      "Does oxygen exposure change sulfur-dioxide loss differently across wine pH?",
+      "Are quality scores reproducible across repeated blind ratings?"
+    ],
+    "final": {
+      "status": "revised",
+      "candidate": {
+        "id": "I1",
+        "title": "Do chemistry-score associations vary across adjacent quality thresholds?",
+        "question": "Within each wine color, do associations between the 11 measured chemical variables and the ordered quality score vary across adjacent score thresholds enough to improve held-out ordinal log loss over a proportional-odds model?",
+        "core": {
+          "object": "Ordered quality score for one wine row",
+          "relation_or_action": "Association of measured chemistry with crossing adjacent quality thresholds",
+          "contrast": "Proportional-odds model versus a coherent partial proportional-odds model, evaluated on held-out ordinal log loss within each color",
+          "prediction": "At least one color shows a reproducible held-out improvement from threshold-specific slopes, while most slope directions remain consistent.",
+          "independent_unit": "One wine row; lot, producer, and panelist clustering are unknown."
+        },
+        "failure_condition": "Threshold-specific slopes fail to improve held-out ordinal log loss beyond resampling uncertainty, or improvements are unstable across splits or colors.",
+        "assumptions": [
+          "Quality is ordered, but equal spacing between scores is not assumed.",
+          "Each color has sufficient support on both sides of the thresholds being compared.",
+          "Row-level resampling is exploratory and cannot account for unknown clusters."
+        ],
+        "required_new_data": "For confirmation about score generation, independently sampled wines with lot identifiers and repeated blinded ratings by a shared panel.",
+        "feasible_with_current_data": true,
+        "domain_value": "Tests whether one common ordinal association structure is an adequate summary or whether specific score transitions merit follow-up.",
+        "history_match": "none",
+        "history_relation": "new_family",
+        "discriminating_delta": "Moves beyond prior local chemistry-score concordance and chemical-interaction questions to test whether the ordinal association structure itself changes across thresholds.",
+        "quality_gate": {
+          "specific": true,
+          "testable": true,
+          "coherent_feasible": true,
+          "worth_testing": true
+        },
+        "next_action": "repair"
+      },
+      "evidence_level": "proposal_only",
+      "what_changed": "The requested computation failed before fitting: compute_0 returned a read-only-array assignment error while standardizing predictors. It provides no class-support summary, model comparison, or evidence for the forecast. I tightened the question to require a coherent ordinal model and held-out improvement beyond resampling uncertainty; the proposed code did not supply that uncertainty or slope-stability analysis.",
+      "what_is_known": "The bundle reports 6,497 rows, 11 physicochemical features, integer quality scores, and no missing values in the listed variables. It does not provide lot, producer, or panelist identifiers. No threshold-specific association result is established. The failed execution is documented by compute_0.",
+      "new_hypothesis": "Some chemistry-score associations may differ across adjacent quality thresholds, even if their overall directions are broadly consistent. This remains untested.",
+      "next_falsifiable_test": "Repair the read-only standard-deviation assignment, then fit a valid proportional-odds and partial proportional-odds comparison within each color. Use a fixed held-out evaluation, report category and threshold support, quantify uncertainty through repeated splits or an appropriate resampling procedure, and check slope stability. Do not interpret row-level uncertainty as accounting for unknown clusters.",
+      "nearest_work_comparison": "The supplied dataset description frames the task as physicochemical modeling of quality and notes feature relevance as an open question. Earlier bundle rounds examined alcohol-by-sugar association and local chemistry-score concordance; this proposal instead tests whether ordinal associations vary by score threshold. No current-round literature search was requested or returned, so this comparison does not establish a literature gap.",
+      "novelty_status": "Unverified; the bundle supports a distinction from its stated general modeling goal and prior-round candidates, not a literature-level novelty claim.",
+      "feedback_type": "implementation_error",
+      "tool_return_ids": [
+        "compute_0"
+      ]
+    },
+    "tools": [
+      {
+        "type": "compute",
+        "id": "I1_threshold_structure_diagnostic",
+        "status": "failed"
+      }
+    ]
+  },
+  {
+    "case": "wine",
+    "arm": "C",
+    "round": 1,
+    "proposed": "I1",
+    "effective": "I1",
+    "titles": [
+      "Does residual sugar modify the alcohol–quality association within wine color?",
+      "Is the quality association with sulfur dioxide tied to its free fraction?",
+      "Do red and white wines differ in score at comparable measured chemistry?"
+    ],
+    "final": {
+      "status": "retained",
+      "candidate": {
+        "id": "I1",
+        "title": "Does residual sugar modify the alcohol–quality association within wine color?",
+        "question": "Within red and white wines separately, does the association between alcohol and sensory quality vary with residual_sugar after adjustment for the other measured chemistry?",
+        "core": {
+          "object": "Wine samples and their measured chemistry and quality scores",
+          "relation_or_action": "Interaction between alcohol and residual_sugar in their conditional association with quality",
+          "contrast": "The adjusted alcohol–quality association at lower versus higher log1p residual_sugar within each color",
+          "prediction": "The proposed direction is a less positive association at higher residual_sugar in at least one color. The exploratory estimates did not establish this prediction; a prespecified ordinal analysis with adequate joint support is needed to assess it.",
+          "independent_unit": "One wine sample; independence across samples cannot be verified from the supplied metadata."
+        },
+        "failure_condition": "The prespecified interaction is near zero or reverses across reasonable ordinal-model specifications within the supported alcohol–sugar region.",
+        "assumptions": [
+          "Quality is an ordinal sensory score, not a direct measure of consumer preference.",
+          "Measured covariates do not remove unmeasured confounding; observational associations do not identify intervention effects.",
+          "Rows may share producers, batches, or panels, but those groupings are unavailable."
+        ],
+        "required_new_data": "None for an observational test. To estimate intervention effects, use replicated independent wine lots in a blinded factorial design varying alcohol and residual sugar, with repeated ratings by the same panel.",
+        "feasible_with_current_data": true,
+        "domain_value": "Could establish whether the measured alcohol–score association differs with sugar and color, informing whether these associations merit controlled sensory testing.",
+        "history_match": "none",
+        "history_relation": "no_history",
+        "discriminating_delta": "Tests a prespecified alcohol-by-sugar contrast within color rather than ranking predictors or asserting a general alcohol effect.",
+        "quality_gate": {
+          "specific": true,
+          "testable": true,
+          "coherent_feasible": true,
+          "worth_testing": true
+        },
+        "next_action": "test"
+      },
+      "evidence_level": "observational_support",
+      "what_changed": "The exploratory estimates made the initial directional forecast inconclusive. For the standardized alcohol-by-log1p(residual_sugar) term, the red estimate was -0.0279 with a row-bootstrap 95% interval of [-0.0736, 0.0186]; the white estimate was -0.0268 with interval [-0.0681, 0.0003] (C1). The interval-score approximation and unverified row independence limit interpretation.",
+      "what_is_known": "C1 ran on the supplied dataset. Both point estimates were negative, but both intervals included zero, so the requested direction was not established. These results do not demonstrate an interaction, its absence, or an intervention effect. The literature search failed after SSL errors, so no nearest-work comparison was obtained (S1).",
+      "new_hypothesis": "Any alcohol-by-sugar association may depend on the outcome scale or the supported chemistry range; the current diagnostic does not distinguish those possibilities from a near-zero association.",
+      "next_falsifiable_test": "On the supplied data, prespecify an ordinal model and interaction estimand, report uncertainty by color, and restrict interpretation to joint alcohol–sugar support. A clear, stable interaction in either color would support the associational hypothesis; estimates centered near zero with sufficiently narrow intervals would count against it. Unknown clustering remains unresolved.",
+      "nearest_work_comparison": "No history candidates were supplied. The requested search for prior analyses of this specific interaction failed (S1), so proximity to published work is unknown.",
+      "novelty_status": "Unverified. The dataset is recognized, but existing metadata is not a discovery, and the failed search cannot establish novelty.",
+      "feedback_type": "uncertainty"
+    },
+    "tools": [
+      {
+        "type": "compute",
+        "id": "C1",
+        "status": "executed"
+      },
+      {
+        "type": "search",
+        "id": "S1",
+        "status": "failed"
+      }
+    ]
+  },
+  {
+    "case": "wine",
+    "arm": "C",
+    "round": 2,
+    "proposed": "I1",
+    "effective": "I1",
+    "titles": [
+      "柠檬酸是否改变挥发酸与质量评分的关系？",
+      "酒精度与评分的关系是否在高酒精区间弯曲？",
+      "挥发酸与评分的关联是否因酒色而异？"
+    ],
+    "final": {
+      "status": "revised",
+      "candidate": {
+        "id": "I1",
+        "title": "白葡萄酒中柠檬酸是否改变挥发酸与质量评分的关联？",
+        "question": "在白葡萄酒样本中，控制其他已测理化变量后，volatile_acidity 与序数 quality 的条件关联是否随 citric_acid 水平增强？",
+        "core": {
+          "object": "白葡萄酒样本及其理化测量和序数 quality 评分",
+          "relation_or_action": "volatile_acidity 与 citric_acid 的交互关联",
+          "contrast": "标准化 volatile_acidity 与 citric_acid 的乘积项对质量评分累积优势的关联",
+          "prediction": "事前预测较高 citric_acid 会减弱 volatile_acidity 与较高 quality 的负向关联；正交互是该预测在比例优势模型中的对应方向。",
+          "independent_unit": "单个样本；生产批次、酒庄及评审依赖关系未知。"
+        },
+        "failure_condition": "在预先规定的序数模型、共同支持区域及合理敏感性分析中，交互估计接近零或方向不稳定。",
+        "assumptions": [
+          "quality 是序数感官评分，不等同消费者偏好。",
+          "测量变量调整不能排除未测混杂。",
+          "行级重抽样假定样本独立，但现有元数据无法验证该假定。"
+        ],
+        "required_new_data": "当前数据可用于探索性关联分析。确认该关联需在独立白葡萄酒批次中重复；估计干预效果则需控制条件的批次实验和盲法重复感官评分。",
+        "feasible_with_current_data": true,
+        "domain_value": "可为独立批次的感官验证提供一项具体交互假设，但现有观察结果不能直接支持酿造干预建议。",
+        "history_match": "none",
+        "history_relation": "new_family",
+        "discriminating_delta": "检验 volatile_acidity × citric_acid 的序数评分交互；历史候选研究的是 alcohol × residual_sugar、硫测量构成或颜色相关比较。",
+        "quality_gate": {
+          "specific": true,
+          "testable": true,
+          "coherent_feasible": true,
+          "worth_testing": true
+        },
+        "next_action": "test"
+      },
+      "evidence_level": "observational_support",
+      "what_changed": "按预先提出的比例优势模型检查，白葡萄酒交互系数为 0.194（标准化预测变量的对数优势尺度），行级 bootstrap 95% 区间为 [0.055, 0.308]；红葡萄酒估计为 0.266，区间为 [-0.024, 0.569]（C2）。因此白葡萄酒结果与预测方向一致，红葡萄酒结果不确定。结论收窄到白葡萄酒的探索性关联，避免把“任一颜色显著”当作验证。",
+      "what_is_known": "C2 的拟合成功，80 次重抽样均得到可用估计，但区间依赖未验证的行独立假设。只报告了两变量各自的边际分位数，没有核验联合支持、影响点敏感性或多重比较；这些限制降低证据强度。S2 检索因 SSL 错误失败，不能据此判断新颖性。观察关联不识别改变成分的效果。",
+      "new_hypothesis": "白葡萄酒中观察到的正交互可能依赖模型规格或变量共同分布；现有输出无法区分稳定的条件关联与这些替代解释。",
+      "next_falsifiable_test": "在独立白葡萄酒批次上预注册比例优势模型、交互尺度和最小有意义效应，评估 joint volatile_acidity–citric_acid 支持，并用批次作为独立单位。如果交互方向在批次层级重复且区间排除预定的近零范围，支持该关联；若估计接近零或不稳定，则不支持。",
+      "nearest_work_comparison": "历史候选没有检验此交互。针对该交互的检索 S2 失败，因此与已发表工作的接近程度未知。",
+      "novelty_status": "未核实；不能从数据集元数据、候选差异或失败的检索推断科学新颖性。",
+      "feedback_type": "uncertainty"
+    },
+    "tools": [
+      {
+        "type": "compute",
+        "id": "C2",
+        "status": "executed"
+      },
+      {
+        "type": "search",
+        "id": "S2",
+        "status": "failed"
+      }
+    ]
+  },
+  {
+    "case": "wine",
+    "arm": "C",
+    "round": 3,
+    "proposed": "I1",
+    "effective": "I1",
+    "titles": [
+      "Does volatile acidity relate differently to low and high quality-score thresholds?",
+      "Does free sulfur dioxide add a distinct score association beyond total sulfur dioxide?",
+      "Is the residual-sugar association with quality distinct from its association through alcohol?"
+    ],
+    "final": {
+      "status": "revised",
+      "candidate": {
+        "id": "I1",
+        "title": "挥发酸与低、高质量评分阈值的关联强度是否不同？",
+        "question": "在红、白葡萄酒各自内部，调整其他已测理化变量后，标准化 volatile_acidity 与 quality <= 5 的对数优势关联，其绝对值是否大于它与 quality >= 7 的对数优势关联？",
+        "core": {
+          "object": "葡萄酒样本的理化测量与 quality 评分",
+          "relation_or_action": "比较 volatile_acidity 与两个不同质量阈值事件的调整后关联强度",
+          "contrast": "每种颜色分别比较 |volatile_acidity 对 quality <= 5 的标准化对数优势系数| 与 |volatile_acidity 对 quality >= 7 的标准化对数优势系数|",
+          "prediction": "事前预测低分事件的关联强度在至少一种颜色中更大。该预测尚未检验；两个事件定义不同，不能据此推断一般的序数模型偏离或感官机制。",
+          "independent_unit": "单个样本；生产者、批次和评审面板依赖关系未知。"
+        },
+        "failure_condition": "预设的低阈值减高阈值绝对系数差接近零或为负；区间过宽则判为不确定，而非证明等效。",
+        "assumptions": [
+          "quality <= 5 与 quality >= 7 是操作性阈值，不是已验证的感官界限。",
+          "系数比较使用标准化 volatile_acidity 的对数优势尺度；两个阈值对应不同二元结果。",
+          "样本行独立性未经元数据验证，化学变量调整也不能排除未测混杂。"
+        ],
+        "required_new_data": "探索性关联分析不需新增数据。若要验证阈值的感官含义，应取得独立酒批次的盲法重复评分及批次、评审面板标识。",
+        "feasible_with_current_data": true,
+        "domain_value": "可检验低评分与高评分阈值是否需要不同的挥发酸关联摘要，为独立批次的感官验证提供具体问题；不能据此推断改变挥发酸会改变评分。",
+        "history_match": "round 2 I1",
+        "history_relation": "new_family",
+        "discriminating_delta": "检验 volatile_acidity 与两个预设评分阈值事件的关联强度差异；round 2 I1 检验 volatile_acidity × citric_acid 对序数评分的交互。",
+        "quality_gate": {
+          "specific": true,
+          "testable": true,
+          "coherent_feasible": true,
+          "worth_testing": true
+        },
+        "next_action": "repair"
+      },
+      "evidence_level": "proposal_only",
+      "what_changed": "将“低阈值关联更强”明确为低、高阈值标准化系数绝对值之差，并强调这是两个不同的二元结果对比。C3 未产生估计：返回状态为 clarification，原因是代码语法错误“'(' was never closed” (C3)。因此没有计算结果可用于支持或反驳预测。",
+      "what_is_known": "本轮没有可用的模型估计、事件计数、区间或收敛结果。C3 是实现错误，不是数据结果或假设检验失败。没有本轮检索返回；新颖性仍未核实。观察性分析也无法识别干预效果。",
+      "new_hypothesis": "volatile_acidity 与低评分事件的调整后关联强度可能高于其与高评分事件的关联强度；现有证据无法判断是否如此。",
+      "next_falsifiable_test": "修复 C3 代码的未闭合括号后，按原定分析分别拟合 quality <= 5 与 quality >= 7 的逻辑回归，报告两类事件计数、系数符号、绝对系数差及配对行 bootstrap 区间，并说明行独立性未经验证。按颜色报告结果；区间跨零表示证据不确定，不表示等效。不得从这些结果推断因果或一般的序数模型违背。",
+      "nearest_work_comparison": "历史候选包括 volatile_acidity × citric_acid 交互、alcohol × residual_sugar 交互、硫测量比较及红白颜色比较；本候选比较同一预测变量与两个评分阈值事件的关联强度。与既有发表工作的接近程度未知。",
+      "novelty_status": "未核实。C3 实现失败，不能提供经验支持；本轮没有可用检索结果。",
+      "feedback_type": "implementation_error"
+    },
+    "tools": [
+      {
+        "type": "compute",
+        "id": "C3",
+        "status": "clarification"
+      }
+    ]
+  },
+  {
+    "case": "shopping",
+    "arm": "A",
+    "round": 1,
+    "proposed": "I1",
+    "effective": "I1",
+    "titles": [
+      "Does product-page dwell relate differently to purchase across visitor types?",
+      "Does a comparison aid increase conversion for high-dwell new visitors?",
+      "Do product revisits after information pages mark a purchase-oriented path?"
+    ],
+    "final": {
+      "status": "revised",
+      "candidate": {
+        "id": "I1",
+        "title": "Does an aggregate product-page dwell proxy have different purchase associations by visitor type?",
+        "question": "Among sessions with ProductRelated > 0, does the association between log-transformed ProductRelated_Duration per ProductRelated page and Revenue differ between New_Visitor and Returning_Visitor sessions, conditional on log page count and Month?",
+        "core": {
+          "object": "Session-level proxy log1p(ProductRelated_Duration / ProductRelated), not page-level dwell time",
+          "relation_or_action": "Estimate its interaction with New_Visitor in a logistic model for Revenue",
+          "contrast": "New_Visitor versus Returning_Visitor sessions, conditional on log1p(ProductRelated) and Month",
+          "prediction": "The pre-computation forecast is a more positive proxy-Revenue association for New_Visitor sessions.",
+          "independent_unit": "One session; the supplied metadata describes different users across sessions in the dataset"
+        },
+        "failure_condition": "The interaction is near zero or negative, or its uncertainty includes both negligible and practically meaningful contrasts.",
+        "assumptions": [
+          "The ratio of aggregate duration to page count is interpretable as a session-level average proxy, though it cannot recover page-level dwell distributions.",
+          "The specified conditional association is observational and does not identify a causal effect.",
+          "Other visitor types are excluded from this contrast; this limits its target population."
+        ],
+        "required_new_data": "None to attempt the specified analysis. Timestamped page events and transaction timing are needed to validate the proxy against page-level dwell or study browsing mechanisms.",
+        "feasible_with_current_data": true,
+        "domain_value": "Could assess whether this aggregate engagement proxy relates differently to purchases across the two specified visitor groups, while clarifying what the existing summaries can support.",
+        "history_match": "none",
+        "history_relation": "no_history",
+        "discriminating_delta": "Defines the measure explicitly as an aggregate proxy and tests a prespecified visitor-type interaction; it does not infer page-level behavior or intervention effects.",
+        "quality_gate": {
+          "specific": true,
+          "testable": true,
+          "coherent_feasible": true,
+          "worth_testing": true
+        },
+        "next_action": "test"
+      },
+      "evidence_level": "proposal_only",
+      "what_changed": "Narrowed the interpretation to an aggregate dwell proxy, stated the excluded VisitorType group and target population, and kept the association explicitly noncausal. The requested computation timed out (compute_0), so the forecast remains unevaluated. The search returned Crossref metadata that did not establish a direct overlap or a research gap; its scope is explicitly non-exhaustive (search_1).",
+      "what_is_known": "The bundle supplies 12,330 rows and aggregate session features. No interaction estimate, interval, or eligible-group outcome counts were produced. The returned search records do not verify novelty. See compute_0 and search_1.",
+      "new_hypothesis": "The supplied summaries may support a conditional association comparison, but whether this aggregate proxy has a stable visitor-type interaction is unknown.",
+      "next_falsifiable_test": "Run the prespecified logistic interaction with uncertainty and the stated upper-tail sensitivity; report group outcome counts and convergence. If the estimate is unstable, near zero, or reverses under the prespecified sensitivity, do not treat the forecast as supported. Validate the proxy against timestamped page-level events before making claims about dwell behavior.",
+      "nearest_work_comparison": "The search return listed shopping and purchase-intention records but supplied no evidence directly addressing this dataset-specific dwell-proxy-by-visitor-type interaction. Because the search was Crossref metadata and non-exhaustive, nearest-work overlap and any literature gap remain unverified.",
+      "novelty_status": "Unverified; no novelty claim is supported by the returned search.",
+      "feedback_type": "uncertainty"
+    },
+    "tools": [
+      {
+        "type": "compute",
+        "id": "R1-C1",
+        "status": "failed"
+      },
+      {
+        "type": "search",
+        "id": "R1-S1",
+        "status": "returned"
+      }
+    ]
+  },
+  {
+    "case": "shopping",
+    "arm": "A",
+    "round": 2,
+    "proposed": "I1",
+    "effective": "I1",
+    "titles": [
+      "Does the dwell proxy–purchase association flatten at higher dwell levels?",
+      "Does an information-to-product return precede higher purchase frequency?",
+      "Does a product comparison aid change conversion for first-time shoppers?"
+    ],
+    "final": {
+      "status": "revised",
+      "candidate": {
+        "id": "I1",
+        "title": "Does the purchase association of an aggregate product-dwell proxy differ in shape by visitor type?",
+        "question": "Among sessions with ProductRelated > 0 and VisitorType in {New_Visitor, Returning_Visitor}, how does the conditional association between log1p(ProductRelated_Duration / ProductRelated) and Revenue vary across the 5th–95th proxy percentiles by visitor type, adjusting for log1p(ProductRelated) and Month?",
+        "core": {
+          "object": "Session-level aggregate proxy log1p(ProductRelated_Duration / ProductRelated), not page-level dwell time",
+          "relation_or_action": "Estimate visitor-specific quadratic associations with Revenue using a logistic model",
+          "contrast": "The proxy slope across the 5th–95th percentiles for New_Visitor versus Returning_Visitor sessions",
+          "prediction": "The prespecified prediction was positive flattening in both groups, with stronger flattening for Returning_Visitor sessions. The observed fitted slopes instead decline from 2.052 to -0.048 for Returning_Visitor and rise from 0.375 to 0.664 for New_Visitor; this reverses the predicted shape for New_Visitor.",
+          "independent_unit": "One session; the supplied metadata describes different users across sessions in the dataset"
+        },
+        "failure_condition": "The visitor-specific curve shapes fail to reproduce in an independent sample, or the fitted differences are materially altered by a prespecified alternative measurement or model.",
+        "assumptions": [
+          "The ratio of aggregate duration to page count is an interpretable session-level proxy, but cannot recover page-level dwell distributions.",
+          "The logistic quadratic is a descriptive approximation over the reported percentile range, not a causal model.",
+          "Adjustment for log page count and Month does not eliminate unmeasured confounding.",
+          "Other visitor types are outside the specified comparison."
+        ],
+        "required_new_data": "An independent session-level sample with the same aggregate fields and outcome, plus timestamped page events if the proxy is to be validated against page-level dwell.",
+        "feasible_with_current_data": true,
+        "domain_value": "Could clarify whether the same aggregate engagement proxy has different purchase associations across visitor types, while limiting interpretation to the measured session summaries.",
+        "history_match": "I1",
+        "history_relation": "refinement",
+        "discriminating_delta": "The fitted curvature differs by visitor type: the quadratic interaction is positive, and fitted slopes decline for Returning_Visitor while rising for New_Visitor across the reported range. This revises the earlier common-shape prediction; it does not establish a behavioral mechanism.",
+        "quality_gate": {
+          "specific": true,
+          "testable": true,
+          "coherent_feasible": true,
+          "worth_testing": true
+        },
+        "next_action": "test"
+      },
+      "evidence_level": "observational_support",
+      "what_changed": "The requested computation completed as compute_0. The common prediction of positive flattening in both groups was not supported: fitted slopes rise across the evaluated range for New_Visitor and decline to slightly below zero for Returning_Visitor. The returning-group quadratic term was -0.241 (95% Wald CI [-0.347, -0.135]); its interaction with New_Visitor was 0.274 (95% CI [0.109, 0.440]). The 99th-percentile cap produced similar terms (-0.241 and 0.311). Both fits reported convergence. I revised the proposed comparison to describe this observed difference in shape, pending independent confirmation.",
+      "what_is_known": "The eligible sample was 12,207 sessions: New_Visitor 1,687 (420 Revenue=true), Returning_Visitor 10,520 (1,466 Revenue=true); 123 Other sessions were excluded. The analysis is observational and uses an aggregate proxy. The fitted New_Visitor slope rises from 0.375 to 0.664 across its proxy 5th and 95th percentiles; the Returning_Visitor slope declines from 2.052 to -0.048. These slopes and coefficients are from the supplied model and data (compute_0), not independent confirmation. The requested output did not provide uncertainty intervals for slopes or the combined New_Visitor curvature.",
+      "new_hypothesis": "In this dataset, the proxy–Revenue association may flatten across the evaluated range for Returning_Visitor sessions but not for New_Visitor sessions; whether that difference generalizes is unknown.",
+      "next_falsifiable_test": "Fit the prespecified model in an independent sample, reporting group-specific curvature and slope uncertainty over the 5th–95th proxy range, with the same cap-99 sensitivity and eligibility rules. Treat the shape hypothesis as unsupported if the visitor-specific slope patterns do not reproduce or the interaction is compatible with no meaningful difference.",
+      "nearest_work_comparison": "search_1 returned Crossref metadata, including a dataset-related record and broad shopping or purchase-intention studies, but did not establish a direct overlap with this nonlinear dwell-proxy comparison by visitor type. Its scope was explicitly non-exhaustive; it establishes neither a verified gap nor novelty.",
+      "novelty_status": "Unverified. The returned search does not support a novelty claim.",
+      "feedback_type": "uncertainty"
+    },
+    "tools": [
+      {
+        "type": "compute",
+        "id": "R2-C1",
+        "status": "executed"
+      },
+      {
+        "type": "search",
+        "id": "R2-S1",
+        "status": "returned"
+      }
+    ]
+  },
+  {
+    "case": "shopping",
+    "arm": "A",
+    "round": 3,
+    "proposed": "I1",
+    "effective": "I1",
+    "titles": [
+      "Does special-day proximity change the purchase association of informational browsing?",
+      "Does checkout transparency improve conversion after product exploration?",
+      "Does informational-page visitation distinguish calendar effects from visitor composition?"
+    ],
+    "final": {
+      "status": "revised",
+      "candidate": {
+        "id": "I1",
+        "title": "Does SpecialDay proximity modify the purchase association of informational-page duration?",
+        "question": "Among sessions with Informational > 0, does the association between log1p(Informational_Duration) and Revenue differ between SpecialDay > 0 and SpecialDay = 0, conditional on log1p(Informational), VisitorType, and Month?",
+        "core": {
+          "object": "Session-level log1p(Informational_Duration), an aggregate duration measure",
+          "relation_or_action": "Estimate its interaction with the indicator SpecialDay > 0 in a logistic model for Revenue",
+          "contrast": "SpecialDay-proximate versus other sessions among sessions with Informational > 0",
+          "prediction": "The prespecified forecast was a more positive duration-Revenue association when SpecialDay > 0; the computed interaction did not support this forecast.",
+          "independent_unit": "One session, as described in the supplied dataset metadata"
+        },
+        "failure_condition": "In an adequately sized independent sample, the interaction remains near zero or its uncertainty continues to span both negligible and meaningful differences.",
+        "assumptions": [
+          "SpecialDay > 0 indicates calendar proximity, not confirmed promotion exposure.",
+          "Informational_Duration is an aggregate session total, not page-level dwell.",
+          "The adjusted association is observational and does not establish a causal effect."
+        ],
+        "required_new_data": "An independent session sample with the same measures; exact session dates and campaign exposure are needed to distinguish calendar proximity from promotion exposure.",
+        "feasible_with_current_data": true,
+        "domain_value": "The analysis checks whether calendar proximity meaningfully changes the observed association between informational browsing duration and purchase, while limiting interpretation to the supplied measures.",
+        "history_match": "none",
+        "history_relation": "new_family",
+        "discriminating_delta": "Tests a SpecialDay-by-informational-duration interaction, distinct from the earlier rounds' product-duration and visitor-type contrasts.",
+        "quality_gate": {
+          "specific": true,
+          "testable": true,
+          "coherent_feasible": true,
+          "worth_testing": true
+        },
+        "next_action": "measure"
+      },
+      "evidence_level": "negative_result",
+      "what_changed": "The executed analysis did not support the forecast. The interaction estimate was -0.0048 log-odds (95% Wald CI [-0.406, 0.397]); excluding VisitorType = Other gave -0.0040 (95% CI [-0.406, 0.398]). Fits converged. SpecialDay-proximate sessions were relatively few: 189 eligible sessions, including 27 purchases, versus 2,442 sessions and 586 purchases at SpecialDay = 0. The wide intervals do not establish that the interaction is absent.",
+      "what_is_known": "Among sessions with Informational > 0, the prespecified conditional interaction estimate was close to zero and highly uncertain; excluding Other barely changed it (compute_0). The analysis is observational. The search returned broad or unrelated Crossref records, including a dataset-related record, and was explicitly non-exhaustive; it did not verify direct overlap or a literature gap (search_1).",
+      "new_hypothesis": "This dataset provides no clear evidence that SpecialDay proximity modifies the conditional association between aggregate informational duration and Revenue, but the small SpecialDay-proximate group leaves meaningful differences unresolved.",
+      "next_falsifiable_test": "Estimate the prespecified interaction in an independent session dataset with substantially more SpecialDay-proximate sessions, reporting group counts and uncertainty. Record exact dates and campaign exposure to test whether any moderation is associated with actual promotion exposure rather than calendar proximity alone.",
+      "nearest_work_comparison": "search_1 returned a dataset-related citation and broad shopping or prediction papers, but no supplied evidence directly testing this interaction. The search was non-exhaustive and supports neither a verified gap nor a novelty claim.",
+      "novelty_status": "Unverified; no novelty claim is supported by the returned search.",
+      "feedback_type": "uncertainty"
+    },
+    "tools": [
+      {
+        "type": "compute",
+        "id": "R3-C1",
+        "status": "executed"
+      },
+      {
+        "type": "search",
+        "id": "R3-S1",
+        "status": "returned"
+      }
+    ]
+  },
+  {
+    "case": "shopping",
+    "arm": "B",
+    "round": 1,
+    "proposed": "I1",
+    "effective": "I1",
+    "titles": [
+      "Does browsing-time allocation relate to purchases beyond browsing volume?",
+      "How much apparent conversion signal depends on PageValues?",
+      "Does the product-duration association vary by month?"
+    ],
+    "final": {
+      "status": "revised",
+      "candidate": {
+        "id": "I1",
+        "title": "Does product-duration share add information beyond browsing volume?",
+        "question": "Among sessions with positive total recorded duration, does ProductRelated_Duration divided by the sum of the three supplied duration fields improve held-out prediction of Revenue beyond page counts, total recorded duration, and supplied context? What is the model-based probability contrast between the training-fold 25th and 75th percentiles of this share at median ProductRelated count?",
+        "core": {
+          "object": "Session-level share of recorded duration attributed to product-related pages.",
+          "relation_or_action": "Compare identical held-out splits for logistic models with and without product-duration share and its interaction with ProductRelated count; exclude PageValues.",
+          "contrast": "Baseline versus augmented model; separately report the augmented model's predicted probability contrast across training-fold share quartiles.",
+          "prediction": "The augmented model will modestly improve held-out log loss and show a positive modeled contrast.",
+          "independent_unit": "Session, as described in the supplied dataset metadata."
+        },
+        "failure_condition": "No reproducible paired log-loss improvement, or the modeled contrast is uncertain across both directions.",
+        "assumptions": [
+          "The three duration fields can be summed for this descriptive share.",
+          "The share measures recorded duration composition, not attention or a causal lever.",
+          "Session-level splitting is appropriate for this within-dataset feasibility analysis but does not establish future deployment performance."
+        ],
+        "required_new_data": "Event-level timestamps and a defined prediction time to assess feature availability before purchase; external sessions for deployment validation.",
+        "feasible_with_current_data": true,
+        "domain_value": "Tests whether analytics distinguish duration composition from browsing volume without implying that changing browsing behavior would change purchases.",
+        "history_match": "none",
+        "history_relation": "new_family",
+        "discriminating_delta": "Conditions product-duration share on page counts and total duration, then reports a supported model-based contrast rather than a single feature association.",
+        "quality_gate": {
+          "specific": true,
+          "testable": true,
+          "coherent_feasible": true,
+          "worth_testing": true
+        },
+        "next_action": "test"
+      },
+      "evidence_level": "proposal_only",
+      "what_changed": "Clarified the share denominator, specified that zero-total-duration sessions must be counted and reported separately, and narrowed interpretation to recorded-duration composition. The requested computation returned a clarification because external I/O/dynamic execution was prohibited, so no metrics or prevalence estimates were produced. The search returned general purchase-prediction work, not a direct test of this conditional allocation contrast.",
+      "what_is_known": "The bundle supplies 12,330 sessions and documents the duration fields and Revenue. It does not provide results for the proposed comparison. Compute request compute_0 did not execute. Search result search_1 was limited Crossref metadata; it does not establish whether close prior work exists.",
+      "new_hypothesis": "None supported by returned evidence. The original positive-association and predictive-improvement forecast remains an untested proposal.",
+      "next_falsifiable_test": "Execute the prespecified paired repeated stratified cross-validation comparison; report zero-total-duration count, paired held-out log-loss differences, and uncertainty and support for the share-quartile probability contrast. Separately obtain event timing or external data before making claims about decision-time availability or deployment.",
+      "nearest_work_comparison": "The returned 2026 paper concerns conversion-prediction and decision-support performance on this dataset. Its abstract does not report the conditional product-duration-share contrast proposed here. The dataset's 2019 introduction paper is also identified in the supplied metadata as prediction-focused. These records do not establish novelty or exclude closer work.",
+      "novelty_status": "Unverified; the limited search found no direct overlap in the returned abstracts, which is not evidence of a literature gap.",
+      "feedback_type": "uncertainty"
+    },
+    "tools": [
+      {
+        "type": "compute",
+        "id": "allocation_cv",
+        "status": "clarification"
+      },
+      {
+        "type": "search",
+        "id": "allocation_prior_work",
+        "status": "returned"
+      }
+    ]
+  },
+  {
+    "case": "shopping",
+    "arm": "B",
+    "round": 2,
+    "proposed": "I1",
+    "effective": "I1",
+    "titles": [
+      "Does SpecialDay add a signal beyond Month?",
+      "Does a delivery-information prompt change conversion near special days?",
+      "Do BounceRates and ExitRates carry distinct session-level signals?"
+    ],
+    "final": {
+      "status": "retained",
+      "candidate": {
+        "id": "I1",
+        "title": "Does SpecialDay add information beyond Month?",
+        "question": "After accounting for Month, session activity, and supplied traffic context, does SpecialDay provide reproducible incremental information about Revenue within this dataset?",
+        "core": {
+          "object": "The conditional association between SpecialDay and session-level Revenue.",
+          "relation_or_action": "Compare identical held-out predictions from otherwise identical models with and without categorical SpecialDay.",
+          "contrast": "Month and session context versus the same features plus SpecialDay.",
+          "prediction": "Adding SpecialDay will produce a small positive held-out log-loss improvement.",
+          "independent_unit": "Session, as described in the supplied metadata."
+        },
+        "failure_condition": "The improvement is not reproducible on new sessions, or an adequately supported conditional association cannot be distinguished from no association.",
+        "assumptions": [
+          "SpecialDay is measured consistently across sessions.",
+          "Its association is observational and does not establish an intervention effect.",
+          "Repeated cross-validation splits estimate within-dataset predictive feasibility, not year-to-year stability."
+        ],
+        "required_new_data": "Multiple years of dated sessions to assess calendar stability; randomized exposure data to estimate an intervention effect.",
+        "feasible_with_current_data": true,
+        "domain_value": "Tests whether a graded calendar-proximity feature adds information beyond month-level seasonality.",
+        "history_match": "none",
+        "history_relation": "new_family",
+        "discriminating_delta": "Tests a calendar feature conditional on Month, unlike prior candidates about duration composition, PageValues timing, or month-varying duration associations.",
+        "quality_gate": {
+          "specific": true,
+          "testable": true,
+          "coherent_feasible": true,
+          "worth_testing": true
+        },
+        "next_action": "test"
+      },
+      "evidence_level": "computed_feasibility",
+      "what_changed": "The requested paired comparison ran as compute_0. Baseline-minus-augmented held-out log-loss improvement averaged 0.000358, 0.000402, and 0.000539 across the three repeats. Individual folds included negative differences, so the gain is small and not uniformly positive. SpecialDay was nonzero in 1,251 of 12,330 sessions; all such sessions were in February or May. The returned search_1 metadata covered general conversion prediction, not this specific contrast.",
+      "what_is_known": "For the specified logistic models and repeated stratified splits, adding categorical SpecialDay yielded a small positive mean log-loss difference in each repeat. The feature's nonzero support was confined to February and May, mostly May. The computation did not report a conditional coefficient or its uncertainty. Repeated folds reuse observations, so they are not independent replications.",
+      "new_hypothesis": "The small incremental gain may be driven by within-month SpecialDay variation in February and May; the supplied results do not establish this explanation.",
+      "next_falsifiable_test": "Report uncertainty for the SpecialDay conditional association and assess whether incremental performance persists within February and May using a prespecified evaluation. Use new years of dated sessions to test calendar stability.",
+      "nearest_work_comparison": "The returned records concern general purchase prediction on this dataset and do not report the SpecialDay-beyond-Month contrast. The search was limited Crossref metadata, so it does not establish a literature gap.",
+      "novelty_status": "Unverified; the returned search did not identify a direct overlap but was not exhaustive.",
+      "feedback_type": "uncertainty"
+    },
+    "tools": [
+      {
+        "type": "compute",
+        "id": "specialday_cv",
+        "status": "executed"
+      },
+      {
+        "type": "search",
+        "id": "specialday_prior_work",
+        "status": "returned"
+      }
+    ]
+  },
+  {
+    "case": "shopping",
+    "arm": "B",
+    "round": 3,
+    "proposed": "I1",
+    "effective": "I1",
+    "titles": [
+      "Is the product-page-depth gradient mostly a session-mix effect?",
+      "Do zero-duration page categories indicate behavior or telemetry gaps?",
+      "Does a randomized product-navigation aid change completed purchases?"
+    ],
+    "final": {
+      "status": "retained",
+      "candidate": {
+        "id": "I1",
+        "title": "How much of the product-page-depth gradient reflects observed session mix?",
+        "question": "Among sessions in the lower and upper quartiles of ProductRelated page count, how much does the Revenue-rate difference change after standardizing both groups to the pooled distribution of VisitorType, TrafficType, Month, and Weekend in context cells represented in both groups?",
+        "core": {
+          "object": "Session-level Revenue-rate difference between low- and high-ProductRelated-count groups.",
+          "relation_or_action": "Compare the marginal high-minus-low difference with a shared-cell standardized difference, weighting each shared context cell by its pooled group count.",
+          "contrast": "Unadjusted difference versus observed-context-standardized difference among shared cells.",
+          "prediction": "Standardization will attenuate the marginal difference while leaving a positive difference.",
+          "independent_unit": "Session, as described in the supplied metadata."
+        },
+        "failure_condition": "The standardized difference is near zero, reversed, or too uncertain to distinguish from zero; or common support is too limited for a useful comparison.",
+        "assumptions": [
+          "The specified context variables capture a useful but incomplete portion of session-composition differences.",
+          "Shared-cell standardization describes an observational contrast and does not estimate the effect of causing more product-page views.",
+          "Summary fields do not establish whether deeper browsing precedes purchase."
+        ],
+        "required_new_data": "Dated event-level page sequences to establish temporal ordering, plus independently collected sessions to assess replication and transportability.",
+        "feasible_with_current_data": true,
+        "domain_value": "Quantifies how much an observed session-depth gradient persists within measured session contexts, informing interpretation of analytics without implying an intervention effect.",
+        "history_match": "none",
+        "history_relation": "new_family",
+        "discriminating_delta": "Prior proposals tested duration composition, calendar-feature prediction, or other feature associations. This decomposes a low-versus-high page-count outcome difference into marginal and shared-context components and makes overlap part of the estimand.",
+        "quality_gate": {
+          "specific": true,
+          "testable": true,
+          "coherent_feasible": true,
+          "worth_testing": true
+        },
+        "next_action": "measure"
+      },
+      "evidence_level": "observational_support",
+      "what_changed": "The requested computation returned as compute_0. The marginal high-minus-low Revenue-rate difference was 0.1840 (18.40 percentage points); the shared-cell standardized difference was 0.1543 (15.43 points), an attenuation of about 16%. Session-bootstrap 95% intervals were [0.1674, 0.1994] and [0.1356, 0.1775], respectively. There were 181 shared and 167 nonshared context cells; 4.04% of low/high-group sessions were in nonshared cells. All 300 bootstrap replicates were valid. These results support the descriptive contrast in this dataset, not a causal interpretation.",
+      "what_is_known": "ProductRelated quartile cutoffs were 7 and 38; the low and high groups contained 3,156 and 3,106 sessions, with Revenue rates 5.10% and 23.50%. Standardization reduced but did not remove the observed difference. The bootstrap intervals quantify resampling uncertainty under this procedure; they do not account for unmeasured context or establish temporal order. Search result search_1 was limited Crossref metadata and did not establish novelty or rule out direct overlap.",
+      "new_hypothesis": "Measured VisitorType, TrafficType, Month, and Weekend composition accounts for part, but not all, of the product-page-depth Revenue gradient. The remaining difference could reflect other composition, timing, or measurement factors.",
+      "next_falsifiable_test": "Re-estimate the prespecified contrast on independently collected sessions with dated event sequences. Check whether product-page views precede purchase, retain the shared-cell support report, and test whether the standardized difference replicates. A null or reversed replicated contrast would weaken the proposed persistence beyond measured session mix.",
+      "nearest_work_comparison": "The supplied history includes a duration-share comparison conditional on page counts, which asks whether time composition adds predictive information. This candidate instead compares outcome rates across page-count extremes and decomposes their difference by observed context. Returned search metadata covered general purchase prediction and other topics, not this exact decomposition; the search was limited and is not evidence of a literature gap.",
+      "novelty_status": "Unverified. The returned search was not exhaustive and did not confirm a direct match.",
+      "feedback_type": "uncertainty"
+    },
+    "tools": [
+      {
+        "type": "compute",
+        "id": "depth_standardization",
+        "status": "executed"
+      },
+      {
+        "type": "search",
+        "id": "depth_standardization_prior_work",
+        "status": "returned"
+      }
+    ]
+  },
+  {
+    "case": "shopping",
+    "arm": "C",
+    "round": 1,
+    "proposed": "I1",
+    "effective": "I1",
+    "titles": [
+      "Is PageValues a label-proximal measurement channel?",
+      "Does visitor type mark different conversion correlates?",
+      "Are month-level conversion differences compositional?"
+    ],
+    "final": {
+      "status": "retained",
+      "candidate": {
+        "id": "I1",
+        "title": "Is PageValues a label-proximal measurement channel?",
+        "question": "How much of the session-level predictive association with Revenue depends on PageValues compared with the other recorded session features?",
+        "core": {
+          "object": "Revenue prediction from supplied session features",
+          "relation_or_action": "Compare PageValues-only, full-feature, and no-PageValues models using identical five-fold evaluation",
+          "contrast": "Including versus excluding PageValues, with the same splits and modeling procedure",
+          "prediction": "The full model will outperform the no-PageValues model on average precision, log loss, and ROC AUC.",
+          "independent_unit": "Session represented by one row"
+        },
+        "failure_condition": "The prediction fails under this pipeline if the full model does not outperform the no-PageValues model on the prespecified metrics.",
+        "assumptions": [
+          "Supplied rows and labels are accurately represented.",
+          "The fixed shuffled folds evaluate within-dataset prediction, not deployment under temporal or population shift.",
+          "Predictive contribution does not establish causation, leakage, or availability at a decision time."
+        ],
+        "required_new_data": [],
+        "feasible_with_current_data": true,
+        "domain_value": "Quantifies how strongly this benchmark's predictive performance depends on a metric whose documented meaning is tied to pages visited before a transaction, motivating investigation of its construction and timing.",
+        "history_match": "none",
+        "history_relation": "no_history",
+        "discriminating_delta": "Tests the incremental predictive contribution of PageValues against both a PageValues-only reference and the remaining recorded features.",
+        "quality_gate": {
+          "specific": true,
+          "testable": true,
+          "coherent_feasible": true,
+          "worth_testing": true
+        },
+        "next_action": "measure"
+      },
+      "evidence_level": "observational_support",
+      "what_changed": "The uncertainty critique required a prespecified metric and threshold. The executed comparison used one logistic-regression pipeline and identical five-fold stratified splits. It supports the predicted held-out association in this dataset, while leaving PageValues' event timing and construction unresolved.",
+      "what_is_known": "In compute_0, mean average precision was about 0.645 for the full model, 0.323 without PageValues, and 0.621 for PageValues alone. Mean ROC AUC was about 0.895, 0.745, and 0.863, respectively. Across the five paired folds, full-minus-no-PageValues average-precision differences ranged from 0.274 to 0.373; ROC AUC differences ranged from 0.139 to 0.159. Fold differences are descriptive, not confidence intervals. The data documentation describes PageValues as an average value for a page visited before a transaction, but does not establish its exact construction or availability at a decision point.",
+      "new_hypothesis": "PageValues may encode a label-proximal analytics signal that accounts for much of this pipeline's predictive performance; whether it is available before transaction completion remains unknown.",
+      "next_falsifiable_test": "Obtain event-level records with timestamps and the PageValues construction rule. Recompute the feature using only information available at a prespecified pre-transaction decision time, then compare a fixed model with and without that version on temporally held-out sessions. A small or absent performance difference would contradict the hypothesis that pre-transaction PageValues carries the observed incremental signal.",
+      "nearest_work_comparison": "The supplied documentation cites prior real-time purchase-intention prediction using MLP and LSTM models. This proposal asks a narrower feature-ablation question about PageValues under a fixed logistic-regression evaluation; it does not establish novelty relative to the broader literature.",
+      "novelty_status": "Literature novelty unverified; the supplied bundle includes a related prediction paper but no search results.",
+      "feedback_type": "uncertainty"
+    },
+    "tools": [
+      {
+        "type": "compute",
+        "id": "C1",
+        "status": "executed"
+      }
+    ]
+  },
+  {
+    "case": "shopping",
+    "arm": "C",
+    "round": 2,
+    "proposed": "I3",
+    "effective": "I3",
+    "titles": [
+      "Does PageValues' predictive contribution persist across months?",
+      "Does product-page dwell per page carry signal beyond browsing depth?",
+      "Is SpecialDay associated with conversion within the same month?"
+    ],
+    "final": {
+      "status": "revised",
+      "candidate": {
+        "id": "I3",
+        "title": "Does the supplied dataset support within-month SpecialDay comparisons?",
+        "question": "Do the supplied sessions contain enough within-Month overlap and outcome observations to estimate adjusted Revenue contrasts between nonzero SpecialDay scores and zero without relying on unsupported extrapolation?",
+        "core": {
+          "object": "Observed SpecialDay scores and Revenue within Month",
+          "relation_or_action": "Audit score-by-month overlap and conversion counts before estimating adjusted contrasts",
+          "contrast": "Months and score categories with observed support versus absent or sparse cells",
+          "prediction": "Support will be concentrated in a small subset of Month × SpecialDay cells, limiting the scope of within-month comparisons.",
+          "independent_unit": "Session represented by one row"
+        },
+        "failure_condition": "The prediction fails if multiple months have adequate observations across zero and nonzero score categories to support the prespecified contrasts.",
+        "assumptions": [
+          "The supplied Month and SpecialDay values are recorded consistently.",
+          "Cell counts describe available support but do not establish a causal effect.",
+          "Adequate support requires prespecified outcome precision criteria, which this bundle does not provide."
+        ],
+        "required_new_data": [
+          "For broader within-month comparisons, obtain date-level session records with exact visit date, SpecialDay construction, Revenue, and relevant campaign or promotion context; compare score groups within the same calendar periods with adequate overlap."
+        ],
+        "feasible_with_current_data": true,
+        "domain_value": "Determines whether this dataset can answer the proposed within-month question or whether finer date and campaign data are needed.",
+        "history_match": "none",
+        "history_relation": "refinement",
+        "discriminating_delta": "Replaces the original adjusted association claim with a test of its empirical support, prompted by empty and sparse score-by-month cells.",
+        "quality_gate": {
+          "specific": true,
+          "testable": true,
+          "coherent_feasible": true,
+          "worth_testing": true
+        },
+        "next_action": "measure"
+      },
+      "evidence_level": "computed_feasibility",
+      "what_changed": "The compute return showed that nonzero SpecialDay scores occur only in February and May; several February cells have fewer than 20 sessions, and all other months have no nonzero-score observations. The requested model-standardized probabilities set each score across all rows, so they extrapolate beyond observed Month × score support and do not establish within-month contrasts. The revision limits the question to support and estimability.",
+      "what_is_known": "In compute_0, May has observed zero and nonzero score groups; February has 105 zero-score sessions and nonzero groups of 5 to 21 sessions. The returned score-by-month table has no nonzero scores for the other observed months. The returned standardized mean predicted rates are model-generated under score assignments across all rows, not observed within-month rates or causal effects. No uncertainty estimates for adjusted contrasts were returned.",
+      "new_hypothesis": "The dataset's SpecialDay–Revenue comparison is primarily constrained by sparse and geographically concentrated score support; broader within-month inference requires finer date-level data and adequate overlap.",
+      "next_falsifiable_test": "With date-level records and a prespecified minimum cell-size and precision rule, enumerate within-period score groups and estimate adjusted Revenue contrasts only where both zero and nonzero scores have support. If several periods meet the rule and yield stable contrasts, the support-limitation hypothesis is weakened.",
+      "nearest_work_comparison": "The supplied documentation cites a real-time purchase-intention prediction paper. The search return search_1 found several dataset prediction papers but no clear direct match for this specific within-month SpecialDay analysis; its Crossref metadata is not exhaustive and does not verify a literature gap.",
+      "novelty_status": "Literature novelty remains unverified. The search result is limited metadata, not evidence that no prior analysis exists.",
+      "feedback_type": "data_gap"
+    },
+    "tools": [
+      {
+        "type": "compute",
+        "id": "C1",
+        "status": "executed"
+      },
+      {
+        "type": "search",
+        "id": "S1",
+        "status": "returned"
+      }
+    ]
+  },
+  {
+    "case": "shopping",
+    "arm": "C",
+    "round": 3,
+    "proposed": "I3",
+    "effective": "I3",
+    "titles": [
+      "Does the weekend conversion difference persist within months?",
+      "Does product-page dwell per page retain an association across visitor types?",
+      "Does the allocation of browsing time across page categories matter?"
+    ],
+    "final": {
+      "status": "revised",
+      "candidate": {
+        "id": "I3",
+        "title": "Is product-page duration share nonlinearly associated with Revenue?",
+        "question": "Among sessions with positive total recorded category duration, does ProductRelated_Duration divided by total recorded category duration show a nonlinear conditional association with Revenue after accounting for total duration, page counts, Month, VisitorType, and TrafficType, excluding PageValues?",
+        "core": {
+          "object": "Revenue and product-page share of recorded Administrative, Informational, and ProductRelated duration",
+          "relation_or_action": "Estimate a prespecified nonlinear conditional association between product-page duration share and Revenue",
+          "contrast": "A nonlinear share term versus a linear share term, using the same adjustment variables and eligible sessions",
+          "prediction": "A nonlinear share term will improve out-of-sample log loss over the linear term; the observed decile rates do not support predicting a monotonic direction.",
+          "independent_unit": "Session represented by one row"
+        },
+        "failure_condition": "The nonlinear term does not improve held-out log loss under a prespecified split and model, or its estimated pattern is unstable across reasonable specifications.",
+        "assumptions": [
+          "The three duration measures are comparable enough to define their sum and a product-page share; this measurement meaning is not established by the bundle.",
+          "Sessions with zero total recorded duration are excluded, and conclusions apply only to eligible sessions.",
+          "Adjustment describes conditional association and does not establish that changing time allocation changes conversion.",
+          "The split and nonlinear model are fixed before evaluating held-out results."
+        ],
+        "required_new_data": [
+          "Documentation confirming whether the three duration fields represent comparable, non-overlapping time; event-level timestamps would be needed to establish temporal ordering relative to purchase intent or transaction."
+        ],
+        "feasible_with_current_data": true,
+        "domain_value": "Tests whether the recorded allocation of browsing duration contains descriptive information beyond total duration and page counts, and whether a simple linear summary is inadequate.",
+        "history_match": "I2",
+        "history_relation": "refinement",
+        "discriminating_delta": "Prior candidates examined product dwell per page and its VisitorType interaction. This candidate examines the share of recorded category duration and compares nonlinear with linear association; it does not claim a causal reallocation effect.",
+        "quality_gate": {
+          "specific": true,
+          "testable": true,
+          "coherent_feasible": true,
+          "worth_testing": true
+        },
+        "next_action": "test"
+      },
+      "evidence_level": "computed_feasibility",
+      "what_changed": "The actual compute return found 720 of 12,330 sessions with zero total recorded category duration, leaving 11,610 eligible sessions (9,705 Revenue=False; 1,905 Revenue=True). Revenue rates across equal-count product-share deciles were nonmonotonic, so I removed the proposed directional prediction and revised the question to test nonlinearity. No adjusted model, uncertainty estimate, or held-out comparison was returned; feasibility summaries do not establish an association.",
+      "what_is_known": "In compute_0, product-share decile conversion rates ranged from about 0.049 to 0.250 and did not change monotonically. The share's correlation with total duration was about 0.066; its correlations with Administrative, Informational, and ProductRelated page counts were about -0.394, -0.232, and 0.118. These summaries do not establish adequate conditional overlap across categorical covariates or support for an adjusted estimate. The duration fields' measurement comparability and timing are unresolved.",
+      "new_hypothesis": "The product-page duration share may have a nonlinear descriptive association with Revenue, but the supplied feasibility summaries neither confirm that relationship nor distinguish it from confounding, measurement structure, or selection into positive-duration sessions.",
+      "next_falsifiable_test": "On eligible sessions, compare prespecified linear and restricted-spline product-share terms in otherwise identical models with the stated adjustment variables, excluding PageValues. Use a fixed session-level held-out split; report held-out log loss, uncertainty appropriate to the split design, overlap, and sensitivity to the zero-duration exclusion. No improvement or an unstable pattern would fail the nonlinear-association prediction.",
+      "nearest_work_comparison": "The supplied history includes questions about ProductRelated_Duration per ProductRelated page and its interaction with VisitorType. This proposal changes the focal measure to a category-duration share and tests functional form, but remains related to those prior duration–Revenue questions. The bundle contains no current-round literature search result, so literature novelty is unverified.",
+      "novelty_status": "Literature novelty unverified; history-relative difference is a refinement of earlier duration–Revenue candidates, not a demonstrated new family.",
+      "feedback_type": "uncertainty"
+    },
+    "tools": [
+      {
+        "type": "compute",
+        "id": "C1",
+        "status": "executed"
+      }
+    ]
+  }
+]

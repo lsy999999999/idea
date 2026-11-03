@@ -1,0 +1,91 @@
+[
+  {
+    "id": "allocation_cv",
+    "broker_id": "compute_0",
+    "type": "compute",
+    "request": {
+      "type": "compute",
+      "id": "compute_0",
+      "purpose": "Estimate paired held-out log-loss change and a supported model-based allocation contrast, while checking zero-duration prevalence. This tests feasibility and within-dataset association, not causality or future deployment.",
+      "model_spec": "Logistic regression with training-fold preprocessing; 5-fold stratified CV repeated 3 times; identical splits for baseline and augmented models. Baseline uses Administrative, Informational, ProductRelated counts, total of the three supplied duration fields, and supplied context (Month, Weekend, VisitorType, OperatingSystems, Browser, Region, TrafficType, SpecialDay). Augmented adds product-duration share and its interaction with ProductRelated. Set share to zero only for feature encoding when total duration is zero and report those sessions separately. Report paired fold log-loss differences and an augmented-model predicted probability contrast between training-fold share quartiles at median training-fold ProductRelated count, restricted to validation rows with positive total duration. Do not call the contrast causal.",
+      "code": "import numpy as np\nfrom sklearn.compose import ColumnTransformer\nfrom sklearn.preprocessing import OneHotEncoder, StandardScaler\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import RepeatedStratifiedKFold\nfrom sklearn.metrics import log_loss\n\nraw = TABLES['main'].copy()\ndur = ['Administrative_Duration', 'Informational_Duration', 'ProductRelated_Duration']\nraw['total_duration'] = raw[dur].sum(axis=1)\nraw['zero_total_duration'] = (raw['total_duration'] == 0).astype(int)\nraw['product_share'] = np.divide(raw['ProductRelated_Duration'], raw['total_duration'], out=np.zeros(len(raw), dtype=float), where=raw['total_duration'].to_numpy() > 0)\nraw['share_x_product_count'] = raw['product_share'] * raw['ProductRelated']\ny = raw['Revenue'].astype(int).to_numpy()\nnum0 = ['Administrative', 'Informational', 'ProductRelated', 'total_duration']\nnum1 = num0 + ['product_share', 'share_x_product_count']\ncat = ['Month', 'Weekend', 'VisitorType', 'OperatingSystems', 'Browser', 'Region', 'TrafficType', 'SpecialDay']\n\ndef model(num):\n    prep = ColumnTransformer([('num', StandardScaler(), num), ('cat', OneHotEncoder(handle_unknown='ignore'), cat)])\n    return make_pipeline(prep, LogisticRegression(max_iter=1000))\n\ncv = RepeatedStratifiedKFold(n_splits=5, n_repeats=3, random_state=20261102)\nrows = []\nfor tr, te in cv.split(raw, y):\n    b, a = model(num0), model(num1)\n    b.fit(raw.iloc[tr], y[tr]); a.fit(raw.iloc[tr], y[tr])\n    pb = b.predict_proba(raw.iloc[te])[:, 1]\n    pa = a.predict_proba(raw.iloc[te])[:, 1]\n    delta = log_loss(y[te], pb, labels=[0, 1]) - log_loss(y[te], pa, labels=[0, 1])\n    train = raw.iloc[tr]\n    q25, q75 = train.loc[train['total_duration'] > 0, 'product_share'].quantile([0.25, 0.75]).to_numpy()\n    med_count = train['ProductRelated'].median()\n    valid = raw.iloc[te].loc[raw.iloc[te]['total_duration'] > 0].copy()\n    lo, hi = valid.copy(), valid.copy()\n    lo['product_share'] = q25; hi['product_share'] = q75\n    lo['share_x_product_count'] = q25 * med_count; hi['share_x_product_count'] = q75 * med_count\n    contrast = float(np.mean(a.predict_proba(hi)[:, 1] - a.predict_proba(lo)[:, 1])) if len(valid) else None\n    rows.append({'logloss_improvement': float(delta), 'share_q25': float(q25), 'share_q75': float(q75), 'median_product_count': float(med_count), 'modeled_probability_contrast': contrast})\nprint(__import__('json').dumps({'n': len(raw), 'zero_total_n': int(raw['zero_total_duration'].sum()), 'zero_total_fraction': float(raw['zero_total_duration'].mean()), 'folds': rows}, separators=(',', ':')))"
+    },
+    "result": {
+      "status": "clarification",
+      "code_sha256": "2fba2d0733bf5d82b15f30fcdc11d530e94c052d600d45f6214dedc69cd13c40",
+      "data_sha256": "b3055ee355f59134d851d32641183cb4a8b45def7124d2f50442a042f358e0d9",
+      "reason": "External I/O/dynamic execution prohibited"
+    }
+  },
+  {
+    "id": "allocation_prior_work",
+    "broker_id": "search_1",
+    "type": "search",
+    "request": {
+      "type": "search",
+      "id": "search_1",
+      "query": "Studies using the UCI Online Shoppers Purchasing Intention Dataset or comparable e-commerce session analytics that test whether product-page dwell-time share predicts purchase conditional on page counts and total session duration; look for compositional or time-allocation analyses, not generic conversion prediction.",
+      "missing_relation": "Whether conditional product-duration allocation beyond browsing volume has already been directly tested, and how its measurement and decision-time availability have been handled.",
+      "change_if_found": "If a close study tests the same conditional contrast, revise I1 toward a genuinely discriminating extension supported by this dataset (or withdraw a novelty implication); if none is found, retain I1 only as a candidate question and do not treat a limited search as proof of novelty."
+    },
+    "result": {
+      "status": "returned",
+      "sources": [
+        {
+          "doi": "10.70267/icrafm.202617509516",
+          "title": "Predicting E-Commerce Purchase Intention from Web Session Behavior: Feature Engineering, Imbalanced Learning, and Conversion Decision Support E-Commerce Purchase Intention Prediction",
+          "date": [
+            2026,
+            10,
+            19
+          ],
+          "abstract": " Online purchase intention prediction is valuable for e-commerce operations, but the positive purchase class is rare and purely accuracy-oriented models can mislead conversion decisions. This paper studies a reproducible decision-support pipeline, FIDDS, for session-level purchase prediction from web behavior. FIDDS combines behavior-driven interaction features, imbalance-aware learning, probability calibration, and utility-based threshold selection. Experiments use the real UCI Online Shoppers Purchasing Intention Dataset with 12,330 sessions, 1,908 purchase sessions, and five stratified random seeds. Random Forest achieves the highest PR-AUC at 0.7453, while FIDDS achieves PR-AUC 0.7426, ROC-AUC 0.9301, F1 0.5723, recall 0.9173, lift at the top 10% of sessions 5.0233, and expected utility 0.1321. The results indicate that conversion-oriented evaluation changes how a model should be selected: the strongest classifier is not always the clearest operating policy. The evidence is limited to one public benchmark and should be read as decision-support validation rather than proof of platform-wide causal uplift. "
+        },
+        {
+          "doi": "10.7717/peerj-cs.59/table-1",
+          "title": "Table 1: Details about the data corpora employed, including counts of session, talk turn, and word token, and also total time duration.",
+          "date": [],
+          "abstract": ""
+        },
+        {
+          "doi": "10.22271/27084515.2024.v5.i2h.407",
+          "title": "Real-time prediction of online shoppers' purchase intent",
+          "date": [
+            2024,
+            7,
+            1
+          ],
+          "abstract": ""
+        },
+        {
+          "doi": "10.7554/elife.07460.013",
+          "title": "Figure 3—figure supplement 1. Daily distribution of Fraxinus game visits.",
+          "date": [],
+          "abstract": ""
+        },
+        {
+          "doi": "10.47738/ijaim.v4i2.81",
+          "title": "Using Random Forest and Support Vector Machine Algorithms to Predict Online Shopper Purchase Intention from E-Commerce Session Data",
+          "date": [
+            2024,
+            6,
+            1
+          ],
+          "abstract": ""
+        },
+        {
+          "doi": "10.1007/s00521-018-3523-0",
+          "title": "Real-time prediction of online shoppers’ purchasing intention using multilayer perceptron and LSTM recurrent neural networks",
+          "date": [
+            2018,
+            5,
+            9
+          ],
+          "abstract": ""
+        }
+      ],
+      "scope": "Crossref metadata, not exhaustive novelty evidence",
+      "transport_failures": []
+    }
+  }
+]

@@ -1,0 +1,117 @@
+{
+  "stage": "L1",
+  "round": 1,
+  "recognition": {
+    "recognized": true,
+    "dataset": "UCI Wine Quality, associated with Cortez et al. (2009)",
+    "basis": "The bundle identifies UCI dataset 186 and provides the characteristic physicochemical variables, quality score, and red/white wine samples.",
+    "limitation": "The supplied rows contain no panelist, producer, vintage, batch, or intervention metadata. A row-level association cannot establish a causal effect or generalize to independent lots."
+  },
+  "candidates": [
+    {
+      "id": "I1",
+      "title": "Does residual sugar modify the alcohol–quality association within wine color?",
+      "question": "Within red and white wines separately, is the association between alcohol and sensory quality more positive at higher residual sugar, after accounting for the other measured physicochemical variables and restricting comparisons to overlapping composition ranges?",
+      "core": {
+        "object": "Row-level quality scores and physicochemical measurements for red and white vinho verde samples",
+        "relation_or_action": "Estimate alcohol-by-residual-sugar interaction in an ordinal quality model, with color-specific terms and adjustment for the other measured chemistry",
+        "contrast": "Alcohol–quality slope at higher versus lower residual sugar within each color, compared with a model lacking the interaction",
+        "prediction": "The alcohol–quality association will be more positive at higher residual sugar in at least one color; this is an observational prediction, not a sugar intervention effect",
+        "independent_unit": "Wine sample row; whether rows represent independent lots is unknown"
+      },
+      "failure_condition": "The interaction is negligible or inconsistent across colors, lacks support within common composition ranges, or disappears under reasonable model and influence checks.",
+      "assumptions": [
+        "The quality score has an ordinal interpretation.",
+        "Measured covariates and common-support restriction address only measured composition; unmeasured style and producer effects may remain.",
+        "A row is a suitable analysis unit, though independence across rows is unverified."
+      ],
+      "required_new_data": "None for an observational test. Causal interpretation would require randomized sugar and alcohol manipulations with blinded panel ratings.",
+      "feasible_with_current_data": true,
+      "domain_value": "A reproducible interaction could motivate testing whether composition-specific sensory guidance differs by wine style; a null result would discourage treating a pooled alcohol association as a balance rule.",
+      "history_match": "none",
+      "history_relation": "no_history",
+      "discriminating_delta": "Tests a specific non-additive alcohol–sugar relation within color, rather than predicting quality from a list of variables or assuming an intervention effect.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    },
+    {
+      "id": "I2",
+      "title": "Does free sulfur dioxide fraction add a within-color quality association?",
+      "question": "Among samples with similar total sulfur dioxide, pH, and other measured chemistry, does the free-to-total sulfur dioxide fraction associate with quality differently in red and white wines?",
+      "core": {
+        "object": "Wine sample quality scores and free and total sulfur dioxide measurements",
+        "relation_or_action": "Compare a model using total sulfur dioxide and pH with one that also includes the free fraction and its interaction with color",
+        "contrast": "Conditional quality association of free fraction across colors at comparable total sulfur dioxide and pH",
+        "prediction": "The free fraction will add a color-dependent association with quality beyond total sulfur dioxide alone",
+        "independent_unit": "Wine sample row; lot-level independence is unknown"
+      },
+      "failure_condition": "The added terms do not improve held-out within-color ordinal fit or estimates are unstable in common-support regions.",
+      "assumptions": [
+        "Free and total sulfur dioxide measurements are comparable across samples.",
+        "Conditioning on pH and measured chemistry does not remove all confounding.",
+        "Observed association is not interpreted as the effect of changing sulfur dioxide."
+      ],
+      "required_new_data": "None for the observational comparison; production recommendations would need prospective controlled cellar measurements and sensory evaluation.",
+      "feasible_with_current_data": true,
+      "domain_value": "Could test whether a relative sulfur dioxide measure carries information not represented by total concentration for these samples.",
+      "history_match": "none",
+      "history_relation": "no_history",
+      "discriminating_delta": "Focuses on the conditional contribution of a derived chemical fraction, rather than generic feature importance.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    },
+    {
+      "id": "I3",
+      "title": "Test sugar–alcohol balance with randomized sensory samples",
+      "question": "In blinded tasting, does adding residual sugar change the effect of alcohol level on perceived overall quality in red and white vinho verde styles?",
+      "core": {
+        "object": "Blind panel ratings of prepared wine samples",
+        "relation_or_action": "Randomize sugar and alcohol levels in a factorial design within each color, then estimate their interaction on ordinal quality ratings",
+        "contrast": "Alcohol-level rating difference at higher versus lower sugar, by color",
+        "prediction": "Higher sugar will make the rating difference between alcohol levels more positive in at least one color",
+        "independent_unit": "Prepared wine lot for treatment assignment; panelist-by-sample rating is a repeated measurement"
+      },
+      "failure_condition": "The sugar-by-alcohol interaction is absent or reverses across independent wine lots, with uncertainty excluding a prespecified meaningful effect.",
+      "assumptions": [
+        "Manipulations preserve the intended style and do not introduce detectable processing artifacts.",
+        "Panelists are blinded and rating order is randomized.",
+        "Inference accounts for repeated panelist ratings and lot-level variation."
+      ],
+      "required_new_data": "Independent base wine lots in both colors; randomized sugar and alcohol treatments; blinded, repeated panel ratings with panelist and lot identifiers.",
+      "feasible_with_current_data": false,
+      "domain_value": "Would distinguish a causal sensory-balance effect from correlations in a dataset lacking panel and production provenance.",
+      "history_match": "none",
+      "history_relation": "no_history",
+      "discriminating_delta": "Adds randomized treatment and sensory measurement, allowing a causal question that the existing cross-sectional rows cannot answer.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": false,
+        "worth_testing": true
+      },
+      "next_action": "measure"
+    }
+  ],
+  "selected_id": "I1",
+  "selection_reason": "I1 is a focused, falsifiable interaction question that can be examined with the supplied rows while preserving the observational limit. I2 is also feasible but relies on a derived ratio whose interpretation may be sensitive to pH and measurement meaning. I3 is stronger for causal inference but requires a new randomized sensory study.",
+  "method_ids": [
+    "M17",
+    "M21",
+    "M33"
+  ],
+  "task": {
+    "deliverable": "Compare a prespecified ordinal model with and without the alcohol-by-residual-sugar interaction, estimate color-specific interaction patterns, and report common-support and influence sensitivity checks.",
+    "acceptance": "Return the actual comparison, uncertainty, sample counts and support limits, and whether the directional forecast was supported. Do not interpret row-level associations as intervention effects or claim independent-lot generalization.",
+    "forecast": "Before any computation, I predict that the alcohol–quality association will be more positive at higher residual sugar in at least one color; the result may be null or unstable after common-support and influence checks."
+  }
+}

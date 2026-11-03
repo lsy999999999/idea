@@ -1,0 +1,50 @@
+[
+  {
+    "id": "C2",
+    "broker_id": "compute_0",
+    "type": "compute",
+    "request": {
+      "type": "compute",
+      "id": "compute_0",
+      "purpose": "Operationalize the proposed nonlinear ordinal comparison with a compact prespecified quadratic surface, and check whether the interaction terms improve fit on the supplied rows. This tests computational feasibility and an observational association only.",
+      "model_spec": "Use rows inside each color's marginal 5th–95th percentile ranges for alcohol and residual_sugar, reporting the limitation that this does not guarantee joint support. Fit proportional-odds logistic models to quality. Both models include color, linear terms for all 11 chemistry variables, and quadratic alcohol and residual_sugar main effects. The expanded model adds alcohol*residual_sugar, alcohol*residual_sugar^2, and alcohol^2*residual_sugar, plus each term's interaction with white, allowing the specified surface to differ by color. Compare log likelihoods by the nominal 6-df likelihood-ratio statistic. Report optimizer status, sample counts by color, coefficient estimates, likelihoods, and the statistic; do not interpret it causally or as reliable population inference without independent-unit metadata.",
+      "code": "import json\nimport numpy as np\nimport pandas as pd\nfrom scipy.optimize import minimize\nfrom scipy.stats import chi2\n\ndf=TABLES['main'].copy()\nchem=['fixed_acidity','volatile_acidity','citric_acid','residual_sugar','chlorides','free_sulfur_dioxide','total_sulfur_dioxide','density','pH','sulphates','alcohol']\ndf=df[chem+['quality','color']].dropna().copy()\nkeep=np.ones(len(df),dtype=bool)\nfor c in df.color.unique():\n    ix=df.color.eq(c)\n    for v in ['alcohol','residual_sugar']:\n        lo,hi=df.loc[ix,v].quantile([.05,.95])\n        keep &= ~(ix & ((df[v]<lo)|(df[v]>hi))).to_numpy()\ndf=df.loc[keep].reset_index(drop=True)\nlevels=sorted(int(v) for v in df.quality.unique())\ny=np.searchsorted(levels,df.quality.to_numpy())\nw=df.color.eq('white').to_numpy(float)\ncols=[]; names=[]\nfor v in chem:\n    z=df[v].to_numpy(float); sd=z.std()\n    cols.append((z-z.mean())/(sd if sd else 1.)); names.append(v)\ncols.append(w); names.append('white')\na=cols[names.index('alcohol')]; s=cols[names.index('residual_sugar')]\ncols += [a*a,s*s]; names += ['alcohol_sq','sugar_sq']\nterms=[a*s,a*s*s,a*a*s]\nX0=np.column_stack(cols)\nX1=np.column_stack(cols+terms+[w*t for t in terms])\ndef fit(X):\n    n,p=X.shape; k=len(levels)-1\n    cum=np.array([(y<=j).mean() for j in range(k)])\n    cuts=np.log(np.clip(cum,1e-5,1-1e-5)/(1-np.clip(cum,1e-5,1-1e-5)))\n    start=np.r_[np.zeros(p),cuts[0],np.log(np.maximum(np.diff(cuts),1e-3))]\n    def unpack(t): return t[:p],np.r_[t[p],t[p]+np.cumsum(np.exp(np.clip(t[p+1:],-20,20)))]\n    def loss(t):\n        b,c=unpack(t); q=1/(1+np.exp(-np.clip(c[None,:]-X@b[:,None],-35,35)))\n        pr=np.column_stack([q[:,0],np.diff(q,axis=1),1-q[:,-1]])\n        return -np.log(np.maximum(pr[np.arange(n),y],1e-15)).sum()\n    r=minimize(loss,start,method='L-BFGS-B',options={'maxiter':700,'ftol':1e-9})\n    return {'success':bool(r.success),'message':str(r.message),'nll':float(r.fun),'beta':[float(v) for v in r.x[:p]]}\nr0=fit(X0); r1=fit(X1); lr=max(0.,2*(r0['nll']-r1['nll']))\nprint(json.dumps({'n':int(len(df)),'counts_by_color':{str(k):int(v) for k,v in df.color.value_counts().items()},'quality_levels':levels,'range_rule':'within-color marginal 5th-95th percentiles for alcohol and residual_sugar','base_fit':r0,'expanded_fit':r1,'interaction_terms':['a*s','a*s^2','a^2*s','white*a*s','white*a*s^2','white*a^2*s'],'lr_stat_6df':float(lr),'lr_p_approx':float(chi2.sf(lr,6)),'warning':'Marginal ranges do not guarantee joint support; row independence and causal interpretation are unverified.'},separators=(',',':')))"
+    },
+    "result": {
+      "status": "executed",
+      "code_sha256": "03d6cec43f3ae1fd768332625d8512258ccf9bc3622a297fbd241bfe18f567b3",
+      "data_sha256": "428bd8df7313b159988405ae5e3be6d363993d73f7ffc2adedfdc1d496508191",
+      "returncode": 0,
+      "stdout": "{\"n\":5432,\"counts_by_color\":{\"white\":4107,\"red\":1325},\"quality_levels\":[3,4,5,6,7,8,9],\"range_rule\":\"within-color marginal 5th-95th percentiles for alcohol and residual_sugar\",\"base_fit\":{\"success\":true,\"message\":\"CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH\",\"nll\":5786.665267022333,\"beta\":[0.4135064411147122,-0.6877124767991931,0.015211068038767395,0.8625040018421477,-0.07722088450669408,0.30772609004031715,-0.2705005309902173,-1.0361954867310226,0.34193865144670427,0.2933754726442708,0.48607622642868503,-1.2342705503100277,0.08162773611258495,-0.046350681171573836]},\"expanded_fit\":{\"success\":true,\"message\":\"CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH\",\"nll\":5761.204043965317,\"beta\":[0.4154403463360882,-0.7043390992793104,0.006211319051746273,0.7356882852631884,-0.06982810083359342,0.3213970455659283,-0.26563271930106924,-1.0560028780552175,0.3490245548002115,0.2906622513891254,0.625736973259665,-1.291355203375294,0.08953215550001506,-0.10516915429699694,-0.4918561774955715,-0.8664137539825065,0.21229463933380968,0.5930266911369698,0.7380192999155433,-0.0690718155986119]},\"interaction_terms\":[\"a*s\",\"a*s^2\",\"a^2*s\",\"white*a*s\",\"white*a*s^2\",\"white*a^2*s\"],\"lr_stat_6df\":50.92244611403112,\"lr_p_approx\":3.070018268855997e-09,\"warning\":\"Marginal ranges do not guarantee joint support; row independence and causal interpretation are unverified.\"}\n",
+      "stderr": "",
+      "stdout_truncated": false
+    }
+  },
+  {
+    "id": "S2",
+    "broker_id": "search_1",
+    "type": "search",
+    "request": {
+      "type": "search",
+      "id": "search_1",
+      "query": "wine sensory quality alcohol residual sugar interaction nonlinear model red white wine samples Cortez Wine Quality studies",
+      "missing_relation": "Whether prior wine sensory studies directly test nonlinear alcohol-by-residual-sugar effect modification by wine color, and how their sensory outcomes and independent sampling units compare.",
+      "change_if_found": "If close work exists, frame this as a replication or identify a distinct prespecified measurement/model comparison. If not found, report only that the targeted search did not locate it, not that novelty is established."
+    },
+    "result": {
+      "status": "failed",
+      "failures": [
+        {
+          "attempt": 0,
+          "error": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1081)>",
+          "time": "2026-11-02T14:51:32.994271+00:00"
+        },
+        {
+          "attempt": 1,
+          "error": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1081)>",
+          "time": "2026-11-02T14:51:41.007656+00:00"
+        }
+      ]
+    }
+  }
+]

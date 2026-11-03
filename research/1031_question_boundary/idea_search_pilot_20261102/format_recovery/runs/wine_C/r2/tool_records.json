@@ -1,0 +1,50 @@
+[
+  {
+    "id": "C2",
+    "broker_id": "compute_0",
+    "type": "compute",
+    "request": {
+      "type": "compute",
+      "id": "compute_0",
+      "purpose": "Estimate the color-specific volatile_acidity-by-citric_acid interaction on an ordinal outcome scale, with row-bootstrap uncertainty, to assess the proposed direction descriptively. This does not resolve unknown clustering or identify an intervention effect.",
+      "model_spec": "Within each color, fit a proportional-odds cumulative-logit model for quality using standardized volatile_acidity and citric_acid, their product, and the remaining measured chemistry as standardized covariates. Report the interaction coefficient and percentile interval from 80 row-bootstrap resamples, plus sample size and marginal 5th–95th percentile ranges of both interaction variables. Bootstrap assumes independent rows; treat results as exploratory.",
+      "code": "import json\nimport numpy as np\nfrom scipy.optimize import minimize\nfrom scipy.special import expit\n\nchem=['fixed_acidity','volatile_acidity','citric_acid','residual_sugar','chlorides','free_sulfur_dioxide','total_sulfur_dioxide','density','pH','sulphates','alcohol']\nresults=[]\ndef fit_ord(X,y,k):\n    n,p=X.shape\n    counts=np.bincount(y,minlength=k).astype(float)\n    cum=np.cumsum(counts)[:-1]/len(y)\n    init_thr=np.log(np.clip(cum,1e-5,1-1e-5)/(1-np.clip(cum,1e-5,1-1e-5)))\n    init=np.r_[np.zeros(p),init_thr[0],np.log(np.maximum(np.diff(init_thr),0.05))]\n    def unpack(q):\n        z=q[p:]\n        th=np.r_[z[0],z[0]+np.cumsum(np.exp(np.clip(z[1:],-8,8)))]\n        return q[:p],th\n    def loss(q):\n        b,th=unpack(q); c=expit(th[None,:]-X@b[:,None])\n        probs=np.column_stack([c[:,0],np.diff(c,axis=1),1-c[:,-1]])\n        return -np.log(np.clip(probs[np.arange(n),y],1e-12,1)).sum()\n    r=minimize(loss,init,method='L-BFGS-B',options={'maxiter':250,'ftol':1e-8})\n    return r.x[3],bool(r.success)\nfor color,g0 in DF.groupby('color'):\n    g=g0.reset_index(drop=True); raw=g[chem].astype(float).to_numpy()\n    mu=raw.mean(axis=0); sd=raw.std(axis=0); sd[sd==0]=1\n    z=(raw-mu)/sd; ia=chem.index('volatile_acidity'); ic=chem.index('citric_acid')\n    interaction=z[:,ia]*z[:,ic]\n    cols=[z[:,ia],z[:,ic],interaction]+[z[:,j] for j in range(len(chem)) if j not in (ia,ic)]\n    X=np.column_stack(cols); cats=sorted(g['quality'].astype(int).unique()); mp={v:i for i,v in enumerate(cats)}\n    y=g['quality'].astype(int).map(mp).to_numpy(); k=len(cats)\n    est,ok=fit_ord(X,y,k); rng=np.random.default_rng(20261102); boot=[]\n    for _ in range(80):\n        ix=rng.integers(0,len(y),len(y))\n        try:\n            b,s=fit_ord(X[ix],y[ix],k)\n            if s and np.isfinite(b): boot.append(float(b))\n        except Exception: pass\n    results.append({'color':str(color),'n':len(y),'interaction_log_odds':float(est),'fit_success':ok,'bootstrap_successes':len(boot),'bootstrap_2_5_97_5':np.quantile(boot,[.025,.975]).tolist() if boot else None,'volatile_acidity_q05_q95':np.quantile(raw[:,ia],[.05,.95]).tolist(),'citric_acid_q05_q95':np.quantile(raw[:,ic],[.05,.95]).tolist()})\nprint(json.dumps({'model':'proportional odds; standardized predictors; row bootstrap assumes independent samples; not causal','results':results},separators=(',',':')))"
+    },
+    "result": {
+      "status": "executed",
+      "code_sha256": "07d2b03f5376c0cd2e85b2a28b6576d49499682cb93d1d881cf7d6700d73335f",
+      "data_sha256": "428bd8df7313b159988405ae5e3be6d363993d73f7ffc2adedfdc1d496508191",
+      "returncode": 0,
+      "stdout": "{\"model\":\"proportional odds; standardized predictors; row bootstrap assumes independent samples; not causal\",\"results\":[{\"color\":\"red\",\"n\":1599,\"interaction_log_odds\":0.2663359553224698,\"fit_success\":true,\"bootstrap_successes\":80,\"bootstrap_2_5_97_5\":[-0.02409781606233982,0.5686402607842989],\"volatile_acidity_q05_q95\":[0.27,0.84],\"citric_acid_q05_q95\":[0.0,0.6]},{\"color\":\"white\",\"n\":4898,\"interaction_log_odds\":0.1940891562423591,\"fit_success\":true,\"bootstrap_successes\":80,\"bootstrap_2_5_97_5\":[0.054670378081608795,0.3078800845185747],\"volatile_acidity_q05_q95\":[0.15,0.46],\"citric_acid_q05_q95\":[0.17,0.54]}]}\n",
+      "stderr": "",
+      "stdout_truncated": false
+    }
+  },
+  {
+    "id": "S2",
+    "broker_id": "search_1",
+    "type": "search",
+    "request": {
+      "type": "search",
+      "id": "search_1",
+      "query": "Studies using the UCI Wine Quality dataset or comparable sensory wine data that estimate a volatile_acidity by citric_acid interaction for ordinal quality, including color-stratified estimates and sampling unit.",
+      "missing_relation": "Whether this specific interaction and estimand have already been studied, and how closely prior analyses match the within-color ordinal contrast.",
+      "change_if_found": "If a close analysis exists, narrow the question to a distinct prespecified contrast or an independent-lot sensory design; if no close work is found, describe the candidate as a possible extension without claiming verified novelty."
+    },
+    "result": {
+      "status": "failed",
+      "failures": [
+        {
+          "attempt": 0,
+          "error": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1081)>",
+          "time": "2026-11-02T14:52:23.359222+00:00"
+        },
+        {
+          "attempt": 1,
+          "error": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1081)>",
+          "time": "2026-11-02T14:52:31.373125+00:00"
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,308 @@
+{
+  "round": 3,
+  "replies": [
+    {
+      "stage": "L1",
+      "reply": {
+        "recognition": {
+          "recognized_dataset": true,
+          "identity": "UCI Online Shoppers Purchasing Intention Dataset (UCI ID 468).",
+          "basis": "The supplied bundle identifies the dataset. I have not independently retrieved or analyzed it."
+        },
+        "candidates": [
+          {
+            "id": "I1",
+            "title": "Is the product-page-depth gradient mostly a session-mix effect?",
+            "question": "How much of the observed Revenue-rate difference between low- and high-ProductRelated-count sessions remains after standardizing both groups to the same VisitorType, TrafficType, Month, and Weekend composition?",
+            "core": {
+              "object": "Session-level Revenue rates across the lower and upper quartiles of ProductRelated page count.",
+              "relation_or_action": "Estimate the marginal rate difference, then estimate the difference after standardizing both count groups to a shared distribution of VisitorType, TrafficType, Month, and Weekend among cells with support.",
+              "contrast": "Marginal low-versus-high count contrast versus the context-standardized contrast.",
+              "prediction": "Standardization will attenuate the marginal difference, but a positive within-context difference will remain.",
+              "independent_unit": "Session, as described in the supplied metadata."
+            },
+            "failure_condition": "The standardized contrast is near zero or changes direction, or common support is too sparse to estimate it reliably.",
+            "assumptions": [
+              "The specified context fields capture a useful, but incomplete, portion of session-composition differences.",
+              "ProductRelated count quartiles are defined over all supplied sessions before outcome comparison.",
+              "The standardized association is observational and does not estimate the effect of causing a session to visit more pages."
+            ],
+            "required_new_data": "None for this within-dataset decomposition; user and campaign identifiers plus external sessions would help assess residual composition and transportability.",
+            "feasible_with_current_data": true,
+            "domain_value": "Distinguishes whether a session-depth association is broadly present within observed contexts or largely reflects which kinds of sessions reach different depths.",
+            "history_match": "none",
+            "history_relation": "new_family",
+            "discriminating_delta": "Earlier candidates tested incremental feature prediction or a feature association conditional on covariates. This proposal decomposes a marginal depth contrast into a context-standardized contrast and makes common support part of the result.",
+            "quality_gate": {
+              "specific": true,
+              "testable": true,
+              "coherent_feasible": true,
+              "worth_testing": true
+            },
+            "next_action": "test"
+          },
+          {
+            "id": "I2",
+            "title": "Do zero-duration page categories indicate behavior or telemetry gaps?",
+            "question": "Among sessions with positive Administrative, Informational, or ProductRelated page counts, how often is the corresponding recorded duration zero, and do these count-duration discordances concentrate in particular contexts or Revenue outcomes?",
+            "core": {
+              "object": "Session-level discordance between page counts and their corresponding duration fields.",
+              "relation_or_action": "Tabulate count-positive/duration-zero pairs by page category and compare their context and Revenue distributions with count-positive/duration-positive sessions.",
+              "contrast": "Count-duration concordant versus discordant sessions, reported separately for each page category.",
+              "prediction": "Discordance will be nonuniform across categories or contexts, indicating that zero duration should not automatically be interpreted as no engagement.",
+              "independent_unit": "Session."
+            },
+            "failure_condition": "Discordant pairs are absent or too sparse to characterize, or independent event-log validation shows that zero durations faithfully represent the measured activity.",
+            "assumptions": [
+              "A positive page count paired with zero duration is a meaningful measurement discordance to audit.",
+              "Patterns in the supplied summaries cannot alone distinguish genuine zero-time activity from instrumentation or aggregation behavior."
+            ],
+            "required_new_data": "For validation, obtain session-level page events and timestamps, linked to the supplied summaries, and compare reconstructed counts and durations with the recorded fields.",
+            "feasible_with_current_data": true,
+            "domain_value": "Clarifies whether common zero values in analytics summaries can be interpreted as behavior before they are used in operational analyses.",
+            "history_match": "none",
+            "history_relation": "new_family",
+            "discriminating_delta": "The prior proposals treated session features as predictors or associations. This asks whether the feature measurements themselves agree internally and specifies event-level validation.",
+            "quality_gate": {
+              "specific": true,
+              "testable": true,
+              "coherent_feasible": true,
+              "worth_testing": true
+            },
+            "next_action": "measure"
+          },
+          {
+            "id": "I3",
+            "title": "Does a randomized product-navigation aid change completed purchases?",
+            "question": "For eligible shoppers who have viewed at least one product page, does offering a clearly labeled, optional product-category navigation aid change the probability of completing a purchase during that visit?",
+            "core": {
+              "object": "Visit-level purchase completion among shoppers eligible after a product-page view.",
+              "relation_or_action": "Randomly assign shoppers to see the optional navigation aid or the usual interface, with assignment persisted across their sessions during the experiment.",
+              "contrast": "Purchase completion by randomized assignment, analyzed by intention to treat.",
+              "prediction": "The aid will increase purchase completion by reducing navigation friction.",
+              "independent_unit": "Shopper, with persistent assignment to prevent repeat-session crossover."
+            },
+            "failure_condition": "The intention-to-treat purchase difference is zero or negative with an adequately powered experiment, or exposure and shopper-level assignment cannot be measured reliably.",
+            "assumptions": [
+              "The navigation aid is usable and does not change price, inventory, or product eligibility.",
+              "The observational dataset does not establish that navigation friction limits purchases or that this interface change will help."
+            ],
+            "required_new_data": "A randomized live test with shopper-level assignment, eligibility and exposure logs, repeat-visit linkage, and completed-purchase outcomes; compare intention-to-treat rates with uncertainty.",
+            "feasible_with_current_data": false,
+            "domain_value": "Tests a concrete, reversible interface intervention against a purchase outcome rather than treating observational page activity as a causal lever.",
+            "history_match": "round2:I2",
+            "history_relation": "new_family",
+            "discriminating_delta": "Round 2 proposed a delivery-timing message near special days. This intervention tests optional product-category navigation after product-page exposure and does not depend on calendar eligibility.",
+            "quality_gate": {
+              "specific": true,
+              "testable": true,
+              "coherent_feasible": true,
+              "worth_testing": true
+            },
+            "next_action": "measure"
+          }
+        ],
+        "selected_id": "I1",
+        "selection_reason": "I1 makes a distinct, feasible contribution: it tests whether the marginal association between product-page depth and Revenue survives standardization for observed session mix. This is different from asking whether a feature adds predictive value or interpreting its coefficient as a behavioral mechanism.",
+        "method_ids": [
+          "M21",
+          "M02",
+          "M33"
+        ],
+        "task": {
+          "deliverable": "Using all supplied rows, define low and high ProductRelated-count groups by the full-sample lower and upper quartiles. Report their marginal Revenue-rate difference, then estimate the difference standardized to the shared VisitorType, TrafficType, Month, and Weekend distribution over context cells represented in both groups. Report group and cell support, uncertainty for both contrasts, and the fraction of sessions excluded for lack of overlap. Treat the result as an observational decomposition.",
+          "acceptance": "Before computation, forecast that standardization will attenuate the marginal difference while leaving a positive contrast. Report the result even if it is null, reversed, or too uncertain. Do not describe the standardized contrast as causal or claim that measured contexts eliminate unobserved composition. If overlap is inadequate, record the decomposition as unresolved rather than extrapolating silently."
+        }
+      }
+    },
+    {
+      "stage": "R1",
+      "reply": {
+        "recognition": {
+          "recognized_dataset": true,
+          "identity": "UCI Online Shoppers Purchasing Intention Dataset (UCI ID 468).",
+          "basis": "The supplied bundle identifies the dataset; I have not independently retrieved or analyzed it."
+        },
+        "critique": "I1 asks a useful decomposition, but its standardized contrast needs a precise target. Define low and high groups explicitly from ProductRelated quartiles, then state which shared context cells contribute and how they are weighted. A defensible option is to retain cells represented in both groups, weight each by its pooled low-plus-high session count, and report the fraction of group sessions discarded for lack of overlap. Sparse cells may make the estimate unstable; report group counts and cell support rather than silently pooling or extrapolating. The marginal and standardized contrasts need uncertainty based on resampling sessions, the stated independent unit, rather than treating context cells as independent observations.\n\nThe predicted attenuation and positive residual contrast are forecasts, not consequences of the design. A standardized contrast can remain positive because measured context does not capture all composition differences. Also, these are summaries of completed sessions: the bundle does not establish whether deeper product browsing precedes purchase, so reverse temporal ordering remains possible. Neither the marginal nor standardized association estimates the effect of causing a shopper to view more product pages.\n\nThe comparison is feasible with current fields, but quartile thresholds, context-cell support, and the standardization weights should be prespecified. Report a null, reversed, or overlap-limited result as such. A computation can establish whether this decomposition is estimable in this dataset; it cannot validate the behavioral interpretation or establish novelty. A focused search may reveal that similar standardization has already been applied to session depth and conversion.",
+        "feedback_type": "uncertainty",
+        "requests": [
+          {
+            "type": "compute",
+            "id": "depth_standardization",
+            "purpose": "Estimate marginal and shared-support context-standardized Revenue contrasts between low- and high-ProductRelated-count sessions, including session-bootstrap uncertainty and overlap diagnostics. This is an observational decomposition, not a causal effect.",
+            "model_spec": "Define low and high groups as ProductRelated at or below its full-sample 25th percentile and at or above its 75th percentile. Context cells are the exact cross-product of VisitorType, TrafficType, Month, and Weekend. Estimate the marginal high-minus-low Revenue-rate difference. For the standardized difference, retain only cells with at least one session in each group and weight each retained cell by its pooled low-plus-high count, normalized over retained cells. Report quartile cutoffs, group sizes and rates, numbers of shared and nonshared cells, fraction of group sessions excluded for lack of overlap, and both differences with percentile 95% intervals from 300 session-level bootstrap resamples. Recompute the quartile cutoffs within each bootstrap sample. Report failed bootstrap replicates. Do not interpret either contrast causally.",
+            "code": "import json\nimport numpy as np\nimport pandas as pd\n\nraw = TABLES['main'].copy()\nx = raw['ProductRelated'].to_numpy(dtype=float)\ny = raw['Revenue'].astype(int).to_numpy()\nctx = ['VisitorType', 'TrafficType', 'Month', 'Weekend']\ncodes, uniques = pd.factorize(pd.MultiIndex.from_frame(raw[ctx]), sort=False)\nn_cells = len(uniques)\n\ndef estimate(idx):\n    xx, yy, cc = x[idx], y[idx], codes[idx]\n    q25, q75 = np.quantile(xx, [0.25, 0.75])\n    grp = np.where(xx <= q25, 0, np.where(xx >= q75, 1, -1))\n    keep = grp >= 0\n    grp, yy, cc = grp[keep], yy[keep], cc[keep]\n    # Flatten cell/group pairs for vectorized counts and outcome sums.\n    key = cc * 2 + grp\n    count = np.bincount(key, minlength=n_cells * 2).reshape(n_cells, 2)\n    wins = np.bincount(key, weights=yy, minlength=n_cells * 2).reshape(n_cells, 2)\n    rates = np.divide(wins, count, out=np.zeros_like(wins), where=count > 0)\n    shared = (count[:, 0] > 0) & (count[:, 1] > 0)\n    weights = count[shared].sum(axis=1).astype(float)\n    weights /= weights.sum() if weights.sum() else 1.0\n    std = float(np.sum(weights * (rates[shared, 1] - rates[shared, 0]))) if shared.any() else np.nan\n    marginal = float(yy[grp == 1].mean() - yy[grp == 0].mean()) if (grp == 0).any() and (grp == 1).any() else np.nan\n    excluded = float(count[~shared].sum() / count.sum()) if count.sum() else np.nan\n    return {'q25': float(q25), 'q75': float(q75), 'n_low': int((grp == 0).sum()), 'n_high': int((grp == 1).sum()), 'rate_low': float(yy[grp == 0].mean()), 'rate_high': float(yy[grp == 1].mean()), 'marginal': marginal, 'standardized': std, 'n_shared_cells': int(shared.sum()), 'n_nonshared_cells': int((~shared).sum()), 'fraction_group_sessions_excluded': excluded}\n\nbase = estimate(np.arange(len(raw)))\nrng = np.random.default_rng(20261102)\nboots = []\nfor _ in range(300):\n    b = estimate(rng.integers(0, len(raw), len(raw)))\n    if np.isfinite(b['marginal']) and np.isfinite(b['standardized']):\n        boots.append([b['marginal'], b['standardized']])\narr = np.asarray(boots)\nci = np.quantile(arr, [0.025, 0.975], axis=0).tolist() if len(arr) else None\nprint(json.dumps({'n': len(raw), 'point_estimates': base, 'bootstrap_replicates_requested': 300, 'bootstrap_replicates_valid': len(boots), 'ci95_marginal_then_standardized': ci}, separators=(',', ':')))"
+          },
+          {
+            "type": "search",
+            "id": "depth_standardization_prior_work",
+            "query": "Studies of the UCI Online Shoppers Purchasing Intention Dataset or comparable e-commerce session data that compare marginal purchase rates across product-page depth or page-count groups with covariate standardization, stratification, or common-support adjustment for visitor type, traffic source, month, and weekend.",
+            "missing_relation": "Whether a session-depth-to-purchase contrast decomposed into marginal and context-standardized components has already been studied, and how overlap and session-level dependence were handled.",
+            "change_if_found": "If a close study performs this decomposition, revise toward a distinct, testable extension supported by the supplied fields or withdraw novelty implications; absence from returned metadata leaves novelty unverified."
+          }
+        ],
+        "acceptance_checks": [
+          "Treat all forecasts as untested until a usable computation result returns.",
+          "Report the exact quartile definitions, shared-cell weighting rule, overlap and group support, and session-bootstrap uncertainty.",
+          "Do not interpret standardization as eliminating unmeasured composition or as estimating an intervention effect.",
+          "If computation or search returns no usable result, leave the empirical and novelty questions unresolved."
+        ]
+      }
+    },
+    {
+      "stage": "L2",
+      "reply": {
+        "recognition": {
+          "recognized_dataset": true,
+          "identity": "UCI Online Shoppers Purchasing Intention Dataset (UCI ID 468).",
+          "basis": "Identified from the supplied bundle; no independent retrieval or analysis."
+        },
+        "selected_id": "I1",
+        "final": {
+          "status": "retained",
+          "candidate": {
+            "id": "I1",
+            "title": "How much of the product-page-depth gradient reflects observed session mix?",
+            "question": "Among sessions in the lower and upper quartiles of ProductRelated page count, how much does the Revenue-rate difference change after standardizing both groups to the pooled distribution of VisitorType, TrafficType, Month, and Weekend in context cells represented in both groups?",
+            "core": {
+              "object": "Session-level Revenue-rate difference between low- and high-ProductRelated-count groups.",
+              "relation_or_action": "Compare the marginal high-minus-low difference with a shared-cell standardized difference, weighting each shared context cell by its pooled group count.",
+              "contrast": "Unadjusted difference versus observed-context-standardized difference among shared cells.",
+              "prediction": "Standardization will attenuate the marginal difference while leaving a positive difference.",
+              "independent_unit": "Session, as described in the supplied metadata."
+            },
+            "failure_condition": "The standardized difference is near zero, reversed, or too uncertain to distinguish from zero; or common support is too limited for a useful comparison.",
+            "assumptions": [
+              "The specified context variables capture a useful but incomplete portion of session-composition differences.",
+              "Shared-cell standardization describes an observational contrast and does not estimate the effect of causing more product-page views.",
+              "Summary fields do not establish whether deeper browsing precedes purchase."
+            ],
+            "required_new_data": "Dated event-level page sequences to establish temporal ordering, plus independently collected sessions to assess replication and transportability.",
+            "feasible_with_current_data": true,
+            "domain_value": "Quantifies how much an observed session-depth gradient persists within measured session contexts, informing interpretation of analytics without implying an intervention effect.",
+            "history_match": "none",
+            "history_relation": "new_family",
+            "discriminating_delta": "Prior proposals tested duration composition, calendar-feature prediction, or other feature associations. This decomposes a low-versus-high page-count outcome difference into marginal and shared-context components and makes overlap part of the estimand.",
+            "quality_gate": {
+              "specific": true,
+              "testable": true,
+              "coherent_feasible": true,
+              "worth_testing": true
+            },
+            "next_action": "measure"
+          },
+          "evidence_level": "observational_support",
+          "what_changed": "The requested computation returned as compute_0. The marginal high-minus-low Revenue-rate difference was 0.1840 (18.40 percentage points); the shared-cell standardized difference was 0.1543 (15.43 points), an attenuation of about 16%. Session-bootstrap 95% intervals were [0.1674, 0.1994] and [0.1356, 0.1775], respectively. There were 181 shared and 167 nonshared context cells; 4.04% of low/high-group sessions were in nonshared cells. All 300 bootstrap replicates were valid. These results support the descriptive contrast in this dataset, not a causal interpretation.",
+          "what_is_known": "ProductRelated quartile cutoffs were 7 and 38; the low and high groups contained 3,156 and 3,106 sessions, with Revenue rates 5.10% and 23.50%. Standardization reduced but did not remove the observed difference. The bootstrap intervals quantify resampling uncertainty under this procedure; they do not account for unmeasured context or establish temporal order. Search result search_1 was limited Crossref metadata and did not establish novelty or rule out direct overlap.",
+          "new_hypothesis": "Measured VisitorType, TrafficType, Month, and Weekend composition accounts for part, but not all, of the product-page-depth Revenue gradient. The remaining difference could reflect other composition, timing, or measurement factors.",
+          "next_falsifiable_test": "Re-estimate the prespecified contrast on independently collected sessions with dated event sequences. Check whether product-page views precede purchase, retain the shared-cell support report, and test whether the standardized difference replicates. A null or reversed replicated contrast would weaken the proposed persistence beyond measured session mix.",
+          "nearest_work_comparison": "The supplied history includes a duration-share comparison conditional on page counts, which asks whether time composition adds predictive information. This candidate instead compares outcome rates across page-count extremes and decomposes their difference by observed context. Returned search metadata covered general purchase prediction and other topics, not this exact decomposition; the search was limited and is not evidence of a literature gap.",
+          "novelty_status": "Unverified. The returned search was not exhaustive and did not confirm a direct match.",
+          "feedback_type": "uncertainty"
+        }
+      }
+    }
+  ],
+  "effective_selected_id": "I1",
+  "tools": [
+    {
+      "id": "depth_standardization",
+      "broker_id": "compute_0",
+      "type": "compute",
+      "request": {
+        "type": "compute",
+        "id": "compute_0",
+        "purpose": "Estimate marginal and shared-support context-standardized Revenue contrasts between low- and high-ProductRelated-count sessions, including session-bootstrap uncertainty and overlap diagnostics. This is an observational decomposition, not a causal effect.",
+        "model_spec": "Define low and high groups as ProductRelated at or below its full-sample 25th percentile and at or above its 75th percentile. Context cells are the exact cross-product of VisitorType, TrafficType, Month, and Weekend. Estimate the marginal high-minus-low Revenue-rate difference. For the standardized difference, retain only cells with at least one session in each group and weight each retained cell by its pooled low-plus-high count, normalized over retained cells. Report quartile cutoffs, group sizes and rates, numbers of shared and nonshared cells, fraction of group sessions excluded for lack of overlap, and both differences with percentile 95% intervals from 300 session-level bootstrap resamples. Recompute the quartile cutoffs within each bootstrap sample. Report failed bootstrap replicates. Do not interpret either contrast causally.",
+        "code": "import json\nimport numpy as np\nimport pandas as pd\n\nraw = TABLES['main'].copy()\nx = raw['ProductRelated'].to_numpy(dtype=float)\ny = raw['Revenue'].astype(int).to_numpy()\nctx = ['VisitorType', 'TrafficType', 'Month', 'Weekend']\ncodes, uniques = pd.factorize(pd.MultiIndex.from_frame(raw[ctx]), sort=False)\nn_cells = len(uniques)\n\ndef estimate(idx):\n    xx, yy, cc = x[idx], y[idx], codes[idx]\n    q25, q75 = np.quantile(xx, [0.25, 0.75])\n    grp = np.where(xx <= q25, 0, np.where(xx >= q75, 1, -1))\n    keep = grp >= 0\n    grp, yy, cc = grp[keep], yy[keep], cc[keep]\n    # Flatten cell/group pairs for vectorized counts and outcome sums.\n    key = cc * 2 + grp\n    count = np.bincount(key, minlength=n_cells * 2).reshape(n_cells, 2)\n    wins = np.bincount(key, weights=yy, minlength=n_cells * 2).reshape(n_cells, 2)\n    rates = np.divide(wins, count, out=np.zeros_like(wins), where=count > 0)\n    shared = (count[:, 0] > 0) & (count[:, 1] > 0)\n    weights = count[shared].sum(axis=1).astype(float)\n    weights /= weights.sum() if weights.sum() else 1.0\n    std = float(np.sum(weights * (rates[shared, 1] - rates[shared, 0]))) if shared.any() else np.nan\n    marginal = float(yy[grp == 1].mean() - yy[grp == 0].mean()) if (grp == 0).any() and (grp == 1).any() else np.nan\n    excluded = float(count[~shared].sum() / count.sum()) if count.sum() else np.nan\n    return {'q25': float(q25), 'q75': float(q75), 'n_low': int((grp == 0).sum()), 'n_high': int((grp == 1).sum()), 'rate_low': float(yy[grp == 0].mean()), 'rate_high': float(yy[grp == 1].mean()), 'marginal': marginal, 'standardized': std, 'n_shared_cells': int(shared.sum()), 'n_nonshared_cells': int((~shared).sum()), 'fraction_group_sessions_excluded': excluded}\n\nbase = estimate(np.arange(len(raw)))\nrng = np.random.default_rng(20261102)\nboots = []\nfor _ in range(300):\n    b = estimate(rng.integers(0, len(raw), len(raw)))\n    if np.isfinite(b['marginal']) and np.isfinite(b['standardized']):\n        boots.append([b['marginal'], b['standardized']])\narr = np.asarray(boots)\nci = np.quantile(arr, [0.025, 0.975], axis=0).tolist() if len(arr) else None\nprint(json.dumps({'n': len(raw), 'point_estimates': base, 'bootstrap_replicates_requested': 300, 'bootstrap_replicates_valid': len(boots), 'ci95_marginal_then_standardized': ci}, separators=(',', ':')))"
+      },
+      "result": {
+        "status": "executed",
+        "code_sha256": "564f8b66c8e53fd5d2ad627db4deb1805f695851e3c529d88b55a8ea7779fa8e",
+        "data_sha256": "b3055ee355f59134d851d32641183cb4a8b45def7124d2f50442a042f358e0d9",
+        "returncode": 0,
+        "stdout": "{\"n\":12330,\"point_estimates\":{\"q25\":7.0,\"q75\":38.0,\"n_low\":3156,\"n_high\":3106,\"rate_low\":0.05101394169835234,\"rate_high\":0.23502897617514487,\"marginal\":0.18401503447679252,\"standardized\":0.15428556430750223,\"n_shared_cells\":181,\"n_nonshared_cells\":167,\"fraction_group_sessions_excluded\":0.04040242733950814},\"bootstrap_replicates_requested\":300,\"bootstrap_replicates_valid\":300,\"ci95_marginal_then_standardized\":[[0.16740612304933775,0.13557642342296203],[0.1994054005716958,0.17749683504403582]]}\n",
+        "stderr": "",
+        "stdout_truncated": false
+      }
+    },
+    {
+      "id": "depth_standardization_prior_work",
+      "broker_id": "search_1",
+      "type": "search",
+      "request": {
+        "type": "search",
+        "id": "search_1",
+        "query": "Studies of the UCI Online Shoppers Purchasing Intention Dataset or comparable e-commerce session data that compare marginal purchase rates across product-page depth or page-count groups with covariate standardization, stratification, or common-support adjustment for visitor type, traffic source, month, and weekend.",
+        "missing_relation": "Whether a session-depth-to-purchase contrast decomposed into marginal and context-standardized components has already been studied, and how overlap and session-level dependence were handled.",
+        "change_if_found": "If a close study performs this decomposition, revise toward a distinct, testable extension supported by the supplied fields or withdraw novelty implications; absence from returned metadata leaves novelty unverified."
+      },
+      "result": {
+        "status": "returned",
+        "sources": [
+          {
+            "doi": "10.31289/jite.v3i1.2599.s170",
+            "title": "Online Shoppers Purchasing Intention Dataset Data Set",
+            "date": [],
+            "abstract": ""
+          },
+          {
+            "doi": "10.2139/ssrn.4507948",
+            "title": "Research on the Influence of Cross-Border E-Commerce Product Page Value on Consumers' Purchase Intention",
+            "date": [
+              2023
+            ],
+            "abstract": ""
+          },
+          {
+            "doi": "10.1016/j.dss.2016.06.009",
+            "title": "The effect of product review balance and volume on online Shoppers' risk perception and purchase intention",
+            "date": [
+              2016,
+              9
+            ],
+            "abstract": ""
+          },
+          {
+            "doi": "10.52783/mjble.395",
+            "title": "Impact of AI-Driven Personalized Product Recommendation Systems on Online Purchase Intention: Indian E-Commerce Shoppers' Perceived Relevance and Trust",
+            "date": [
+              2026,
+              4,
+              15
+            ],
+            "abstract": " The rapid development of artificial intelligence (AI) in e-commerce has altered how customers look for, evaluate, and purchase goods online. AI-powered tailored recommendation systems are essential in influencing shopping decisions. This study examines how Indian e-commerce customers' intents to make online purchases are impacted by these AI-driven recommendation systems, with a particular emphasis on the roles of perceived relevance and consumer trust. We used a structured questionnaire to gather data from 160 Indian online shoppers using a quantitative research design. The investigation used SPSS and Partial Least Squares Structural Equation Modeling (PLS-SEM) to evaluate both the measurement and structural models. The findings demonstrate that customer trust is significantly increased by the degree of recommendation customisation and the transparency of AI recommendations. In the meantime, perceived relevance is mostly impacted by suggestion accuracy. Online purchase intentions are positively impacted by both perceived relevance and customer trust, with perceived relevance being a stronger predictor. Mediation study demonstrates that trust and perceived relevance are major psychological elements via which the features of AI recommendation systems affect purchase intentions. The results show that without clear and tailored recommendations, algorithmic accuracy alone is insufficient to influence consumer behaviour. By offering data from the Indian e-commerce scene, a new digital sector that has not yet received much attention, this study contributes to the expanding corpus of research on AI in marketing. The results provide useful information for e-commerce platforms, highlighting the significance of developing AI recommendation systems that prioritize relevance, transparency, and customisation in order to foster customer confidence and boost purchase intentions. "
+          },
+          {
+            "doi": "10.47738/ijaim.v4i2.81",
+            "title": "Using Random Forest and Support Vector Machine Algorithms to Predict Online Shopper Purchase Intention from E-Commerce Session Data",
+            "date": [
+              2024,
+              6,
+              1
+            ],
+            "abstract": ""
+          },
+          {
+            "doi": "10.4018/ijsodit.2013100102",
+            "title": "How Does a Social Network Site Fan Page Influence Purchase Intention of Online Shoppers",
+            "date": [
+              2013,
+              10,
+              1
+            ],
+            "abstract": " This research revisited how fan pages in the social network site created by online merchants affects the purchase intention of online shoppers using qualitative research methods. Through fine-tuning the research model developed by Jahn and Kunz (2012) which is grounded on the Uses and Gratifications Theory, the authors conducted a qualitative study through interviewing consumers who participated in fan pages. Based on their responses in the interviews, the authors reconfirmed that content-oriented needs and social interaction value of relationship-oriented needs had positive impacts on fan page usage intensity and fan page engagement, respectively. Plus, the authors discovered that content-oriented needs had a positive impact on fan page engagement. The theoretical contributions, managerial implications of this study are also discussed. "
+          }
+        ],
+        "scope": "Crossref metadata, not exhaustive novelty evidence",
+        "transport_failures": [
+          {
+            "attempt": 0,
+            "error": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1081)>",
+            "time": "2026-11-02T14:54:16.031854+00:00"
+          }
+        ]
+      }
+    }
+  ]
+}

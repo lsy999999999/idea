@@ -1,0 +1,44 @@
+{
+  "time": "2026-11-03T10:12:37.662328+00:00",
+  "premise_checks": {
+    "exact_current_inputs": true,
+    "shared_parameters": true,
+    "deterministic": true,
+    "measurement_stable": true,
+    "known_bounded_error": true
+  },
+  "certified": [
+    {
+      "original": {
+        "id": "C1",
+        "rule": "same_input_single_value",
+        "evidence_refs": [
+          "dev: u=0.4, h=0.3, history=[1,1,1,1], six repeats; mean=1.3126313975",
+          "dev: u=0.4, h=0.3, history=[-1,-1,-1,-1], six repeats; mean=-0.7212799053",
+          "diagnostic: mean gap=2.0339113028; minimum cross-group pair gap=2.0080844150",
+          "metadata: absolute readout error bound epsilon=0.015; calibrated identical reference channel; deterministic response assumption"
+        ],
+        "premises": [
+          "Both groups have exactly the same u, h, times, dt, measurement protocol, and shared parameters within each comparison; only prior drive history differs.",
+          "The deterministic response is single-valued conditional on the stated inputs and shared parameters.",
+          "Each observed response differs from its true response by at most 0.015 response units.",
+          "The calibrated reference-channel certificate applies to these observations."
+        ],
+        "derivation": "For either matched-input pair, if a deterministic model depends only on (u,h) and shared parameters, both true responses equal f(u,h). With errors e1,e2 bounded by 0.015, the observed gap is |e1-e2| <= 0.030. At h=0.3 the group mean gap is 2.0339113028, and even the minimum cross-group pair gap is 2.0080844150; both exceed 0.030. Thus the joint assumptions that response is deterministic and that its complete predictive input is only (u,h), with the stated error bound and certificate, are rejected. At h=1.2 the mean gap is also 1.3481296441, independently exceeding 0.030.",
+        "scope": "Excludes deterministic single-valued prediction from (u,h) alone under the stated measurement certificate and error bound at the tested conditions. It does not exclude dependence on history, unrecorded state, stochastic response, changing parameters, or measurement/protocol effects if their premises fail; it identifies no physical mechanism.",
+        "strength": "hard",
+        "generator_operation": "Before generating candidates, mark the (u,h)-only deterministic class as excluded conditional on the certificate. Require each candidate to name its complete pre-response arguments; permit full recorded history or an explicitly represented latent state, and do not claim a physical mechanism from this constraint.",
+        "independent_test": "On fresh matched trials, hold u, h, times, dt, protocol, and shared parameters fixed while varying history. Compare all cross-history observed gaps with 0.030; also verify repeatability within each history condition and the calibration certificate. Fit any predictive candidate on fit only, refitting every parameter there, and score raw o on a separate development set.",
+        "withdrawal": "Restore search over deterministic (u,h)-only prediction if matching is shown to be inexact, the deterministic/shared-parameter premise fails, the reference-channel certificate does not apply, or the absolute error bound is invalid."
+      },
+      "verified_rule": "single_value_collision",
+      "certified_scope": "shared deterministic o=g(u,h) with common stable observation and bounded error; histories/extra information remain unrestricted",
+      "strength": "hard",
+      "witness_gap": 2.061663313286648,
+      "allowed_gap": 0.03,
+      "source": "LLM proposal verified against mathematical rule and actual records"
+    }
+  ],
+  "unverified": [],
+  "numerical_fit_failure_used_as_proof": false
+}

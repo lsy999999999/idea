@@ -1,0 +1,46 @@
+{
+  "recognition": "这是 UCI Wine Quality 数据集，包含葡萄牙 Vinho Verde 红、白葡萄酒的理化测量与质量评分。数据集识别不构成发现。",
+  "selected_id": "I1",
+  "final": {
+    "status": "revised",
+    "candidate": {
+      "id": "I1",
+      "title": "白葡萄酒中柠檬酸是否改变挥发酸与质量评分的关联？",
+      "question": "在白葡萄酒样本中，控制其他已测理化变量后，volatile_acidity 与序数 quality 的条件关联是否随 citric_acid 水平增强？",
+      "core": {
+        "object": "白葡萄酒样本及其理化测量和序数 quality 评分",
+        "relation_or_action": "volatile_acidity 与 citric_acid 的交互关联",
+        "contrast": "标准化 volatile_acidity 与 citric_acid 的乘积项对质量评分累积优势的关联",
+        "prediction": "事前预测较高 citric_acid 会减弱 volatile_acidity 与较高 quality 的负向关联；正交互是该预测在比例优势模型中的对应方向。",
+        "independent_unit": "单个样本；生产批次、酒庄及评审依赖关系未知。"
+      },
+      "failure_condition": "在预先规定的序数模型、共同支持区域及合理敏感性分析中，交互估计接近零或方向不稳定。",
+      "assumptions": [
+        "quality 是序数感官评分，不等同消费者偏好。",
+        "测量变量调整不能排除未测混杂。",
+        "行级重抽样假定样本独立，但现有元数据无法验证该假定。"
+      ],
+      "required_new_data": "当前数据可用于探索性关联分析。确认该关联需在独立白葡萄酒批次中重复；估计干预效果则需控制条件的批次实验和盲法重复感官评分。",
+      "feasible_with_current_data": true,
+      "domain_value": "可为独立批次的感官验证提供一项具体交互假设，但现有观察结果不能直接支持酿造干预建议。",
+      "history_match": "none",
+      "history_relation": "new_family",
+      "discriminating_delta": "检验 volatile_acidity × citric_acid 的序数评分交互；历史候选研究的是 alcohol × residual_sugar、硫测量构成或颜色相关比较。",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    },
+    "evidence_level": "observational_support",
+    "what_changed": "按预先提出的比例优势模型检查，白葡萄酒交互系数为 0.194（标准化预测变量的对数优势尺度），行级 bootstrap 95% 区间为 [0.055, 0.308]；红葡萄酒估计为 0.266，区间为 [-0.024, 0.569]（C2）。因此白葡萄酒结果与预测方向一致，红葡萄酒结果不确定。结论收窄到白葡萄酒的探索性关联，避免把“任一颜色显著”当作验证。",
+    "what_is_known": "C2 的拟合成功，80 次重抽样均得到可用估计，但区间依赖未验证的行独立假设。只报告了两变量各自的边际分位数，没有核验联合支持、影响点敏感性或多重比较；这些限制降低证据强度。S2 检索因 SSL 错误失败，不能据此判断新颖性。观察关联不识别改变成分的效果。",
+    "new_hypothesis": "白葡萄酒中观察到的正交互可能依赖模型规格或变量共同分布；现有输出无法区分稳定的条件关联与这些替代解释。",
+    "next_falsifiable_test": "在独立白葡萄酒批次上预注册比例优势模型、交互尺度和最小有意义效应，评估 joint volatile_acidity–citric_acid 支持，并用批次作为独立单位。如果交互方向在批次层级重复且区间排除预定的近零范围，支持该关联；若估计接近零或不稳定，则不支持。",
+    "nearest_work_comparison": "历史候选没有检验此交互。针对该交互的检索 S2 失败，因此与已发表工作的接近程度未知。",
+    "novelty_status": "未核实；不能从数据集元数据、候选差异或失败的检索推断科学新颖性。",
+    "feedback_type": "uncertainty"
+  }
+}

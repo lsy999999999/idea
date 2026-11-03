@@ -1,0 +1,48 @@
+{
+  "recognition": "这是 UCI Online Shoppers Purchasing Intention 数据集。识别和随附元数据不是发现。",
+  "selected_id": "I3",
+  "final": {
+    "status": "revised",
+    "candidate": {
+      "id": "I3",
+      "title": "Does the supplied dataset support within-month SpecialDay comparisons?",
+      "question": "Do the supplied sessions contain enough within-Month overlap and outcome observations to estimate adjusted Revenue contrasts between nonzero SpecialDay scores and zero without relying on unsupported extrapolation?",
+      "core": {
+        "object": "Observed SpecialDay scores and Revenue within Month",
+        "relation_or_action": "Audit score-by-month overlap and conversion counts before estimating adjusted contrasts",
+        "contrast": "Months and score categories with observed support versus absent or sparse cells",
+        "prediction": "Support will be concentrated in a small subset of Month × SpecialDay cells, limiting the scope of within-month comparisons.",
+        "independent_unit": "Session represented by one row"
+      },
+      "failure_condition": "The prediction fails if multiple months have adequate observations across zero and nonzero score categories to support the prespecified contrasts.",
+      "assumptions": [
+        "The supplied Month and SpecialDay values are recorded consistently.",
+        "Cell counts describe available support but do not establish a causal effect.",
+        "Adequate support requires prespecified outcome precision criteria, which this bundle does not provide."
+      ],
+      "required_new_data": [
+        "For broader within-month comparisons, obtain date-level session records with exact visit date, SpecialDay construction, Revenue, and relevant campaign or promotion context; compare score groups within the same calendar periods with adequate overlap."
+      ],
+      "feasible_with_current_data": true,
+      "domain_value": "Determines whether this dataset can answer the proposed within-month question or whether finer date and campaign data are needed.",
+      "history_match": "none",
+      "history_relation": "refinement",
+      "discriminating_delta": "Replaces the original adjusted association claim with a test of its empirical support, prompted by empty and sparse score-by-month cells.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "measure"
+    },
+    "evidence_level": "computed_feasibility",
+    "what_changed": "The compute return showed that nonzero SpecialDay scores occur only in February and May; several February cells have fewer than 20 sessions, and all other months have no nonzero-score observations. The requested model-standardized probabilities set each score across all rows, so they extrapolate beyond observed Month × score support and do not establish within-month contrasts. The revision limits the question to support and estimability.",
+    "what_is_known": "In compute_0, May has observed zero and nonzero score groups; February has 105 zero-score sessions and nonzero groups of 5 to 21 sessions. The returned score-by-month table has no nonzero scores for the other observed months. The returned standardized mean predicted rates are model-generated under score assignments across all rows, not observed within-month rates or causal effects. No uncertainty estimates for adjusted contrasts were returned.",
+    "new_hypothesis": "The dataset's SpecialDay–Revenue comparison is primarily constrained by sparse and geographically concentrated score support; broader within-month inference requires finer date-level data and adequate overlap.",
+    "next_falsifiable_test": "With date-level records and a prespecified minimum cell-size and precision rule, enumerate within-period score groups and estimate adjusted Revenue contrasts only where both zero and nonzero scores have support. If several periods meet the rule and yield stable contrasts, the support-limitation hypothesis is weakened.",
+    "nearest_work_comparison": "The supplied documentation cites a real-time purchase-intention prediction paper. The search return search_1 found several dataset prediction papers but no clear direct match for this specific within-month SpecialDay analysis; its Crossref metadata is not exhaustive and does not verify a literature gap.",
+    "novelty_status": "Literature novelty remains unverified. The search result is limited metadata, not evidence that no prior analysis exists.",
+    "feedback_type": "data_gap"
+  }
+}

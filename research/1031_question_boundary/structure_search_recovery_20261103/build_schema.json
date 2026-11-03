@@ -1,0 +1,138 @@
+{
+  "type": "object",
+  "properties": {
+    "parameters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "dimension": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "lower": {
+            "type": "number"
+          },
+          "initial": {
+            "type": "number"
+          },
+          "upper": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "name",
+          "dimension",
+          "lower",
+          "initial",
+          "upper"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 8
+    },
+    "quantities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "expression": {
+            "type": "string"
+          },
+          "interpretation": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "expression",
+          "interpretation"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 8
+    },
+    "exposed_inputs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "u",
+          "h",
+          "history",
+          "times",
+          "dt"
+        ]
+      },
+      "maxItems": 5
+    },
+    "rationale": {
+      "type": "string"
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "experiments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "u": {
+            "type": "number"
+          },
+          "h": {
+            "type": "number"
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 4,
+            "maxItems": 4
+          },
+          "purpose": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "u",
+          "h",
+          "history",
+          "purpose"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 4
+    },
+    "measurement_requests": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "parameters",
+    "quantities",
+    "exposed_inputs",
+    "rationale",
+    "evidence_refs",
+    "experiments",
+    "measurement_requests"
+  ],
+  "additionalProperties": false
+}

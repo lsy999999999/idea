@@ -1,0 +1,1028 @@
+{
+  "id": "C6",
+  "scaffold": {
+    "parameters": [
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0,
+        "lower": -3,
+        "name": "a",
+        "upper": 3
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 1,
+        "lower": -3,
+        "name": "b",
+        "upper": 3
+      },
+      {
+        "dimension": [
+          -1,
+          1
+        ],
+        "initial": -0.2,
+        "lower": -2,
+        "name": "c",
+        "upper": 2
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.5,
+        "lower": -3,
+        "name": "d",
+        "upper": 3
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.2,
+        "lower": -3,
+        "name": "e",
+        "upper": 3
+      },
+      {
+        "dimension": [
+          1,
+          0
+        ],
+        "initial": 2,
+        "lower": 0.1,
+        "name": "tau",
+        "upper": 8
+      }
+    ],
+    "quantities": [
+      {
+        "expression": "sum(history*exp(times/tau))",
+        "interpretation": "Dimensionless exponentially discounted summary of prior drive; positive tau makes more recent intervals count more.",
+        "name": "memory"
+      }
+    ],
+    "exposed_inputs": [
+      "u",
+      "h",
+      "history",
+      "times"
+    ],
+    "rationale": "The u,h-only model has poor fit and dev RMSE. A shared affine memory model improved fit RMSE to 0.0612 and dev RMSE to 0.1470 but missed the 0.06 criterion. Its development residuals show structured failures: at fixed u and positive history it overpredicts responses, while for all-negative history at h=0.3 it underpredicts magnitude (dev_0 versus dev_6), and increasing h shifts the errors (dev_12 versus dev_18). Within observed conditions, the same memory summary misses the h=2.2 positive constant-history case (observed_B_4) despite close agreement at h=0.5 (observed_B_0), and alternating orders can yield substantially different outputs (observed_A_16 versus observed_A_24). The new term lets recent-versus-old placement modulate the memory contribution, while retaining shared coefficients and the age-weighted history summary. Prospective pulse repeats distinguish the two placements: fresh_1_0 is around 0.323 versus fresh_1_4 around 0.625 at short wait, and fresh_1_8 around 0.281 versus fresh_1_12 around 0.469 at longer wait. These support an order-sensitive response, but do not establish this particular functional form or that it passes the RMSE target. All coefficients are declared for fit-only refitting.",
+    "evidence_refs": [
+      "dev_0",
+      "dev_6",
+      "dev_12",
+      "dev_18",
+      "observed_A_0",
+      "observed_A_8",
+      "observed_A_16",
+      "observed_A_24",
+      "observed_B_0",
+      "observed_B_4",
+      "fresh_1_0",
+      "fresh_1_4",
+      "fresh_1_8",
+      "fresh_1_12"
+    ],
+    "experiments": [
+      {
+        "h": 0.5,
+        "history": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "purpose": "Probe an old isolated pulse at a drive within the fit range, to test the remaining age-dependent residual pattern.",
+        "u": 0.3
+      },
+      {
+        "h": 0.5,
+        "history": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "purpose": "Matched recent isolated pulse; compare with the old-pulse condition to test temporal placement.",
+        "u": 0.3
+      },
+      {
+        "h": 1.5,
+        "history": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "purpose": "Repeat the old pulse at longer wait to test whether the age effect is separate from waiting-time dependence.",
+        "u": 0.3
+      },
+      {
+        "h": 1.5,
+        "history": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "purpose": "Matched recent pulse at longer wait, completing the pulse-age by wait comparison.",
+        "u": 0.3
+      }
+    ],
+    "measurement_requests": [
+      "Collect four repeats per condition and report raw response values."
+    ]
+  },
+  "expression": "a+b*u+c*h+d*memory+e*(history[3]-history[0])*memory",
+  "annotation": {
+    "evidence_refs": [
+      "dev_0",
+      "dev_6",
+      "dev_12",
+      "dev_18",
+      "observed_A_0",
+      "observed_A_8",
+      "observed_A_16",
+      "observed_A_24",
+      "observed_B_0",
+      "observed_B_4",
+      "fresh_1_0",
+      "fresh_1_4",
+      "fresh_1_8",
+      "fresh_1_12"
+    ],
+    "experiments": [
+      {
+        "h": 0.5,
+        "history": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "purpose": "Probe an old isolated pulse at a drive within the fit range, to test the remaining age-dependent residual pattern.",
+        "u": 0.3
+      },
+      {
+        "h": 0.5,
+        "history": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "purpose": "Matched recent isolated pulse; compare with the old-pulse condition to test temporal placement.",
+        "u": 0.3
+      },
+      {
+        "h": 1.5,
+        "history": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "purpose": "Repeat the old pulse at longer wait to test whether the age effect is separate from waiting-time dependence.",
+        "u": 0.3
+      },
+      {
+        "h": 1.5,
+        "history": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "purpose": "Matched recent pulse at longer wait, completing the pulse-age by wait comparison.",
+        "u": 0.3
+      }
+    ],
+    "exposed_inputs": [
+      "u",
+      "h",
+      "history",
+      "times"
+    ],
+    "expression": "a+b*u+c*h+d*memory+e*(history[3]-history[0])*memory",
+    "measurement_requests": [
+      "Collect four repeats per condition and report raw response values."
+    ],
+    "parameters": [
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0,
+        "lower": -3,
+        "name": "a",
+        "upper": 3
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 1,
+        "lower": -3,
+        "name": "b",
+        "upper": 3
+      },
+      {
+        "dimension": [
+          -1,
+          1
+        ],
+        "initial": -0.2,
+        "lower": -2,
+        "name": "c",
+        "upper": 2
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.5,
+        "lower": -3,
+        "name": "d",
+        "upper": 3
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.2,
+        "lower": -3,
+        "name": "e",
+        "upper": 3
+      },
+      {
+        "dimension": [
+          1,
+          0
+        ],
+        "initial": 2,
+        "lower": 0.1,
+        "name": "tau",
+        "upper": 8
+      }
+    ],
+    "quantities": [
+      {
+        "expression": "sum(history*exp(times/tau))",
+        "interpretation": "Dimensionless exponentially discounted summary of prior drive; positive tau makes more recent intervals count more.",
+        "name": "memory"
+      }
+    ],
+    "rationale": "The u,h-only model has poor fit and dev RMSE. A shared affine memory model improved fit RMSE to 0.0612 and dev RMSE to 0.1470 but missed the 0.06 criterion. Its development residuals show structured failures: at fixed u and positive history it overpredicts responses, while for all-negative history at h=0.3 it underpredicts magnitude (dev_0 versus dev_6), and increasing h shifts the errors (dev_12 versus dev_18). Within observed conditions, the same memory summary misses the h=2.2 positive constant-history case (observed_B_4) despite close agreement at h=0.5 (observed_B_0), and alternating orders can yield substantially different outputs (observed_A_16 versus observed_A_24). The new term lets recent-versus-old placement modulate the memory contribution, while retaining shared coefficients and the age-weighted history summary. Prospective pulse repeats distinguish the two placements: fresh_1_0 is around 0.323 versus fresh_1_4 around 0.625 at short wait, and fresh_1_8 around 0.281 versus fresh_1_12 around 0.469 at longer wait. These support an order-sensitive response, but do not establish this particular functional form or that it passes the RMSE target. All coefficients are declared for fit-only refitting.",
+    "scientific_change": "Revise the incomplete affine history law by adding an order-sensitive interaction between the exponentially weighted memory and the difference between the newest and oldest history samples. The large matched-u,h history contrasts and prospective isolated-pulse contrasts show that a scalar unweighted summary cannot explain the observations. This candidate targets the residual failure of the prior affine-memory model; it remains a hypothesis pending fit-only refitting and dev evaluation."
+  },
+  "result": {
+    "status": "executed",
+    "parameters": {
+      "a": 0.009326538839148713,
+      "b": 0.9009681353520035,
+      "c": 0.012291575322558727,
+      "d": 0.4460421398658237,
+      "e": -0.04122654551209513,
+      "tau": 2.8585403015158617
+    },
+    "values": [
+      0.009326538839148713,
+      0.9009681353520035,
+      0.012291575322558727,
+      0.4460421398658237,
+      -0.04122654551209513,
+      2.8585403015158617
+    ],
+    "fit_rmse": 0.059160301221535906,
+    "dev_rmse": 0.1463128267207265,
+    "optimizer_converged": true,
+    "residual_calls": 224,
+    "attempts": [
+      {
+        "calls": 49,
+        "converged": true,
+        "message": "`ftol` termination condition is satisfied."
+      },
+      {
+        "calls": 63,
+        "converged": true,
+        "message": "`ftol` termination condition is satisfied."
+      },
+      {
+        "calls": 56,
+        "converged": true,
+        "message": "`ftol` termination condition is satisfied."
+      },
+      {
+        "calls": 56,
+        "converged": true,
+        "message": "`ftol` termination condition is satisfied."
+      }
+    ],
+    "dev_predictions": [
+      {
+        "row_id": "dev_0",
+        "observed": 1.3051720130977043,
+        "predicted": 1.1755844850793449,
+        "residual": -0.12958752801835938
+      },
+      {
+        "row_id": "dev_1",
+        "observed": 1.3299464539887613,
+        "predicted": 1.1755844850793449,
+        "residual": -0.15436196890941645
+      },
+      {
+        "row_id": "dev_2",
+        "observed": 1.315556400303728,
+        "predicted": 1.1755844850793449,
+        "residual": -0.13997191522438301
+      },
+      {
+        "row_id": "dev_3",
+        "observed": 1.3018382948668406,
+        "predicted": 1.1755844850793449,
+        "residual": -0.12625380978749567
+      },
+      {
+        "row_id": "dev_4",
+        "observed": 1.3063033231839458,
+        "predicted": 1.1755844850793449,
+        "residual": -0.13071883810460094
+      },
+      {
+        "row_id": "dev_5",
+        "observed": 1.316971899597782,
+        "predicted": 1.1755844850793449,
+        "residual": -0.14138741451843706
+      },
+      {
+        "row_id": "dev_6",
+        "observed": -0.7317168592978868,
+        "predicted": -0.42878195392590934,
+        "residual": 0.3029349053719774
+      },
+      {
+        "row_id": "dev_7",
+        "observed": -0.7315951080306806,
+        "predicted": -0.42878195392590934,
+        "residual": 0.3028131541047713
+      },
+      {
+        "row_id": "dev_8",
+        "observed": -0.7133590087789013,
+        "predicted": -0.42878195392590934,
+        "residual": 0.284577054852992
+      },
+      {
+        "row_id": "dev_9",
+        "observed": -0.7197943079426534,
+        "predicted": -0.42878195392590934,
+        "residual": 0.2910123540167441
+      },
+      {
+        "row_id": "dev_10",
+        "observed": -0.706246120141251,
+        "predicted": -0.42878195392590934,
+        "residual": 0.27746416621534165
+      },
+      {
+        "row_id": "dev_11",
+        "observed": -0.7249680276130827,
+        "predicted": -0.42878195392590934,
+        "residual": 0.2961860736871733
+      },
+      {
+        "row_id": "dev_12",
+        "observed": 0.9872606040127475,
+        "predicted": 1.1866469028696476,
+        "residual": 0.19938629885690007
+      },
+      {
+        "row_id": "dev_13",
+        "observed": 0.9703903087452999,
+        "predicted": 1.1866469028696476,
+        "residual": 0.21625659412434772
+      },
+      {
+        "row_id": "dev_14",
+        "observed": 0.9653176407338192,
+        "predicted": 1.1866469028696476,
+        "residual": 0.22132926213582838
+      },
+      {
+        "row_id": "dev_15",
+        "observed": 0.9818137403148506,
+        "predicted": 1.1866469028696476,
+        "residual": 0.204833162554797
+      },
+      {
+        "row_id": "dev_16",
+        "observed": 0.9710228761101786,
+        "predicted": 1.1866469028696476,
+        "residual": 0.215624026759469
+      },
+      {
+        "row_id": "dev_17",
+        "observed": 0.9821325647467699,
+        "predicted": 1.1866469028696476,
+        "residual": 0.20451433812287767
+      },
+      {
+        "row_id": "dev_18",
+        "observed": -0.3765090262237718,
+        "predicted": -0.4177195361356065,
+        "residual": -0.04121050991183467
+      },
+      {
+        "row_id": "dev_19",
+        "observed": -0.37078533476920067,
+        "predicted": -0.4177195361356065,
+        "residual": -0.0469342013664058
+      },
+      {
+        "row_id": "dev_20",
+        "observed": -0.37152767435121076,
+        "predicted": -0.4177195361356065,
+        "residual": -0.046191861784395716
+      },
+      {
+        "row_id": "dev_21",
+        "observed": -0.36885371633763314,
+        "predicted": -0.4177195361356065,
+        "residual": -0.04886581979797333
+      },
+      {
+        "row_id": "dev_22",
+        "observed": -0.38218811611320275,
+        "predicted": -0.4177195361356065,
+        "residual": -0.035531420022403726
+      },
+      {
+        "row_id": "dev_23",
+        "observed": -0.3609762624194256,
+        "predicted": -0.4177195361356065,
+        "residual": -0.056743273716180875
+      },
+      {
+        "row_id": "observed_A_0",
+        "observed": 0.6307931713001469,
+        "predicted": 0.7213428594321871,
+        "residual": 0.09054968813204023
+      },
+      {
+        "row_id": "observed_A_1",
+        "observed": 0.6464020470805342,
+        "predicted": 0.7213428594321871,
+        "residual": 0.07494081235165295
+      },
+      {
+        "row_id": "observed_A_2",
+        "observed": 0.6484555894530206,
+        "predicted": 0.7213428594321871,
+        "residual": 0.0728872699791665
+      },
+      {
+        "row_id": "observed_A_3",
+        "observed": 0.6505355658220674,
+        "predicted": 0.7213428594321871,
+        "residual": 0.07080729361011973
+      },
+      {
+        "row_id": "observed_A_4",
+        "observed": 0.5927914700228543,
+        "predicted": 0.7422385374805369,
+        "residual": 0.14944706745768266
+      },
+      {
+        "row_id": "observed_A_5",
+        "observed": 0.5830899698883254,
+        "predicted": 0.7422385374805369,
+        "residual": 0.15914856759221152
+      },
+      {
+        "row_id": "observed_A_6",
+        "observed": 0.5882816402980804,
+        "predicted": 0.7422385374805369,
+        "residual": 0.15395689718245653
+      },
+      {
+        "row_id": "observed_A_7",
+        "observed": 0.5846661965452915,
+        "predicted": 0.7422385374805369,
+        "residual": 0.15757234093524541
+      },
+      {
+        "row_id": "observed_A_8",
+        "observed": 0.932769447730129,
+        "predicted": 0.8864191569346869,
+        "residual": -0.04635029079544217
+      },
+      {
+        "row_id": "observed_A_9",
+        "observed": 0.9273772122254385,
+        "predicted": 0.8864191569346869,
+        "residual": -0.04095805529075158
+      },
+      {
+        "row_id": "observed_A_10",
+        "observed": 0.9519302331607015,
+        "predicted": 0.8864191569346869,
+        "residual": -0.0655110762260146
+      },
+      {
+        "row_id": "observed_A_11",
+        "observed": 0.952336917559102,
+        "predicted": 0.8864191569346869,
+        "residual": -0.06591776062441512
+      },
+      {
+        "row_id": "observed_A_12",
+        "observed": 0.7220010562640917,
+        "predicted": 0.9073148349830367,
+        "residual": 0.18531377871894494
+      },
+      {
+        "row_id": "observed_A_13",
+        "observed": 0.7204434990009025,
+        "predicted": 0.9073148349830367,
+        "residual": 0.18687133598213412
+      },
+      {
+        "row_id": "observed_A_14",
+        "observed": 0.7318157317488707,
+        "predicted": 0.9073148349830367,
+        "residual": 0.17549910323416595
+      },
+      {
+        "row_id": "observed_A_15",
+        "observed": 0.7320894879185589,
+        "predicted": 0.9073148349830367,
+        "residual": 0.1752253470644778
+      },
+      {
+        "row_id": "observed_A_16",
+        "observed": 0.32454212155208745,
+        "predicted": 0.43652553983859343,
+        "residual": 0.11198341828650599
+      },
+      {
+        "row_id": "observed_A_17",
+        "observed": 0.33636213952435945,
+        "predicted": 0.43652553983859343,
+        "residual": 0.10016340031423399
+      },
+      {
+        "row_id": "observed_A_18",
+        "observed": 0.3267810216192671,
+        "predicted": 0.43652553983859343,
+        "residual": 0.10974451821932635
+      },
+      {
+        "row_id": "observed_A_19",
+        "observed": 0.340311943577755,
+        "predicted": 0.43652553983859343,
+        "residual": 0.09621359626083842
+      },
+      {
+        "row_id": "observed_A_20",
+        "observed": 0.43586080685044065,
+        "predicted": 0.45742121788694323,
+        "residual": 0.02156041103650258
+      },
+      {
+        "row_id": "observed_A_21",
+        "observed": 0.4558132642638018,
+        "predicted": 0.45742121788694323,
+        "residual": 0.0016079536231414226
+      },
+      {
+        "row_id": "observed_A_22",
+        "observed": 0.4450194423386643,
+        "predicted": 0.45742121788694323,
+        "residual": 0.012401775548278926
+      },
+      {
+        "row_id": "observed_A_23",
+        "observed": 0.4535919182106059,
+        "predicted": 0.45742121788694323,
+        "residual": 0.0038292996763373277
+      },
+      {
+        "row_id": "observed_A_24",
+        "observed": 0.7370916983141308,
+        "predicted": 0.7143250741117958,
+        "residual": -0.022766624202334995
+      },
+      {
+        "row_id": "observed_A_25",
+        "observed": 0.7445164340914321,
+        "predicted": 0.7143250741117958,
+        "residual": -0.03019135997963629
+      },
+      {
+        "row_id": "observed_A_26",
+        "observed": 0.7390414239330393,
+        "predicted": 0.7143250741117958,
+        "residual": -0.02471634982124349
+      },
+      {
+        "row_id": "observed_A_27",
+        "observed": 0.7587147033940054,
+        "predicted": 0.7143250741117958,
+        "residual": -0.044389629282209575
+      },
+      {
+        "row_id": "observed_A_28",
+        "observed": 0.6335948058188414,
+        "predicted": 0.7352207521601456,
+        "residual": 0.10162594634130417
+      },
+      {
+        "row_id": "observed_A_29",
+        "observed": 0.6439356011478652,
+        "predicted": 0.7352207521601456,
+        "residual": 0.09128515101228041
+      },
+      {
+        "row_id": "observed_A_30",
+        "observed": 0.644963168846186,
+        "predicted": 0.7352207521601456,
+        "residual": 0.09025758331395961
+      },
+      {
+        "row_id": "observed_A_31",
+        "observed": 0.6307091208417741,
+        "predicted": 0.7352207521601456,
+        "residual": 0.10451163131837149
+      },
+      {
+        "row_id": "observed_B_0",
+        "observed": 0.9989438687509821,
+        "predicted": 1.002193224230544,
+        "residual": 0.003249355479561955
+      },
+      {
+        "row_id": "observed_B_1",
+        "observed": 1.0093896289352093,
+        "predicted": 1.002193224230544,
+        "residual": -0.007196404704665316
+      },
+      {
+        "row_id": "observed_B_2",
+        "observed": 0.9934467110608171,
+        "predicted": 1.002193224230544,
+        "residual": 0.008746513169726966
+      },
+      {
+        "row_id": "observed_B_3",
+        "observed": 0.9868358901261626,
+        "predicted": 1.002193224230544,
+        "residual": 0.015357334104381448
+      },
+      {
+        "row_id": "observed_B_4",
+        "observed": 0.7561866826194857,
+        "predicted": 1.0230889022788938,
+        "residual": 0.2669022196594081
+      },
+      {
+        "row_id": "observed_B_5",
+        "observed": 0.7586961806960817,
+        "predicted": 1.0230889022788938,
+        "residual": 0.26439272158281213
+      },
+      {
+        "row_id": "observed_B_6",
+        "observed": 0.7458182097118563,
+        "predicted": 1.0230889022788938,
+        "residual": 0.2772706925670375
+      },
+      {
+        "row_id": "observed_B_7",
+        "observed": 0.7564605377011872,
+        "predicted": 1.0230889022788938,
+        "residual": 0.26662836457770667
+      },
+      {
+        "row_id": "fresh_1_0",
+        "observed": 0.31991131701881936,
+        "predicted": 0.4060040120589859,
+        "residual": 0.08609269504016653
+      },
+      {
+        "row_id": "fresh_1_1",
+        "observed": 0.3229077347136631,
+        "predicted": 0.4060040120589859,
+        "residual": 0.08309627734532282
+      },
+      {
+        "row_id": "fresh_1_2",
+        "observed": 0.33118275836584615,
+        "predicted": 0.4060040120589859,
+        "residual": 0.07482125369313974
+      },
+      {
+        "row_id": "fresh_1_3",
+        "observed": 0.3185065774664961,
+        "predicted": 0.4060040120589859,
+        "residual": 0.08749743459248982
+      },
+      {
+        "row_id": "fresh_1_4",
+        "observed": 0.6208279711704124,
+        "predicted": 0.5710803095614856,
+        "residual": -0.04974766160892685
+      },
+      {
+        "row_id": "fresh_1_5",
+        "observed": 0.6218083055020318,
+        "predicted": 0.5710803095614856,
+        "residual": -0.05072799594054622
+      },
+      {
+        "row_id": "fresh_1_6",
+        "observed": 0.6322656995309451,
+        "predicted": 0.5710803095614856,
+        "residual": -0.06118538996945955
+      },
+      {
+        "row_id": "fresh_1_7",
+        "observed": 0.6232624640586267,
+        "predicted": 0.5710803095614856,
+        "residual": -0.05218215449714114
+      },
+      {
+        "row_id": "fresh_1_8",
+        "observed": 0.27252449477528273,
+        "predicted": 0.4182955873815446,
+        "residual": 0.14577109260626187
+      },
+      {
+        "row_id": "fresh_1_9",
+        "observed": 0.2689342004439257,
+        "predicted": 0.4182955873815446,
+        "residual": 0.1493613869376189
+      },
+      {
+        "row_id": "fresh_1_10",
+        "observed": 0.2847414981527855,
+        "predicted": 0.4182955873815446,
+        "residual": 0.1335540892287591
+      },
+      {
+        "row_id": "fresh_1_11",
+        "observed": 0.2969607907606968,
+        "predicted": 0.4182955873815446,
+        "residual": 0.12133479662084778
+      },
+      {
+        "row_id": "fresh_1_12",
+        "observed": 0.4695451241000241,
+        "predicted": 0.5833718848840443,
+        "residual": 0.11382676078402026
+      },
+      {
+        "row_id": "fresh_1_13",
+        "observed": 0.4605876283337802,
+        "predicted": 0.5833718848840443,
+        "residual": 0.12278425655026415
+      },
+      {
+        "row_id": "fresh_1_14",
+        "observed": 0.4820012449774068,
+        "predicted": 0.5833718848840443,
+        "residual": 0.10137063990663753
+      },
+      {
+        "row_id": "fresh_1_15",
+        "observed": 0.4649940177389958,
+        "predicted": 0.5833718848840443,
+        "residual": 0.11837786714504855
+      }
+    ],
+    "dev_pass": false,
+    "manifest": {
+      "equations": {
+        "memory": "sum(history * exp(times / tau))"
+      },
+      "response": "a + b * u + c * h + d * memory + e * (history[3] - history[0]) * memory",
+      "parameter_bindings": {
+        "a": 0,
+        "b": 1,
+        "c": 2,
+        "d": 3,
+        "e": 4,
+        "tau": 5
+      },
+      "types": {
+        "u": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "0"
+          ]
+        },
+        "h": {
+          "shape": "scalar",
+          "dimension": [
+            "1",
+            "0"
+          ]
+        },
+        "history": {
+          "shape": "vector4",
+          "dimension": [
+            "0",
+            "0"
+          ]
+        },
+        "times": {
+          "shape": "vector4",
+          "dimension": [
+            "1",
+            "0"
+          ]
+        },
+        "dt": {
+          "shape": "scalar",
+          "dimension": [
+            "1",
+            "0"
+          ]
+        },
+        "a": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "1"
+          ]
+        },
+        "b": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "1"
+          ]
+        },
+        "c": {
+          "shape": "scalar",
+          "dimension": [
+            "-1",
+            "1"
+          ]
+        },
+        "d": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "1"
+          ]
+        },
+        "e": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "1"
+          ]
+        },
+        "tau": {
+          "shape": "scalar",
+          "dimension": [
+            "1",
+            "0"
+          ]
+        },
+        "memory": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "0"
+          ]
+        }
+      },
+      "final_allowed_symbols": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "h",
+        "history",
+        "memory",
+        "tau",
+        "times",
+        "u"
+      ],
+      "source": "Derived from the one named specification"
+    }
+  },
+  "capacity_screen_after_generation": {
+    "stage": "partial representation, before complete response generation",
+    "premises_active": true,
+    "dev_rows": 80,
+    "guaranteed_dev_rmse_lower_bound": 0.0077095855057770415,
+    "equivalence_classes": 18,
+    "witnesses": [],
+    "unknown": [],
+    "finish_enabled": true,
+    "next_operation": "compose_complete_response",
+    "explanation": "Every deterministic shared response using only these exposed inputs and defined quantities has the stated RMSE floor on this exact development set. Unproven equality is not merged; unknown cases remain available. This provides no preferred formula."
+  },
+  "dev_row_ids": [
+    "dev_0",
+    "dev_1",
+    "dev_2",
+    "dev_3",
+    "dev_4",
+    "dev_5",
+    "dev_6",
+    "dev_7",
+    "dev_8",
+    "dev_9",
+    "dev_10",
+    "dev_11",
+    "dev_12",
+    "dev_13",
+    "dev_14",
+    "dev_15",
+    "dev_16",
+    "dev_17",
+    "dev_18",
+    "dev_19",
+    "dev_20",
+    "dev_21",
+    "dev_22",
+    "dev_23",
+    "observed_A_0",
+    "observed_A_1",
+    "observed_A_2",
+    "observed_A_3",
+    "observed_A_4",
+    "observed_A_5",
+    "observed_A_6",
+    "observed_A_7",
+    "observed_A_8",
+    "observed_A_9",
+    "observed_A_10",
+    "observed_A_11",
+    "observed_A_12",
+    "observed_A_13",
+    "observed_A_14",
+    "observed_A_15",
+    "observed_A_16",
+    "observed_A_17",
+    "observed_A_18",
+    "observed_A_19",
+    "observed_A_20",
+    "observed_A_21",
+    "observed_A_22",
+    "observed_A_23",
+    "observed_A_24",
+    "observed_A_25",
+    "observed_A_26",
+    "observed_A_27",
+    "observed_A_28",
+    "observed_A_29",
+    "observed_A_30",
+    "observed_A_31",
+    "observed_B_0",
+    "observed_B_1",
+    "observed_B_2",
+    "observed_B_3",
+    "observed_B_4",
+    "observed_B_5",
+    "observed_B_6",
+    "observed_B_7",
+    "fresh_1_0",
+    "fresh_1_1",
+    "fresh_1_2",
+    "fresh_1_3",
+    "fresh_1_4",
+    "fresh_1_5",
+    "fresh_1_6",
+    "fresh_1_7",
+    "fresh_1_8",
+    "fresh_1_9",
+    "fresh_1_10",
+    "fresh_1_11",
+    "fresh_1_12",
+    "fresh_1_13",
+    "fresh_1_14",
+    "fresh_1_15"
+  ]
+}

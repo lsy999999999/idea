@@ -1,0 +1,113 @@
+{
+  "recognition": "I recognize the supplied data as the UCI Online Shoppers Purchasing Intention dataset, a session-level conversion benchmark. That recognition and the supplied metadata are not discoveries.",
+  "candidates": [
+    {
+      "id": "I1",
+      "title": "Does PageValues' predictive contribution persist across months?",
+      "question": "Does adding PageValues improve held-out Revenue prediction when each Month is held out in turn, compared with models using the same features and pipeline but excluding PageValues?",
+      "core": {
+        "object": "Revenue prediction from the supplied session features",
+        "relation_or_action": "Compare full-feature and no-PageValues models under leave-one-Month-out evaluation",
+        "contrast": "Adding versus excluding PageValues on identical held-out Month sessions",
+        "prediction": "The full model will have lower log loss and higher average precision in most held-out months.",
+        "independent_unit": "Session represented by one row; held-out Month is the evaluation group"
+      },
+      "failure_condition": "The prediction fails if the full model does not improve both prespecified metrics in a majority of held-out months, or if sparse months prevent interpretable estimates.",
+      "assumptions": [
+        "Month categories provide an adequate, though coarse, proxy for temporal variation.",
+        "Each model uses the same preprocessing and fixed settings.",
+        "Performance differences do not establish PageValues' availability before a transaction."
+      ],
+      "required_new_data": [],
+      "feasible_with_current_data": true,
+      "domain_value": "Checks whether PageValues' predictive contribution is concentrated in particular months, which would affect how broadly this benchmark result can be used.",
+      "history_match": "I1",
+      "history_relation": "refinement",
+      "discriminating_delta": "The prior candidate compared shuffled folds; this tests across-month transfer and exposes month-specific dependence.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    },
+    {
+      "id": "I2",
+      "title": "Does product-page dwell per page carry signal beyond browsing depth?",
+      "question": "Among sessions with at least one product page, is ProductRelated_Duration per ProductRelated page associated with Revenue after accounting for page count and the other recorded features except PageValues?",
+      "core": {
+        "object": "Revenue among sessions with ProductRelated greater than zero",
+        "relation_or_action": "Estimate the association of per-page product dwell with Revenue while adjusting for ProductRelated count and other recorded features",
+        "contrast": "Sessions with different per-page dwell at comparable product-page counts",
+        "prediction": "Higher per-page dwell will be associated with higher Revenue odds after adjustment.",
+        "independent_unit": "Session represented by one row"
+      },
+      "failure_condition": "The prediction fails if the adjusted per-page dwell association is near zero, unstable across reasonable functional forms, or reverses direction.",
+      "assumptions": [
+        "ProductRelated_Duration divided by ProductRelated is a meaningful session-level dwell summary.",
+        "PageValues is excluded because its construction and transaction timing are unresolved.",
+        "Adjustment yields an observational association, not an intervention effect."
+      ],
+      "required_new_data": [],
+      "feasible_with_current_data": true,
+      "domain_value": "Separates browsing depth from time per product page, which could help identify whether follow-up instrumentation should capture page-level engagement rather than session totals.",
+      "history_match": "I2",
+      "history_relation": "refinement",
+      "discriminating_delta": "The earlier candidate tested ProductRelated_Duration by VisitorType interaction; this tests a derived per-page measure conditional on browsing depth and does not make visitor type the contrast.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    },
+    {
+      "id": "I3",
+      "title": "Is SpecialDay associated with conversion within the same month?",
+      "question": "Within Month, do sessions with nonzero SpecialDay scores have different Revenue rates from sessions with SpecialDay equal to zero after adjustment for the other supplied session features, excluding PageValues?",
+      "core": {
+        "object": "Session-level Revenue rates across SpecialDay scores",
+        "relation_or_action": "Estimate the adjusted association between SpecialDay score and Revenue, allowing a categorical score effect",
+        "contrast": "Nonzero versus zero SpecialDay scores within Month",
+        "prediction": "At least one nonzero score category will have a different adjusted Revenue rate from the zero category.",
+        "independent_unit": "Session represented by one row"
+      },
+      "failure_condition": "The prediction fails if category contrasts are small or too uncertain to distinguish from zero after accounting for sparse score-by-month groups.",
+      "assumptions": [
+        "SpecialDay scores are consistently recorded and comparable within Month.",
+        "The score categories and available covariates support the prespecified contrasts.",
+        "Month adjustment cannot identify a causal effect of holidays or promotions."
+      ],
+      "required_new_data": [],
+      "feasible_with_current_data": true,
+      "domain_value": "Tests whether the supplied holiday-proximity score contains conversion-related information beyond broad monthly composition, helping determine whether date-level records are needed for further analysis.",
+      "history_match": "none",
+      "history_relation": "new_family",
+      "discriminating_delta": "Earlier candidates addressed PageValues, visitor-type engagement interaction, and month composition; this tests a distinct event-proximity score within Month.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    }
+  ],
+  "comparison_forecast": {
+    "predicted_selection": "I3",
+    "basis": "All three candidates self-report passing all four quality gates and are feasible with current data. I1 and I2 are refinements of prior candidates; I3 is a new family. Under the broker's lexicographic rule, I3 ranks higher regardless of index."
+  },
+  "selected_id": "I3",
+  "selection_reason": "I3 is a distinct, testable within-month comparison using supplied variables and does not repeat the prior PageValues, visitor-type interaction, or month-composition questions. Its result would clarify whether the supplied SpecialDay score warrants date-level follow-up, while remaining explicitly observational.",
+  "method_ids": [
+    "M02",
+    "M36",
+    "M33"
+  ],
+  "task": {
+    "deliverable": "Estimate within-Month adjusted Revenue contrasts for each nonzero SpecialDay category versus zero, excluding PageValues, and report group counts, uncertainty, model specification, and sensitivity to sparse groups.",
+    "acceptance": "Use the supplied session rows; disclose dataset recognition; account for Month and the other recorded features; report whether overlap and group sizes support the contrasts. Treat any association as observational and do not infer a holiday or promotion intervention effect."
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "recognition": "This is the UCI Wine Quality dataset (UCI ID 186), with red and white vinho verde samples, physicochemical measurements, and sensory quality scores. Dataset recognition is not a discovery; its observational rows do not establish intervention effects.",
+  "candidates": [
+    {
+      "id": "I1",
+      "title": "Does residual sugar modify the alcohol-quality association?",
+      "question": "Within each wine color and their shared chemical range, does the association between alcohol and ordinal quality weaken as residual_sugar increases?",
+      "core": {
+        "object": "Ordinal quality score for a wine sample",
+        "relation_or_action": "Association of alcohol with quality conditional on residual_sugar and color",
+        "contrast": "Alcohol-quality slope at lower versus higher residual_sugar, estimated separately by color within common support",
+        "prediction": "The alcohol-quality association is more positive at lower residual_sugar; a model allowing this interaction fits better than an additive model.",
+        "independent_unit": "One dataset row representing a wine sample; dependence among samples is unknown because lot or producer IDs are absent."
+      },
+      "failure_condition": "Within common support, the interaction is near zero, reverses direction, or does not replicate across colors.",
+      "assumptions": [
+        "Quality scores are comparable within each color.",
+        "The observed chemical range supports both sugar levels at comparable alcohol and color.",
+        "Rows can be treated as independent for exploratory uncertainty estimates; this may fail if samples share lots or producers."
+      ],
+      "required_new_data": "For confirmation, independently sampled wines with lot or producer identifiers and repeated blinded sensory ratings.",
+      "feasible_with_current_data": true,
+      "domain_value": "Can identify a specific composition pattern for follow-up sensory trials without treating observational associations as formulation effects.",
+      "history_match": "none",
+      "history_relation": "no_history",
+      "discriminating_delta": "Tests a directional alcohol-by-sugar interaction within color and common support, rather than general quality prediction from physicochemical variables.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    },
+    {
+      "id": "I2",
+      "title": "Does sulfur dioxide composition matter beyond total concentration?",
+      "question": "At comparable total sulfur dioxide levels, is the association between free_sulfur_dioxide and quality different across red and white wines?",
+      "core": {
+        "object": "Ordinal quality score for a wine sample",
+        "relation_or_action": "Conditional association of free_sulfur_dioxide with quality at fixed total_sulfur_dioxide",
+        "contrast": "Within-color free sulfur dioxide slopes at comparable total sulfur dioxide",
+        "prediction": "The conditional association is not identical across colors.",
+        "independent_unit": "One dataset row representing a wine sample; lot or producer dependence is unknown."
+      },
+      "failure_condition": "The conditional association is negligible or similar across colors over their shared support.",
+      "assumptions": [
+        "The two sulfur dioxide measures are comparable across colors.",
+        "There is sufficient overlap in their joint distributions.",
+        "Associations do not identify a preservation or sensory causal effect."
+      ],
+      "required_new_data": "Independent samples with lot identifiers and repeated sensory assessments; process records would be needed to test preservation mechanisms.",
+      "feasible_with_current_data": true,
+      "domain_value": "Separates an association with free sulfur dioxide from one attributable simply to total sulfur dioxide.",
+      "history_match": "none",
+      "history_relation": "no_history",
+      "discriminating_delta": "Contrasts free and total sulfur dioxide conditionally, rather than treating each measurement as an independent generic predictor.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    },
+    {
+      "id": "I3",
+      "title": "Does chemical overlap account for the red-white quality-score gap?",
+      "question": "How much of the observed red-white quality-score difference remains when comparing samples only within shared physicochemical support?",
+      "core": {
+        "object": "Difference in observed quality-score distributions between red and white samples",
+        "relation_or_action": "Standardize color-specific score distributions to a shared measured-chemistry distribution",
+        "contrast": "Raw color difference versus overlap-restricted standardized difference",
+        "prediction": "The score gap shrinks after restriction and standardization, but may not disappear.",
+        "independent_unit": "One dataset row representing a wine sample; sampling structure is unavailable."
+      },
+      "failure_condition": "Little shared support prevents a stable comparison, or the standardized gap is not smaller than the raw gap.",
+      "assumptions": [
+        "The quality scale is comparable across colors.",
+        "Measured variables capture the relevant composition for this descriptive comparison.",
+        "Standardization is not interpreted as a causal effect of color."
+      ],
+      "required_new_data": "For a stronger comparison, the same trained panel should rate both colors under a blinded, randomized protocol.",
+      "feasible_with_current_data": true,
+      "domain_value": "Clarifies whether the score difference is mostly a comparison of different measured chemical profiles or persists within comparable profiles.",
+      "history_match": "none",
+      "history_relation": "no_history",
+      "discriminating_delta": "Separates a descriptive overlap-based comparison from the dataset's general modeling objective.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    }
+  ],
+  "selected_id": "I1",
+  "selection_reason": "It makes a directional, falsifiable comparison about a specific compositional interaction, is testable with the supplied rows, and can motivate a controlled sensory follow-up. The prediction is an observational association, not an intervention claim.",
+  "method_ids": [
+    "M17",
+    "M29",
+    "M33"
+  ],
+  "task": {
+    "deliverable": "Assess whether the alcohol-by-residual_sugar association with ordinal quality is supported within each color and common chemical support; report overlap, effect estimates with uncertainty, and the additive-model comparison.",
+    "acceptance": "Define the shared-support rule before estimating the contrast; account for ordinal quality and color; report whether the predicted attenuation appears in each color and whether uncertainty permits a meaningful distinction. Do not interpret feasibility or model fit as causal confirmation."
+  }
+}

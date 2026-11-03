@@ -1,0 +1,23 @@
+[
+  {
+    "id": "I1_threshold_structure_diagnostic",
+    "broker_id": "compute_0",
+    "type": "compute",
+    "request": {
+      "type": "compute",
+      "id": "compute_0",
+      "purpose": "检查各颜色的类别与累积阈值支持，并比较共同化学斜率与阈值特异斜率对 held-out ordinal log loss 的表现及稳定性。该结果是探索性模型诊断，不是机制或因果证据。",
+      "model_spec": "在每种 color 内，按固定随机种子将行分为训练集和测试集；训练集内对 11 个化学变量标准化。拟合有序 logistic proportional-odds 模型及允许阈值特异化学斜率的 partial proportional-odds 模型。若使用交叉验证选择正则化或模型细节，只在训练集内进行。报告每个 quality 类别的总数、每个累积阈值两侧的训练和测试数、测试集 ordinal log loss、两模型的损失差及按行重采样的不确定性，并报告阈值斜率方向的稳定性。指出多重阈值比较、类别不平衡、未知样本聚类的局限；不把行级不确定性视作独立批次或感官评审的重复。",
+      "code": "import json\nimport numpy as np\nimport pandas as pd\nfrom scipy.optimize import minimize\nfrom scipy.special import expit\n\nrng = np.random.default_rng(20261102)\ncols = ['fixed_acidity','volatile_acidity','citric_acid','residual_sugar','chlorides','free_sulfur_dioxide','total_sulfur_dioxide','density','pH','sulphates','alcohol']\nout = {}\n\ndef fit_model(X, y, levels, partial):\n    # Cumulative-logit likelihood; optimize unconstrained threshold logits,\n    # sorting them per row to ensure valid nonnegative category probabilities.\n    K, p = len(levels) - 1, X.shape[1]\n    q = K * (p + 1) if partial else K + p\n    def probs(par, Xb):\n        if partial:\n            z = par.reshape(K, p + 1)\n            eta = z[:, 0][None, :] - Xb @ z[:, 1:].T\n        else:\n            z = par[:K]\n            eta = z[None, :] - (Xb @ par[K:])[:, None]\n        c = expit(np.sort(eta, axis=1))\n        return np.column_stack([c[:, 0], np.diff(c, axis=1), 1 - c[:, -1]])\n    yi = np.searchsorted(levels, y)\n    def loss(par):\n        pr = probs(par, X)\n        return -np.log(np.maximum(pr[np.arange(len(y)), yi], 1e-12)).mean()\n    opt = minimize(loss, np.zeros(q), method='L-BFGS-B', options={'maxiter': 250, 'ftol': 1e-8})\n    return opt.x, opt.success\n\nfor color, g in TABLES['main'].groupby('color'):\n    g = g.reset_index(drop=True)\n    y = g['quality'].to_numpy(dtype=int)\n    levels = np.sort(np.unique(y))\n    order = rng.permutation(len(g))\n    cut = int(.8 * len(g))\n    tr, te = order[:cut], order[cut:]\n    mu = g.loc[tr, cols].mean().to_numpy()\n    sd = g.loc[tr, cols].std(ddof=0).to_numpy()\n    sd[sd == 0] = 1\n    X = (g[cols].to_numpy(dtype=float) - mu) / sd\n    pars, ok_common = fit_model(X[tr], y[tr], levels, False)\n    part, ok_partial = fit_model(X[tr], y[tr], levels, True)\n    def test_loss(par, partial):\n        K, p = len(levels)-1, X.shape[1]\n        if partial:\n            z = par.reshape(K, p+1)\n            eta = z[:, 0][None, :] - X[te] @ z[:, 1:].T\n        else:\n            eta = par[None, :K] - (X[te] @ par[K:])[:, None]\n        c = expit(np.sort(eta, axis=1))\n        pr = np.column_stack([c[:, 0], np.diff(c, axis=1), 1-c[:, -1]])\n        yi = np.searchsorted(levels, y[te])\n        return -np.log(np.maximum(pr[np.arange(len(te)), yi], 1e-12)).mean()\n    out[str(color)] = {'n_train':len(tr),'n_test':len(te),'class_counts':{str(int(v)):int((y==v).sum()) for v in levels},'cumulative_train_counts':{str(int(v)): {'at_or_below':int((y[tr]<=v).sum()),'above':int((y[tr]>v).sum())} for v in levels[:-1]},'common_test_ordinal_log_loss':test_loss(pars,False),'partial_test_ordinal_log_loss':test_loss(part,True),'optimizer_success':{'common':bool(ok_common),'partial':bool(ok_partial)}}\nprint(json.dumps(out,separators=(',',':')))"
+    },
+    "result": {
+      "status": "failed",
+      "code_sha256": "b7b2d34715c9afa7b85d32d8f3e35a8e874cd0c4861d766b40b107a107f2b698",
+      "data_sha256": "428bd8df7313b159988405ae5e3be6d363993d73f7ffc2adedfdc1d496508191",
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/Applications/ideas/research/1031_question_boundary/idea_search_pilot_20261102/runs/wine_B/r3/tools/compute_0/executed.py\", line 44, in <module>\n    sd[sd == 0] = 1\n    ~~^^^^^^^^^\nValueError: assignment destination is read-only\n",
+      "stdout_truncated": false
+    }
+  }
+]

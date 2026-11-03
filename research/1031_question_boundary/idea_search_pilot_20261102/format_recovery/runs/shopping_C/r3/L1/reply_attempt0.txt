@@ -1,0 +1,113 @@
+{
+  "recognition": "我识别出这是 UCI Online Shoppers Purchasing Intention 数据集。数据集识别和附带元数据不是发现；现有记录是 session-level 观测，不能据此推断干预效果。",
+  "candidates": [
+    {
+      "id": "I1",
+      "title": "Does the weekend conversion difference persist within months?",
+      "question": "Within each Month, how does the observed Revenue rate for Weekend sessions compare with weekday sessions after standardizing to a common VisitorType and TrafficType distribution?",
+      "core": {
+        "object": "Session-level Revenue rates by Weekend",
+        "relation_or_action": "Compare within-Month observed rates and composition-standardized rates",
+        "contrast": "Weekend versus weekday sessions, standardized to a shared VisitorType and TrafficType mix",
+        "prediction": "The standardized weekend-weekday difference will be smaller than the pooled difference if visitor and traffic composition explains part of it.",
+        "independent_unit": "Session represented by one row"
+      },
+      "failure_condition": "The prediction fails if standardization does not reduce the pooled difference, or if overlap is inadequate to estimate the standardized contrast.",
+      "assumptions": [
+        "Month, Weekend, VisitorType, TrafficType, and Revenue are consistently recorded.",
+        "The observed groups have enough overlap for standardization.",
+        "Standardization describes an association and does not identify a weekend effect."
+      ],
+      "required_new_data": [],
+      "feasible_with_current_data": true,
+      "domain_value": "Clarifies whether a weekend conversion pattern is associated with the observed visitor and traffic mix, informing what calendar or campaign data a follow-up analysis needs.",
+      "history_match": "I3",
+      "history_relation": "refinement",
+      "discriminating_delta": "The prior candidate standardized monthly differences across visitor and traffic mix; this compares weekend with weekday sessions within Month.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    },
+    {
+      "id": "I2",
+      "title": "Does product-page dwell per page retain an association across visitor types?",
+      "question": "Among sessions with ProductRelated greater than zero, does the association between ProductRelated_Duration per ProductRelated page and Revenue differ between New_Visitor and Returning_Visitor sessions, adjusting for page count and other recorded features except PageValues?",
+      "core": {
+        "object": "Revenue and per-page product dwell across VisitorType groups",
+        "relation_or_action": "Estimate a VisitorType interaction with ProductRelated_Duration divided by ProductRelated",
+        "contrast": "The adjusted per-page dwell association for New_Visitor versus Returning_Visitor sessions",
+        "prediction": "The two visitor groups will have different adjusted associations.",
+        "independent_unit": "Session represented by one row"
+      },
+      "failure_condition": "The prediction fails if the interaction is small or uncertain, or changes direction under reasonable functional-form checks.",
+      "assumptions": [
+        "The per-page ratio is interpretable among sessions with at least one product page.",
+        "PageValues is excluded because its construction and timing remain unresolved.",
+        "Adjustment cannot remove unmeasured confounding or establish an intervention effect."
+      ],
+      "required_new_data": [],
+      "feasible_with_current_data": true,
+      "domain_value": "Tests whether the descriptive relevance of product-page dwell differs by visitor group, potentially guiding page-level instrumentation.",
+      "history_match": "I2",
+      "history_relation": "refinement",
+      "discriminating_delta": "The previous candidate estimated the per-page dwell association overall; this tests whether that association differs by VisitorType.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    },
+    {
+      "id": "I3",
+      "title": "Does the allocation of browsing time across page categories matter?",
+      "question": "Among sessions with positive total recorded duration across Administrative_Duration, Informational_Duration, and ProductRelated_Duration, is the share of that duration spent on product pages associated with Revenue when comparing sessions with similar total duration and page counts, excluding PageValues?",
+      "core": {
+        "object": "Revenue and session-level allocation of recorded duration across page categories",
+        "relation_or_action": "Estimate the association of ProductRelated_Duration divided by total recorded category duration, adjusting for total duration, category page counts, Month, VisitorType, and TrafficType",
+        "contrast": "Sessions with different product-page duration shares at similar total recorded duration and page counts",
+        "prediction": "A higher product-page duration share will be associated with higher Revenue odds.",
+        "independent_unit": "Session represented by one row"
+      },
+      "failure_condition": "The prediction fails if the adjusted share association is near zero, unstable across reasonable functional forms, or reverses direction.",
+      "assumptions": [
+        "The three duration fields are comparable and their sum is a meaningful recorded-duration total.",
+        "Sessions with zero total recorded duration are excluded by a prespecified rule.",
+        "The association is observational; matching recorded totals does not establish a causal reallocation effect."
+      ],
+      "required_new_data": [],
+      "feasible_with_current_data": true,
+      "domain_value": "Distinguishes browsing-time allocation from total recorded time, helping determine whether future instrumentation should preserve page-category time rather than only session totals.",
+      "history_match": "I2",
+      "history_relation": "new_family",
+      "discriminating_delta": "The prior candidate examined product dwell per product page; this asks whether allocating a fixed recorded-duration total toward product pages is associated with Revenue, using page-category allocation as the primary relation.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    }
+  ],
+  "comparison_forecast": {
+    "predicted_selection": "I3",
+    "basis": "All three candidates self-report passing the four gates and being feasible with current data. I1 and I2 are refinements; I3 is reported as a new family. Under the broker's lexicographic rule, I3 ranks above both refinements."
+  },
+  "selected_id": "I3",
+  "selection_reason": "I3 proposes an observable comparison using the supplied duration and page-count fields. It tests allocation at similar total recorded duration, a relation distinct from the prior per-page dwell question. It remains descriptive and depends on the recorded duration fields being comparable.",
+  "method_ids": [
+    "M01",
+    "M02",
+    "M36"
+  ],
+  "task": {
+    "deliverable": "Estimate the adjusted association between product-page duration share and Revenue among sessions with positive total recorded category duration. Report inclusion counts, the model specification, uncertainty, and sensitivity to reasonable functional forms; exclude PageValues.",
+    "acceptance": "Define the duration share and excluded-session rule before estimation. Check overlap and collinearity with total duration and page counts. Report the association with uncertainty and describe it as observational; do not interpret it as the effect of reallocating browsing time or as evidence of business impact."
+  }
+}

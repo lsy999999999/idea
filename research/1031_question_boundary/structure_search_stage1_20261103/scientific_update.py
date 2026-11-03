@@ -1,0 +1,10 @@
+"""Final bounded research update; final hidden scores stay evaluator-only."""
+import json
+import experiment as e
+
+def main():
+    root=e.ROOT;br=root/'revision_R1'
+    bundle=dict(stage='scientific update after two separately frozen prediction batches',initial_evidence=e.read(root/'visible/evidence.json'),constraints=e.read(root/'CONSTRAINT_AUDIT.json'),first_candidates={a:e.read(root/f'candidates/{a}_raw.json') for a in ['F','G']},first_development=e.read(root/'DEVELOPMENT_RESULTS.json'),first_forecasts=e.read(root/'PREDICTION_FREEZE.json'),first_new_evidence=e.read(root/'NEW_EXPERIMENT.json'),revision_protocol=(root/'REVISION_PROTOCOL.md').read_text(),revision_raw=e.read(br/'raw_candidates.json'),revision_conversion=e.read(br/'CONVERSION_AUDIT.json'),revision_development=e.read(br/'DEVELOPMENT_RESULTS.json'),revision_forecasts=e.read(br/'PREDICTION_FREEZE.json'),revision_new_evidence=e.read(br/'NEW_EXPERIMENT.json'),withdrawal_test=e.read(root/'withdrawal/RESULT.json'),instruction='Update the collision constraint using actual new reference-channel evidence and candidate predictions. Separately assess the explicitly counterfactual withdrawal test. Inspect actual equations, not narrative claims; distinguish conversion, execution, observed structural conflict and predictive failure. Do not refit, repair candidates, move thresholds, claim F/G superiority or identify unique mechanism. Hidden final test scores are not supplied. State which stage-one acceptance items succeeded or failed.',output_schema=dict(constraint_decision='retain or soften or withdraw with evidence',candidate_conclusions=['precise claims tied to actual equations and evidence'],semantic_mismatches=['any text-versus-program mismatch'],remaining_equivalent_explanations=['strings'],next_discriminating_action='concrete executable next action',stage1_acceptance='passed/partial/failed, with unmet checks'))
+    reply=e.infer('03_update',bundle);e.write(root/'SCIENTIFIC_UPDATE.json',reply);print(json.dumps(reply,ensure_ascii=False))
+
+if __name__=='__main__':main()

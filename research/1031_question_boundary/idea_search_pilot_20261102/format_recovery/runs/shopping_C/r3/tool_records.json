@@ -1,0 +1,23 @@
+[
+  {
+    "id": "C1",
+    "broker_id": "compute_0",
+    "type": "compute",
+    "request": {
+      "type": "compute",
+      "id": "compute_0",
+      "purpose": "在拟合解释性模型前检查份额定义的适用范围、排除数量，以及产品时长份额与拟议调整变量的实际重叠；结果可决定该候选是否能按当前估计目标实施。",
+      "model_spec": "使用全部 supplied rows。定义 total_duration 为 Administrative_Duration + Informational_Duration + ProductRelated_Duration；仅对 total_duration > 0 的 session 计算 product_share = ProductRelated_Duration / total_duration。报告总行数、total_duration 为零及被排除的行数、Revenue 分组的纳入数。报告 product_share 的总体及 Revenue 分组分位数，并报告它与 total_duration、Administrative、Informational、ProductRelated、Month、VisitorType、TrafficType 的相关或分组支持摘要。报告 Revenue 分组的 product_share 十分位计数和转化率。只做可行性描述，不把这些摘要当作假设检验或因果证据。",
+      "code": "import json\nimport numpy as np\nimport pandas as pd\n\ndf = TABLES['main'].copy()\ncols = ['Administrative_Duration', 'Informational_Duration', 'ProductRelated_Duration']\ntotal = df[cols].sum(axis=1)\nvalid = total > 0\nx = df.loc[valid].copy()\nx['total_duration'] = total.loc[valid]\nx['product_share'] = x['ProductRelated_Duration'] / x['total_duration']\ny = x['Revenue'].astype(int)\nquantiles = [0, .1, .25, .5, .75, .9, 1]\nby_revenue = {}\nfor label, group in x.groupby('Revenue', observed=True):\n    by_revenue[str(label)] = {'n': int(len(group)), 'share_quantiles': {str(q): float(group['product_share'].quantile(q)) for q in quantiles}}\nx['share_decile'] = pd.qcut(x['product_share'].rank(method='first'), 10, labels=False)\ndeciles = x.groupby('share_decile', observed=True).agg(n=('Revenue', 'size'), conversions=('Revenue', 'sum'), rate=('Revenue', 'mean')).reset_index().to_dict(orient='records')\ncorrelations = {c: float(x['product_share'].corr(x[c])) for c in ['total_duration', 'Administrative', 'Informational', 'ProductRelated']}\nprint(json.dumps({'n_total': int(len(df)), 'n_zero_total_duration': int((~valid).sum()), 'n_included': int(valid.sum()), 'included_by_revenue': {str(k): int(v) for k, v in x['Revenue'].value_counts().items()}, 'share_quantiles_by_revenue': by_revenue, 'share_deciles': deciles, 'share_correlations': correlations, 'month_counts': x['Month'].value_counts().to_dict(), 'visitor_type_counts': x['VisitorType'].value_counts().to_dict(), 'traffic_type_counts': x['TrafficType'].value_counts().to_dict()}, separators=(',', ':')))"
+    },
+    "result": {
+      "status": "executed",
+      "code_sha256": "7f5b7880218663a611426cad819793d764c9c0eec968d294556cf62b7ca56a9a",
+      "data_sha256": "b3055ee355f59134d851d32641183cb4a8b45def7124d2f50442a042f358e0d9",
+      "returncode": 0,
+      "stdout": "{\"n_total\":12330,\"n_zero_total_duration\":720,\"n_included\":11610,\"included_by_revenue\":{\"False\":9705,\"True\":1905},\"share_quantiles_by_revenue\":{\"False\":{\"n\":9705,\"share_quantiles\":{\"0\":0.0,\"0.1\":0.6640052488418691,\"0.25\":0.8672199170124482,\"0.5\":0.9837193993880139,\"0.75\":1.0,\"0.9\":1.0,\"1\":1.0}},\"True\":{\"n\":1905,\"share_quantiles\":{\"0\":0.0,\"0.1\":0.6869835323858537,\"0.25\":0.8551003574374485,\"0.5\":0.9461394956971776,\"0.75\":0.9961741720126489,\"0.9\":1.0,\"1\":1.0}}},\"share_deciles\":[{\"share_decile\":0,\"n\":1161,\"conversions\":172,\"rate\":0.14814814814814814},{\"share_decile\":1,\"n\":1161,\"conversions\":218,\"rate\":0.18776916451335057},{\"share_decile\":2,\"n\":1161,\"conversions\":260,\"rate\":0.2239448751076658},{\"share_decile\":3,\"n\":1161,\"conversions\":274,\"rate\":0.2360034453057709},{\"share_decile\":4,\"n\":1161,\"conversions\":290,\"rate\":0.24978466838931956},{\"share_decile\":5,\"n\":1161,\"conversions\":236,\"rate\":0.20327304048234282},{\"share_decile\":6,\"n\":1161,\"conversions\":57,\"rate\":0.04909560723514212},{\"share_decile\":7,\"n\":1161,\"conversions\":81,\"rate\":0.06976744186046512},{\"share_decile\":8,\"n\":1161,\"conversions\":172,\"rate\":0.14814814814814814},{\"share_decile\":9,\"n\":1161,\"conversions\":145,\"rate\":0.12489233419465978}],\"share_correlations\":{\"total_duration\":0.06584861098937571,\"Administrative\":-0.3935022388098072,\"Informational\":-0.23215524927660436,\"ProductRelated\":0.1179715529730798},\"month_counts\":{\"May\":3144,\"Nov\":2845,\"Mar\":1771,\"Dec\":1625,\"Oct\":542,\"Sep\":442,\"Aug\":421,\"Jul\":409,\"June\":261,\"Feb\":150},\"visitor_type_counts\":{\"Returning_Visitor\":9877,\"New_Visitor\":1665,\"Other\":68},\"traffic_type_counts\":{\"2\":3851,\"1\":2211,\"3\":1866,\"4\":1033,\"13\":654,\"10\":432,\"6\":419,\"8\":332,\"5\":253,\"11\":233,\"20\":179,\"7\":40,\"9\":37,\"15\":28,\"19\":16,\"14\":13,\"18\":8,\"16\":3,\"12\":1,\"17\":1}}\n",
+      "stderr": "",
+      "stdout_truncated": false
+    }
+  }
+]

@@ -1,0 +1,117 @@
+{
+  "stage": "L1",
+  "round": 3,
+  "recognition": {
+    "recognized": true,
+    "dataset": "UCI Wine Quality, associated with Cortez et al. (2009)",
+    "basis": "The bundle identifies UCI dataset 186 and provides its characteristic physicochemical measurements, sensory quality scores, and red and white vinho verde samples.",
+    "limitation": "The rows lack panelist, producer, vintage, and lot identifiers. Row-level associations cannot establish intervention effects or generalize to independent lots."
+  },
+  "candidates": [
+    {
+      "id": "I1",
+      "title": "Does volatile acidity have threshold-specific associations with quality?",
+      "question": "Within the supplied samples, does volatile_acidity have different associations with crossing low versus high quality-score thresholds after adjustment for the other measured chemistry and color?",
+      "core": {
+        "object": "Ordinal quality scores and physicochemical measurements for red and white wine samples",
+        "relation_or_action": "Compare a proportional-odds model with a prespecified partial proportional-odds model allowing the volatile_acidity slope to vary across cumulative quality thresholds",
+        "contrast": "Common volatile_acidity slope across thresholds versus threshold-specific slopes, on the same rows with identical covariates",
+        "prediction": "Allowing threshold-specific slopes will improve ordinal fit, with a more negative volatile_acidity association at thresholds separating higher scores.",
+        "independent_unit": "Wine sample row; whether rows represent independent lots is unknown"
+      },
+      "failure_condition": "The threshold-specific model does not improve fit under a prespecified comparison, or slope differences are small or unstable under influence and color-stratified sensitivity checks.",
+      "assumptions": [
+        "The integer quality score is ordinal, and cumulative thresholds have a meaningful interpretation.",
+        "A partial proportional-odds model can represent the proposed threshold variation without unsupported complexity.",
+        "Measured chemistry and color adjustment do not remove unmeasured production or sampling effects."
+      ],
+      "required_new_data": "None for the row-level model comparison. Panelist and lot identifiers would be needed to assess dependence and generalization; a causal sensory claim would require randomized volatile_acidity manipulation and blinded ratings.",
+      "feasible_with_current_data": true,
+      "domain_value": "Could show whether a single average acidity association hides differences between avoiding low ratings and attaining higher ratings, informing the interpretation of ordinal sensory scores.",
+      "history_match": "none",
+      "history_relation": "new_family",
+      "discriminating_delta": "Tests whether a specific chemical association varies across outcome thresholds, rather than revisiting the alcohol–residual_sugar interaction or adding a generic prediction model.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    },
+    {
+      "id": "I2",
+      "title": "Does visible wine color shift ratings of the same wine?",
+      "question": "For the same wine samples, does showing versus masking visual color change blinded panelists’ ordinal quality ratings, and does that within-sample effect differ between red and white wines?",
+      "core": {
+        "object": "Repeated panelist ratings of the same wine samples under visible-color and opaque-glass conditions",
+        "relation_or_action": "Randomize serving condition within panelist and sample, then estimate the visibility effect and its interaction with wine color",
+        "contrast": "Visible-color versus masked-color rating for the same sample, compared across red and white wines",
+        "prediction": "Visible color will shift ratings for at least one wine color relative to masked presentation.",
+        "independent_unit": "Panelist-by-sample pair for the within-pair contrast, with repeated measurements clustered by panelist and wine sample"
+      },
+      "failure_condition": "The within-sample visibility effect is negligible in both wine colors, with uncertainty excluding a prespecified practically meaningful rating shift.",
+      "assumptions": [
+        "Serving order is randomized and panelists are blinded to the study hypothesis.",
+        "Opaque and visible conditions differ primarily in visual information, not temperature, aroma access, or serving procedure.",
+        "Analysis accounts for repeated ratings by both panelist and sample."
+      ],
+      "required_new_data": "A panel study using the same red and white samples served in randomized visible and opaque conditions, with panelist and sample identifiers and repeated ordinal ratings.",
+      "feasible_with_current_data": false,
+      "domain_value": "Would test whether visual appearance contributes to the sensory score independently of the measured chemistry, helping interpret what the dataset’s quality ratings represent.",
+      "history_match": "none",
+      "history_relation": "new_family",
+      "discriminating_delta": "Randomizes visual information while holding each wine sample fixed, unlike observational comparisons between red and white rows.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": false,
+        "worth_testing": true
+      },
+      "next_action": "measure"
+    },
+    {
+      "id": "I3",
+      "title": "Does free sulfur dioxide add a conditional association beyond total sulfur dioxide?",
+      "question": "Within each wine color, does free sulfur dioxide add an association with ordinal quality after accounting for total sulfur dioxide, pH, and the other measured chemistry?",
+      "core": {
+        "object": "Row-level quality scores and free and total sulfur dioxide measurements",
+        "relation_or_action": "Compare ordinal models with and without free sulfur dioxide, using identical rows and covariates including total sulfur dioxide and pH",
+        "contrast": "Conditional association added by free sulfur dioxide beyond total concentration and pH, estimated within color",
+        "prediction": "Free sulfur dioxide will add a nonzero conditional association in at least one color.",
+        "independent_unit": "Wine sample row; lot-level independence is unknown"
+      },
+      "failure_condition": "The added term does not improve prespecified held-out within-color ordinal fit, or its estimate is unstable in regions of overlapping measured chemistry.",
+      "assumptions": [
+        "The free and total sulfur dioxide measurements are comparable across samples.",
+        "Joint adjustment does not eliminate all unmeasured production or style confounding.",
+        "An observational association is not interpreted as the effect of changing sulfur dioxide."
+      ],
+      "required_new_data": "None for an observational comparison. Controlled cellar measurements and sensory ratings would be needed for production recommendations or causal claims.",
+      "feasible_with_current_data": true,
+      "domain_value": "Tests whether the free concentration carries information beyond total concentration and acidity without relying on a ratio with potentially ambiguous interpretation.",
+      "history_match": "I2",
+      "history_relation": "refinement",
+      "discriminating_delta": "The first-round I2 proposed a free-to-total fraction; this question instead estimates free concentration conditional on total sulfur dioxide and pH.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    }
+  ],
+  "selected_id": "I1",
+  "selection_reason": "I1 is feasible with the supplied rows and asks a focused question about how an ordinal sensory score relates to one measured chemical variable across rating thresholds. Its model comparison can be specified in advance. The result would remain observational and sample-specific; I2 offers a cleaner randomized test but requires new panel data, while I3 revisits a prior-round sulfur-dioxide direction.",
+  "method_ids": [
+    "M01",
+    "M31",
+    "M36"
+  ],
+  "task": {
+    "deliverable": "Compare proportional-odds and partial proportional-odds models for quality, allowing only the volatile_acidity slope to vary across cumulative thresholds in the expanded model. Use identical rows and covariates, report fit status, threshold-specific estimates with uncertainty, and color-stratified and influence sensitivity checks.",
+    "acceptance": "Return the actual fit comparison, uncertainty, sample counts, and sensitivity results. State that the data lack panelist and lot identifiers, distinguish row-level association from intervention effects, and do not claim novelty without literature evidence.",
+    "forecast": "Before computation, I predict that the threshold-specific model will improve fit and that the volatile_acidity association will be more negative at thresholds separating higher quality scores. A null, reversed, or unstable pattern would fail this directional forecast."
+  }
+}

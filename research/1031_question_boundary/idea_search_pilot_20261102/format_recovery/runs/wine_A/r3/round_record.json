@@ -1,0 +1,321 @@
+{
+  "round": 3,
+  "replies": [
+    {
+      "stage": "L1",
+      "reply": {
+        "stage": "L1",
+        "round": 3,
+        "recognition": {
+          "recognized": true,
+          "dataset": "UCI Wine Quality, associated with Cortez et al. (2009)",
+          "basis": "The bundle identifies UCI dataset 186 and provides its characteristic physicochemical measurements, sensory quality scores, and red and white vinho verde samples.",
+          "limitation": "The rows lack panelist, producer, vintage, and lot identifiers. Row-level associations cannot establish intervention effects or generalize to independent lots."
+        },
+        "candidates": [
+          {
+            "id": "I1",
+            "title": "Does volatile acidity have threshold-specific associations with quality?",
+            "question": "Within the supplied samples, does volatile_acidity have different associations with crossing low versus high quality-score thresholds after adjustment for the other measured chemistry and color?",
+            "core": {
+              "object": "Ordinal quality scores and physicochemical measurements for red and white wine samples",
+              "relation_or_action": "Compare a proportional-odds model with a prespecified partial proportional-odds model allowing the volatile_acidity slope to vary across cumulative quality thresholds",
+              "contrast": "Common volatile_acidity slope across thresholds versus threshold-specific slopes, on the same rows with identical covariates",
+              "prediction": "Allowing threshold-specific slopes will improve ordinal fit, with a more negative volatile_acidity association at thresholds separating higher scores.",
+              "independent_unit": "Wine sample row; whether rows represent independent lots is unknown"
+            },
+            "failure_condition": "The threshold-specific model does not improve fit under a prespecified comparison, or slope differences are small or unstable under influence and color-stratified sensitivity checks.",
+            "assumptions": [
+              "The integer quality score is ordinal, and cumulative thresholds have a meaningful interpretation.",
+              "A partial proportional-odds model can represent the proposed threshold variation without unsupported complexity.",
+              "Measured chemistry and color adjustment do not remove unmeasured production or sampling effects."
+            ],
+            "required_new_data": "None for the row-level model comparison. Panelist and lot identifiers would be needed to assess dependence and generalization; a causal sensory claim would require randomized volatile_acidity manipulation and blinded ratings.",
+            "feasible_with_current_data": true,
+            "domain_value": "Could show whether a single average acidity association hides differences between avoiding low ratings and attaining higher ratings, informing the interpretation of ordinal sensory scores.",
+            "history_match": "none",
+            "history_relation": "new_family",
+            "discriminating_delta": "Tests whether a specific chemical association varies across outcome thresholds, rather than revisiting the alcohol–residual_sugar interaction or adding a generic prediction model.",
+            "quality_gate": {
+              "specific": true,
+              "testable": true,
+              "coherent_feasible": true,
+              "worth_testing": true
+            },
+            "next_action": "test"
+          },
+          {
+            "id": "I2",
+            "title": "Does visible wine color shift ratings of the same wine?",
+            "question": "For the same wine samples, does showing versus masking visual color change blinded panelists’ ordinal quality ratings, and does that within-sample effect differ between red and white wines?",
+            "core": {
+              "object": "Repeated panelist ratings of the same wine samples under visible-color and opaque-glass conditions",
+              "relation_or_action": "Randomize serving condition within panelist and sample, then estimate the visibility effect and its interaction with wine color",
+              "contrast": "Visible-color versus masked-color rating for the same sample, compared across red and white wines",
+              "prediction": "Visible color will shift ratings for at least one wine color relative to masked presentation.",
+              "independent_unit": "Panelist-by-sample pair for the within-pair contrast, with repeated measurements clustered by panelist and wine sample"
+            },
+            "failure_condition": "The within-sample visibility effect is negligible in both wine colors, with uncertainty excluding a prespecified practically meaningful rating shift.",
+            "assumptions": [
+              "Serving order is randomized and panelists are blinded to the study hypothesis.",
+              "Opaque and visible conditions differ primarily in visual information, not temperature, aroma access, or serving procedure.",
+              "Analysis accounts for repeated ratings by both panelist and sample."
+            ],
+            "required_new_data": "A panel study using the same red and white samples served in randomized visible and opaque conditions, with panelist and sample identifiers and repeated ordinal ratings.",
+            "feasible_with_current_data": false,
+            "domain_value": "Would test whether visual appearance contributes to the sensory score independently of the measured chemistry, helping interpret what the dataset’s quality ratings represent.",
+            "history_match": "none",
+            "history_relation": "new_family",
+            "discriminating_delta": "Randomizes visual information while holding each wine sample fixed, unlike observational comparisons between red and white rows.",
+            "quality_gate": {
+              "specific": true,
+              "testable": true,
+              "coherent_feasible": false,
+              "worth_testing": true
+            },
+            "next_action": "measure"
+          },
+          {
+            "id": "I3",
+            "title": "Does free sulfur dioxide add a conditional association beyond total sulfur dioxide?",
+            "question": "Within each wine color, does free sulfur dioxide add an association with ordinal quality after accounting for total sulfur dioxide, pH, and the other measured chemistry?",
+            "core": {
+              "object": "Row-level quality scores and free and total sulfur dioxide measurements",
+              "relation_or_action": "Compare ordinal models with and without free sulfur dioxide, using identical rows and covariates including total sulfur dioxide and pH",
+              "contrast": "Conditional association added by free sulfur dioxide beyond total concentration and pH, estimated within color",
+              "prediction": "Free sulfur dioxide will add a nonzero conditional association in at least one color.",
+              "independent_unit": "Wine sample row; lot-level independence is unknown"
+            },
+            "failure_condition": "The added term does not improve prespecified held-out within-color ordinal fit, or its estimate is unstable in regions of overlapping measured chemistry.",
+            "assumptions": [
+              "The free and total sulfur dioxide measurements are comparable across samples.",
+              "Joint adjustment does not eliminate all unmeasured production or style confounding.",
+              "An observational association is not interpreted as the effect of changing sulfur dioxide."
+            ],
+            "required_new_data": "None for an observational comparison. Controlled cellar measurements and sensory ratings would be needed for production recommendations or causal claims.",
+            "feasible_with_current_data": true,
+            "domain_value": "Tests whether the free concentration carries information beyond total concentration and acidity without relying on a ratio with potentially ambiguous interpretation.",
+            "history_match": "I2",
+            "history_relation": "refinement",
+            "discriminating_delta": "The first-round I2 proposed a free-to-total fraction; this question instead estimates free concentration conditional on total sulfur dioxide and pH.",
+            "quality_gate": {
+              "specific": true,
+              "testable": true,
+              "coherent_feasible": true,
+              "worth_testing": true
+            },
+            "next_action": "test"
+          }
+        ],
+        "selected_id": "I1",
+        "selection_reason": "I1 is feasible with the supplied rows and asks a focused question about how an ordinal sensory score relates to one measured chemical variable across rating thresholds. Its model comparison can be specified in advance. The result would remain observational and sample-specific; I2 offers a cleaner randomized test but requires new panel data, while I3 revisits a prior-round sulfur-dioxide direction.",
+        "method_ids": [
+          "M01",
+          "M31",
+          "M36"
+        ],
+        "task": {
+          "deliverable": "Compare proportional-odds and partial proportional-odds models for quality, allowing only the volatile_acidity slope to vary across cumulative thresholds in the expanded model. Use identical rows and covariates, report fit status, threshold-specific estimates with uncertainty, and color-stratified and influence sensitivity checks.",
+          "acceptance": "Return the actual fit comparison, uncertainty, sample counts, and sensitivity results. State that the data lack panelist and lot identifiers, distinguish row-level association from intervention effects, and do not claim novelty without literature evidence.",
+          "forecast": "Before computation, I predict that the threshold-specific model will improve fit and that the volatile_acidity association will be more negative at thresholds separating higher quality scores. A null, reversed, or unstable pattern would fail this directional forecast."
+        }
+      }
+    },
+    {
+      "stage": "R1",
+      "reply": {
+        "stage": "R1",
+        "round": 3,
+        "recognition": {
+          "recognized": true,
+          "dataset": "UCI Wine Quality, associated with Cortez et al. (2009)",
+          "basis": "The bundle identifies UCI dataset 186 and its characteristic chemistry variables, quality scores, and red and white samples.",
+          "limitation": "Rows have no panelist, producer, vintage, or lot identifiers. The analysis can describe row-level associations but cannot establish intervention effects or generalize to independent lots."
+        },
+        "critique": [
+          "I1 asks a concrete ordinal question, but a partial proportional-odds comparison needs a precise parameterization. Specify which cumulative thresholds may have separate volatile_acidity slopes, which covariates retain common slopes, and how the models handle any crossing cumulative probabilities. Comparing a common-slope model to threshold-specific slopes is only meaningful when both use the same rows, outcome coding, and covariates and both fit adequately.",
+          "The directional forecast is not fully operational. “More negative ... at thresholds separating higher scores” needs a defined contrast across the ordered thresholds and uncertainty; a fit improvement alone would not establish that pattern. With seven quality levels, estimating six threshold-specific slopes may also produce unstable estimates, especially for sparse outcome categories. Report threshold counts and avoid treating repeated cumulative outcomes as independent observations.",
+          "The data record quality as an integer sensory score, but the bundle does not describe panel design or measurement reliability. M01 is relevant: distinguish the recorded score from latent sensory preference. Color and measured chemistry adjustment cannot resolve differences in panelists, production, or sampling because the needed identifiers and provenance are absent.",
+          "The result would remain observational. volatile_acidity may covary with other chemistry and unmeasured production factors, so even a robust threshold pattern would not show that changing acidity changes the probability of a higher rating. Row-level uncertainty may also be too optimistic if samples share lots or producers.",
+          "M31 can guide checks for model mismatch, but a residual or fit diagnostic does not validate the ordinal measurement or establish independent sampling. M36 is useful for checking dependence on score coding and influential rows; the supplied data do not include raw sensory measurements or calibration details. A targeted literature search could change the framing: dataset recognition and the bundle’s metadata do not establish novelty, and earlier rounds’ searches failed."
+        ],
+        "feedback_type": "uncertainty",
+        "requested_method_ids": [
+          "M01",
+          "M31",
+          "M36"
+        ],
+        "requests": [
+          {
+            "type": "compute",
+            "id": "C3",
+            "purpose": "Check whether the volatile_acidity association varies across the six cumulative quality thresholds in the supplied rows, and report the threshold counts and slope estimates. This is an exploratory association diagnostic, not a causal test or a formal partial proportional-odds likelihood-ratio comparison.",
+            "model_spec": "For each threshold j between adjacent observed quality levels, fit a binary logistic regression for quality > j using the same complete rows, standardized 11 chemistry variables, and color. Report counts on both sides of each threshold, the volatile_acidity coefficient and model-based standard error, and convergence status. Compare the six coefficient estimates descriptively; do not treat the six fits as independent or claim a formal across-threshold test. Row independence and lot-level generalization are unknown.",
+            "code": "import json\nimport numpy as np\nimport pandas as pd\nfrom scipy.optimize import minimize\n\ndf=TABLES['main'].copy()\nchem=['fixed_acidity','volatile_acidity','citric_acid','residual_sugar','chlorides','free_sulfur_dioxide','total_sulfur_dioxide','density','pH','sulphates','alcohol']\ndf=df[chem+['quality','color']].dropna().copy()\nlevels=sorted(int(v) for v in df.quality.unique())\ncols=[]; names=[]\nfor v in chem:\n    z=df[v].to_numpy(float); sd=z.std()\n    cols.append((z-z.mean())/(sd if sd else 1.)); names.append(v)\ncols.append(df.color.eq('white').to_numpy(float)); names.append('white')\nX=np.column_stack([np.ones(len(df))]+cols)\nva_idx=names.index('volatile_acidity')+1\nresults=[]\nfor j in levels[:-1]:\n    y=(df.quality.to_numpy()>j).astype(float)\n    n1=int(y.sum()); n0=int(len(y)-n1)\n    def loss(b):\n        z=np.clip(X@b,-35,35)\n        return float(np.logaddexp(0,z).sum()-y@z)\n    def grad(b):\n        z=np.clip(X@b,-35,35)\n        p=1/(1+np.exp(-z))\n        return X.T@(p-y)\n    r=minimize(loss,np.zeros(X.shape[1]),jac=grad,method='BFGS',options={'maxiter':500,'gtol':1e-7})\n    try:\n        H=X.T@((lambda p:p*(1-p))(1/(1+np.exp(-np.clip(X@r.x,-35,35))))[:,None]*X)\n        cov=np.linalg.pinv(H)\n        se=float(np.sqrt(max(cov[va_idx,va_idx],0)))\n    except Exception:\n        se=None\n    results.append({'threshold':int(j),'n_quality_le_threshold':n0,'n_quality_gt_threshold':n1,'converged':bool(r.success),'message':str(r.message),'volatile_acidity_beta':float(r.x[va_idx]),'model_based_se':se})\nprint(json.dumps({'n':int(len(df)),'quality_levels':levels,'same_rows_all_thresholds':True,'predictors':chem+['white'],'threshold_results':results,'warning':'Descriptive separate cumulative logits; thresholds share rows, model-based standard errors assume independent rows, and neither causality nor lot-level inference is established.'},separators=(',',':')))"
+          },
+          {
+            "type": "search",
+            "id": "S3",
+            "query": "wine quality volatile acidity ordinal regression threshold-specific effects partial proportional odds sensory score red white",
+            "missing_relation": "Whether prior work on wine sensory quality tested threshold-specific volatile_acidity associations or partial proportional-odds models, and what sampling units and sensory measurements it used.",
+            "change_if_found": "If close work is found, frame this as a replication or identify a prespecified difference in outcome, threshold model, or sampling unit. If none is found, report only that this targeted search did not locate close work, not that novelty is established."
+          }
+        ],
+        "acceptance_checks": [
+          "Treat C3 and S3 as pending until actual results return. Report all threshold counts and coefficient estimates; a failed or nonconverged fit does not support the forecast.",
+          "Describe C3 as a descriptive set of cumulative-logit fits, not a formal partial proportional-odds model comparison. Note that thresholds reuse the same rows and that model-based standard errors assume independent rows.",
+          "Keep the observed score distinct from latent sensory preference, and distinguish association from intervention effects and lot-level inference.",
+          "Compare any returned search evidence by outcome, volatile_acidity relation, threshold-specific modeling, and sampling unit. Do not infer novelty from dataset metadata or a failed search."
+        ]
+      }
+    },
+    {
+      "stage": "L2",
+      "reply": {
+        "recognition": {
+          "recognized": true,
+          "dataset": "UCI Wine Quality, associated with Cortez et al. (2009)",
+          "basis": "The supplied bundle identifies UCI dataset 186 and its physicochemical measurements, ordinal quality scores, and red and white wine samples."
+        },
+        "selected_id": "I1",
+        "final": {
+          "status": "blocked",
+          "candidate": {
+            "id": "I1",
+            "title": "Does the volatile_acidity association vary across quality thresholds?",
+            "question": "Among the supplied wine samples, does the adjusted volatile_acidity association with quality vary across cumulative score thresholds, and is it weaker at thresholds for higher scores?",
+            "core": {
+              "object": "Row-level ordinal quality scores and measured chemistry for red and white wine samples",
+              "relation_or_action": "Estimate threshold-specific volatile_acidity slopes with a prespecified partial proportional-odds model, retaining common slopes for other covariates",
+              "contrast": "A common volatile_acidity slope versus threshold-varying slopes on identical rows and covariates",
+              "prediction": "The negative association may attenuate at higher quality thresholds; the supplied exploratory fits show this pattern descriptively, but do not establish it.",
+              "independent_unit": "Wine sample row; lot, producer, and panelist dependence are unknown"
+            },
+            "failure_condition": "A converged, prespecified model finds no meaningful threshold variation, or the pattern is unstable under influence and color-stratified sensitivity checks.",
+            "assumptions": [
+              "Quality scores have an ordinal interpretation, but their panel measurement process is undocumented.",
+              "The model handles cumulative probabilities without crossing and uses the same rows and covariates across comparisons.",
+              "Row-level estimates do not establish intervention effects or independent-lot generalization."
+            ],
+            "required_new_data": "None for a row-level model comparison. Panelist and lot identifiers are needed to assess dependence and generalization; causal claims require randomized acidity manipulation and blinded ratings.",
+            "feasible_with_current_data": true,
+            "domain_value": "Could distinguish whether volatile_acidity relates similarly to avoiding low ratings and reaching high ratings, rather than relying on one average ordinal association.",
+            "history_match": "none",
+            "history_relation": "new_family",
+            "discriminating_delta": "Examines whether a measured chemical association changes across outcome thresholds, a different question from the prior alcohol–residual_sugar interaction.",
+            "quality_gate": {
+              "specific": true,
+              "testable": true,
+              "coherent_feasible": true,
+              "worth_testing": true
+            },
+            "next_action": "repair"
+          },
+          "evidence_level": "computed_feasibility",
+          "what_changed": "C3 returned six separate cumulative-logit estimates on 6,497 rows. The volatile_acidity coefficients became less negative from lower to higher thresholds: -0.854 at quality >3, -0.903 at >4, -0.787 at >5, -0.603 at >6, -0.292 at >7, and -0.213 at >8. This descriptively opposes the forecast of a more negative association at higher thresholds. Five fits reported precision loss; the threshold >8 fit had only five observations above the threshold and a model-based SE of 0.865. These exploratory fits do not provide a formal test of threshold variation. Search S3 returned general ordinal-model references, not wine-specific evidence about volatile_acidity or this dataset.",
+          "what_is_known": "The data contain 6,497 rows and quality levels 3–9. C3's six threshold fits reuse the same rows, and their reported standard errors assume independent rows. The dataset lacks panelist, producer, vintage, and lot identifiers. S3's scope is Crossref metadata and is not exhaustive.",
+          "new_hypothesis": "The negative volatile_acidity association may attenuate at higher quality thresholds, but sparse upper categories and optimization precision loss could produce an unstable pattern.",
+          "next_falsifiable_test": "Fit a converged partial proportional-odds model with only the volatile_acidity slope varying by threshold, check cumulative-probability ordering, report threshold-specific uncertainty and category counts, and assess influence and color-stratified sensitivity. If convergence or category sparsity prevents reliable estimation, report that limitation rather than treating separate threshold fits as confirmation.",
+          "nearest_work_comparison": "S3 found general methods on partial proportional odds and proportionality assessment, including DOI 10.2307/2532457, but no returned wine-specific study. Comparison by wine outcome, volatile_acidity relation, threshold model, and sampling unit remains unresolved.",
+          "novelty_status": "Unverified. Dataset recognition and the returned general-method references do not establish novelty.",
+          "feedback_type": "uncertainty"
+        }
+      }
+    }
+  ],
+  "effective_selected_id": "I1",
+  "tools": [
+    {
+      "id": "C3",
+      "broker_id": "compute_0",
+      "type": "compute",
+      "request": {
+        "type": "compute",
+        "id": "compute_0",
+        "purpose": "Check whether the volatile_acidity association varies across the six cumulative quality thresholds in the supplied rows, and report the threshold counts and slope estimates. This is an exploratory association diagnostic, not a causal test or a formal partial proportional-odds likelihood-ratio comparison.",
+        "model_spec": "For each threshold j between adjacent observed quality levels, fit a binary logistic regression for quality > j using the same complete rows, standardized 11 chemistry variables, and color. Report counts on both sides of each threshold, the volatile_acidity coefficient and model-based standard error, and convergence status. Compare the six coefficient estimates descriptively; do not treat the six fits as independent or claim a formal across-threshold test. Row independence and lot-level generalization are unknown.",
+        "code": "import json\nimport numpy as np\nimport pandas as pd\nfrom scipy.optimize import minimize\n\ndf=TABLES['main'].copy()\nchem=['fixed_acidity','volatile_acidity','citric_acid','residual_sugar','chlorides','free_sulfur_dioxide','total_sulfur_dioxide','density','pH','sulphates','alcohol']\ndf=df[chem+['quality','color']].dropna().copy()\nlevels=sorted(int(v) for v in df.quality.unique())\ncols=[]; names=[]\nfor v in chem:\n    z=df[v].to_numpy(float); sd=z.std()\n    cols.append((z-z.mean())/(sd if sd else 1.)); names.append(v)\ncols.append(df.color.eq('white').to_numpy(float)); names.append('white')\nX=np.column_stack([np.ones(len(df))]+cols)\nva_idx=names.index('volatile_acidity')+1\nresults=[]\nfor j in levels[:-1]:\n    y=(df.quality.to_numpy()>j).astype(float)\n    n1=int(y.sum()); n0=int(len(y)-n1)\n    def loss(b):\n        z=np.clip(X@b,-35,35)\n        return float(np.logaddexp(0,z).sum()-y@z)\n    def grad(b):\n        z=np.clip(X@b,-35,35)\n        p=1/(1+np.exp(-z))\n        return X.T@(p-y)\n    r=minimize(loss,np.zeros(X.shape[1]),jac=grad,method='BFGS',options={'maxiter':500,'gtol':1e-7})\n    try:\n        H=X.T@((lambda p:p*(1-p))(1/(1+np.exp(-np.clip(X@r.x,-35,35))))[:,None]*X)\n        cov=np.linalg.pinv(H)\n        se=float(np.sqrt(max(cov[va_idx,va_idx],0)))\n    except Exception:\n        se=None\n    results.append({'threshold':int(j),'n_quality_le_threshold':n0,'n_quality_gt_threshold':n1,'converged':bool(r.success),'message':str(r.message),'volatile_acidity_beta':float(r.x[va_idx]),'model_based_se':se})\nprint(json.dumps({'n':int(len(df)),'quality_levels':levels,'same_rows_all_thresholds':True,'predictors':chem+['white'],'threshold_results':results,'warning':'Descriptive separate cumulative logits; thresholds share rows, model-based standard errors assume independent rows, and neither causality nor lot-level inference is established.'},separators=(',',':')))"
+      },
+      "result": {
+        "status": "executed",
+        "code_sha256": "ee7ff72db2d1713e4ef9da45afab473dd1fede9e9fa2d7878bc3423d88b693e2",
+        "data_sha256": "428bd8df7313b159988405ae5e3be6d363993d73f7ffc2adedfdc1d496508191",
+        "returncode": 0,
+        "stdout": "{\"n\":6497,\"quality_levels\":[3,4,5,6,7,8,9],\"same_rows_all_thresholds\":true,\"predictors\":[\"fixed_acidity\",\"volatile_acidity\",\"citric_acid\",\"residual_sugar\",\"chlorides\",\"free_sulfur_dioxide\",\"total_sulfur_dioxide\",\"density\",\"pH\",\"sulphates\",\"alcohol\",\"white\"],\"threshold_results\":[{\"threshold\":3,\"n_quality_le_threshold\":30,\"n_quality_gt_threshold\":6467,\"converged\":false,\"message\":\"Desired error not necessarily achieved due to precision loss.\",\"volatile_acidity_beta\":-0.8536468644384119,\"model_based_se\":0.17084287844836918},{\"threshold\":4,\"n_quality_le_threshold\":246,\"n_quality_gt_threshold\":6251,\"converged\":false,\"message\":\"Desired error not necessarily achieved due to precision loss.\",\"volatile_acidity_beta\":-0.9034677608552857,\"model_based_se\":0.07901410420254398},{\"threshold\":5,\"n_quality_le_threshold\":2384,\"n_quality_gt_threshold\":4113,\"converged\":false,\"message\":\"Desired error not necessarily achieved due to precision loss.\",\"volatile_acidity_beta\":-0.7865784570531866,\"model_based_se\":0.04862977545766456},{\"threshold\":6,\"n_quality_le_threshold\":5220,\"n_quality_gt_threshold\":1277,\"converged\":false,\"message\":\"Desired error not necessarily achieved due to precision loss.\",\"volatile_acidity_beta\":-0.6030329456782036,\"model_based_se\":0.06390250678325388},{\"threshold\":7,\"n_quality_le_threshold\":6299,\"n_quality_gt_threshold\":198,\"converged\":false,\"message\":\"Desired error not necessarily achieved due to precision loss.\",\"volatile_acidity_beta\":-0.29200086489757493,\"model_based_se\":0.13314950300184158},{\"threshold\":8,\"n_quality_le_threshold\":6492,\"n_quality_gt_threshold\":5,\"converged\":true,\"message\":\"Optimization terminated successfully.\",\"volatile_acidity_beta\":-0.21335894838847697,\"model_based_se\":0.8647885446902166}],\"warning\":\"Descriptive separate cumulative logits; thresholds share rows, model-based standard errors assume independent rows, and neither causality nor lot-level inference is established.\"}\n",
+        "stderr": "",
+        "stdout_truncated": false
+      }
+    },
+    {
+      "id": "S3",
+      "broker_id": "search_1",
+      "type": "search",
+      "request": {
+        "type": "search",
+        "id": "search_1",
+        "query": "wine quality volatile acidity ordinal regression threshold-specific effects partial proportional odds sensory score red white",
+        "missing_relation": "Whether prior work on wine sensory quality tested threshold-specific volatile_acidity associations or partial proportional-odds models, and what sampling units and sensory measurements it used.",
+        "change_if_found": "If close work is found, frame this as a replication or identify a prespecified difference in outcome, threshold model, or sampling unit. If none is found, report only that this targeted search did not locate close work, not that novelty is established."
+      },
+      "result": {
+        "status": "returned",
+        "sources": [
+          {
+            "doi": "10.4135/9781071878972.n5",
+            "title": "Partial Proportional Odds Models and Generalized Ordinal Logistic Regression Models",
+            "date": [
+              2016
+            ],
+            "abstract": ""
+          },
+          {
+            "doi": "10.4135/9781412984812.n4",
+            "title": "The Cumulative (Proportional) Odds Model for Ordinal Outcomes",
+            "date": [
+              2006
+            ],
+            "abstract": ""
+          },
+          {
+            "doi": "10.4135/9781071878972.n4",
+            "title": "Proportional Odds Models for Ordinal Response Variables",
+            "date": [
+              2016
+            ],
+            "abstract": ""
+          },
+          {
+            "doi": "10.2307/2532457",
+            "title": "Assessing Proportionality in the Proportional Odds Model for Ordinal Logistic Regression",
+            "date": [
+              1990,
+              12
+            ],
+            "abstract": ""
+          },
+          {
+            "doi": "10.32614/cran.package.repolr",
+            "title": "repolr: Repeated Measures Proportional Odds Logistic Regression",
+            "date": [
+              2012,
+              10,
+              29
+            ],
+            "abstract": ""
+          },
+          {
+            "doi": "10.1016/j.cmpb.2017.07.008",
+            "title": "GEEORD: A SAS macro for analyzing ordinal response variables with repeated measures through proportional odds, partial proportional odds, or non-proportional odds models",
+            "date": [
+              2017,
+              10
+            ],
+            "abstract": ""
+          }
+        ],
+        "scope": "Crossref metadata, not exhaustive novelty evidence",
+        "transport_failures": []
+      }
+    }
+  ]
+}

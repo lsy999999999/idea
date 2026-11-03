@@ -1,0 +1,111 @@
+{
+  "recognition": {
+    "recognized_dataset": true,
+    "identity": "UCI Online Shoppers Purchasing Intention Dataset (UCI ID 468), also associated with the supplied 2019 introduction paper",
+    "basis": "The supplied metadata identifies it. I make no claim of having independently retrieved or analyzed the dataset."
+  },
+  "candidates": [
+    {
+      "id": "I1",
+      "title": "Does browsing-time allocation relate to purchases beyond browsing volume?",
+      "question": "Among sessions with comparable page counts and total recorded browsing duration, is a larger share of recorded duration spent on product-related pages associated with a higher probability of Revenue=true?",
+      "core": {
+        "object": "Session-level allocation of recorded duration across product-related and other page categories",
+        "relation_or_action": "Compare purchase rates across product-duration shares while adjusting for page counts, total duration, Month, Weekend, VisitorType, and other supplied context",
+        "contrast": "A model with page counts and total duration versus the same model adding product-duration share and its interaction with product-page count",
+        "prediction": "The added allocation terms improve held-out log loss and show a positive conditional association with Revenue",
+        "independent_unit": "Session; the metadata says sessions belong to different users"
+      },
+      "failure_condition": "The allocation terms provide no reproducible held-out improvement or show no conditional association after accounting for counts and total duration.",
+      "assumptions": [
+        "Recorded duration categories are comparable within a session.",
+        "Sessions are independent as described in the documentation.",
+        "Revenue associations are observational and do not establish that changing browsing allocation changes purchasing."
+      ],
+      "required_new_data": "None for the proposed association test; event-level timestamps and page sequences would be needed to validate the interpretation as attention allocation.",
+      "feasible_with_current_data": true,
+      "domain_value": "Could inform whether analytics should distinguish browsing volume from how session time is allocated, without treating either as a proven intervention lever.",
+      "history_match": "none",
+      "history_relation": "new_family",
+      "discriminating_delta": "Tests a compositional allocation contrast conditional on volume, rather than generic conversion prediction or the association of a single duration feature.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    },
+    {
+      "id": "I2",
+      "title": "How much apparent conversion signal depends on PageValues?",
+      "question": "How much does held-out conversion prediction change when PageValues is omitted, especially because its documented definition refers to page value before a transaction?",
+      "core": {
+        "object": "Incremental predictive contribution of PageValues for Revenue",
+        "relation_or_action": "Compare otherwise identical held-out models with and without PageValues",
+        "contrast": "PageValues included versus excluded, reporting both overall and by Revenue class",
+        "prediction": "Including PageValues improves prediction substantially, but that gain may reflect outcome-adjacent construction rather than a deployable pre-session signal",
+        "independent_unit": "Session"
+      },
+      "failure_condition": "The models show little predictive difference, or the supplied metadata cannot determine whether PageValues was available at the intended prediction time.",
+      "assumptions": [
+        "The documented PageValues meaning applies to this dataset version.",
+        "Predictive contribution does not by itself establish leakage or causal relevance."
+      ],
+      "required_new_data": "Feature-generation timestamps and the prediction-time definition are needed to establish whether PageValues is available before the decision it would inform.",
+      "feasible_with_current_data": true,
+      "domain_value": "Helps assess whether an apparent analytics signal is suitable for real-time intervention or only for retrospective classification.",
+      "history_match": "none",
+      "history_relation": "new_family",
+      "discriminating_delta": "Examines the decision-time validity of a documented feature, not merely its predictive importance.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    },
+    {
+      "id": "I3",
+      "title": "Does the product-duration association vary by month?",
+      "question": "Does the conditional association between ProductRelated_Duration and Revenue differ across Month after accounting for product-page count and recorded context?",
+      "core": {
+        "object": "Month-specific association between product-related duration and Revenue",
+        "relation_or_action": "Estimate and compare duration associations across months with adequate sample support",
+        "contrast": "A shared duration association across months versus month-varying associations",
+        "prediction": "A shared association will not describe all months equally well",
+        "independent_unit": "Session"
+      },
+      "failure_condition": "Month interactions do not improve held-out prediction or estimates are too uncertain in sparsely represented months.",
+      "assumptions": [
+        "Month labels are valid calendar categories.",
+        "Differences between months are descriptive and may reflect unmeasured campaigns or traffic composition."
+      ],
+      "required_new_data": "Campaign and date-level traffic context would be needed to interpret month differences.",
+      "feasible_with_current_data": true,
+      "domain_value": "Could indicate whether a single session-analytics relationship is stable across the observed calendar categories.",
+      "history_match": "none",
+      "history_relation": "new_family",
+      "discriminating_delta": "Tests temporal-category stability rather than overall prediction or a single pooled feature association.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    }
+  ],
+  "selected_id": "I1",
+  "selection_reason": "I1 poses a concrete, observationally testable contrast using existing fields while avoiding a causal claim. It is distinct from the familiar dataset’s general purchase-prediction framing because it asks whether time allocation contributes information beyond browsing volume.",
+  "method_ids": [
+    "M01",
+    "M33",
+    "M43"
+  ],
+  "task": {
+    "deliverable": "Using all supplied rows, compare a held-out baseline model for Revenue using page counts, total recorded duration, and supplied context against the same model augmented with product-duration share and its interaction with ProductRelated count. Exclude PageValues from both models. Report the split unit, preprocessing, held-out log loss, uncertainty across repeated splits, and the conditional direction and uncertainty of the allocation association. Do not interpret the result causally.",
+    "acceptance": "Before computation, forecast that adding the allocation terms will produce a modest held-out log-loss improvement and a positive conditional association; this is a prediction, not a result. Compare against the baseline on identical splits. Treat no reproducible improvement or an uncertain association spanning both directions as failure to support the proposal. Account for class imbalance and avoid leakage between train and test. The session is the independent unit per supplied metadata. A feasibility count or predictive gain alone does not establish an intervention effect."
+  }
+}

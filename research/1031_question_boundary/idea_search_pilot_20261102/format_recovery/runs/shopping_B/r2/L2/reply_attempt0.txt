@@ -1,0 +1,50 @@
+{
+  "recognition": {
+    "recognized_dataset": true,
+    "identity": "UCI Online Shoppers Purchasing Intention Dataset (UCI ID 468)",
+    "basis": "Identified from the supplied bundle; no independent retrieval or analysis."
+  },
+  "selected_id": "I1",
+  "final": {
+    "status": "retained",
+    "candidate": {
+      "id": "I1",
+      "title": "Does SpecialDay add information beyond Month?",
+      "question": "After accounting for Month, session activity, and supplied traffic context, does SpecialDay provide reproducible incremental information about Revenue within this dataset?",
+      "core": {
+        "object": "The conditional association between SpecialDay and session-level Revenue.",
+        "relation_or_action": "Compare identical held-out predictions from otherwise identical models with and without categorical SpecialDay.",
+        "contrast": "Month and session context versus the same features plus SpecialDay.",
+        "prediction": "Adding SpecialDay will produce a small positive held-out log-loss improvement.",
+        "independent_unit": "Session, as described in the supplied metadata."
+      },
+      "failure_condition": "The improvement is not reproducible on new sessions, or an adequately supported conditional association cannot be distinguished from no association.",
+      "assumptions": [
+        "SpecialDay is measured consistently across sessions.",
+        "Its association is observational and does not establish an intervention effect.",
+        "Repeated cross-validation splits estimate within-dataset predictive feasibility, not year-to-year stability."
+      ],
+      "required_new_data": "Multiple years of dated sessions to assess calendar stability; randomized exposure data to estimate an intervention effect.",
+      "feasible_with_current_data": true,
+      "domain_value": "Tests whether a graded calendar-proximity feature adds information beyond month-level seasonality.",
+      "history_match": "none",
+      "history_relation": "new_family",
+      "discriminating_delta": "Tests a calendar feature conditional on Month, unlike prior candidates about duration composition, PageValues timing, or month-varying duration associations.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    },
+    "evidence_level": "computed_feasibility",
+    "what_changed": "The requested paired comparison ran as compute_0. Baseline-minus-augmented held-out log-loss improvement averaged 0.000358, 0.000402, and 0.000539 across the three repeats. Individual folds included negative differences, so the gain is small and not uniformly positive. SpecialDay was nonzero in 1,251 of 12,330 sessions; all such sessions were in February or May. The returned search_1 metadata covered general conversion prediction, not this specific contrast.",
+    "what_is_known": "For the specified logistic models and repeated stratified splits, adding categorical SpecialDay yielded a small positive mean log-loss difference in each repeat. The feature's nonzero support was confined to February and May, mostly May. The computation did not report a conditional coefficient or its uncertainty. Repeated folds reuse observations, so they are not independent replications.",
+    "new_hypothesis": "The small incremental gain may be driven by within-month SpecialDay variation in February and May; the supplied results do not establish this explanation.",
+    "next_falsifiable_test": "Report uncertainty for the SpecialDay conditional association and assess whether incremental performance persists within February and May using a prespecified evaluation. Use new years of dated sessions to test calendar stability.",
+    "nearest_work_comparison": "The returned records concern general purchase prediction on this dataset and do not report the SpecialDay-beyond-Month contrast. The search was limited Crossref metadata, so it does not establish a literature gap.",
+    "novelty_status": "Unverified; the returned search did not identify a direct overlap but was not exhaustive.",
+    "feedback_type": "uncertainty"
+  }
+}

@@ -1,0 +1,94 @@
+[
+  {
+    "id": "C3",
+    "broker_id": "compute_0",
+    "type": "compute",
+    "request": {
+      "type": "compute",
+      "id": "compute_0",
+      "purpose": "Check whether the volatile_acidity association varies across the six cumulative quality thresholds in the supplied rows, and report the threshold counts and slope estimates. This is an exploratory association diagnostic, not a causal test or a formal partial proportional-odds likelihood-ratio comparison.",
+      "model_spec": "For each threshold j between adjacent observed quality levels, fit a binary logistic regression for quality > j using the same complete rows, standardized 11 chemistry variables, and color. Report counts on both sides of each threshold, the volatile_acidity coefficient and model-based standard error, and convergence status. Compare the six coefficient estimates descriptively; do not treat the six fits as independent or claim a formal across-threshold test. Row independence and lot-level generalization are unknown.",
+      "code": "import json\nimport numpy as np\nimport pandas as pd\nfrom scipy.optimize import minimize\n\ndf=TABLES['main'].copy()\nchem=['fixed_acidity','volatile_acidity','citric_acid','residual_sugar','chlorides','free_sulfur_dioxide','total_sulfur_dioxide','density','pH','sulphates','alcohol']\ndf=df[chem+['quality','color']].dropna().copy()\nlevels=sorted(int(v) for v in df.quality.unique())\ncols=[]; names=[]\nfor v in chem:\n    z=df[v].to_numpy(float); sd=z.std()\n    cols.append((z-z.mean())/(sd if sd else 1.)); names.append(v)\ncols.append(df.color.eq('white').to_numpy(float)); names.append('white')\nX=np.column_stack([np.ones(len(df))]+cols)\nva_idx=names.index('volatile_acidity')+1\nresults=[]\nfor j in levels[:-1]:\n    y=(df.quality.to_numpy()>j).astype(float)\n    n1=int(y.sum()); n0=int(len(y)-n1)\n    def loss(b):\n        z=np.clip(X@b,-35,35)\n        return float(np.logaddexp(0,z).sum()-y@z)\n    def grad(b):\n        z=np.clip(X@b,-35,35)\n        p=1/(1+np.exp(-z))\n        return X.T@(p-y)\n    r=minimize(loss,np.zeros(X.shape[1]),jac=grad,method='BFGS',options={'maxiter':500,'gtol':1e-7})\n    try:\n        H=X.T@((lambda p:p*(1-p))(1/(1+np.exp(-np.clip(X@r.x,-35,35))))[:,None]*X)\n        cov=np.linalg.pinv(H)\n        se=float(np.sqrt(max(cov[va_idx,va_idx],0)))\n    except Exception:\n        se=None\n    results.append({'threshold':int(j),'n_quality_le_threshold':n0,'n_quality_gt_threshold':n1,'converged':bool(r.success),'message':str(r.message),'volatile_acidity_beta':float(r.x[va_idx]),'model_based_se':se})\nprint(json.dumps({'n':int(len(df)),'quality_levels':levels,'same_rows_all_thresholds':True,'predictors':chem+['white'],'threshold_results':results,'warning':'Descriptive separate cumulative logits; thresholds share rows, model-based standard errors assume independent rows, and neither causality nor lot-level inference is established.'},separators=(',',':')))"
+    },
+    "result": {
+      "status": "executed",
+      "code_sha256": "ee7ff72db2d1713e4ef9da45afab473dd1fede9e9fa2d7878bc3423d88b693e2",
+      "data_sha256": "428bd8df7313b159988405ae5e3be6d363993d73f7ffc2adedfdc1d496508191",
+      "returncode": 0,
+      "stdout": "{\"n\":6497,\"quality_levels\":[3,4,5,6,7,8,9],\"same_rows_all_thresholds\":true,\"predictors\":[\"fixed_acidity\",\"volatile_acidity\",\"citric_acid\",\"residual_sugar\",\"chlorides\",\"free_sulfur_dioxide\",\"total_sulfur_dioxide\",\"density\",\"pH\",\"sulphates\",\"alcohol\",\"white\"],\"threshold_results\":[{\"threshold\":3,\"n_quality_le_threshold\":30,\"n_quality_gt_threshold\":6467,\"converged\":false,\"message\":\"Desired error not necessarily achieved due to precision loss.\",\"volatile_acidity_beta\":-0.8536468644384119,\"model_based_se\":0.17084287844836918},{\"threshold\":4,\"n_quality_le_threshold\":246,\"n_quality_gt_threshold\":6251,\"converged\":false,\"message\":\"Desired error not necessarily achieved due to precision loss.\",\"volatile_acidity_beta\":-0.9034677608552857,\"model_based_se\":0.07901410420254398},{\"threshold\":5,\"n_quality_le_threshold\":2384,\"n_quality_gt_threshold\":4113,\"converged\":false,\"message\":\"Desired error not necessarily achieved due to precision loss.\",\"volatile_acidity_beta\":-0.7865784570531866,\"model_based_se\":0.04862977545766456},{\"threshold\":6,\"n_quality_le_threshold\":5220,\"n_quality_gt_threshold\":1277,\"converged\":false,\"message\":\"Desired error not necessarily achieved due to precision loss.\",\"volatile_acidity_beta\":-0.6030329456782036,\"model_based_se\":0.06390250678325388},{\"threshold\":7,\"n_quality_le_threshold\":6299,\"n_quality_gt_threshold\":198,\"converged\":false,\"message\":\"Desired error not necessarily achieved due to precision loss.\",\"volatile_acidity_beta\":-0.29200086489757493,\"model_based_se\":0.13314950300184158},{\"threshold\":8,\"n_quality_le_threshold\":6492,\"n_quality_gt_threshold\":5,\"converged\":true,\"message\":\"Optimization terminated successfully.\",\"volatile_acidity_beta\":-0.21335894838847697,\"model_based_se\":0.8647885446902166}],\"warning\":\"Descriptive separate cumulative logits; thresholds share rows, model-based standard errors assume independent rows, and neither causality nor lot-level inference is established.\"}\n",
+      "stderr": "",
+      "stdout_truncated": false
+    }
+  },
+  {
+    "id": "S3",
+    "broker_id": "search_1",
+    "type": "search",
+    "request": {
+      "type": "search",
+      "id": "search_1",
+      "query": "wine quality volatile acidity ordinal regression threshold-specific effects partial proportional odds sensory score red white",
+      "missing_relation": "Whether prior work on wine sensory quality tested threshold-specific volatile_acidity associations or partial proportional-odds models, and what sampling units and sensory measurements it used.",
+      "change_if_found": "If close work is found, frame this as a replication or identify a prespecified difference in outcome, threshold model, or sampling unit. If none is found, report only that this targeted search did not locate close work, not that novelty is established."
+    },
+    "result": {
+      "status": "returned",
+      "sources": [
+        {
+          "doi": "10.4135/9781071878972.n5",
+          "title": "Partial Proportional Odds Models and Generalized Ordinal Logistic Regression Models",
+          "date": [
+            2016
+          ],
+          "abstract": ""
+        },
+        {
+          "doi": "10.4135/9781412984812.n4",
+          "title": "The Cumulative (Proportional) Odds Model for Ordinal Outcomes",
+          "date": [
+            2006
+          ],
+          "abstract": ""
+        },
+        {
+          "doi": "10.4135/9781071878972.n4",
+          "title": "Proportional Odds Models for Ordinal Response Variables",
+          "date": [
+            2016
+          ],
+          "abstract": ""
+        },
+        {
+          "doi": "10.2307/2532457",
+          "title": "Assessing Proportionality in the Proportional Odds Model for Ordinal Logistic Regression",
+          "date": [
+            1990,
+            12
+          ],
+          "abstract": ""
+        },
+        {
+          "doi": "10.32614/cran.package.repolr",
+          "title": "repolr: Repeated Measures Proportional Odds Logistic Regression",
+          "date": [
+            2012,
+            10,
+            29
+          ],
+          "abstract": ""
+        },
+        {
+          "doi": "10.1016/j.cmpb.2017.07.008",
+          "title": "GEEORD: A SAS macro for analyzing ordinal response variables with repeated measures through proportional odds, partial proportional odds, or non-proportional odds models",
+          "date": [
+            2017,
+            10
+          ],
+          "abstract": ""
+        }
+      ],
+      "scope": "Crossref metadata, not exhaustive novelty evidence",
+      "transport_failures": []
+    }
+  }
+]

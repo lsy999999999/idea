@@ -1,0 +1,294 @@
+{
+  "round": 3,
+  "replies": [
+    {
+      "stage": "L1",
+      "reply": {
+        "recognition": "Recognized from the supplied metadata as the UCI Online Shoppers Purchasing Intention Dataset (UCI ID 468), with 12,330 session rows and Revenue as the outcome. This is recognition of the supplied dataset, not a discovery.",
+        "candidates": [
+          {
+            "id": "I1",
+            "title": "Does special-day proximity change the purchase association of informational browsing?",
+            "question": "Among sessions with at least one informational page, is Revenue more strongly associated with informational-page duration on sessions with SpecialDay > 0 than on sessions with SpecialDay = 0, conditional on informational-page count, VisitorType, and Month?",
+            "core": {
+              "object": "Informational_Duration among sessions with Informational > 0",
+              "relation_or_action": "Estimate its interaction with SpecialDay > 0 in a session-level model for Revenue",
+              "contrast": "SpecialDay-proximate versus other sessions at comparable informational-page counts, VisitorType, and Month",
+              "prediction": "Before computation, predict a more positive duration-Revenue association when SpecialDay > 0.",
+              "independent_unit": "One session; the supplied metadata describes different users across sessions in the dataset"
+            },
+            "failure_condition": "The interaction is near zero or negative, or uncertainty is too broad to distinguish a practically meaningful contrast from a negligible one.",
+            "assumptions": [
+              "Informational_Duration is measured comparably across sessions.",
+              "SpecialDay indicates calendar proximity, not confirmed exposure to a promotion.",
+              "Adjustment does not make this observational association causal."
+            ],
+            "required_new_data": "None for the association analysis; actual promotion exposure and exact session dates would be needed to separate calendar proximity from promotion exposure.",
+            "feasible_with_current_data": true,
+            "domain_value": "Could indicate whether informational browsing is differently associated with purchases near designated shopping dates, helping prioritize a later test of information support.",
+            "history_match": "none",
+            "history_relation": "new_family",
+            "discriminating_delta": "Tests whether calendar proximity modifies the informational-browsing association, rather than revisiting the prior rounds' product-dwell proxy and visitor-type contrasts.",
+            "quality_gate": {
+              "specific": true,
+              "testable": true,
+              "coherent_feasible": true,
+              "worth_testing": true
+            },
+            "next_action": "test"
+          },
+          {
+            "id": "I2",
+            "title": "Does checkout transparency improve conversion after product exploration?",
+            "question": "Among first-time visitors who have viewed at least two product pages and added an item to cart, does showing the full estimated delivery cost before checkout increase transaction completion compared with the usual checkout flow?",
+            "core": {
+              "object": "Transaction completion within a prespecified session window",
+              "relation_or_action": "Randomly assign early delivery-cost disclosure or the usual flow",
+              "contrast": "Disclosure versus control among eligible first-time visitors",
+              "prediction": "Before the experiment, predict higher completion in the disclosure arm.",
+              "independent_unit": "Visitor, assigned once at the first eligible session"
+            },
+            "failure_condition": "The intention-to-treat conversion difference is zero or negative, or eligibility, assignment, and exposure cannot be measured reliably.",
+            "assumptions": [
+              "Eligibility is determined before randomization.",
+              "Delivery-cost estimates are available and sufficiently accurate at assignment.",
+              "Repeat visits follow the visitor-level assignment."
+            ],
+            "required_new_data": "A retail-site randomized experiment recording visitor assignment, product-page events, cart addition, disclosed cost, checkout events, and transaction completion.",
+            "feasible_with_current_data": false,
+            "domain_value": "Tests a concrete checkout change that could reduce late purchase abandonment, with an intervention effect measured directly.",
+            "history_match": "I3",
+            "history_relation": "new_family",
+            "discriminating_delta": "Tests delivery-cost disclosure at cart entry; the prior experiment proposal tested a product-comparison aid before checkout.",
+            "quality_gate": {
+              "specific": true,
+              "testable": true,
+              "coherent_feasible": true,
+              "worth_testing": true
+            },
+            "next_action": "measure"
+          },
+          {
+            "id": "I3",
+            "title": "Does informational-page visitation distinguish calendar effects from visitor composition?",
+            "question": "Among sessions with no informational-page views, does the Revenue rate differ between SpecialDay-proximate and other sessions, and is that contrast similar for New_Visitor and Returning_Visitor sessions?",
+            "core": {
+              "object": "Session-level Revenue among sessions with Informational = 0",
+              "relation_or_action": "Compare Revenue rates by SpecialDay status and visitor type",
+              "contrast": "SpecialDay > 0 versus SpecialDay = 0 within New_Visitor and Returning_Visitor groups",
+              "prediction": "Before computation, predict a larger SpecialDay-associated increase for New_Visitor sessions.",
+              "independent_unit": "One visitor-session"
+            },
+            "failure_condition": "The within-group contrasts are absent, reverse direction, or are too imprecise to distinguish between visitor types.",
+            "assumptions": [
+              "SpecialDay status is a calendar-proximity indicator, not randomized treatment.",
+              "Sessions with Informational = 0 form a relevant but restricted population.",
+              "Month adjustment and group comparisons do not remove all confounding."
+            ],
+            "required_new_data": "None for the association comparison; exact dates and campaign exposure would be needed to attribute differences to a campaign or calendar mechanism.",
+            "feasible_with_current_data": true,
+            "domain_value": "Could show whether calendar-proximity conversion patterns persist among visitors who do not browse informational pages, helping interpret the selected candidate's comparison.",
+            "history_match": "none",
+            "history_relation": "new_family",
+            "discriminating_delta": "Restricts to sessions without informational browsing to distinguish a broad calendar-associated conversion contrast from one tied to informational-page engagement.",
+            "quality_gate": {
+              "specific": true,
+              "testable": true,
+              "coherent_feasible": true,
+              "worth_testing": true
+            },
+            "next_action": "test"
+          }
+        ],
+        "selected_id": "I1",
+        "selection_reason": "I1 is feasible with the supplied rows and tests a distinct, decision-relevant interaction. Before any computation, I predict a more positive Informational_Duration–Revenue association for sessions with SpecialDay > 0. That is a forecast about an observational association, not evidence of a promotion effect.",
+        "method_ids": [
+          "M02",
+          "M36",
+          "M33"
+        ],
+        "task": {
+          "deliverable": "Among sessions with Informational > 0, estimate the prespecified Informational_Duration by (SpecialDay > 0) interaction for Revenue, adjusting for Informational, VisitorType, and Month. Report eligible session and outcome counts by SpecialDay status, the interaction estimate with uncertainty, convergence, and sensitivity to excluding VisitorType = Other. Do not use PageValues.",
+          "acceptance": "Use sessions as analysis units; state that SpecialDay is calendar proximity and Informational_Duration is an aggregate session measure. Report uncertainty and the excluded-group count. Treat results as observational and do not interpret the comparison as a causal effect or novelty evidence. The forecast is supported only if the interaction is positive with uncertainty that rules out a negligible contrast; it is contradicted if near zero or negative."
+        }
+      }
+    },
+    {
+      "stage": "R1",
+      "reply": {
+        "recognition": "Recognized from the supplied metadata as the UCI Online Shoppers Purchasing Intention Dataset (UCI ID 468), with session-level aggregate browsing measures and Revenue as the binary outcome. This is dataset recognition, not a discovery.",
+        "critique": "I1 is a testable observational comparison, but its key variables need tighter operational definitions. Informational_Duration is an aggregate session total, not page-level dwell, and its association with Revenue may largely reflect how many informational pages were viewed. The proposed adjustment for Informational page count helps distinguish these quantities but does not establish a browsing mechanism. Specify the duration scale and the interaction scale before interpreting the result; raw duration may be highly skewed, so the coefficient could depend on a few long sessions.\n\nSpecialDay > 0 is a calendar-proximity indicator, not evidence that a session encountered a promotion or that a particular event caused purchase intent. The contrast also combines sessions across different SpecialDay values. Month adjustment may leave limited overlap between SpecialDay status and calendar months, and the eligible sample after restricting to Informational > 0 may be small or imbalanced. Report eligible session and outcome counts by SpecialDay status, convergence, and uncertainty. The requested sensitivity excluding VisitorType = Other is useful, but it does not address unmeasured campaign exposure or purchase intent. Do not include PageValues: its documented definition is tied to pages visited before a transaction.\n\nBefore computation, my forecast is that the Informational_Duration–Revenue association will be more positive when SpecialDay > 0. This is a forecast about a conditional observational association, not an intervention effect. A positive interaction would not show that informational browsing or calendar proximity increases purchases. The supplied bundle has no prior history on this SpecialDay interaction, and the prior searches concerned different dwell questions; a targeted literature search could clarify whether this exact contrast is already routine. The previous-round computations and searches do not test this candidate.",
+        "feedback_type": "uncertainty",
+        "requests": [
+          {
+            "type": "compute",
+            "id": "R3-C1",
+            "purpose": "Evaluate the prespecified SpecialDay-by-informational-duration association and its feasibility, with outcome counts and an exclusion sensitivity. This does not test a causal effect.",
+            "model_spec": "Among rows with Informational > 0, fit logistic regression for Revenue with z = standardized log1p(Informational_Duration), SpecialDay indicator (SpecialDay > 0), z × SpecialDay, log1p(Informational), VisitorType indicators, and Month indicators. Report eligible N and Revenue counts by SpecialDay indicator; the interaction log-odds coefficient with a Wald 95% interval; convergence; and the same interaction estimate and interval after excluding VisitorType = Other. Omit PageValues. Treat sessions as units and results as observational.",
+            "code": "import json\nimport numpy as np\nimport pandas as pd\nfrom scipy.optimize import minimize\n\nx = DF.loc[DF['Informational'] > 0].copy().reset_index(drop=True)\ny = x['Revenue'].astype(int).to_numpy()\nsd = (x['SpecialDay'].to_numpy(dtype=float) > 0).astype(float)\nd = np.log1p(x['Informational_Duration'].to_numpy(dtype=float))\ncount = np.log1p(x['Informational'].to_numpy(dtype=float))\n\ndef fit_frame(frame):\n    yy = frame['Revenue'].astype(int).to_numpy()\n    ss = (frame['SpecialDay'].to_numpy(dtype=float) > 0).astype(float)\n    dd = np.log1p(frame['Informational_Duration'].to_numpy(dtype=float))\n    zz = (dd - dd.mean()) / (dd.std() or 1.0)\n    cc = np.log1p(frame['Informational'].to_numpy(dtype=float))\n    vt = pd.get_dummies(frame['VisitorType'], drop_first=True, dtype=float).to_numpy()\n    mo = pd.get_dummies(frame['Month'], drop_first=True, dtype=float).to_numpy()\n    X = np.column_stack([np.ones(len(frame)), zz, ss, zz*ss, cc, vt, mo])\n    def objective(b):\n        eta = np.clip(X @ b, -30, 30)\n        return np.logaddexp(0, eta).sum() - yy @ eta + 1e-8*(b @ b)\n    res = minimize(objective, np.zeros(X.shape[1]), method='L-BFGS-B')\n    b = res.x\n    p = 1/(1+np.exp(-np.clip(X @ b, -30, 30)))\n    H = X.T @ (X * (p*(1-p))[:,None]) + np.eye(X.shape[1])*1e-8\n    cov = np.linalg.pinv(H)\n    j = 3\n    se = float(np.sqrt(max(cov[j,j], 0)))\n    return {'success':bool(res.success),'interaction':float(b[j]),'ci95':[float(b[j]-1.96*se),float(b[j]+1.96*se)],'n':len(frame),'counts':frame.assign(_sd=ss).groupby(['_sd','Revenue']).size().unstack(fill_value=0).to_dict(orient='index')}\n\nbase = fit_frame(x)\nnonother = fit_frame(x.loc[x['VisitorType'] != 'Other'].reset_index(drop=True))\nprint(json.dumps({'all':base,'exclude_other':nonother},separators=(',',':')))"
+          },
+          {
+            "type": "search",
+            "id": "R3-S1",
+            "query": "Studies using the UCI Online Shoppers Purchasing Intention Dataset or comparable session-level ecommerce data that test whether calendar special-day proximity moderates the association between informational-page browsing duration and completed purchase, controlling for page count and visitor type.",
+            "missing_relation": "Whether this specific calendar-proximity-by-informational-browsing contrast has been directly studied.",
+            "change_if_found": "If closely overlapping work exists, describe this as a replication or identify a genuinely distinct measurement or comparison; metadata search results alone cannot establish a literature gap."
+          }
+        ],
+        "acceptance_checks": [
+          "Define SpecialDay as > 0 and duration as log1p(Informational_Duration) before interpreting the interaction; report the model scale and the eligible sample.",
+          "Report Revenue counts by SpecialDay status, interaction estimate and uncertainty, convergence, and the specified exclusion sensitivity.",
+          "Treat SpecialDay as calendar proximity and the duration as an aggregate session measure; omit PageValues and make no causal claim.",
+          "Use returned search evidence only to compare nearest work; do not claim novelty from a non-exhaustive metadata search."
+        ]
+      }
+    },
+    {
+      "stage": "L2",
+      "reply": {
+        "recognition": "Recognized from the supplied metadata as the UCI Online Shoppers Purchasing Intention Dataset (UCI ID 468). This is dataset recognition, not a discovery.",
+        "selected_id": "I1",
+        "final": {
+          "status": "revised",
+          "candidate": {
+            "id": "I1",
+            "title": "Does SpecialDay proximity modify the purchase association of informational-page duration?",
+            "question": "Among sessions with Informational > 0, does the association between log1p(Informational_Duration) and Revenue differ between SpecialDay > 0 and SpecialDay = 0, conditional on log1p(Informational), VisitorType, and Month?",
+            "core": {
+              "object": "Session-level log1p(Informational_Duration), an aggregate duration measure",
+              "relation_or_action": "Estimate its interaction with the indicator SpecialDay > 0 in a logistic model for Revenue",
+              "contrast": "SpecialDay-proximate versus other sessions among sessions with Informational > 0",
+              "prediction": "The prespecified forecast was a more positive duration-Revenue association when SpecialDay > 0; the computed interaction did not support this forecast.",
+              "independent_unit": "One session, as described in the supplied dataset metadata"
+            },
+            "failure_condition": "In an adequately sized independent sample, the interaction remains near zero or its uncertainty continues to span both negligible and meaningful differences.",
+            "assumptions": [
+              "SpecialDay > 0 indicates calendar proximity, not confirmed promotion exposure.",
+              "Informational_Duration is an aggregate session total, not page-level dwell.",
+              "The adjusted association is observational and does not establish a causal effect."
+            ],
+            "required_new_data": "An independent session sample with the same measures; exact session dates and campaign exposure are needed to distinguish calendar proximity from promotion exposure.",
+            "feasible_with_current_data": true,
+            "domain_value": "The analysis checks whether calendar proximity meaningfully changes the observed association between informational browsing duration and purchase, while limiting interpretation to the supplied measures.",
+            "history_match": "none",
+            "history_relation": "new_family",
+            "discriminating_delta": "Tests a SpecialDay-by-informational-duration interaction, distinct from the earlier rounds' product-duration and visitor-type contrasts.",
+            "quality_gate": {
+              "specific": true,
+              "testable": true,
+              "coherent_feasible": true,
+              "worth_testing": true
+            },
+            "next_action": "measure"
+          },
+          "evidence_level": "negative_result",
+          "what_changed": "The executed analysis did not support the forecast. The interaction estimate was -0.0048 log-odds (95% Wald CI [-0.406, 0.397]); excluding VisitorType = Other gave -0.0040 (95% CI [-0.406, 0.398]). Fits converged. SpecialDay-proximate sessions were relatively few: 189 eligible sessions, including 27 purchases, versus 2,442 sessions and 586 purchases at SpecialDay = 0. The wide intervals do not establish that the interaction is absent.",
+          "what_is_known": "Among sessions with Informational > 0, the prespecified conditional interaction estimate was close to zero and highly uncertain; excluding Other barely changed it (compute_0). The analysis is observational. The search returned broad or unrelated Crossref records, including a dataset-related record, and was explicitly non-exhaustive; it did not verify direct overlap or a literature gap (search_1).",
+          "new_hypothesis": "This dataset provides no clear evidence that SpecialDay proximity modifies the conditional association between aggregate informational duration and Revenue, but the small SpecialDay-proximate group leaves meaningful differences unresolved.",
+          "next_falsifiable_test": "Estimate the prespecified interaction in an independent session dataset with substantially more SpecialDay-proximate sessions, reporting group counts and uncertainty. Record exact dates and campaign exposure to test whether any moderation is associated with actual promotion exposure rather than calendar proximity alone.",
+          "nearest_work_comparison": "search_1 returned a dataset-related citation and broad shopping or prediction papers, but no supplied evidence directly testing this interaction. The search was non-exhaustive and supports neither a verified gap nor a novelty claim.",
+          "novelty_status": "Unverified; no novelty claim is supported by the returned search.",
+          "feedback_type": "uncertainty"
+        }
+      }
+    }
+  ],
+  "effective_selected_id": "I1",
+  "tools": [
+    {
+      "id": "R3-C1",
+      "broker_id": "compute_0",
+      "type": "compute",
+      "request": {
+        "type": "compute",
+        "id": "compute_0",
+        "purpose": "Evaluate the prespecified SpecialDay-by-informational-duration association and its feasibility, with outcome counts and an exclusion sensitivity. This does not test a causal effect.",
+        "model_spec": "Among rows with Informational > 0, fit logistic regression for Revenue with z = standardized log1p(Informational_Duration), SpecialDay indicator (SpecialDay > 0), z × SpecialDay, log1p(Informational), VisitorType indicators, and Month indicators. Report eligible N and Revenue counts by SpecialDay indicator; the interaction log-odds coefficient with a Wald 95% interval; convergence; and the same interaction estimate and interval after excluding VisitorType = Other. Omit PageValues. Treat sessions as units and results as observational.",
+        "code": "import json\nimport numpy as np\nimport pandas as pd\nfrom scipy.optimize import minimize\n\nx = DF.loc[DF['Informational'] > 0].copy().reset_index(drop=True)\ny = x['Revenue'].astype(int).to_numpy()\nsd = (x['SpecialDay'].to_numpy(dtype=float) > 0).astype(float)\nd = np.log1p(x['Informational_Duration'].to_numpy(dtype=float))\ncount = np.log1p(x['Informational'].to_numpy(dtype=float))\n\ndef fit_frame(frame):\n    yy = frame['Revenue'].astype(int).to_numpy()\n    ss = (frame['SpecialDay'].to_numpy(dtype=float) > 0).astype(float)\n    dd = np.log1p(frame['Informational_Duration'].to_numpy(dtype=float))\n    zz = (dd - dd.mean()) / (dd.std() or 1.0)\n    cc = np.log1p(frame['Informational'].to_numpy(dtype=float))\n    vt = pd.get_dummies(frame['VisitorType'], drop_first=True, dtype=float).to_numpy()\n    mo = pd.get_dummies(frame['Month'], drop_first=True, dtype=float).to_numpy()\n    X = np.column_stack([np.ones(len(frame)), zz, ss, zz*ss, cc, vt, mo])\n    def objective(b):\n        eta = np.clip(X @ b, -30, 30)\n        return np.logaddexp(0, eta).sum() - yy @ eta + 1e-8*(b @ b)\n    res = minimize(objective, np.zeros(X.shape[1]), method='L-BFGS-B')\n    b = res.x\n    p = 1/(1+np.exp(-np.clip(X @ b, -30, 30)))\n    H = X.T @ (X * (p*(1-p))[:,None]) + np.eye(X.shape[1])*1e-8\n    cov = np.linalg.pinv(H)\n    j = 3\n    se = float(np.sqrt(max(cov[j,j], 0)))\n    return {'success':bool(res.success),'interaction':float(b[j]),'ci95':[float(b[j]-1.96*se),float(b[j]+1.96*se)],'n':len(frame),'counts':frame.assign(_sd=ss).groupby(['_sd','Revenue']).size().unstack(fill_value=0).to_dict(orient='index')}\n\nbase = fit_frame(x)\nnonother = fit_frame(x.loc[x['VisitorType'] != 'Other'].reset_index(drop=True))\nprint(json.dumps({'all':base,'exclude_other':nonother},separators=(',',':')))"
+      },
+      "result": {
+        "status": "executed",
+        "code_sha256": "957678d9add98818b856ea0b84fb7a983315a5a985dfb24798fa0a6e96fb3486",
+        "data_sha256": "b3055ee355f59134d851d32641183cb4a8b45def7124d2f50442a042f358e0d9",
+        "returncode": 0,
+        "stdout": "{\"all\":{\"success\":true,\"interaction\":-0.004765544434562984,\"ci95\":[-0.40643379420639353,0.3969027053372675],\"n\":2631,\"counts\":{\"0.0\":{\"false\":1856,\"true\":586},\"1.0\":{\"false\":162,\"true\":27}}},\"exclude_other\":{\"success\":true,\"interaction\":-0.004006501245663659,\"ci95\":[-0.4055146504996773,0.39750164800835],\"n\":2624,\"counts\":{\"0.0\":{\"false\":1851,\"true\":584},\"1.0\":{\"false\":162,\"true\":27}}}}\n",
+        "stderr": "",
+        "stdout_truncated": false
+      }
+    },
+    {
+      "id": "R3-S1",
+      "broker_id": "search_1",
+      "type": "search",
+      "request": {
+        "type": "search",
+        "id": "search_1",
+        "query": "Studies using the UCI Online Shoppers Purchasing Intention Dataset or comparable session-level ecommerce data that test whether calendar special-day proximity moderates the association between informational-page browsing duration and completed purchase, controlling for page count and visitor type.",
+        "missing_relation": "Whether this specific calendar-proximity-by-informational-browsing contrast has been directly studied.",
+        "change_if_found": "If closely overlapping work exists, describe this as a replication or identify a genuinely distinct measurement or comparison; metadata search results alone cannot establish a literature gap."
+      },
+      "result": {
+        "status": "returned",
+        "sources": [
+          {
+            "doi": "10.31289/jite.v3i1.2599.s170",
+            "title": "Online Shoppers Purchasing Intention Dataset Data Set",
+            "date": [],
+            "abstract": ""
+          },
+          {
+            "doi": "10.4018/ijsodit.2013100102",
+            "title": "How Does a Social Network Site Fan Page Influence Purchase Intention of Online Shoppers",
+            "date": [
+              2013,
+              10,
+              1
+            ],
+            "abstract": " This research revisited how fan pages in the social network site created by online merchants affects the purchase intention of online shoppers using qualitative research methods. Through fine-tuning the research model developed by Jahn and Kunz (2012) which is grounded on the Uses and Gratifications Theory, the authors conducted a qualitative study through interviewing consumers who participated in fan pages. Based on their responses in the interviews, the authors reconfirmed that content-oriented needs and social interaction value of relationship-oriented needs had positive impacts on fan page usage intensity and fan page engagement, respectively. Plus, the authors discovered that content-oriented needs had a positive impact on fan page engagement. The theoretical contributions, managerial implications of this study are also discussed. "
+          },
+          {
+            "doi": "10.15341/jbe(2155-7950)/01.10.2019/003",
+            "title": "The Webmosphirics Effects on Shopping Behavior: The Influences of Web Page Color Displays on Online Impulse Purchasing Intention",
+            "date": [
+              2019,
+              1,
+              20
+            ],
+            "abstract": " It is interesting to note that even though the studies of atmospheric effects in physical stores have been abundant, knowledge of ambient factor effects in the online retailing context has been limited. This study investigates the influence of webmospheric effect, web page color displays on respondents’ emotional reactions and subsequent online impulse buying intention. A Stimulus-Organism-Responses (S-O-R) model was used as the basic framework and a laboratory experiment was conducted to test the hypotheses in this study.  The results demonstrated that web page color displays had a significant effect on participants’ emotional response, eventually influencing their intention to purchase impulsively online. Specifically, respondents felt more aroused and experienced greater pleasure when they were exposed to chromatic web page displays than achromatic one. Additionally, both pleasure and arousal emotions played an intervening role between web page color displays and online impulse purchasing intention. Personality traits and product involvement were proved to moderate the relationship between atmospheric cues and impulse shopping intention. These findings suggest that the website design with effective web page color displays would create a desirable environment and thus prompt consumers to buy impulsively. Finally, research implications of the model and proposition are presented. "
+          },
+          {
+            "doi": "10.1088/1742-6596/1641/1/012083",
+            "title": "Improving The Effectiveness of Classification Using The Data Level Approach and Feature Selection Techniques in Online Shoppers Purchasing Intention Prediction",
+            "date": [
+              2020,
+              11,
+              1
+            ],
+            "abstract": " Abstract \n                Online shopping is a form of trading using electronic devices that allows consumers to buy goods or services from sellers via the internet. Other names for these activities are: e-web-shop, e-shop, e-shop, internet shop, web-shop, web-store, online shop, and virtual shop. An online store generates purchases of products or services at retailers or shopping centers, which are referred to as business-to-consumer (B2C) online shopping. n another process where a business buys from another business, it is called business-to-business (B2B). Nowadays online shopping has become more sophisticated with trading via mobile phones (m-commerce). Cellular phones have been optimized with an application to buy from online sites. In this study, we proposed a data level approach and feature selection techniques as a solution for the classification of imbalanced data. The imbalance class classification is one of the classic problems in the field of artificial intelligence, especially for classification in machine learning. Imbalanced data have been proven to reduce the performance of machine learning algorithms, where imbalance data means that the total data from each class is significantly different. The proposed method is evaluated using a dataset from the UCI repository and area under the curve (AUC) as the main evaluation. The results have shown that the proposed method produces good performance. (AUC¿ 0.8). Overall the second experiment outperformed and was better than the first and third experiments because the main evaluation in the unbalanced class classification is AUC. Therefore, it can be concluded that the proposed method produces optimal performance both for large scale data sets. Overall the second experiment outperformed and better than the first and third experiments, because the main evaluation in the unbalanced class classification was AUC. "
+          },
+          {
+            "doi": "10.1109/get.2015.7453830",
+            "title": "Efficient search engine approach for measuring similarity between words: Using page count and snippets",
+            "date": [
+              2015,
+              11
+            ],
+            "abstract": ""
+          },
+          {
+            "doi": "10.3768/rtipress.2016.bk.0016.1608.4",
+            "title": "Genetic Inheritance and Genome-Wide Association Statistical Test Performance Using Simulated Data",
+            "date": [
+              2016,
+              8,
+              30
+            ],
+            "abstract": ""
+          }
+        ],
+        "scope": "Crossref metadata, not exhaustive novelty evidence",
+        "transport_failures": []
+      }
+    }
+  ]
+}

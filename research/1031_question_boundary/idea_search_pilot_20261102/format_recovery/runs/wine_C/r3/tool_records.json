@@ -1,0 +1,20 @@
+[
+  {
+    "id": "C3",
+    "broker_id": "compute_0",
+    "type": "compute",
+    "request": {
+      "type": "compute",
+      "id": "compute_0",
+      "purpose": "Assess whether the predicted low-threshold association is descriptively stronger than the high-threshold association on a prespecified, comparable scale within each color.",
+      "model_spec": "Within each color, fit separate logistic regressions for the events quality <= 5 and quality >= 7, each with standardized volatile_acidity and the other measured chemistry as standardized covariates. Define strength as the absolute volatile_acidity log-odds coefficient; compute low-event absolute coefficient minus high-event absolute coefficient. Use a paired row bootstrap for a percentile interval, reporting event counts and convergence. This is exploratory, assumes independent rows, and does not test an intervention effect or a general ordinal-model assumption.",
+      "code": "import json\nimport numpy as np\nfrom scipy.optimize import minimize\n\nchem=['fixed_acidity','volatile_acidity','citric_acid','residual_sugar','chlorides','free_sulfur_dioxide','total_sulfur_dioxide','density','pH','sulphates','alcohol']\nout=[]\ndef fit(X,y):\n    def loss(b):\n        z=np.clip(X@b,-30,30)\n        return np.logaddexp(0,z).sum()-y@z\n    r=minimize(loss,np.zeros(X.shape[1]),method='L-BFGS-B',options={'maxiter':300,'ftol':1e-10})\n    return float(r.x[1]),bool(r.success)\nfor color,g0 in DF.groupby('color'):\n    g=g0.reset_index(drop=True); raw=g[chem].astype(float).to_numpy(); mu=raw.mean(0); sd=raw.std(0); sd[sd==0]=1\n    z=(raw-mu)/sd; X=np.column_stack([np.ones(len(g)),z]); q=g['quality'].astype(int).to_numpy()\n    yl=(q<=5).astype(float); yh=(q>=7).astype(float)\n    bl,okl=fit(X,yl); bh,okh=fit(X,yh); rng=np.random.default_rng(20261102); vals=[]\n    for _ in range(120):\n        ix=rng.integers(0,len(q),len(q))\n        if len(np.unique(yl[ix]))<2 or len(np.unique(yh[ix]))<2: continue\n        try:\n            a,sa=fit(X[ix],yl[ix]); b,sb=fit(X[ix],yh[ix])\n            if sa and sb: vals.append(abs(a)-abs(b))\n        except Exception: pass\n    out.append({'color':str(color),'n':len(q),'low_event_n':int(yl.sum()),'high_event_n':int(yh.sum()),'low_coef':bl,'high_coef':bh,'abs_strength_difference_low_minus_high':abs(bl)-abs(bh),'paired_bootstrap_2_5_97_5':np.quantile(vals,[.025,.975]).tolist() if vals else None,'bootstrap_successes':len(vals),'fits_converged':[okl,okh]})\nprint(json.dumps({'scale':'standardized volatile_acidity log-odds; difference is absolute low-event coefficient minus absolute high-event coefficient','caveat':'paired row bootstrap assumes independent samples; exploratory and noncausal','results':out},separators=(',',':'))"
+    },
+    "result": {
+      "status": "clarification",
+      "code_sha256": "3aa970034e904839e44607fe613086f0586a502e78316b9f7e50a6397f90b6c1",
+      "data_sha256": "428bd8df7313b159988405ae5e3be6d363993d73f7ffc2adedfdc1d496508191",
+      "reason": "'(' was never closed (<unknown>, line 26)"
+    }
+  }
+]

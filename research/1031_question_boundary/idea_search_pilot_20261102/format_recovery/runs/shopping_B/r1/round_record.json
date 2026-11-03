@@ -1,0 +1,298 @@
+{
+  "round": 1,
+  "replies": [
+    {
+      "stage": "L1",
+      "reply": {
+        "recognition": {
+          "recognized_dataset": true,
+          "identity": "UCI Online Shoppers Purchasing Intention Dataset (UCI ID 468), also associated with the supplied 2019 introduction paper",
+          "basis": "The supplied metadata identifies it. I make no claim of having independently retrieved or analyzed the dataset."
+        },
+        "candidates": [
+          {
+            "id": "I1",
+            "title": "Does browsing-time allocation relate to purchases beyond browsing volume?",
+            "question": "Among sessions with comparable page counts and total recorded browsing duration, is a larger share of recorded duration spent on product-related pages associated with a higher probability of Revenue=true?",
+            "core": {
+              "object": "Session-level allocation of recorded duration across product-related and other page categories",
+              "relation_or_action": "Compare purchase rates across product-duration shares while adjusting for page counts, total duration, Month, Weekend, VisitorType, and other supplied context",
+              "contrast": "A model with page counts and total duration versus the same model adding product-duration share and its interaction with product-page count",
+              "prediction": "The added allocation terms improve held-out log loss and show a positive conditional association with Revenue",
+              "independent_unit": "Session; the metadata says sessions belong to different users"
+            },
+            "failure_condition": "The allocation terms provide no reproducible held-out improvement or show no conditional association after accounting for counts and total duration.",
+            "assumptions": [
+              "Recorded duration categories are comparable within a session.",
+              "Sessions are independent as described in the documentation.",
+              "Revenue associations are observational and do not establish that changing browsing allocation changes purchasing."
+            ],
+            "required_new_data": "None for the proposed association test; event-level timestamps and page sequences would be needed to validate the interpretation as attention allocation.",
+            "feasible_with_current_data": true,
+            "domain_value": "Could inform whether analytics should distinguish browsing volume from how session time is allocated, without treating either as a proven intervention lever.",
+            "history_match": "none",
+            "history_relation": "new_family",
+            "discriminating_delta": "Tests a compositional allocation contrast conditional on volume, rather than generic conversion prediction or the association of a single duration feature.",
+            "quality_gate": {
+              "specific": true,
+              "testable": true,
+              "coherent_feasible": true,
+              "worth_testing": true
+            },
+            "next_action": "test"
+          },
+          {
+            "id": "I2",
+            "title": "How much apparent conversion signal depends on PageValues?",
+            "question": "How much does held-out conversion prediction change when PageValues is omitted, especially because its documented definition refers to page value before a transaction?",
+            "core": {
+              "object": "Incremental predictive contribution of PageValues for Revenue",
+              "relation_or_action": "Compare otherwise identical held-out models with and without PageValues",
+              "contrast": "PageValues included versus excluded, reporting both overall and by Revenue class",
+              "prediction": "Including PageValues improves prediction substantially, but that gain may reflect outcome-adjacent construction rather than a deployable pre-session signal",
+              "independent_unit": "Session"
+            },
+            "failure_condition": "The models show little predictive difference, or the supplied metadata cannot determine whether PageValues was available at the intended prediction time.",
+            "assumptions": [
+              "The documented PageValues meaning applies to this dataset version.",
+              "Predictive contribution does not by itself establish leakage or causal relevance."
+            ],
+            "required_new_data": "Feature-generation timestamps and the prediction-time definition are needed to establish whether PageValues is available before the decision it would inform.",
+            "feasible_with_current_data": true,
+            "domain_value": "Helps assess whether an apparent analytics signal is suitable for real-time intervention or only for retrospective classification.",
+            "history_match": "none",
+            "history_relation": "new_family",
+            "discriminating_delta": "Examines the decision-time validity of a documented feature, not merely its predictive importance.",
+            "quality_gate": {
+              "specific": true,
+              "testable": true,
+              "coherent_feasible": true,
+              "worth_testing": true
+            },
+            "next_action": "test"
+          },
+          {
+            "id": "I3",
+            "title": "Does the product-duration association vary by month?",
+            "question": "Does the conditional association between ProductRelated_Duration and Revenue differ across Month after accounting for product-page count and recorded context?",
+            "core": {
+              "object": "Month-specific association between product-related duration and Revenue",
+              "relation_or_action": "Estimate and compare duration associations across months with adequate sample support",
+              "contrast": "A shared duration association across months versus month-varying associations",
+              "prediction": "A shared association will not describe all months equally well",
+              "independent_unit": "Session"
+            },
+            "failure_condition": "Month interactions do not improve held-out prediction or estimates are too uncertain in sparsely represented months.",
+            "assumptions": [
+              "Month labels are valid calendar categories.",
+              "Differences between months are descriptive and may reflect unmeasured campaigns or traffic composition."
+            ],
+            "required_new_data": "Campaign and date-level traffic context would be needed to interpret month differences.",
+            "feasible_with_current_data": true,
+            "domain_value": "Could indicate whether a single session-analytics relationship is stable across the observed calendar categories.",
+            "history_match": "none",
+            "history_relation": "new_family",
+            "discriminating_delta": "Tests temporal-category stability rather than overall prediction or a single pooled feature association.",
+            "quality_gate": {
+              "specific": true,
+              "testable": true,
+              "coherent_feasible": true,
+              "worth_testing": true
+            },
+            "next_action": "test"
+          }
+        ],
+        "selected_id": "I1",
+        "selection_reason": "I1 poses a concrete, observationally testable contrast using existing fields while avoiding a causal claim. It is distinct from the familiar dataset’s general purchase-prediction framing because it asks whether time allocation contributes information beyond browsing volume.",
+        "method_ids": [
+          "M01",
+          "M33",
+          "M43"
+        ],
+        "task": {
+          "deliverable": "Using all supplied rows, compare a held-out baseline model for Revenue using page counts, total recorded duration, and supplied context against the same model augmented with product-duration share and its interaction with ProductRelated count. Exclude PageValues from both models. Report the split unit, preprocessing, held-out log loss, uncertainty across repeated splits, and the conditional direction and uncertainty of the allocation association. Do not interpret the result causally.",
+          "acceptance": "Before computation, forecast that adding the allocation terms will produce a modest held-out log-loss improvement and a positive conditional association; this is a prediction, not a result. Compare against the baseline on identical splits. Treat no reproducible improvement or an uncertain association spanning both directions as failure to support the proposal. Account for class imbalance and avoid leakage between train and test. The session is the independent unit per supplied metadata. A feasibility count or predictive gain alone does not establish an intervention effect."
+        }
+      }
+    },
+    {
+      "stage": "R1",
+      "reply": {
+        "recognition": {
+          "recognized_dataset": true,
+          "identity": "UCI Online Shoppers Purchasing Intention Dataset (UCI ID 468), identified from the supplied metadata.",
+          "basis": "The bundle names the dataset and its 2019 introduction paper; I did not independently retrieve or analyze either."
+        },
+        "critique": "I1 asks a specific observational question, but its proposed allocation measure needs a precise definition: ProductRelated_Duration divided by the sum of the three supplied duration fields. Sessions with zero total recorded duration have no defined share and should be reported separately, not silently treated as ordinary zero-share sessions. Even for other sessions, this is a share of recorded page-category duration, not a direct measure of attention or time allocation; the duration fields are derived from page activity and may omit time not captured by the analytics system.\n\nThe proposed held-out log-loss comparison can test incremental predictive information, but it does not by itself establish a stable association or explain its source. The share and its interaction with ProductRelated count are model-dependent terms; an overall coefficient or gain does not show that the association is positive across the observed count range. Request a prespecified modeled contrast at a supported count and share range, with uncertainty, and report the share’s support and zero-duration frequency. Keep identical splits and preprocessing within training folds; report the paired fold-level log-loss differences rather than treating folds as independent replications.\n\nThe session is the stated independent unit, but the metadata does not provide dates or user identifiers for an independent temporal or user-level holdout. The documented session construction says each session belongs to a different user, which supports session-level splitting for this dataset, but it does not make random splits representative of future deployment. Finally, the source metadata says features update as users act, while the supplied rows appear to summarize sessions. Without feature timestamps and a decision time, the proposed comparison cannot establish that these features were available before a purchase decision. Excluding PageValues avoids one documented outcome-adjacent field, but does not resolve timing for the duration and page-count features. Treat findings as within-dataset association and predictive feasibility; stronger claims require event-level timing or external validation.",
+        "feedback_type": "uncertainty",
+        "requests": [
+          {
+            "type": "compute",
+            "id": "allocation_cv",
+            "purpose": "Estimate paired held-out log-loss change and a supported model-based allocation contrast, while checking zero-duration prevalence. This tests feasibility and within-dataset association, not causality or future deployment.",
+            "model_spec": "Logistic regression with training-fold preprocessing; 5-fold stratified CV repeated 3 times; identical splits for baseline and augmented models. Baseline uses Administrative, Informational, ProductRelated counts, total of the three supplied duration fields, and supplied context (Month, Weekend, VisitorType, OperatingSystems, Browser, Region, TrafficType, SpecialDay). Augmented adds product-duration share and its interaction with ProductRelated. Set share to zero only for feature encoding when total duration is zero and report those sessions separately. Report paired fold log-loss differences and an augmented-model predicted probability contrast between training-fold share quartiles at median training-fold ProductRelated count, restricted to validation rows with positive total duration. Do not call the contrast causal.",
+            "code": "import numpy as np\nfrom sklearn.compose import ColumnTransformer\nfrom sklearn.preprocessing import OneHotEncoder, StandardScaler\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import RepeatedStratifiedKFold\nfrom sklearn.metrics import log_loss\n\nraw = TABLES['main'].copy()\ndur = ['Administrative_Duration', 'Informational_Duration', 'ProductRelated_Duration']\nraw['total_duration'] = raw[dur].sum(axis=1)\nraw['zero_total_duration'] = (raw['total_duration'] == 0).astype(int)\nraw['product_share'] = np.divide(raw['ProductRelated_Duration'], raw['total_duration'], out=np.zeros(len(raw), dtype=float), where=raw['total_duration'].to_numpy() > 0)\nraw['share_x_product_count'] = raw['product_share'] * raw['ProductRelated']\ny = raw['Revenue'].astype(int).to_numpy()\nnum0 = ['Administrative', 'Informational', 'ProductRelated', 'total_duration']\nnum1 = num0 + ['product_share', 'share_x_product_count']\ncat = ['Month', 'Weekend', 'VisitorType', 'OperatingSystems', 'Browser', 'Region', 'TrafficType', 'SpecialDay']\n\ndef model(num):\n    prep = ColumnTransformer([('num', StandardScaler(), num), ('cat', OneHotEncoder(handle_unknown='ignore'), cat)])\n    return make_pipeline(prep, LogisticRegression(max_iter=1000))\n\ncv = RepeatedStratifiedKFold(n_splits=5, n_repeats=3, random_state=20261102)\nrows = []\nfor tr, te in cv.split(raw, y):\n    b, a = model(num0), model(num1)\n    b.fit(raw.iloc[tr], y[tr]); a.fit(raw.iloc[tr], y[tr])\n    pb = b.predict_proba(raw.iloc[te])[:, 1]\n    pa = a.predict_proba(raw.iloc[te])[:, 1]\n    delta = log_loss(y[te], pb, labels=[0, 1]) - log_loss(y[te], pa, labels=[0, 1])\n    train = raw.iloc[tr]\n    q25, q75 = train.loc[train['total_duration'] > 0, 'product_share'].quantile([0.25, 0.75]).to_numpy()\n    med_count = train['ProductRelated'].median()\n    valid = raw.iloc[te].loc[raw.iloc[te]['total_duration'] > 0].copy()\n    lo, hi = valid.copy(), valid.copy()\n    lo['product_share'] = q25; hi['product_share'] = q75\n    lo['share_x_product_count'] = q25 * med_count; hi['share_x_product_count'] = q75 * med_count\n    contrast = float(np.mean(a.predict_proba(hi)[:, 1] - a.predict_proba(lo)[:, 1])) if len(valid) else None\n    rows.append({'logloss_improvement': float(delta), 'share_q25': float(q25), 'share_q75': float(q75), 'median_product_count': float(med_count), 'modeled_probability_contrast': contrast})\nprint(__import__('json').dumps({'n': len(raw), 'zero_total_n': int(raw['zero_total_duration'].sum()), 'zero_total_fraction': float(raw['zero_total_duration'].mean()), 'folds': rows}, separators=(',', ':')))"
+          },
+          {
+            "type": "search",
+            "id": "allocation_prior_work",
+            "query": "Studies using the UCI Online Shoppers Purchasing Intention Dataset or comparable e-commerce session analytics that test whether product-page dwell-time share predicts purchase conditional on page counts and total session duration; look for compositional or time-allocation analyses, not generic conversion prediction.",
+            "missing_relation": "Whether conditional product-duration allocation beyond browsing volume has already been directly tested, and how its measurement and decision-time availability have been handled.",
+            "change_if_found": "If a close study tests the same conditional contrast, revise I1 toward a genuinely discriminating extension supported by this dataset (or withdraw a novelty implication); if none is found, retain I1 only as a candidate question and do not treat a limited search as proof of novelty."
+          }
+        ],
+        "acceptance_checks": [
+          "Do not describe the proposal or self-assessment as an empirical finding.",
+          "Report the share definition, number and fraction of zero-total-duration sessions, and the paired held-out log-loss differences on identical folds.",
+          "State the modeled contrast’s support and uncertainty; a positive average contrast or predictive gain alone does not establish a causal effect or deployment-time availability.",
+          "If tool results do not return, label the candidate proposal-only and leave the empirical comparison unresolved."
+        ]
+      }
+    },
+    {
+      "stage": "L2",
+      "reply": {
+        "recognition": {
+          "recognized_dataset": true,
+          "identity": "UCI Online Shoppers Purchasing Intention Dataset (UCI ID 468), identified from the supplied metadata.",
+          "basis": "Dataset recognition comes from the bundle; no independent retrieval or analysis was performed."
+        },
+        "selected_id": "I1",
+        "final": {
+          "status": "revised",
+          "candidate": {
+            "id": "I1",
+            "title": "Does product-duration share add information beyond browsing volume?",
+            "question": "Among sessions with positive total recorded duration, does ProductRelated_Duration divided by the sum of the three supplied duration fields improve held-out prediction of Revenue beyond page counts, total recorded duration, and supplied context? What is the model-based probability contrast between the training-fold 25th and 75th percentiles of this share at median ProductRelated count?",
+            "core": {
+              "object": "Session-level share of recorded duration attributed to product-related pages.",
+              "relation_or_action": "Compare identical held-out splits for logistic models with and without product-duration share and its interaction with ProductRelated count; exclude PageValues.",
+              "contrast": "Baseline versus augmented model; separately report the augmented model's predicted probability contrast across training-fold share quartiles.",
+              "prediction": "The augmented model will modestly improve held-out log loss and show a positive modeled contrast.",
+              "independent_unit": "Session, as described in the supplied dataset metadata."
+            },
+            "failure_condition": "No reproducible paired log-loss improvement, or the modeled contrast is uncertain across both directions.",
+            "assumptions": [
+              "The three duration fields can be summed for this descriptive share.",
+              "The share measures recorded duration composition, not attention or a causal lever.",
+              "Session-level splitting is appropriate for this within-dataset feasibility analysis but does not establish future deployment performance."
+            ],
+            "required_new_data": "Event-level timestamps and a defined prediction time to assess feature availability before purchase; external sessions for deployment validation.",
+            "feasible_with_current_data": true,
+            "domain_value": "Tests whether analytics distinguish duration composition from browsing volume without implying that changing browsing behavior would change purchases.",
+            "history_match": "none",
+            "history_relation": "new_family",
+            "discriminating_delta": "Conditions product-duration share on page counts and total duration, then reports a supported model-based contrast rather than a single feature association.",
+            "quality_gate": {
+              "specific": true,
+              "testable": true,
+              "coherent_feasible": true,
+              "worth_testing": true
+            },
+            "next_action": "test"
+          },
+          "evidence_level": "proposal_only",
+          "what_changed": "Clarified the share denominator, specified that zero-total-duration sessions must be counted and reported separately, and narrowed interpretation to recorded-duration composition. The requested computation returned a clarification because external I/O/dynamic execution was prohibited, so no metrics or prevalence estimates were produced. The search returned general purchase-prediction work, not a direct test of this conditional allocation contrast.",
+          "what_is_known": "The bundle supplies 12,330 sessions and documents the duration fields and Revenue. It does not provide results for the proposed comparison. Compute request compute_0 did not execute. Search result search_1 was limited Crossref metadata; it does not establish whether close prior work exists.",
+          "new_hypothesis": "None supported by returned evidence. The original positive-association and predictive-improvement forecast remains an untested proposal.",
+          "next_falsifiable_test": "Execute the prespecified paired repeated stratified cross-validation comparison; report zero-total-duration count, paired held-out log-loss differences, and uncertainty and support for the share-quartile probability contrast. Separately obtain event timing or external data before making claims about decision-time availability or deployment.",
+          "nearest_work_comparison": "The returned 2026 paper concerns conversion-prediction and decision-support performance on this dataset. Its abstract does not report the conditional product-duration-share contrast proposed here. The dataset's 2019 introduction paper is also identified in the supplied metadata as prediction-focused. These records do not establish novelty or exclude closer work.",
+          "novelty_status": "Unverified; the limited search found no direct overlap in the returned abstracts, which is not evidence of a literature gap.",
+          "feedback_type": "uncertainty"
+        }
+      }
+    }
+  ],
+  "effective_selected_id": "I1",
+  "tools": [
+    {
+      "id": "allocation_cv",
+      "broker_id": "compute_0",
+      "type": "compute",
+      "request": {
+        "type": "compute",
+        "id": "compute_0",
+        "purpose": "Estimate paired held-out log-loss change and a supported model-based allocation contrast, while checking zero-duration prevalence. This tests feasibility and within-dataset association, not causality or future deployment.",
+        "model_spec": "Logistic regression with training-fold preprocessing; 5-fold stratified CV repeated 3 times; identical splits for baseline and augmented models. Baseline uses Administrative, Informational, ProductRelated counts, total of the three supplied duration fields, and supplied context (Month, Weekend, VisitorType, OperatingSystems, Browser, Region, TrafficType, SpecialDay). Augmented adds product-duration share and its interaction with ProductRelated. Set share to zero only for feature encoding when total duration is zero and report those sessions separately. Report paired fold log-loss differences and an augmented-model predicted probability contrast between training-fold share quartiles at median training-fold ProductRelated count, restricted to validation rows with positive total duration. Do not call the contrast causal.",
+        "code": "import numpy as np\nfrom sklearn.compose import ColumnTransformer\nfrom sklearn.preprocessing import OneHotEncoder, StandardScaler\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import RepeatedStratifiedKFold\nfrom sklearn.metrics import log_loss\n\nraw = TABLES['main'].copy()\ndur = ['Administrative_Duration', 'Informational_Duration', 'ProductRelated_Duration']\nraw['total_duration'] = raw[dur].sum(axis=1)\nraw['zero_total_duration'] = (raw['total_duration'] == 0).astype(int)\nraw['product_share'] = np.divide(raw['ProductRelated_Duration'], raw['total_duration'], out=np.zeros(len(raw), dtype=float), where=raw['total_duration'].to_numpy() > 0)\nraw['share_x_product_count'] = raw['product_share'] * raw['ProductRelated']\ny = raw['Revenue'].astype(int).to_numpy()\nnum0 = ['Administrative', 'Informational', 'ProductRelated', 'total_duration']\nnum1 = num0 + ['product_share', 'share_x_product_count']\ncat = ['Month', 'Weekend', 'VisitorType', 'OperatingSystems', 'Browser', 'Region', 'TrafficType', 'SpecialDay']\n\ndef model(num):\n    prep = ColumnTransformer([('num', StandardScaler(), num), ('cat', OneHotEncoder(handle_unknown='ignore'), cat)])\n    return make_pipeline(prep, LogisticRegression(max_iter=1000))\n\ncv = RepeatedStratifiedKFold(n_splits=5, n_repeats=3, random_state=20261102)\nrows = []\nfor tr, te in cv.split(raw, y):\n    b, a = model(num0), model(num1)\n    b.fit(raw.iloc[tr], y[tr]); a.fit(raw.iloc[tr], y[tr])\n    pb = b.predict_proba(raw.iloc[te])[:, 1]\n    pa = a.predict_proba(raw.iloc[te])[:, 1]\n    delta = log_loss(y[te], pb, labels=[0, 1]) - log_loss(y[te], pa, labels=[0, 1])\n    train = raw.iloc[tr]\n    q25, q75 = train.loc[train['total_duration'] > 0, 'product_share'].quantile([0.25, 0.75]).to_numpy()\n    med_count = train['ProductRelated'].median()\n    valid = raw.iloc[te].loc[raw.iloc[te]['total_duration'] > 0].copy()\n    lo, hi = valid.copy(), valid.copy()\n    lo['product_share'] = q25; hi['product_share'] = q75\n    lo['share_x_product_count'] = q25 * med_count; hi['share_x_product_count'] = q75 * med_count\n    contrast = float(np.mean(a.predict_proba(hi)[:, 1] - a.predict_proba(lo)[:, 1])) if len(valid) else None\n    rows.append({'logloss_improvement': float(delta), 'share_q25': float(q25), 'share_q75': float(q75), 'median_product_count': float(med_count), 'modeled_probability_contrast': contrast})\nprint(__import__('json').dumps({'n': len(raw), 'zero_total_n': int(raw['zero_total_duration'].sum()), 'zero_total_fraction': float(raw['zero_total_duration'].mean()), 'folds': rows}, separators=(',', ':')))"
+      },
+      "result": {
+        "status": "clarification",
+        "code_sha256": "2fba2d0733bf5d82b15f30fcdc11d530e94c052d600d45f6214dedc69cd13c40",
+        "data_sha256": "b3055ee355f59134d851d32641183cb4a8b45def7124d2f50442a042f358e0d9",
+        "reason": "External I/O/dynamic execution prohibited"
+      }
+    },
+    {
+      "id": "allocation_prior_work",
+      "broker_id": "search_1",
+      "type": "search",
+      "request": {
+        "type": "search",
+        "id": "search_1",
+        "query": "Studies using the UCI Online Shoppers Purchasing Intention Dataset or comparable e-commerce session analytics that test whether product-page dwell-time share predicts purchase conditional on page counts and total session duration; look for compositional or time-allocation analyses, not generic conversion prediction.",
+        "missing_relation": "Whether conditional product-duration allocation beyond browsing volume has already been directly tested, and how its measurement and decision-time availability have been handled.",
+        "change_if_found": "If a close study tests the same conditional contrast, revise I1 toward a genuinely discriminating extension supported by this dataset (or withdraw a novelty implication); if none is found, retain I1 only as a candidate question and do not treat a limited search as proof of novelty."
+      },
+      "result": {
+        "status": "returned",
+        "sources": [
+          {
+            "doi": "10.70267/icrafm.202617509516",
+            "title": "Predicting E-Commerce Purchase Intention from Web Session Behavior: Feature Engineering, Imbalanced Learning, and Conversion Decision Support E-Commerce Purchase Intention Prediction",
+            "date": [
+              2026,
+              10,
+              19
+            ],
+            "abstract": " Online purchase intention prediction is valuable for e-commerce operations, but the positive purchase class is rare and purely accuracy-oriented models can mislead conversion decisions. This paper studies a reproducible decision-support pipeline, FIDDS, for session-level purchase prediction from web behavior. FIDDS combines behavior-driven interaction features, imbalance-aware learning, probability calibration, and utility-based threshold selection. Experiments use the real UCI Online Shoppers Purchasing Intention Dataset with 12,330 sessions, 1,908 purchase sessions, and five stratified random seeds. Random Forest achieves the highest PR-AUC at 0.7453, while FIDDS achieves PR-AUC 0.7426, ROC-AUC 0.9301, F1 0.5723, recall 0.9173, lift at the top 10% of sessions 5.0233, and expected utility 0.1321. The results indicate that conversion-oriented evaluation changes how a model should be selected: the strongest classifier is not always the clearest operating policy. The evidence is limited to one public benchmark and should be read as decision-support validation rather than proof of platform-wide causal uplift. "
+          },
+          {
+            "doi": "10.7717/peerj-cs.59/table-1",
+            "title": "Table 1: Details about the data corpora employed, including counts of session, talk turn, and word token, and also total time duration.",
+            "date": [],
+            "abstract": ""
+          },
+          {
+            "doi": "10.22271/27084515.2024.v5.i2h.407",
+            "title": "Real-time prediction of online shoppers' purchase intent",
+            "date": [
+              2024,
+              7,
+              1
+            ],
+            "abstract": ""
+          },
+          {
+            "doi": "10.7554/elife.07460.013",
+            "title": "Figure 3—figure supplement 1. Daily distribution of Fraxinus game visits.",
+            "date": [],
+            "abstract": ""
+          },
+          {
+            "doi": "10.47738/ijaim.v4i2.81",
+            "title": "Using Random Forest and Support Vector Machine Algorithms to Predict Online Shopper Purchase Intention from E-Commerce Session Data",
+            "date": [
+              2024,
+              6,
+              1
+            ],
+            "abstract": ""
+          },
+          {
+            "doi": "10.1007/s00521-018-3523-0",
+            "title": "Real-time prediction of online shoppers’ purchasing intention using multilayer perceptron and LSTM recurrent neural networks",
+            "date": [
+              2018,
+              5,
+              9
+            ],
+            "abstract": ""
+          }
+        ],
+        "scope": "Crossref metadata, not exhaustive novelty evidence",
+        "transport_failures": []
+      }
+    }
+  ]
+}

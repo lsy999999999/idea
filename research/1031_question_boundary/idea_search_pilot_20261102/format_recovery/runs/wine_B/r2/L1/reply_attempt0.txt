@@ -1,0 +1,109 @@
+{
+  "recognition": "This is the UCI Wine Quality dataset (UCI ID 186), with red and white vinho verde samples, physicochemical measurements, and sensory quality scores. Dataset recognition and its existing metadata are not discoveries. The supplied rows are observational and do not establish intervention effects.",
+  "candidates": [
+    {
+      "id": "I1",
+      "title": "How much quality disagreement remains among chemically similar wines?",
+      "question": "Within each color, do wines with very similar measured physicochemical profiles have more similar quality scores than expected under a quality-label permutation that preserves color and coarse chemistry strata?",
+      "core": {
+        "object": "Quality-score disagreement among same-color wine pairs",
+        "relation_or_action": "Relate multivariate physicochemical distance to absolute quality-score difference",
+        "contrast": "Observed disagreement among prespecified nearest-neighbor pairs versus a conditional permutation reference",
+        "prediction": "Nearest-neighbor pairs have smaller quality-score differences than the permutation reference, but nonzero disagreement remains.",
+        "independent_unit": "A wine row; pairwise comparisons are dependent, and lot, producer, and panel identifiers are unavailable."
+      },
+      "failure_condition": "Nearest-neighbor pairs show no lower disagreement than the conditional permutation reference, or results change materially under reasonable distance and stratum definitions.",
+      "assumptions": [
+        "Chemistry can be scaled comparably within color for distance calculations.",
+        "The permutation strata preserve relevant broad chemistry and score distributions.",
+        "Pair-level uncertainty accounts for shared rows; rows are not independent replicates of a sensory panel."
+      ],
+      "required_new_data": "Independent wines with lot and producer identifiers, repeated blinded sensory ratings, and the same physicochemical measurements to separate sample variation from rating and batch variation.",
+      "feasible_with_current_data": true,
+      "domain_value": "Tests whether measured chemistry is locally informative about sensory scores and identifies whether chemistry-similar samples still require additional sensory or process measurements.",
+      "history_match": "none",
+      "history_relation": "new_family",
+      "discriminating_delta": "Tests local score concordance and residual disagreement, rather than a particular chemical interaction or a red-white score difference.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    },
+    {
+      "id": "I2",
+      "title": "Does chemical rarity distinguish high-scoring wines from typical wines?",
+      "question": "Within each color, are quality 8–9 samples more chemically unusual than quality 5–6 samples under a prespecified multivariate rarity score, after matching the comparison on sample count and score frequency?",
+      "core": {
+        "object": "Color-specific multivariate chemical rarity of wine samples",
+        "relation_or_action": "Compare chemistry-density ranks between high-scoring and typical-score samples",
+        "contrast": "Quality 8–9 versus quality 5–6 within color",
+        "prediction": "High-scoring samples have lower estimated local chemistry density, but this contrast may differ by color.",
+        "independent_unit": "A wine row; sampling structure and dependence among samples are unknown."
+      },
+      "failure_condition": "High-scoring wines are not more chemically rare within either color, or the finding is unstable to the prespecified density estimator and leave-one-out calculation.",
+      "assumptions": [
+        "The score ranges are sufficiently represented within each color.",
+        "Density ranks are meaningful in the observed feature space after scaling and handling correlated measurements.",
+        "Rarity is descriptive and does not imply that rare chemistry causes high quality."
+      ],
+      "required_new_data": "A prospectively sampled set with lot or producer identifiers, repeated blinded sensory ratings, and enough high-scoring samples to validate rarity ranks out of sample.",
+      "feasible_with_current_data": true,
+      "domain_value": "Could determine whether exceptional scores merit targeted follow-up of unusual compositions or instead occur across common chemistry profiles.",
+      "history_match": "none",
+      "history_relation": "new_family",
+      "discriminating_delta": "Focuses on multivariate composition rarity conditional on score and color, rather than general outlier detection or feature relevance.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    },
+    {
+      "id": "I3",
+      "title": "Does residual sugar buffer the sensory effect of volatile acidity?",
+      "question": "In a randomized sensory study of otherwise matched wines, does the effect of experimentally varied volatile acidity on blinded quality ratings differ between low and high residual-sugar formulations?",
+      "core": {
+        "object": "Blinded sensory quality rating of a wine formulation",
+        "relation_or_action": "Estimate the interaction between assigned volatile acidity and assigned residual_sugar",
+        "contrast": "Volatile-acidity effect at low versus high assigned residual_sugar",
+        "prediction": "Increasing volatile acidity lowers ratings less at high than at low residual_sugar.",
+        "independent_unit": "Independently prepared wine batch; panelist ratings are repeated measurements nested within batch and panelist."
+      },
+      "failure_condition": "The interaction is absent, reverses direction, or does not replicate across independently prepared batches.",
+      "assumptions": [
+        "Formulations can vary the two targets without unintended changes to other measured or sensory properties.",
+        "Panelists are blinded and assignment order is randomized.",
+        "The supplied observational rows may motivate, but cannot estimate, the intervention effect."
+      ],
+      "required_new_data": "Randomized factorial formulations with measured chemistry, independent preparation batches, and repeated blinded ratings from a defined sensory panel.",
+      "feasible_with_current_data": false,
+      "domain_value": "Would test a controllable formulation question and distinguish sensory buffering from an observational association.",
+      "history_match": "round1:I1",
+      "history_relation": "new_family",
+      "discriminating_delta": "Moves from an observational alcohol-by-sugar association to a randomized test of volatile acidity by residual_sugar with preparation batch and panelist represented in the design.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": false,
+        "worth_testing": true
+      },
+      "next_action": "measure"
+    }
+  ],
+  "selected_id": "I1",
+  "selection_reason": "I1 opens a direction distinct from the prior round's chemical interaction and color-gap comparisons. It tests whether chemistry-similar samples have locally concordant scores and forecasts a direct comparison against a color- and chemistry-stratified permutation reference. I expect lower score disagreement among nearest neighbors, with residual disagreement remaining; this would be exploratory evidence about local association, not proof that chemistry is sufficient or causal.",
+  "method_ids": [
+    "M36",
+    "M21",
+    "M38"
+  ],
+  "task": {
+    "deliverable": "Define a scaled multivariate chemistry distance and nearest-neighbor rule within each color before inspecting pairwise score differences. Compare absolute quality-score disagreement for nearest-neighbor pairs with a conditional permutation reference preserving color and coarse chemistry strata. Report the forecast comparison, sensitivity to reasonable distance and stratum choices, and uncertainty that accounts for pairs sharing rows.",
+    "acceptance": "The analysis reports whether nearest-neighbor disagreement is lower than the reference, the size and uncertainty of the contrast, and whether nonzero disagreement remains. It treats rows and derived pairs as observational, notes missing lot, producer, and panel identifiers, and makes no causal or sensory-reliability claim."
+  }
+}

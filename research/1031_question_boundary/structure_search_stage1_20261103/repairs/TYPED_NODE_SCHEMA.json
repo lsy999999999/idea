@@ -1,0 +1,135 @@
+{
+  "$defs": {
+    "node": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "enum": [
+                "u",
+                "h",
+                "history",
+                "times",
+                "dt",
+                "p0",
+                "p1",
+                "p2",
+                "p3"
+              ]
+            },
+            "value": {
+              "type": "null"
+            },
+            "args": {
+              "type": "array",
+              "items": {},
+              "maxItems": 0
+            }
+          },
+          "required": [
+            "op",
+            "value",
+            "args"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "enum": [
+                "constant"
+              ]
+            },
+            "value": {
+              "type": "number"
+            },
+            "args": {
+              "type": "array",
+              "items": {},
+              "maxItems": 0
+            }
+          },
+          "required": [
+            "op",
+            "value",
+            "args"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "enum": [
+                "sum",
+                "mean",
+                "exp",
+                "log",
+                "sqrt",
+                "abs",
+                "sin",
+                "cos",
+                "tanh"
+              ]
+            },
+            "value": {
+              "type": "null"
+            },
+            "args": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/node"
+              },
+              "minItems": 1,
+              "maxItems": 1
+            }
+          },
+          "required": [
+            "op",
+            "value",
+            "args"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "enum": [
+                "add",
+                "sub",
+                "mul",
+                "div",
+                "pow"
+              ]
+            },
+            "value": {
+              "type": "null"
+            },
+            "args": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/node"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "required": [
+            "op",
+            "value",
+            "args"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    }
+  },
+  "$ref": "#/$defs/node"
+}

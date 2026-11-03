@@ -1,0 +1,160 @@
+{
+  "time": "2026-11-03T12:28:43.978927+00:00",
+  "scope": "Organizer post-run diagnosis using observed records; no new model calls, no scientific candidate repairs, not autonomous constraint discovery",
+  "sources": {
+    "amendment1/visible/evidence.json": "c1527805626ff6d915c9b9116cfd1d7a13bfd52351c075d6400e3d6b02b35a05",
+    "amendment1/experiments/batch_1/OBSERVATIONS.json": "3ef269825e19cb7b2797dce89d133fafc43a6dc545e74ea1091823836f58c6b3",
+    "amendment1/candidates/C5.json": "20d88d307f4049cb6f399dbc13c71c50d0bfdc593dd573dbbeac79505653f3f3",
+    "amendment1/candidates/C6.json": "75c537b203a8acda8bd43624d388a172020b9e0246e3f2ebca872172d365e3a5"
+  },
+  "initial64_additive_floor": {
+    "rows": 64,
+    "class_": "A(u,h) + B(history,times,dt)",
+    "left_levels": 4,
+    "right_levels": 7,
+    "rank": 9,
+    "minimum_possible_rmse": 0.11679774867591308,
+    "sse": 0.8730697021287523,
+    "normal_equation_max_abs": 1.6264767310758543e-14,
+    "proof": "On this finite set, allow an independent unrestricted value for A at each unique left input and B at each unique right input. This contains every shared deterministic additive model on the set. Global linear least squares therefore gives the exact class minimum empirical RMSE, irrespective of nonlinear function forms or parameter fitting."
+  },
+  "common80_additive_floor": {
+    "rows": 80,
+    "class_": "A(u,h) + B(history,times,dt)",
+    "left_levels": 6,
+    "right_levels": 7,
+    "rank": 11,
+    "minimum_possible_rmse": 0.10536671677205334,
+    "sse": 0.8881716002657685,
+    "normal_equation_max_abs": 7.93809462606987e-15,
+    "proof": "On this finite set, allow an independent unrestricted value for A at each unique left input and B at each unique right input. This contains every shared deterministic additive model on the set. Global linear least squares therefore gives the exact class minimum empirical RMSE, irrespective of nonlinear function forms or parameter fitting."
+  },
+  "independent_analytic_certificate": {
+    "means": [
+      1.3126313975064603,
+      -0.7212799053007427,
+      0.9763229557772776,
+      -0.3718066883690741
+    ],
+    "group_n": 6,
+    "difference_in_differences": 0.6857816586608516,
+    "min_sse_from_group_means": 0.7054447250334432,
+    "rmse_lower_bound_on_80_rows": 0.09390452099296412,
+    "proof": "For additive predictions, the signed four-group contrast is zero. Cauchy-Schwarz gives sum of four squared mean residuals >= observed contrast squared/4. Six repetitions per group imply SSE >= 6*contrast^2/4, before adding within-group noise or other records."
+  },
+  "candidate_memberships": [
+    {
+      "id": "C5",
+      "certified_additive": true,
+      "terms": [
+        {
+          "expression": "a",
+          "raw_dependencies": [],
+          "group": "left"
+        },
+        {
+          "expression": "b * u",
+          "raw_dependencies": [
+            "u"
+          ],
+          "group": "left"
+        },
+        {
+          "expression": "c * h",
+          "raw_dependencies": [
+            "h"
+          ],
+          "group": "left"
+        },
+        {
+          "expression": "d * memory",
+          "raw_dependencies": [
+            "history",
+            "times"
+          ],
+          "group": "right"
+        }
+      ],
+      "scope": "Sufficient syntactic dependency certificate; unknown expressions are never declared additive merely because analysis fails"
+    },
+    {
+      "id": "C6",
+      "certified_additive": true,
+      "terms": [
+        {
+          "expression": "a",
+          "raw_dependencies": [],
+          "group": "left"
+        },
+        {
+          "expression": "b * u",
+          "raw_dependencies": [
+            "u"
+          ],
+          "group": "left"
+        },
+        {
+          "expression": "c * h",
+          "raw_dependencies": [
+            "h"
+          ],
+          "group": "left"
+        },
+        {
+          "expression": "d * memory",
+          "raw_dependencies": [
+            "history",
+            "times"
+          ],
+          "group": "right"
+        },
+        {
+          "expression": "e * (history[3] - history[0]) * memory",
+          "raw_dependencies": [
+            "history",
+            "times"
+          ],
+          "group": "right"
+        }
+      ],
+      "scope": "Sufficient syntactic dependency certificate; unknown expressions are never declared additive merely because analysis fails"
+    }
+  ],
+  "audit_checks": {
+    "known_cross_term_not_misclassified": true,
+    "exact_metric_recomputed": true,
+    "all_frozen_sources_unchanged": true,
+    "all_six_calls_no_tool_actions": true,
+    "initial_prompt_no_specific_history_formula": true,
+    "amendment_evidence_refs_valid": {
+      "05_full": true,
+      "06_full": true
+    }
+  },
+  "prospective": [
+    {
+      "batch": "batch_1",
+      "conditions": 4,
+      "observations": 16,
+      "rmse": 0.08953555642684077,
+      "prediction_before_observation": true
+    },
+    {
+      "batch": "batch_2",
+      "conditions": 0,
+      "observations": 0,
+      "rmse": null,
+      "prediction_before_observation": true
+    }
+  ],
+  "repeated_call6_conditions": 4,
+  "research_calls": 6,
+  "usage": {
+    "input_tokens": 206533,
+    "cached_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 3460,
+    "reasoning_output_tokens": 0
+  },
+  "finding": "Both complete runnable candidates remain in the same additive class, whose best possible RMSE on all 80 development records is above 0.06. The new interaction changes history dependence but leaves the contradicted separation from waiting time intact."
+}

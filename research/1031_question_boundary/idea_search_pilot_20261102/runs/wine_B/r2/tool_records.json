@@ -1,0 +1,92 @@
+[
+  {
+    "id": "I1_local_score_concordance",
+    "broker_id": "compute_0",
+    "type": "compute",
+    "request": {
+      "type": "compute",
+      "id": "compute_0",
+      "purpose": "Estimate the prespecified nearest-neighbor score-disagreement contrast against a color- and coarse-chemistry-stratified permutation reference. This is an exploratory diagnostic, not confirmation.",
+      "model_spec": "Within each color, z-scale the 11 chemistry columns, form unique undirected pairs from each row's single nearest neighbor, and calculate mean absolute quality difference. Form coarse chemistry strata from quartile bins of the first two PCs computed within color. Permute quality within those strata 500 times and recalculate pair disagreement. Report counts, observed disagreement, permutation mean and 2.5th–97.5th percentiles, and the fraction of permutation contrasts at least as favorable as observed. State that this reference depends on within-stratum exchangeability and that pair dependence and unknown sampling structure limit inference.",
+      "code": "import json\nimport numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.decomposition import PCA\nfrom sklearn.neighbors import NearestNeighbors\n\nrng = np.random.default_rng(20261102)\ncols = ['fixed_acidity','volatile_acidity','citric_acid','residual_sugar','chlorides','free_sulfur_dioxide','total_sulfur_dioxide','density','pH','sulphates','alcohol']\nout = {}\nfor color, g in TABLES['main'].groupby('color'):\n    X = StandardScaler().fit_transform(g[cols].to_numpy(dtype=float))\n    y = g['quality'].to_numpy(dtype=float)\n    n = len(g)\n    nn = NearestNeighbors(n_neighbors=2).fit(X).kneighbors(X, return_distance=False)[:, 1]\n    pairs = sorted(set((min(i, int(j)), max(i, int(j))) for i, j in enumerate(nn)))\n    a = np.array([p[0] for p in pairs], dtype=int)\n    b = np.array([p[1] for p in pairs], dtype=int)\n    observed = float(np.mean(np.abs(y[a] - y[b])))\n    pcs = PCA(n_components=2).fit_transform(X)\n    strata = np.zeros(n, dtype=int)\n    for j in range(2):\n        strata = strata * 4 + pd.qcut(pcs[:, j], q=4, labels=False, duplicates='drop').astype(int)\n    groups = [np.flatnonzero(strata == s) for s in np.unique(strata)]\n    perm = []\n    for _ in range(500):\n        yp = y.copy()\n        for ix in groups:\n            yp[ix] = rng.permutation(yp[ix])\n        perm.append(float(np.mean(np.abs(yp[a] - yp[b]))))\n    perm = np.asarray(perm)\n    out[str(color)] = {'n_rows': n, 'n_unique_pairs': len(pairs), 'n_strata': len(groups), 'min_stratum_n': int(min(map(len, groups))), 'observed_mean_abs_quality_difference': observed, 'permutation_mean': float(perm.mean()), 'permutation_interval_95': [float(np.quantile(perm, .025)), float(np.quantile(perm, .975))], 'fraction_permutations_at_least_as_favorable': float(np.mean(perm <= observed))}\nprint(json.dumps(out, separators=(',', ':')))"
+    },
+    "result": {
+      "status": "executed",
+      "code_sha256": "a88622ce44abd8c3b01f62d860e7fdaa8290ad49c4d2eed344400640fa6fa20b",
+      "data_sha256": "428bd8df7313b159988405ae5e3be6d363993d73f7ffc2adedfdc1d496508191",
+      "returncode": 0,
+      "stdout": "{\"red\":{\"n_rows\":1599,\"n_unique_pairs\":1350,\"n_strata\":16,\"min_stratum_n\":66,\"observed_mean_abs_quality_difference\":0.3814814814814815,\"permutation_mean\":0.6313896296296295,\"permutation_interval_95\":[0.6022222222222222,0.6607407407407407],\"fraction_permutations_at_least_as_favorable\":0.0},\"white\":{\"n_rows\":4898,\"n_unique_pairs\":4241,\"n_strata\":16,\"min_stratum_n\":269,\"observed_mean_abs_quality_difference\":0.3727894364536666,\"permutation_mean\":0.7135251120018863,\"permutation_interval_95\":[0.6949952841311011,0.7320266446592785],\"fraction_permutations_at_least_as_favorable\":0.0}}\n",
+      "stderr": "",
+      "stdout_truncated": false
+    }
+  },
+  {
+    "id": "I1_nearest_work",
+    "broker_id": "search_1",
+    "type": "search",
+    "request": {
+      "type": "search",
+      "id": "search_1",
+      "query": "Studies using the UCI Wine Quality data or related wine sensory datasets that test local multivariate physicochemical similarity against sensory quality-score disagreement, including label-permutation or conditional-randomization references",
+      "missing_relation": "Whether local chemistry-to-score concordance with residual disagreement is already a studied question, beyond general wine-quality prediction, outlier detection, or feature selection",
+      "change_if_found": "If a close study tests this relation and contrast, classify I1 as literature-overlapping and refine toward a prespecified unresolved measurement or sampling source; otherwise retain only as a candidate question with novelty still unverified."
+    },
+    "result": {
+      "status": "returned",
+      "sources": [
+        {
+          "doi": "10.1533/9781845699284.2.189",
+          "title": "Sensory analysis of wine",
+          "date": [
+            2010
+          ],
+          "abstract": ""
+        },
+        {
+          "doi": "10.32614/cran.package.sensorydatasets",
+          "title": "SensoryDataSets: A Collection of Sensory Evaluation and Consumer Science Datasets",
+          "date": [
+            2026,
+            9,
+            14
+          ],
+          "abstract": ""
+        },
+        {
+          "doi": "10.1533/9781845699284.1.3",
+          "title": "Volatile aroma compounds and wine sensory attributes",
+          "date": [
+            2010
+          ],
+          "abstract": ""
+        },
+        {
+          "doi": "10.1016/b978-0-08-102067-8.00010-5",
+          "title": "Sensory analysis of wine",
+          "date": [
+            2022
+          ],
+          "abstract": ""
+        },
+        {
+          "doi": "10.1533/9781845699512.3.236",
+          "title": "Sensory quality control in the wine industry",
+          "date": [
+            2010
+          ],
+          "abstract": ""
+        },
+        {
+          "doi": "10.1533/9780857098856.3.466",
+          "title": "Instrumental assessment of the sensory quality of wine",
+          "date": [
+            2013
+          ],
+          "abstract": ""
+        }
+      ],
+      "scope": "Crossref metadata, not exhaustive novelty evidence",
+      "transport_failures": []
+    }
+  }
+]

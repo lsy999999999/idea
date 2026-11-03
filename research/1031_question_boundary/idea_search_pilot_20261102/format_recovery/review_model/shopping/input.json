@@ -1,0 +1,2277 @@
+{
+  "instruction": "# 隐藏组名的语义复核规则\n\nThis is a pre-specified evaluation of research candidates. You are not the generator. Use only the supplied records. Do not use tools, files, memory, network or external papers. Record what the evidence permits. Return JSON directly, with no markdown. No private reasoning trace is requested.\n\nThe records are shuffled and have opaque ids. Do not infer or reward the method, verbosity, apparent sophistication or family names proposed by a generator. Assign your own coarse semantic families jointly across ALL records in this task. Same core question with a new name, threshold, model, routine subgroup or time window remains the same family. A different intervention/comparison or scientific relation may be a different family if its central discriminating prediction changes. Same-family refinements can be useful: record them separately rather than dismissing them. Do not force everything with the same outcome into one family. Initial and final variants often belong together.\n\nJudge candidate quality by four criteria: specific question/action, falsifiable contrast, coherent measurement/logic, feasible research plan with explicit necessary measurements. Current data need not settle the question, but a vague wish to collect unspecified new data is insufficient. Generic feature selection, fit-a-better-model or merely repeating a limitation in the dataset documentation is insufficient input increment. Existing conventional methods can form testable proposals, but do not count as established literature originality.\n\nFor final records, additionally inspect the actual tool request/code/output and final evidence claim. A code exit 0 is not scientific validation. Check if code computes the stated contrast, correct unit/independent sample, direction, temporal availability, target leakage, sample selection and causal scope. A computed feasibility count does not support an effect. A revised but uncomputed question may remain a useful proposal; it cannot inherit empirical support for a different question. Negative findings and correct withdrawals are useful evidence updates. Do not count withdrawn/blocked/null final candidates as delivered usable final ideas.\n\nMain judgement usable_final requires a valid concrete final candidate AND no material mismatch between its claimed evidence status and actual evidence. A proposal-only final can pass when the plan is feasible and correctly labeled. A scientifically invalid evidence claim can fail even if the question itself is interesting. Report both proposal_quality and usable_final.\n\nThis review does not establish literature novelty or real-world causal effects. Do not penalize honest uncertainty. Do not invent statistical or code errors. If an issue cannot be settled from supplied records, label needs_check and state the exact unresolved issue.\n\nReturn JSON with:\n- families: [{family_id, label, core_definition, boundary_rationale}]\n- records: exactly one entry per opaque input id, each {id,family_id,criteria:{specific:boolean,falsifiable:boolean,coherent:boolean,feasible:boolean,input_increment:boolean},proposal_quality:boolean,usable_final:boolean|null,material_acceptance_error:boolean,error_type:string,reason:string,needs_check:string}.\n- cross_record_observations: concise facts about repeated families and meaningful refinements without guessing strategies.\n\nEvery candidate id must occur exactly once; every family_id must exist. For a null final use family_id NONE, proposal_quality false, usable_final false, and define NONE. Explanations may be in Chinese. Limit each record's reason to around 45 English words or comparable Chinese length.\n",
+  "materials": {
+    "case": "shopping",
+    "official_documentation": {
+      "uci_id": 468,
+      "name": "Online Shoppers Purchasing Intention Dataset",
+      "repository_url": "https://archive.ics.uci.edu/dataset/468/online+shoppers+purchasing+intention+dataset",
+      "data_url": "https://archive.ics.uci.edu/static/public/468/data.csv",
+      "abstract": "Of the 12,330 sessions in the dataset,\n84.5% (10,422) were negative class samples that did not\nend with shopping, and the rest (1908) were positive class\nsamples ending with shopping.",
+      "area": "Business",
+      "tasks": [
+        "Classification",
+        "Clustering"
+      ],
+      "characteristics": [
+        "Multivariate"
+      ],
+      "num_instances": 12330,
+      "num_features": 17,
+      "feature_types": [
+        "Integer",
+        "Real"
+      ],
+      "demographics": [],
+      "target_col": [
+        "Revenue"
+      ],
+      "index_col": null,
+      "has_missing_values": "no",
+      "missing_values_symbol": null,
+      "year_of_dataset_creation": 2018,
+      "last_updated": "Thu Jan 11 2024",
+      "dataset_doi": "10.24432/C5F88Q",
+      "creators": [
+        "C. Sakar",
+        "Yomi Kastro"
+      ],
+      "intro_paper": {
+        "ID": 367,
+        "type": "NATIVE",
+        "title": "Real-time prediction of online shoppers’ purchasing intention using multilayer perceptron and LSTM recurrent neural networks",
+        "authors": "C. O. Sakar, S. Polat, Mete Katircioglu, Yomi Kastro",
+        "venue": "Neural computing & applications (Print)",
+        "year": 2019,
+        "journal": null,
+        "DOI": "10.1007/s00521-018-3523-0",
+        "URL": "https://www.semanticscholar.org/paper/747e098f85ca2d20afd6313b11242c0c427e6fb3",
+        "sha": null,
+        "corpus": null,
+        "arxiv": null,
+        "mag": null,
+        "acl": null,
+        "pmid": null,
+        "pmcid": null
+      },
+      "variables": [
+        {
+          "name": "Administrative",
+          "role": "Feature",
+          "type": "Integer",
+          "demographic": null,
+          "description": null,
+          "units": null,
+          "missing_values": "no"
+        },
+        {
+          "name": "Administrative_Duration",
+          "role": "Feature",
+          "type": "Integer",
+          "demographic": null,
+          "description": null,
+          "units": null,
+          "missing_values": "no"
+        },
+        {
+          "name": "Informational",
+          "role": "Feature",
+          "type": "Integer",
+          "demographic": null,
+          "description": null,
+          "units": null,
+          "missing_values": "no"
+        },
+        {
+          "name": "Informational_Duration",
+          "role": "Feature",
+          "type": "Integer",
+          "demographic": null,
+          "description": null,
+          "units": null,
+          "missing_values": "no"
+        },
+        {
+          "name": "ProductRelated",
+          "role": "Feature",
+          "type": "Integer",
+          "demographic": null,
+          "description": null,
+          "units": null,
+          "missing_values": "no"
+        },
+        {
+          "name": "ProductRelated_Duration",
+          "role": "Feature",
+          "type": "Continuous",
+          "demographic": null,
+          "description": null,
+          "units": null,
+          "missing_values": "no"
+        },
+        {
+          "name": "BounceRates",
+          "role": "Feature",
+          "type": "Continuous",
+          "demographic": null,
+          "description": null,
+          "units": null,
+          "missing_values": "no"
+        },
+        {
+          "name": "ExitRates",
+          "role": "Feature",
+          "type": "Continuous",
+          "demographic": null,
+          "description": null,
+          "units": null,
+          "missing_values": "no"
+        },
+        {
+          "name": "PageValues",
+          "role": "Feature",
+          "type": "Integer",
+          "demographic": null,
+          "description": null,
+          "units": null,
+          "missing_values": "no"
+        },
+        {
+          "name": "SpecialDay",
+          "role": "Feature",
+          "type": "Integer",
+          "demographic": null,
+          "description": null,
+          "units": null,
+          "missing_values": "no"
+        },
+        {
+          "name": "Month",
+          "role": "Feature",
+          "type": "Categorical",
+          "demographic": null,
+          "description": null,
+          "units": null,
+          "missing_values": "no"
+        },
+        {
+          "name": "OperatingSystems",
+          "role": "Feature",
+          "type": "Integer",
+          "demographic": null,
+          "description": null,
+          "units": null,
+          "missing_values": "no"
+        },
+        {
+          "name": "Browser",
+          "role": "Feature",
+          "type": "Integer",
+          "demographic": null,
+          "description": null,
+          "units": null,
+          "missing_values": "no"
+        },
+        {
+          "name": "Region",
+          "role": "Feature",
+          "type": "Integer",
+          "demographic": null,
+          "description": null,
+          "units": null,
+          "missing_values": "no"
+        },
+        {
+          "name": "TrafficType",
+          "role": "Feature",
+          "type": "Integer",
+          "demographic": null,
+          "description": null,
+          "units": null,
+          "missing_values": "no"
+        },
+        {
+          "name": "VisitorType",
+          "role": "Feature",
+          "type": "Categorical",
+          "demographic": null,
+          "description": null,
+          "units": null,
+          "missing_values": "no"
+        },
+        {
+          "name": "Weekend",
+          "role": "Feature",
+          "type": "Binary",
+          "demographic": null,
+          "description": null,
+          "units": null,
+          "missing_values": "no"
+        },
+        {
+          "name": "Revenue",
+          "role": "Target",
+          "type": "Binary",
+          "demographic": null,
+          "description": null,
+          "units": null,
+          "missing_values": "no"
+        }
+      ],
+      "additional_info": {
+        "summary": "The dataset consists of feature vectors belonging to 12,330 sessions. \r\nThe dataset was formed so that each session\r\nwould belong to a different user in a 1-year period to avoid\r\nany tendency to a specific campaign, special day, user\r\nprofile, or period. ",
+        "purpose": null,
+        "funded_by": null,
+        "instances_represent": null,
+        "recommended_data_splits": null,
+        "sensitive_data": null,
+        "preprocessing_description": null,
+        "variable_info": "The dataset consists of 10 numerical and 8 categorical attributes.\r\nThe 'Revenue' attribute can be used as the class label.\r\n\r\n\"Administrative\", \"Administrative Duration\", \"Informational\", \"Informational Duration\", \"Product Related\" and \"Product Related Duration\" represent the number of different types of pages visited by the visitor in that session and total time spent in each of these page categories. The values of these features are derived from the URL information of the pages visited by the user and updated in real time when a user takes an action, e.g. moving from one page to another. The \"Bounce Rate\", \"Exit Rate\" and \"Page Value\" features represent the metrics measured by \"Google Analytics\" for each page in the e-commerce site. The value of \"Bounce Rate\" feature for a web page refers to the percentage of visitors who enter the site from that page and then leave (\"bounce\") without triggering any other requests to the analytics server during that session. The value of \"Exit Rate\" feature for a specific web page is calculated as for all pageviews to the page, the percentage that were the last in the session. The \"Page Value\" feature represents the average value for a web page that a user visited before completing an e-commerce transaction. The \"Special Day\" feature indicates the closeness of the site visiting time to a specific special day (e.g. Mother’s Day, Valentine's Day) in which the sessions are more likely to be finalized with transaction. The value of this attribute is determined by considering the dynamics of e-commerce such as the duration between the order date and delivery date. For example, for Valentina’s day, this value takes a nonzero value between February 2 and February 12, zero before and after this date unless it is close to another special day, and its maximum value of 1 on February 8. The dataset also includes operating system, browser, region, traffic type, visitor type as returning or new visitor, a Boolean value indicating whether the date of the visit is weekend, and month of the year.",
+        "citation": null
+      }
+    },
+    "actual_rows": 12330,
+    "data_sha256": "b3055ee355f59134d851d32641183cb4a8b45def7124d2f50442a042f358e0d9",
+    "metadata_sha256": "015fad0a43ae2bba872f45a962cfbb38c3d26733aa753bdd444e4ccbb1cc2a55",
+    "univariate_profile": {
+      "Administrative": {
+        "dtype": "int64",
+        "missing": 0,
+        "unique": 27,
+        "quantiles": {
+          "0.0": 0.0,
+          "0.25": 0.0,
+          "0.5": 1.0,
+          "0.75": 4.0,
+          "1.0": 27.0
+        }
+      },
+      "Administrative_Duration": {
+        "dtype": "float64",
+        "missing": 0,
+        "unique": 3335,
+        "quantiles": {
+          "0.0": 0.0,
+          "0.25": 0.0,
+          "0.5": 7.5,
+          "0.75": 93.25625,
+          "1.0": 3398.75
+        }
+      },
+      "Informational": {
+        "dtype": "int64",
+        "missing": 0,
+        "unique": 17,
+        "quantiles": {
+          "0.0": 0.0,
+          "0.25": 0.0,
+          "0.5": 0.0,
+          "0.75": 0.0,
+          "1.0": 24.0
+        }
+      },
+      "Informational_Duration": {
+        "dtype": "float64",
+        "missing": 0,
+        "unique": 1258,
+        "quantiles": {
+          "0.0": 0.0,
+          "0.25": 0.0,
+          "0.5": 0.0,
+          "0.75": 0.0,
+          "1.0": 2549.375
+        }
+      },
+      "ProductRelated": {
+        "dtype": "int64",
+        "missing": 0,
+        "unique": 311,
+        "quantiles": {
+          "0.0": 0.0,
+          "0.25": 7.0,
+          "0.5": 18.0,
+          "0.75": 38.0,
+          "1.0": 705.0
+        }
+      },
+      "ProductRelated_Duration": {
+        "dtype": "float64",
+        "missing": 0,
+        "unique": 9551,
+        "quantiles": {
+          "0.0": 0.0,
+          "0.25": 184.1375,
+          "0.5": 598.9369047499999,
+          "0.75": 1464.1572135000001,
+          "1.0": 63973.52223
+        }
+      },
+      "BounceRates": {
+        "dtype": "float64",
+        "missing": 0,
+        "unique": 1872,
+        "quantiles": {
+          "0.0": 0.0,
+          "0.25": 0.0,
+          "0.5": 0.0031124675,
+          "0.75": 0.016812558499999998,
+          "1.0": 0.2
+        }
+      },
+      "ExitRates": {
+        "dtype": "float64",
+        "missing": 0,
+        "unique": 4777,
+        "quantiles": {
+          "0.0": 0.0,
+          "0.25": 0.014285714,
+          "0.5": 0.0251564025,
+          "0.75": 0.05,
+          "1.0": 0.2
+        }
+      },
+      "PageValues": {
+        "dtype": "float64",
+        "missing": 0,
+        "unique": 2704,
+        "quantiles": {
+          "0.0": 0.0,
+          "0.25": 0.0,
+          "0.5": 0.0,
+          "0.75": 0.0,
+          "1.0": 361.7637419
+        }
+      },
+      "SpecialDay": {
+        "dtype": "float64",
+        "missing": 0,
+        "unique": 6,
+        "quantiles": {
+          "0.0": 0.0,
+          "0.25": 0.0,
+          "0.5": 0.0,
+          "0.75": 0.0,
+          "1.0": 1.0
+        }
+      },
+      "Month": {
+        "dtype": "str",
+        "missing": 0,
+        "unique": 10,
+        "top_values": {
+          "May": 3364,
+          "Nov": 2998,
+          "Mar": 1907,
+          "Dec": 1727,
+          "Oct": 549,
+          "Sep": 448,
+          "Aug": 433,
+          "Jul": 432
+        }
+      },
+      "OperatingSystems": {
+        "dtype": "int64",
+        "missing": 0,
+        "unique": 8,
+        "quantiles": {
+          "0.0": 1.0,
+          "0.25": 2.0,
+          "0.5": 2.0,
+          "0.75": 3.0,
+          "1.0": 8.0
+        }
+      },
+      "Browser": {
+        "dtype": "int64",
+        "missing": 0,
+        "unique": 13,
+        "quantiles": {
+          "0.0": 1.0,
+          "0.25": 2.0,
+          "0.5": 2.0,
+          "0.75": 2.0,
+          "1.0": 13.0
+        }
+      },
+      "Region": {
+        "dtype": "int64",
+        "missing": 0,
+        "unique": 9,
+        "quantiles": {
+          "0.0": 1.0,
+          "0.25": 1.0,
+          "0.5": 3.0,
+          "0.75": 4.0,
+          "1.0": 9.0
+        }
+      },
+      "TrafficType": {
+        "dtype": "int64",
+        "missing": 0,
+        "unique": 20,
+        "quantiles": {
+          "0.0": 1.0,
+          "0.25": 2.0,
+          "0.5": 2.0,
+          "0.75": 4.0,
+          "1.0": 20.0
+        }
+      },
+      "VisitorType": {
+        "dtype": "str",
+        "missing": 0,
+        "unique": 3,
+        "top_values": {
+          "Returning_Visitor": 10551,
+          "New_Visitor": 1694,
+          "Other": 85
+        }
+      },
+      "Weekend": {
+        "dtype": "bool",
+        "missing": 0,
+        "unique": 2,
+        "top_values": {
+          "False": 9462,
+          "True": 2868
+        }
+      },
+      "Revenue": {
+        "dtype": "bool",
+        "missing": 0,
+        "unique": 2,
+        "top_values": {
+          "False": 10422,
+          "True": 1908
+        }
+      }
+    },
+    "sample_rows": [
+      {
+        "Administrative": 0,
+        "Administrative_Duration": 0.0,
+        "Informational": 0,
+        "Informational_Duration": 0.0,
+        "ProductRelated": 1,
+        "ProductRelated_Duration": 0.0,
+        "BounceRates": 0.2,
+        "ExitRates": 0.2,
+        "PageValues": 0.0,
+        "SpecialDay": 0.0,
+        "Month": "Feb",
+        "OperatingSystems": 1,
+        "Browser": 1,
+        "Region": 1,
+        "TrafficType": 1,
+        "VisitorType": "Returning_Visitor",
+        "Weekend": false,
+        "Revenue": false
+      },
+      {
+        "Administrative": 5,
+        "Administrative_Duration": 52.0,
+        "Informational": 0,
+        "Informational_Duration": 0.0,
+        "ProductRelated": 16,
+        "ProductRelated_Duration": 866.5,
+        "BounceRates": 0.0,
+        "ExitRates": 0.011764706,
+        "PageValues": 0.0,
+        "SpecialDay": 0.0,
+        "Month": "May",
+        "OperatingSystems": 2,
+        "Browser": 2,
+        "Region": 1,
+        "TrafficType": 2,
+        "VisitorType": "Returning_Visitor",
+        "Weekend": false,
+        "Revenue": false
+      },
+      {
+        "Administrative": 0,
+        "Administrative_Duration": 0.0,
+        "Informational": 0,
+        "Informational_Duration": 0.0,
+        "ProductRelated": 6,
+        "ProductRelated_Duration": 162.5,
+        "BounceRates": 0.0,
+        "ExitRates": 0.033333333,
+        "PageValues": 0.0,
+        "SpecialDay": 0.0,
+        "Month": "May",
+        "OperatingSystems": 2,
+        "Browser": 2,
+        "Region": 1,
+        "TrafficType": 1,
+        "VisitorType": "Returning_Visitor",
+        "Weekend": false,
+        "Revenue": false
+      },
+      {
+        "Administrative": 8,
+        "Administrative_Duration": 164.4666667,
+        "Informational": 0,
+        "Informational_Duration": 0.0,
+        "ProductRelated": 3,
+        "ProductRelated_Duration": 26.7,
+        "BounceRates": 0.022222222,
+        "ExitRates": 0.044444444,
+        "PageValues": 0.0,
+        "SpecialDay": 0.0,
+        "Month": "Oct",
+        "OperatingSystems": 3,
+        "Browser": 2,
+        "Region": 4,
+        "TrafficType": 4,
+        "VisitorType": "New_Visitor",
+        "Weekend": true,
+        "Revenue": false
+      },
+      {
+        "Administrative": 4,
+        "Administrative_Duration": 20.5,
+        "Informational": 1,
+        "Informational_Duration": 59.0,
+        "ProductRelated": 5,
+        "ProductRelated_Duration": 83.5,
+        "BounceRates": 0.0,
+        "ExitRates": 0.014814815,
+        "PageValues": 0.0,
+        "SpecialDay": 0.0,
+        "Month": "Dec",
+        "OperatingSystems": 2,
+        "Browser": 2,
+        "Region": 9,
+        "TrafficType": 3,
+        "VisitorType": "Returning_Visitor",
+        "Weekend": false,
+        "Revenue": false
+      },
+      {
+        "Administrative": 0,
+        "Administrative_Duration": 0.0,
+        "Informational": 0,
+        "Informational_Duration": 0.0,
+        "ProductRelated": 3,
+        "ProductRelated_Duration": 21.25,
+        "BounceRates": 0.0,
+        "ExitRates": 0.066666667,
+        "PageValues": 0.0,
+        "SpecialDay": 0.0,
+        "Month": "Nov",
+        "OperatingSystems": 3,
+        "Browser": 2,
+        "Region": 1,
+        "TrafficType": 2,
+        "VisitorType": "New_Visitor",
+        "Weekend": true,
+        "Revenue": false
+      }
+    ],
+    "task": "Find worthwhile, testable research questions beyond the supplied descriptions. All rows are available to requested computation. State data limitations and recognition; no target-paper answer is supplied."
+  },
+  "records": [
+    {
+      "stage": "initial",
+      "candidate": {
+        "title": "Does visitor type mark different conversion correlates?",
+        "question": "Among sessions with similar recorded engagement and traffic characteristics, does the association between product-page engagement and Revenue differ for New_Visitor and Returning_Visitor sessions?",
+        "core": {
+          "object": "Revenue and ProductRelated_Duration across VisitorType groups",
+          "relation_or_action": "Estimate whether the conditional association between ProductRelated_Duration and Revenue varies by VisitorType",
+          "contrast": "New_Visitor versus Returning_Visitor sessions, adjusting for the other supplied session features and Month",
+          "prediction": "The engagement-Revenue association will differ between new and returning visitors after adjustment.",
+          "independent_unit": "Session, as represented by one row"
+        },
+        "failure_condition": "The prediction fails if the estimated interaction is small or uncertain under a prespecified model and sensitivity checks.",
+        "assumptions": [
+          "The visitor-type categories are consistently recorded.",
+          "Sessions are the analysis units; no user-level repeated measurements are represented in the bundle.",
+          "Adjustment cannot eliminate unmeasured confounding or establish an intervention effect."
+        ],
+        "required_new_data": [],
+        "feasible_with_current_data": true,
+        "domain_value": "Could identify whether session-level engagement has different descriptive relevance across visitor groups, informing what subgroup-specific follow-up data would be useful.",
+        "next_action": "test"
+      },
+      "id": "K001"
+    },
+    {
+      "stage": "initial",
+      "candidate": {
+        "title": "Does the weekend conversion difference persist within months?",
+        "question": "Within each Month, how does the observed Revenue rate for Weekend sessions compare with weekday sessions after standardizing to a common VisitorType and TrafficType distribution?",
+        "core": {
+          "object": "Session-level Revenue rates by Weekend",
+          "relation_or_action": "Compare within-Month observed rates and composition-standardized rates",
+          "contrast": "Weekend versus weekday sessions, standardized to a shared VisitorType and TrafficType mix",
+          "prediction": "The standardized weekend-weekday difference will be smaller than the pooled difference if visitor and traffic composition explains part of it.",
+          "independent_unit": "Session represented by one row"
+        },
+        "failure_condition": "The prediction fails if standardization does not reduce the pooled difference, or if overlap is inadequate to estimate the standardized contrast.",
+        "assumptions": [
+          "Month, Weekend, VisitorType, TrafficType, and Revenue are consistently recorded.",
+          "The observed groups have enough overlap for standardization.",
+          "Standardization describes an association and does not identify a weekend effect."
+        ],
+        "required_new_data": [],
+        "feasible_with_current_data": true,
+        "domain_value": "Clarifies whether a weekend conversion pattern is associated with the observed visitor and traffic mix, informing what calendar or campaign data a follow-up analysis needs.",
+        "next_action": "test"
+      },
+      "id": "K002"
+    },
+    {
+      "stage": "initial",
+      "candidate": {
+        "title": "Do zero-duration page categories indicate behavior or telemetry gaps?",
+        "question": "Among sessions with positive Administrative, Informational, or ProductRelated page counts, how often is the corresponding recorded duration zero, and do these count-duration discordances concentrate in particular contexts or Revenue outcomes?",
+        "core": {
+          "object": "Session-level discordance between page counts and their corresponding duration fields.",
+          "relation_or_action": "Tabulate count-positive/duration-zero pairs by page category and compare their context and Revenue distributions with count-positive/duration-positive sessions.",
+          "contrast": "Count-duration concordant versus discordant sessions, reported separately for each page category.",
+          "prediction": "Discordance will be nonuniform across categories or contexts, indicating that zero duration should not automatically be interpreted as no engagement.",
+          "independent_unit": "Session."
+        },
+        "failure_condition": "Discordant pairs are absent or too sparse to characterize, or independent event-log validation shows that zero durations faithfully represent the measured activity.",
+        "assumptions": [
+          "A positive page count paired with zero duration is a meaningful measurement discordance to audit.",
+          "Patterns in the supplied summaries cannot alone distinguish genuine zero-time activity from instrumentation or aggregation behavior."
+        ],
+        "required_new_data": "For validation, obtain session-level page events and timestamps, linked to the supplied summaries, and compare reconstructed counts and durations with the recorded fields.",
+        "feasible_with_current_data": true,
+        "domain_value": "Clarifies whether common zero values in analytics summaries can be interpreted as behavior before they are used in operational analyses.",
+        "next_action": "measure"
+      },
+      "id": "K003"
+    },
+    {
+      "stage": "initial",
+      "candidate": {
+        "title": "Are month-level conversion differences compositional?",
+        "question": "How much of the observed variation in Revenue across Month remains after standardizing months to a common distribution of VisitorType and TrafficType?",
+        "core": {
+          "object": "Monthly Revenue rates",
+          "relation_or_action": "Compare observed monthly rates with rates standardized to a shared VisitorType and TrafficType distribution",
+          "contrast": "Raw month-specific rates versus composition-standardized rates",
+          "prediction": "Standardization will reduce at least part of the between-month variation if visitor and traffic composition accounts for some of it.",
+          "independent_unit": "Session, with uncertainty estimated to reflect session counts within months"
+        },
+        "failure_condition": "The prediction fails if standardized rates show no meaningful reduction in between-month variation, or uncertainty makes the reduction indistinguishable from zero.",
+        "assumptions": [
+          "Month and group labels are recorded consistently.",
+          "The available categories permit standardization without relying on unsupported extrapolation.",
+          "Standardization is descriptive and does not identify causal seasonal effects."
+        ],
+        "required_new_data": [],
+        "feasible_with_current_data": true,
+        "domain_value": "Separates a descriptive seasonal pattern from differences in the observed mix of visitors and traffic sources, guiding whether further calendar or campaign data are needed.",
+        "next_action": "test"
+      },
+      "id": "K004"
+    },
+    {
+      "stage": "initial",
+      "candidate": {
+        "title": "How much apparent conversion signal depends on PageValues?",
+        "question": "How much does held-out conversion prediction change when PageValues is omitted, especially because its documented definition refers to page value before a transaction?",
+        "core": {
+          "object": "Incremental predictive contribution of PageValues for Revenue",
+          "relation_or_action": "Compare otherwise identical held-out models with and without PageValues",
+          "contrast": "PageValues included versus excluded, reporting both overall and by Revenue class",
+          "prediction": "Including PageValues improves prediction substantially, but that gain may reflect outcome-adjacent construction rather than a deployable pre-session signal",
+          "independent_unit": "Session"
+        },
+        "failure_condition": "The models show little predictive difference, or the supplied metadata cannot determine whether PageValues was available at the intended prediction time.",
+        "assumptions": [
+          "The documented PageValues meaning applies to this dataset version.",
+          "Predictive contribution does not by itself establish leakage or causal relevance."
+        ],
+        "required_new_data": "Feature-generation timestamps and the prediction-time definition are needed to establish whether PageValues is available before the decision it would inform.",
+        "feasible_with_current_data": true,
+        "domain_value": "Helps assess whether an apparent analytics signal is suitable for real-time intervention or only for retrospective classification.",
+        "next_action": "test"
+      },
+      "id": "K005"
+    },
+    {
+      "stage": "final",
+      "candidate": {
+        "title": "Does SpecialDay proximity modify the purchase association of informational-page duration?",
+        "question": "Among sessions with Informational > 0, does the association between log1p(Informational_Duration) and Revenue differ between SpecialDay > 0 and SpecialDay = 0, conditional on log1p(Informational), VisitorType, and Month?",
+        "core": {
+          "object": "Session-level log1p(Informational_Duration), an aggregate duration measure",
+          "relation_or_action": "Estimate its interaction with the indicator SpecialDay > 0 in a logistic model for Revenue",
+          "contrast": "SpecialDay-proximate versus other sessions among sessions with Informational > 0",
+          "prediction": "The prespecified forecast was a more positive duration-Revenue association when SpecialDay > 0; the computed interaction did not support this forecast.",
+          "independent_unit": "One session, as described in the supplied dataset metadata"
+        },
+        "failure_condition": "In an adequately sized independent sample, the interaction remains near zero or its uncertainty continues to span both negligible and meaningful differences.",
+        "assumptions": [
+          "SpecialDay > 0 indicates calendar proximity, not confirmed promotion exposure.",
+          "Informational_Duration is an aggregate session total, not page-level dwell.",
+          "The adjusted association is observational and does not establish a causal effect."
+        ],
+        "required_new_data": "An independent session sample with the same measures; exact session dates and campaign exposure are needed to distinguish calendar proximity from promotion exposure.",
+        "feasible_with_current_data": true,
+        "domain_value": "The analysis checks whether calendar proximity meaningfully changes the observed association between informational browsing duration and purchase, while limiting interpretation to the supplied measures.",
+        "next_action": "measure"
+      },
+      "final_record": {
+        "status": "revised",
+        "evidence_level": "negative_result",
+        "what_changed": "The executed analysis did not support the forecast. The interaction estimate was -0.0048 log-odds (95% Wald CI [-0.406, 0.397]); excluding VisitorType = Other gave -0.0040 (95% CI [-0.406, 0.398]). Fits converged. SpecialDay-proximate sessions were relatively few: 189 eligible sessions, including 27 purchases, versus 2,442 sessions and 586 purchases at SpecialDay = 0. The wide intervals do not establish that the interaction is absent.",
+        "what_is_known": "Among sessions with Informational > 0, the prespecified conditional interaction estimate was close to zero and highly uncertain; excluding Other barely changed it (compute_0). The analysis is observational. The search returned broad or unrelated Crossref records, including a dataset-related record, and was explicitly non-exhaustive; it did not verify direct overlap or a literature gap (search_1).",
+        "new_hypothesis": "This dataset provides no clear evidence that SpecialDay proximity modifies the conditional association between aggregate informational duration and Revenue, but the small SpecialDay-proximate group leaves meaningful differences unresolved.",
+        "next_falsifiable_test": "Estimate the prespecified interaction in an independent session dataset with substantially more SpecialDay-proximate sessions, reporting group counts and uncertainty. Record exact dates and campaign exposure to test whether any moderation is associated with actual promotion exposure rather than calendar proximity alone.",
+        "nearest_work_comparison": "search_1 returned a dataset-related citation and broad shopping or prediction papers, but no supplied evidence directly testing this interaction. The search was non-exhaustive and supports neither a verified gap nor a novelty claim.",
+        "feedback_type": "uncertainty"
+      },
+      "actual_tools": [
+        {
+          "id": "R3-C1",
+          "broker_id": "compute_0",
+          "type": "compute",
+          "request": {
+            "type": "compute",
+            "id": "compute_0",
+            "purpose": "Evaluate the prespecified SpecialDay-by-informational-duration association and its feasibility, with outcome counts and an exclusion sensitivity. This does not test a causal effect.",
+            "model_spec": "Among rows with Informational > 0, fit logistic regression for Revenue with z = standardized log1p(Informational_Duration), SpecialDay indicator (SpecialDay > 0), z × SpecialDay, log1p(Informational), VisitorType indicators, and Month indicators. Report eligible N and Revenue counts by SpecialDay indicator; the interaction log-odds coefficient with a Wald 95% interval; convergence; and the same interaction estimate and interval after excluding VisitorType = Other. Omit PageValues. Treat sessions as units and results as observational.",
+            "code": "import json\nimport numpy as np\nimport pandas as pd\nfrom scipy.optimize import minimize\n\nx = DF.loc[DF['Informational'] > 0].copy().reset_index(drop=True)\ny = x['Revenue'].astype(int).to_numpy()\nsd = (x['SpecialDay'].to_numpy(dtype=float) > 0).astype(float)\nd = np.log1p(x['Informational_Duration'].to_numpy(dtype=float))\ncount = np.log1p(x['Informational'].to_numpy(dtype=float))\n\ndef fit_frame(frame):\n    yy = frame['Revenue'].astype(int).to_numpy()\n    ss = (frame['SpecialDay'].to_numpy(dtype=float) > 0).astype(float)\n    dd = np.log1p(frame['Informational_Duration'].to_numpy(dtype=float))\n    zz = (dd - dd.mean()) / (dd.std() or 1.0)\n    cc = np.log1p(frame['Informational'].to_numpy(dtype=float))\n    vt = pd.get_dummies(frame['VisitorType'], drop_first=True, dtype=float).to_numpy()\n    mo = pd.get_dummies(frame['Month'], drop_first=True, dtype=float).to_numpy()\n    X = np.column_stack([np.ones(len(frame)), zz, ss, zz*ss, cc, vt, mo])\n    def objective(b):\n        eta = np.clip(X @ b, -30, 30)\n        return np.logaddexp(0, eta).sum() - yy @ eta + 1e-8*(b @ b)\n    res = minimize(objective, np.zeros(X.shape[1]), method='L-BFGS-B')\n    b = res.x\n    p = 1/(1+np.exp(-np.clip(X @ b, -30, 30)))\n    H = X.T @ (X * (p*(1-p))[:,None]) + np.eye(X.shape[1])*1e-8\n    cov = np.linalg.pinv(H)\n    j = 3\n    se = float(np.sqrt(max(cov[j,j], 0)))\n    return {'success':bool(res.success),'interaction':float(b[j]),'ci95':[float(b[j]-1.96*se),float(b[j]+1.96*se)],'n':len(frame),'counts':frame.assign(_sd=ss).groupby(['_sd','Revenue']).size().unstack(fill_value=0).to_dict(orient='index')}\n\nbase = fit_frame(x)\nnonother = fit_frame(x.loc[x['VisitorType'] != 'Other'].reset_index(drop=True))\nprint(json.dumps({'all':base,'exclude_other':nonother},separators=(',',':')))"
+          },
+          "result": {
+            "status": "executed",
+            "code_sha256": "957678d9add98818b856ea0b84fb7a983315a5a985dfb24798fa0a6e96fb3486",
+            "data_sha256": "b3055ee355f59134d851d32641183cb4a8b45def7124d2f50442a042f358e0d9",
+            "returncode": 0,
+            "stdout": "{\"all\":{\"success\":true,\"interaction\":-0.004765544434562984,\"ci95\":[-0.40643379420639353,0.3969027053372675],\"n\":2631,\"counts\":{\"0.0\":{\"false\":1856,\"true\":586},\"1.0\":{\"false\":162,\"true\":27}}},\"exclude_other\":{\"success\":true,\"interaction\":-0.004006501245663659,\"ci95\":[-0.4055146504996773,0.39750164800835],\"n\":2624,\"counts\":{\"0.0\":{\"false\":1851,\"true\":584},\"1.0\":{\"false\":162,\"true\":27}}}}\n",
+            "stderr": "",
+            "stdout_truncated": false
+          }
+        },
+        {
+          "id": "R3-S1",
+          "broker_id": "search_1",
+          "type": "search",
+          "request": {
+            "type": "search",
+            "id": "search_1",
+            "query": "Studies using the UCI Online Shoppers Purchasing Intention Dataset or comparable session-level ecommerce data that test whether calendar special-day proximity moderates the association between informational-page browsing duration and completed purchase, controlling for page count and visitor type.",
+            "missing_relation": "Whether this specific calendar-proximity-by-informational-browsing contrast has been directly studied.",
+            "change_if_found": "If closely overlapping work exists, describe this as a replication or identify a genuinely distinct measurement or comparison; metadata search results alone cannot establish a literature gap."
+          },
+          "result": {
+            "status": "returned",
+            "sources": [
+              {
+                "doi": "10.31289/jite.v3i1.2599.s170",
+                "title": "Online Shoppers Purchasing Intention Dataset Data Set",
+                "date": [],
+                "abstract": ""
+              },
+              {
+                "doi": "10.4018/ijsodit.2013100102",
+                "title": "How Does a Social Network Site Fan Page Influence Purchase Intention of Online Shoppers",
+                "date": [
+                  2013,
+                  10,
+                  1
+                ],
+                "abstract": " This research revisited how fan pages in the social network site created by online merchants affects the purchase intention of online shoppers using qualitative research methods. Through fine-tuning the research model developed by Jahn and Kunz (2012) which is grounded on the Uses and Gratifications Theory, the authors conducted a qualitative study through interviewing consumers who participated in fan pages. Based on their responses in the interviews, the authors reconfirmed that content-oriented needs and social interaction value of relationship-oriented needs had positive impacts on fan page usage intensity and fan page engagement, respectively. Plus, the authors discovered that content-oriented needs had a positive impact on fan page engagement. The theoretical contributions, managerial implications of this study are also discussed. "
+              },
+              {
+                "doi": "10.15341/jbe(2155-7950)/01.10.2019/003",
+                "title": "The Webmosphirics Effects on Shopping Behavior: The Influences of Web Page Color Displays on Online Impulse Purchasing Intention",
+                "date": [
+                  2019,
+                  1,
+                  20
+                ],
+                "abstract": " It is interesting to note that even though the studies of atmospheric effects in physical stores have been abundant, knowledge of ambient factor effects in the online retailing context has been limited. This study investigates the influence of webmospheric effect, web page color displays on respondents’ emotional reactions and subsequent online impulse buying intention. A Stimulus-Organism-Responses (S-O-R) model was used as the basic framework and a laboratory experiment was conducted to test the hypotheses in this study.  The results demonstrated that web page color displays had a significant effect on participants’ emotional response, eventually influencing their intention to purchase impulsively online. Specifically, respondents felt more aroused and experienced greater pleasure when they were exposed to chromatic web page displays than achromatic one. Additionally, both pleasure and arousal emotions played an intervening role between web page color displays and online impulse purchasing intention. Personality traits and product involvement were proved to moderate the relationship between atmospheric cues and impulse shopping intention. These findings suggest that the website design with effective web page color displays would create a desirable environment and thus prompt consumers to buy impulsively. Finally, research implications of the model and proposition are presented. "
+              },
+              {
+                "doi": "10.1088/1742-6596/1641/1/012083",
+                "title": "Improving The Effectiveness of Classification Using The Data Level Approach and Feature Selection Techniques in Online Shoppers Purchasing Intention Prediction",
+                "date": [
+                  2020,
+                  11,
+                  1
+                ],
+                "abstract": " Abstract \n                Online shopping is a form of trading using electronic devices that allows consumers to buy goods or services from sellers via the internet. Other names for these activities are: e-web-shop, e-shop, e-shop, internet shop, web-shop, web-store, online shop, and virtual shop. An online store generates purchases of products or services at retailers or shopping centers, which are referred to as business-to-consumer (B2C) online shopping. n another process where a business buys from another business, it is called business-to-business (B2B). Nowadays online shopping has become more sophisticated with trading via mobile phones (m-commerce). Cellular phones have been optimized with an application to buy from online sites. In this study, we proposed a data level approach and feature selection techniques as a solution for the classification of imbalanced data. The imbalance class classification is one of the classic problems in the field of artificial intelligence, especially for classification in machine learning. Imbalanced data have been proven to reduce the performance of machine learning algorithms, where imbalance data means that the total data from each class is significantly different. The proposed method is evaluated using a dataset from the UCI repository and area under the curve (AUC) as the main evaluation. The results have shown that the proposed method produces good performance. (AUC¿ 0.8). Overall the second experiment outperformed and was better than the first and third experiments because the main evaluation in the unbalanced class classification is AUC. Therefore, it can be concluded that the proposed method produces optimal performance both for large scale data sets. Overall the second experiment outperformed and better than the first and third experiments, because the main evaluation in the unbalanced class classification was AUC. "
+              },
+              {
+                "doi": "10.1109/get.2015.7453830",
+                "title": "Efficient search engine approach for measuring similarity between words: Using page count and snippets",
+                "date": [
+                  2015,
+                  11
+                ],
+                "abstract": ""
+              },
+              {
+                "doi": "10.3768/rtipress.2016.bk.0016.1608.4",
+                "title": "Genetic Inheritance and Genome-Wide Association Statistical Test Performance Using Simulated Data",
+                "date": [
+                  2016,
+                  8,
+                  30
+                ],
+                "abstract": ""
+              }
+            ],
+            "scope": "Crossref metadata, not exhaustive novelty evidence",
+            "transport_failures": []
+          }
+        }
+      ],
+      "id": "K006"
+    },
+    {
+      "stage": "initial",
+      "candidate": {
+        "title": "Do BounceRates and ExitRates carry distinct session-level signals?",
+        "question": "After accounting for page counts, recorded durations, and supplied context, does each of BounceRates and ExitRates provide distinct information about Revenue, or does one add little once the other is included?",
+        "core": {
+          "object": "The conditional associations of BounceRates and ExitRates with session-level Revenue.",
+          "relation_or_action": "Compare otherwise identical held-out models using neither metric, each metric separately, and both together.",
+          "contrast": "Incremental held-out contribution of each metric when the other and supplied session context are present.",
+          "prediction": "The two metrics will not be fully interchangeable: at least one will retain incremental association when conditioned on the other and session activity.",
+          "independent_unit": "Session, as described in the supplied metadata."
+        },
+        "failure_condition": "Neither metric reproducibly adds held-out information when the other and activity measures are included.",
+        "assumptions": [
+          "The supplied aggregate fields correspond to the documented analytics measures.",
+          "Distinct predictive information would not establish distinct behavioral mechanisms or causal effects.",
+          "Model results may depend on functional form and overlap among session metrics."
+        ],
+        "required_new_data": "None for the proposed conditional association; page-level event data and metric-generation details would be needed to validate the fields as measures of separate session processes.",
+        "feasible_with_current_data": true,
+        "domain_value": "Could clarify whether two commonly used analytics fields warrant separate monitoring in session-level analyses.",
+        "next_action": "test"
+      },
+      "id": "K007"
+    },
+    {
+      "stage": "final",
+      "candidate": {
+        "title": "Does an aggregate product-page dwell proxy have different purchase associations by visitor type?",
+        "question": "Among sessions with ProductRelated > 0, does the association between log-transformed ProductRelated_Duration per ProductRelated page and Revenue differ between New_Visitor and Returning_Visitor sessions, conditional on log page count and Month?",
+        "core": {
+          "object": "Session-level proxy log1p(ProductRelated_Duration / ProductRelated), not page-level dwell time",
+          "relation_or_action": "Estimate its interaction with New_Visitor in a logistic model for Revenue",
+          "contrast": "New_Visitor versus Returning_Visitor sessions, conditional on log1p(ProductRelated) and Month",
+          "prediction": "The pre-computation forecast is a more positive proxy-Revenue association for New_Visitor sessions.",
+          "independent_unit": "One session; the supplied metadata describes different users across sessions in the dataset"
+        },
+        "failure_condition": "The interaction is near zero or negative, or its uncertainty includes both negligible and practically meaningful contrasts.",
+        "assumptions": [
+          "The ratio of aggregate duration to page count is interpretable as a session-level average proxy, though it cannot recover page-level dwell distributions.",
+          "The specified conditional association is observational and does not identify a causal effect.",
+          "Other visitor types are excluded from this contrast; this limits its target population."
+        ],
+        "required_new_data": "None to attempt the specified analysis. Timestamped page events and transaction timing are needed to validate the proxy against page-level dwell or study browsing mechanisms.",
+        "feasible_with_current_data": true,
+        "domain_value": "Could assess whether this aggregate engagement proxy relates differently to purchases across the two specified visitor groups, while clarifying what the existing summaries can support.",
+        "next_action": "test"
+      },
+      "final_record": {
+        "status": "revised",
+        "evidence_level": "proposal_only",
+        "what_changed": "Narrowed the interpretation to an aggregate dwell proxy, stated the excluded VisitorType group and target population, and kept the association explicitly noncausal. The requested computation timed out (compute_0), so the forecast remains unevaluated. The search returned Crossref metadata that did not establish a direct overlap or a research gap; its scope is explicitly non-exhaustive (search_1).",
+        "what_is_known": "The bundle supplies 12,330 rows and aggregate session features. No interaction estimate, interval, or eligible-group outcome counts were produced. The returned search records do not verify novelty. See compute_0 and search_1.",
+        "new_hypothesis": "The supplied summaries may support a conditional association comparison, but whether this aggregate proxy has a stable visitor-type interaction is unknown.",
+        "next_falsifiable_test": "Run the prespecified logistic interaction with uncertainty and the stated upper-tail sensitivity; report group outcome counts and convergence. If the estimate is unstable, near zero, or reverses under the prespecified sensitivity, do not treat the forecast as supported. Validate the proxy against timestamped page-level events before making claims about dwell behavior.",
+        "nearest_work_comparison": "The search return listed shopping and purchase-intention records but supplied no evidence directly addressing this dataset-specific dwell-proxy-by-visitor-type interaction. Because the search was Crossref metadata and non-exhaustive, nearest-work overlap and any literature gap remain unverified.",
+        "feedback_type": "uncertainty"
+      },
+      "actual_tools": [
+        {
+          "id": "R1-C1",
+          "broker_id": "compute_0",
+          "type": "compute",
+          "request": {
+            "type": "compute",
+            "id": "compute_0",
+            "purpose": "Check group outcome counts, estimate the prespecified observational dwell-by-visitor-type interaction with uncertainty, and assess sensitivity to the upper dwell tail. This evaluates feasibility and the forecast; it does not establish causality.",
+            "model_spec": "Among rows with ProductRelated > 0 and VisitorType in {New_Visitor, Returning_Visitor}, fit logistic regression for Revenue using log1p(ProductRelated_Duration / ProductRelated), its interaction with New_Visitor, log1p(ProductRelated), and Month indicators. Report group sample and outcome counts, the interaction log-odds estimate and session bootstrap 95% interval, and the interaction estimate after winsorizing the dwell measure at its 99th percentile. Treat each row as one session; omit PageValues.",
+            "code": "import json\nimport numpy as np\nimport pandas as pd\nfrom scipy.optimize import minimize\n\nx = DF.loc[(DF['ProductRelated'] > 0) & DF['VisitorType'].isin(['New_Visitor', 'Returning_Visitor'])].copy().reset_index(drop=True)\ny = x['Revenue'].astype(int).to_numpy()\nnew = (x['VisitorType'].to_numpy() == 'New_Visitor').astype(float)\ndwell = np.log1p((x['ProductRelated_Duration'] / x['ProductRelated']).to_numpy(dtype=float))\ncount = np.log1p(x['ProductRelated'].to_numpy(dtype=float))\nmonths = pd.get_dummies(x['Month'], drop_first=True, dtype=float).to_numpy()\n\ndef design(d):\n    z = (d - d.mean()) / (d.std() or 1.0)\n    return np.column_stack([np.ones(len(z)), z, new, z * new, count, months])\n\ndef fit(X, yy):\n    def objective(b):\n        eta = np.clip(X @ b, -30, 30)\n        return np.logaddexp(0, eta).sum() - yy @ eta + 1e-6 * (b @ b)\n    result = minimize(objective, np.zeros(X.shape[1]), method='L-BFGS-B')\n    return result.x if result.success else None\n\nX = design(dwell)\nb = fit(X, y)\ncounts = x.groupby(['VisitorType', 'Revenue']).size().unstack(fill_value=0).to_dict(orient='index')\nrng = np.random.default_rng(20261102)\nboot = []\nfor _ in range(300):\n    idx = rng.integers(0, len(y), len(y))\n    if len(np.unique(y[idx])) < 2:\n        continue\n    bb = fit(X[idx], y[idx])\n    if bb is not None:\n        boot.append(float(bb[3]))\nq99 = float(np.quantile(dwell, .99))\ncap = np.minimum(dwell, q99)\nbcap = fit(design(cap), y)\nprint(json.dumps({'n':len(x),'counts':counts,'interaction_log_odds':None if b is None else float(b[3]),'bootstrap_95_ci':None if len(boot)<30 else [float(v) for v in np.quantile(boot,[.025,.975])],'bootstrap_successes':len(boot),'winsor99_interaction_log_odds':None if bcap is None else float(bcap[3])},separators=(',',':')))"
+          },
+          "result": {
+            "status": "failed",
+            "code_sha256": "cae935baf5e56505d520ff34118d780d5670859e02d9dda213f3ad202b344775",
+            "data_sha256": "b3055ee355f59134d851d32641183cb4a8b45def7124d2f50442a042f358e0d9",
+            "reason": "30s timeout",
+            "stdout": "None",
+            "stderr": "None"
+          }
+        },
+        {
+          "id": "R1-S1",
+          "broker_id": "search_1",
+          "type": "search",
+          "request": {
+            "type": "search",
+            "id": "search_1",
+            "query": "Prior studies using the UCI Online Shoppers Purchasing Intention Dataset or comparable session-level ecommerce data to estimate whether product-page dwell or dwell per product page interacts with new versus returning visitor status in association with purchase/conversion; identify close empirical and methodological overlaps.",
+            "missing_relation": "Whether the proposed dwell-by-visitor-type interaction is already a routine or directly studied contrast, especially in this dataset.",
+            "change_if_found": "If closely overlapping work exists, do not claim novelty for I1; revise toward a distinct, timestamped sequence or experimental question, or retain I1 only as a replication."
+          },
+          "result": {
+            "status": "returned",
+            "sources": [
+              {
+                "doi": "10.17051/ilkonline.2021.03.138",
+                "title": "Can POP Ads about organic ingredients lower the informational purchasing barrier and raise the purchase intention? : perspective of franchise and new product",
+                "date": [
+                  2021,
+                  1,
+                  1
+                ],
+                "abstract": ""
+              },
+              {
+                "doi": "10.15444/gfmc2024.03.04.05",
+                "title": "CLICK TO CHIC: DECODING THE IMPACT OF FASHION PRODUCT PAGE DESIGN ON ONLINE PURCHASE INTENTION",
+                "date": [
+                  2024,
+                  7,
+                  11
+                ],
+                "abstract": ""
+              },
+              {
+                "doi": "10.15719/geba.15.6.201412.167",
+                "title": "Influence which purchase situation information exposed to webpage prior to click has over product evaluation and purchase intention - With focus on the number of purchasers, satisfaction level, and price discount rate -",
+                "date": [
+                  2014,
+                  12
+                ],
+                "abstract": ""
+              },
+              {
+                "doi": "10.1080/20932685.2025.2491327",
+                "title": "Click to chic: Decoding the impact of fashion product page design on online purchase intention",
+                "date": [
+                  2025,
+                  5,
+                  21
+                ],
+                "abstract": ""
+              },
+              {
+                "doi": "10.15341/jbe(2155-7950)/01.10.2019/003",
+                "title": "The Webmosphirics Effects on Shopping Behavior: The Influences of Web Page Color Displays on Online Impulse Purchasing Intention",
+                "date": [
+                  2019,
+                  1,
+                  20
+                ],
+                "abstract": " It is interesting to note that even though the studies of atmospheric effects in physical stores have been abundant, knowledge of ambient factor effects in the online retailing context has been limited. This study investigates the influence of webmospheric effect, web page color displays on respondents’ emotional reactions and subsequent online impulse buying intention. A Stimulus-Organism-Responses (S-O-R) model was used as the basic framework and a laboratory experiment was conducted to test the hypotheses in this study.  The results demonstrated that web page color displays had a significant effect on participants’ emotional response, eventually influencing their intention to purchase impulsively online. Specifically, respondents felt more aroused and experienced greater pleasure when they were exposed to chromatic web page displays than achromatic one. Additionally, both pleasure and arousal emotions played an intervening role between web page color displays and online impulse purchasing intention. Personality traits and product involvement were proved to moderate the relationship between atmospheric cues and impulse shopping intention. These findings suggest that the website design with effective web page color displays would create a desirable environment and thus prompt consumers to buy impulsively. Finally, research implications of the model and proposition are presented. "
+              },
+              {
+                "doi": "10.1257/rct.12307",
+                "title": "Suspense as a persuader",
+                "date": [
+                  2023,
+                  10,
+                  16
+                ],
+                "abstract": ""
+              }
+            ],
+            "scope": "Crossref metadata, not exhaustive novelty evidence",
+            "transport_failures": []
+          }
+        }
+      ],
+      "id": "K008"
+    },
+    {
+      "stage": "final",
+      "candidate": {
+        "title": "Is PageValues a label-proximal measurement channel?",
+        "question": "How much of the session-level predictive association with Revenue depends on PageValues compared with the other recorded session features?",
+        "core": {
+          "object": "Revenue prediction from supplied session features",
+          "relation_or_action": "Compare PageValues-only, full-feature, and no-PageValues models using identical five-fold evaluation",
+          "contrast": "Including versus excluding PageValues, with the same splits and modeling procedure",
+          "prediction": "The full model will outperform the no-PageValues model on average precision, log loss, and ROC AUC.",
+          "independent_unit": "Session represented by one row"
+        },
+        "failure_condition": "The prediction fails under this pipeline if the full model does not outperform the no-PageValues model on the prespecified metrics.",
+        "assumptions": [
+          "Supplied rows and labels are accurately represented.",
+          "The fixed shuffled folds evaluate within-dataset prediction, not deployment under temporal or population shift.",
+          "Predictive contribution does not establish causation, leakage, or availability at a decision time."
+        ],
+        "required_new_data": [],
+        "feasible_with_current_data": true,
+        "domain_value": "Quantifies how strongly this benchmark's predictive performance depends on a metric whose documented meaning is tied to pages visited before a transaction, motivating investigation of its construction and timing.",
+        "next_action": "measure"
+      },
+      "final_record": {
+        "status": "retained",
+        "evidence_level": "observational_support",
+        "what_changed": "The uncertainty critique required a prespecified metric and threshold. The executed comparison used one logistic-regression pipeline and identical five-fold stratified splits. It supports the predicted held-out association in this dataset, while leaving PageValues' event timing and construction unresolved.",
+        "what_is_known": "In compute_0, mean average precision was about 0.645 for the full model, 0.323 without PageValues, and 0.621 for PageValues alone. Mean ROC AUC was about 0.895, 0.745, and 0.863, respectively. Across the five paired folds, full-minus-no-PageValues average-precision differences ranged from 0.274 to 0.373; ROC AUC differences ranged from 0.139 to 0.159. Fold differences are descriptive, not confidence intervals. The data documentation describes PageValues as an average value for a page visited before a transaction, but does not establish its exact construction or availability at a decision point.",
+        "new_hypothesis": "PageValues may encode a label-proximal analytics signal that accounts for much of this pipeline's predictive performance; whether it is available before transaction completion remains unknown.",
+        "next_falsifiable_test": "Obtain event-level records with timestamps and the PageValues construction rule. Recompute the feature using only information available at a prespecified pre-transaction decision time, then compare a fixed model with and without that version on temporally held-out sessions. A small or absent performance difference would contradict the hypothesis that pre-transaction PageValues carries the observed incremental signal.",
+        "nearest_work_comparison": "The supplied documentation cites prior real-time purchase-intention prediction using MLP and LSTM models. This proposal asks a narrower feature-ablation question about PageValues under a fixed logistic-regression evaluation; it does not establish novelty relative to the broader literature.",
+        "feedback_type": "uncertainty"
+      },
+      "actual_tools": [
+        {
+          "id": "C1",
+          "broker_id": "compute_0",
+          "type": "compute",
+          "request": {
+            "type": "compute",
+            "id": "compute_0",
+            "purpose": "Estimate the prespecified predictive contrasts with identical folds and a fixed model pipeline. The result can establish whether PageValues contributes predictive signal under this evaluation, but not its real-time availability or causal value.",
+            "model_spec": "Five-fold StratifiedKFold with shuffle=True and random_state=2026. For PageValues-only, all-feature, and all-except-PageValues inputs, use the same sklearn Pipeline: ColumnTransformer with StandardScaler for numeric columns and OneHotEncoder(handle_unknown='ignore') for categorical/bool columns, followed by LogisticRegression(max_iter=1000). Report fold-level average precision, log loss, and ROC AUC. Report paired fold differences for full minus no-PageValues in average precision and ROC AUC, and no-PageValues minus full in log loss. Fold summaries are descriptive, not inferential confidence intervals.",
+            "code": "import json\nimport numpy as np\nfrom sklearn.compose import ColumnTransformer\nfrom sklearn.preprocessing import OneHotEncoder, StandardScaler\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import StratifiedKFold\nfrom sklearn.metrics import average_precision_score, log_loss, roc_auc_score\n\ndf = TABLES['main'].copy()\ny = df['Revenue'].astype(int)\nbase = df.drop(columns=['Revenue'])\nskf = StratifiedKFold(n_splits=5, shuffle=True, random_state=2026)\nresults = {}\nfor name, cols in [('pagevalues_only', ['PageValues']), ('full', list(base.columns)), ('no_pagevalues', [c for c in base.columns if c != 'PageValues'])]:\n    X = base[cols]\n    cat = [c for c in cols if str(X[c].dtype) in ('object', 'bool', 'category', 'str')]\n    num = [c for c in cols if c not in cat]\n    prep = ColumnTransformer([('num', StandardScaler(), num), ('cat', OneHotEncoder(handle_unknown='ignore'), cat)])\n    rows = []\n    for fold, (tr, te) in enumerate(skf.split(X, y), 1):\n        model = make_pipeline(prep, LogisticRegression(max_iter=1000))\n        model.fit(X.iloc[tr], y.iloc[tr])\n        p = model.predict_proba(X.iloc[te])[:, 1]\n        rows.append({'fold': fold, 'average_precision': float(average_precision_score(y.iloc[te], p)), 'log_loss': float(log_loss(y.iloc[te], p)), 'roc_auc': float(roc_auc_score(y.iloc[te], p))})\n    results[name] = rows\npaired = []\nfor i in range(5):\n    f, n = results['full'][i], results['no_pagevalues'][i]\n    paired.append({'fold': i + 1, 'average_precision_full_minus_no_pagevalues': f['average_precision'] - n['average_precision'], 'log_loss_no_pagevalues_minus_full': n['log_loss'] - f['log_loss'], 'roc_auc_full_minus_no_pagevalues': f['roc_auc'] - n['roc_auc']})\nprint(json.dumps({'fold_metrics': results, 'paired_full_vs_no_pagevalues': paired}, separators=(',', ':')))"
+          },
+          "result": {
+            "status": "executed",
+            "code_sha256": "b867ffec8d4e4e1e84f82861b2c4d41da683ec6c93cbb129350aca22003326b7",
+            "data_sha256": "b3055ee355f59134d851d32641183cb4a8b45def7124d2f50442a042f358e0d9",
+            "returncode": 0,
+            "stdout": "{\"fold_metrics\":{\"pagevalues_only\":[{\"fold\":1,\"average_precision\":0.6094756397652162,\"log_loss\":0.3209753991698589,\"roc_auc\":0.8522190121918213},{\"fold\":2,\"average_precision\":0.6528227848377327,\"log_loss\":0.30344371177366886,\"roc_auc\":0.8655425266086344},{\"fold\":3,\"average_precision\":0.5762487833704465,\"log_loss\":0.3419080404411354,\"roc_auc\":0.855259091959683},{\"fold\":4,\"average_precision\":0.6494270370380228,\"log_loss\":0.31292285985077173,\"roc_auc\":0.8679040508084533},{\"fold\":5,\"average_precision\":0.6179711344354933,\"log_loss\":0.32204269763203763,\"roc_auc\":0.8750678316969982}],\"full\":[{\"fold\":1,\"average_precision\":0.6339340645360586,\"log_loss\":0.29454747122645825,\"roc_auc\":0.8873493331319197},{\"fold\":2,\"average_precision\":0.6707032689991608,\"log_loss\":0.28032024368563146,\"roc_auc\":0.9007269774731395},{\"fold\":3,\"average_precision\":0.5932128971525082,\"log_loss\":0.316755981325487,\"roc_auc\":0.877710755594859},{\"fold\":4,\"average_precision\":0.6854483886045128,\"log_loss\":0.27989658041281873,\"roc_auc\":0.9040269417451338},{\"fold\":5,\"average_precision\":0.640682001861627,\"log_loss\":0.2915116740543895,\"roc_auc\":0.9029466591633086}],\"no_pagevalues\":[{\"fold\":1,\"average_precision\":0.3191077131585781,\"log_loss\":0.37987344782898413,\"roc_auc\":0.7373754539675347},{\"fold\":2,\"average_precision\":0.2977412384799287,\"log_loss\":0.38088548695803925,\"roc_auc\":0.742089792732743},{\"fold\":3,\"average_precision\":0.31961723271966586,\"log_loss\":0.38238526308393295,\"roc_auc\":0.7347077207544895},{\"fold\":4,\"average_precision\":0.35643334245735214,\"log_loss\":0.3689811745159015,\"roc_auc\":0.7649443277627599},{\"fold\":5,\"average_precision\":0.32320993242057716,\"log_loss\":0.37635101205752763,\"roc_auc\":0.7436991890343781}]},\"paired_full_vs_no_pagevalues\":[{\"fold\":1,\"average_precision_full_minus_no_pagevalues\":0.3148263513774805,\"log_loss_no_pagevalues_minus_full\":0.08532597660252589,\"roc_auc_full_minus_no_pagevalues\":0.14997387916438498},{\"fold\":2,\"average_precision_full_minus_no_pagevalues\":0.37296203051923205,\"log_loss_no_pagevalues_minus_full\":0.10056524327240779,\"roc_auc_full_minus_no_pagevalues\":0.15863718474039645},{\"fold\":3,\"average_precision_full_minus_no_pagevalues\":0.2735956644328424,\"log_loss_no_pagevalues_minus_full\":0.06562928175844596,\"roc_auc_full_minus_no_pagevalues\":0.14300303484036947},{\"fold\":4,\"average_precision_full_minus_no_pagevalues\":0.3290150461471607,\"log_loss_no_pagevalues_minus_full\":0.08908459410308278,\"roc_auc_full_minus_no_pagevalues\":0.13908261398237387},{\"fold\":5,\"average_precision_full_minus_no_pagevalues\":0.3174720694410499,\"log_loss_no_pagevalues_minus_full\":0.08483933800313814,\"roc_auc_full_minus_no_pagevalues\":0.15924747012893048}]}\n",
+            "stderr": "",
+            "stdout_truncated": false
+          }
+        }
+      ],
+      "id": "K009"
+    },
+    {
+      "stage": "initial",
+      "candidate": {
+        "title": "Does product-page dwell per page retain an association across visitor types?",
+        "question": "Among sessions with ProductRelated greater than zero, does the association between ProductRelated_Duration per ProductRelated page and Revenue differ between New_Visitor and Returning_Visitor sessions, adjusting for page count and other recorded features except PageValues?",
+        "core": {
+          "object": "Revenue and per-page product dwell across VisitorType groups",
+          "relation_or_action": "Estimate a VisitorType interaction with ProductRelated_Duration divided by ProductRelated",
+          "contrast": "The adjusted per-page dwell association for New_Visitor versus Returning_Visitor sessions",
+          "prediction": "The two visitor groups will have different adjusted associations.",
+          "independent_unit": "Session represented by one row"
+        },
+        "failure_condition": "The prediction fails if the interaction is small or uncertain, or changes direction under reasonable functional-form checks.",
+        "assumptions": [
+          "The per-page ratio is interpretable among sessions with at least one product page.",
+          "PageValues is excluded because its construction and timing remain unresolved.",
+          "Adjustment cannot remove unmeasured confounding or establish an intervention effect."
+        ],
+        "required_new_data": [],
+        "feasible_with_current_data": true,
+        "domain_value": "Tests whether the descriptive relevance of product-page dwell differs by visitor group, potentially guiding page-level instrumentation.",
+        "next_action": "test"
+      },
+      "id": "K010"
+    },
+    {
+      "stage": "initial",
+      "candidate": {
+        "title": "Does special-day proximity change the purchase association of informational browsing?",
+        "question": "Among sessions with at least one informational page, is Revenue more strongly associated with informational-page duration on sessions with SpecialDay > 0 than on sessions with SpecialDay = 0, conditional on informational-page count, VisitorType, and Month?",
+        "core": {
+          "object": "Informational_Duration among sessions with Informational > 0",
+          "relation_or_action": "Estimate its interaction with SpecialDay > 0 in a session-level model for Revenue",
+          "contrast": "SpecialDay-proximate versus other sessions at comparable informational-page counts, VisitorType, and Month",
+          "prediction": "Before computation, predict a more positive duration-Revenue association when SpecialDay > 0.",
+          "independent_unit": "One session; the supplied metadata describes different users across sessions in the dataset"
+        },
+        "failure_condition": "The interaction is near zero or negative, or uncertainty is too broad to distinguish a practically meaningful contrast from a negligible one.",
+        "assumptions": [
+          "Informational_Duration is measured comparably across sessions.",
+          "SpecialDay indicates calendar proximity, not confirmed exposure to a promotion.",
+          "Adjustment does not make this observational association causal."
+        ],
+        "required_new_data": "None for the association analysis; actual promotion exposure and exact session dates would be needed to separate calendar proximity from promotion exposure.",
+        "feasible_with_current_data": true,
+        "domain_value": "Could indicate whether informational browsing is differently associated with purchases near designated shopping dates, helping prioritize a later test of information support.",
+        "next_action": "test"
+      },
+      "id": "K011"
+    },
+    {
+      "stage": "final",
+      "candidate": {
+        "title": "How much of the product-page-depth gradient reflects observed session mix?",
+        "question": "Among sessions in the lower and upper quartiles of ProductRelated page count, how much does the Revenue-rate difference change after standardizing both groups to the pooled distribution of VisitorType, TrafficType, Month, and Weekend in context cells represented in both groups?",
+        "core": {
+          "object": "Session-level Revenue-rate difference between low- and high-ProductRelated-count groups.",
+          "relation_or_action": "Compare the marginal high-minus-low difference with a shared-cell standardized difference, weighting each shared context cell by its pooled group count.",
+          "contrast": "Unadjusted difference versus observed-context-standardized difference among shared cells.",
+          "prediction": "Standardization will attenuate the marginal difference while leaving a positive difference.",
+          "independent_unit": "Session, as described in the supplied metadata."
+        },
+        "failure_condition": "The standardized difference is near zero, reversed, or too uncertain to distinguish from zero; or common support is too limited for a useful comparison.",
+        "assumptions": [
+          "The specified context variables capture a useful but incomplete portion of session-composition differences.",
+          "Shared-cell standardization describes an observational contrast and does not estimate the effect of causing more product-page views.",
+          "Summary fields do not establish whether deeper browsing precedes purchase."
+        ],
+        "required_new_data": "Dated event-level page sequences to establish temporal ordering, plus independently collected sessions to assess replication and transportability.",
+        "feasible_with_current_data": true,
+        "domain_value": "Quantifies how much an observed session-depth gradient persists within measured session contexts, informing interpretation of analytics without implying an intervention effect.",
+        "next_action": "measure"
+      },
+      "final_record": {
+        "status": "retained",
+        "evidence_level": "observational_support",
+        "what_changed": "The requested computation returned as compute_0. The marginal high-minus-low Revenue-rate difference was 0.1840 (18.40 percentage points); the shared-cell standardized difference was 0.1543 (15.43 points), an attenuation of about 16%. Session-bootstrap 95% intervals were [0.1674, 0.1994] and [0.1356, 0.1775], respectively. There were 181 shared and 167 nonshared context cells; 4.04% of low/high-group sessions were in nonshared cells. All 300 bootstrap replicates were valid. These results support the descriptive contrast in this dataset, not a causal interpretation.",
+        "what_is_known": "ProductRelated quartile cutoffs were 7 and 38; the low and high groups contained 3,156 and 3,106 sessions, with Revenue rates 5.10% and 23.50%. Standardization reduced but did not remove the observed difference. The bootstrap intervals quantify resampling uncertainty under this procedure; they do not account for unmeasured context or establish temporal order. Search result search_1 was limited Crossref metadata and did not establish novelty or rule out direct overlap.",
+        "new_hypothesis": "Measured VisitorType, TrafficType, Month, and Weekend composition accounts for part, but not all, of the product-page-depth Revenue gradient. The remaining difference could reflect other composition, timing, or measurement factors.",
+        "next_falsifiable_test": "Re-estimate the prespecified contrast on independently collected sessions with dated event sequences. Check whether product-page views precede purchase, retain the shared-cell support report, and test whether the standardized difference replicates. A null or reversed replicated contrast would weaken the proposed persistence beyond measured session mix.",
+        "nearest_work_comparison": "The supplied history includes a duration-share comparison conditional on page counts, which asks whether time composition adds predictive information. This candidate instead compares outcome rates across page-count extremes and decomposes their difference by observed context. Returned search metadata covered general purchase prediction and other topics, not this exact decomposition; the search was limited and is not evidence of a literature gap.",
+        "feedback_type": "uncertainty"
+      },
+      "actual_tools": [
+        {
+          "id": "depth_standardization",
+          "broker_id": "compute_0",
+          "type": "compute",
+          "request": {
+            "type": "compute",
+            "id": "compute_0",
+            "purpose": "Estimate marginal and shared-support context-standardized Revenue contrasts between low- and high-ProductRelated-count sessions, including session-bootstrap uncertainty and overlap diagnostics. This is an observational decomposition, not a causal effect.",
+            "model_spec": "Define low and high groups as ProductRelated at or below its full-sample 25th percentile and at or above its 75th percentile. Context cells are the exact cross-product of VisitorType, TrafficType, Month, and Weekend. Estimate the marginal high-minus-low Revenue-rate difference. For the standardized difference, retain only cells with at least one session in each group and weight each retained cell by its pooled low-plus-high count, normalized over retained cells. Report quartile cutoffs, group sizes and rates, numbers of shared and nonshared cells, fraction of group sessions excluded for lack of overlap, and both differences with percentile 95% intervals from 300 session-level bootstrap resamples. Recompute the quartile cutoffs within each bootstrap sample. Report failed bootstrap replicates. Do not interpret either contrast causally.",
+            "code": "import json\nimport numpy as np\nimport pandas as pd\n\nraw = TABLES['main'].copy()\nx = raw['ProductRelated'].to_numpy(dtype=float)\ny = raw['Revenue'].astype(int).to_numpy()\nctx = ['VisitorType', 'TrafficType', 'Month', 'Weekend']\ncodes, uniques = pd.factorize(pd.MultiIndex.from_frame(raw[ctx]), sort=False)\nn_cells = len(uniques)\n\ndef estimate(idx):\n    xx, yy, cc = x[idx], y[idx], codes[idx]\n    q25, q75 = np.quantile(xx, [0.25, 0.75])\n    grp = np.where(xx <= q25, 0, np.where(xx >= q75, 1, -1))\n    keep = grp >= 0\n    grp, yy, cc = grp[keep], yy[keep], cc[keep]\n    # Flatten cell/group pairs for vectorized counts and outcome sums.\n    key = cc * 2 + grp\n    count = np.bincount(key, minlength=n_cells * 2).reshape(n_cells, 2)\n    wins = np.bincount(key, weights=yy, minlength=n_cells * 2).reshape(n_cells, 2)\n    rates = np.divide(wins, count, out=np.zeros_like(wins), where=count > 0)\n    shared = (count[:, 0] > 0) & (count[:, 1] > 0)\n    weights = count[shared].sum(axis=1).astype(float)\n    weights /= weights.sum() if weights.sum() else 1.0\n    std = float(np.sum(weights * (rates[shared, 1] - rates[shared, 0]))) if shared.any() else np.nan\n    marginal = float(yy[grp == 1].mean() - yy[grp == 0].mean()) if (grp == 0).any() and (grp == 1).any() else np.nan\n    excluded = float(count[~shared].sum() / count.sum()) if count.sum() else np.nan\n    return {'q25': float(q25), 'q75': float(q75), 'n_low': int((grp == 0).sum()), 'n_high': int((grp == 1).sum()), 'rate_low': float(yy[grp == 0].mean()), 'rate_high': float(yy[grp == 1].mean()), 'marginal': marginal, 'standardized': std, 'n_shared_cells': int(shared.sum()), 'n_nonshared_cells': int((~shared).sum()), 'fraction_group_sessions_excluded': excluded}\n\nbase = estimate(np.arange(len(raw)))\nrng = np.random.default_rng(20261102)\nboots = []\nfor _ in range(300):\n    b = estimate(rng.integers(0, len(raw), len(raw)))\n    if np.isfinite(b['marginal']) and np.isfinite(b['standardized']):\n        boots.append([b['marginal'], b['standardized']])\narr = np.asarray(boots)\nci = np.quantile(arr, [0.025, 0.975], axis=0).tolist() if len(arr) else None\nprint(json.dumps({'n': len(raw), 'point_estimates': base, 'bootstrap_replicates_requested': 300, 'bootstrap_replicates_valid': len(boots), 'ci95_marginal_then_standardized': ci}, separators=(',', ':')))"
+          },
+          "result": {
+            "status": "executed",
+            "code_sha256": "564f8b66c8e53fd5d2ad627db4deb1805f695851e3c529d88b55a8ea7779fa8e",
+            "data_sha256": "b3055ee355f59134d851d32641183cb4a8b45def7124d2f50442a042f358e0d9",
+            "returncode": 0,
+            "stdout": "{\"n\":12330,\"point_estimates\":{\"q25\":7.0,\"q75\":38.0,\"n_low\":3156,\"n_high\":3106,\"rate_low\":0.05101394169835234,\"rate_high\":0.23502897617514487,\"marginal\":0.18401503447679252,\"standardized\":0.15428556430750223,\"n_shared_cells\":181,\"n_nonshared_cells\":167,\"fraction_group_sessions_excluded\":0.04040242733950814},\"bootstrap_replicates_requested\":300,\"bootstrap_replicates_valid\":300,\"ci95_marginal_then_standardized\":[[0.16740612304933775,0.13557642342296203],[0.1994054005716958,0.17749683504403582]]}\n",
+            "stderr": "",
+            "stdout_truncated": false
+          }
+        },
+        {
+          "id": "depth_standardization_prior_work",
+          "broker_id": "search_1",
+          "type": "search",
+          "request": {
+            "type": "search",
+            "id": "search_1",
+            "query": "Studies of the UCI Online Shoppers Purchasing Intention Dataset or comparable e-commerce session data that compare marginal purchase rates across product-page depth or page-count groups with covariate standardization, stratification, or common-support adjustment for visitor type, traffic source, month, and weekend.",
+            "missing_relation": "Whether a session-depth-to-purchase contrast decomposed into marginal and context-standardized components has already been studied, and how overlap and session-level dependence were handled.",
+            "change_if_found": "If a close study performs this decomposition, revise toward a distinct, testable extension supported by the supplied fields or withdraw novelty implications; absence from returned metadata leaves novelty unverified."
+          },
+          "result": {
+            "status": "returned",
+            "sources": [
+              {
+                "doi": "10.31289/jite.v3i1.2599.s170",
+                "title": "Online Shoppers Purchasing Intention Dataset Data Set",
+                "date": [],
+                "abstract": ""
+              },
+              {
+                "doi": "10.2139/ssrn.4507948",
+                "title": "Research on the Influence of Cross-Border E-Commerce Product Page Value on Consumers' Purchase Intention",
+                "date": [
+                  2023
+                ],
+                "abstract": ""
+              },
+              {
+                "doi": "10.1016/j.dss.2016.06.009",
+                "title": "The effect of product review balance and volume on online Shoppers' risk perception and purchase intention",
+                "date": [
+                  2016,
+                  9
+                ],
+                "abstract": ""
+              },
+              {
+                "doi": "10.52783/mjble.395",
+                "title": "Impact of AI-Driven Personalized Product Recommendation Systems on Online Purchase Intention: Indian E-Commerce Shoppers' Perceived Relevance and Trust",
+                "date": [
+                  2026,
+                  4,
+                  15
+                ],
+                "abstract": " The rapid development of artificial intelligence (AI) in e-commerce has altered how customers look for, evaluate, and purchase goods online. AI-powered tailored recommendation systems are essential in influencing shopping decisions. This study examines how Indian e-commerce customers' intents to make online purchases are impacted by these AI-driven recommendation systems, with a particular emphasis on the roles of perceived relevance and consumer trust. We used a structured questionnaire to gather data from 160 Indian online shoppers using a quantitative research design. The investigation used SPSS and Partial Least Squares Structural Equation Modeling (PLS-SEM) to evaluate both the measurement and structural models. The findings demonstrate that customer trust is significantly increased by the degree of recommendation customisation and the transparency of AI recommendations. In the meantime, perceived relevance is mostly impacted by suggestion accuracy. Online purchase intentions are positively impacted by both perceived relevance and customer trust, with perceived relevance being a stronger predictor. Mediation study demonstrates that trust and perceived relevance are major psychological elements via which the features of AI recommendation systems affect purchase intentions. The results show that without clear and tailored recommendations, algorithmic accuracy alone is insufficient to influence consumer behaviour. By offering data from the Indian e-commerce scene, a new digital sector that has not yet received much attention, this study contributes to the expanding corpus of research on AI in marketing. The results provide useful information for e-commerce platforms, highlighting the significance of developing AI recommendation systems that prioritize relevance, transparency, and customisation in order to foster customer confidence and boost purchase intentions. "
+              },
+              {
+                "doi": "10.47738/ijaim.v4i2.81",
+                "title": "Using Random Forest and Support Vector Machine Algorithms to Predict Online Shopper Purchase Intention from E-Commerce Session Data",
+                "date": [
+                  2024,
+                  6,
+                  1
+                ],
+                "abstract": ""
+              },
+              {
+                "doi": "10.4018/ijsodit.2013100102",
+                "title": "How Does a Social Network Site Fan Page Influence Purchase Intention of Online Shoppers",
+                "date": [
+                  2013,
+                  10,
+                  1
+                ],
+                "abstract": " This research revisited how fan pages in the social network site created by online merchants affects the purchase intention of online shoppers using qualitative research methods. Through fine-tuning the research model developed by Jahn and Kunz (2012) which is grounded on the Uses and Gratifications Theory, the authors conducted a qualitative study through interviewing consumers who participated in fan pages. Based on their responses in the interviews, the authors reconfirmed that content-oriented needs and social interaction value of relationship-oriented needs had positive impacts on fan page usage intensity and fan page engagement, respectively. Plus, the authors discovered that content-oriented needs had a positive impact on fan page engagement. The theoretical contributions, managerial implications of this study are also discussed. "
+              }
+            ],
+            "scope": "Crossref metadata, not exhaustive novelty evidence",
+            "transport_failures": [
+              {
+                "attempt": 0,
+                "error": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1081)>",
+                "time": "2026-11-02T14:54:16.031854+00:00"
+              }
+            ]
+          }
+        }
+      ],
+      "id": "K012"
+    },
+    {
+      "stage": "final",
+      "candidate": {
+        "title": "Does product-duration share add information beyond browsing volume?",
+        "question": "Among sessions with positive total recorded duration, does ProductRelated_Duration divided by the sum of the three supplied duration fields improve held-out prediction of Revenue beyond page counts, total recorded duration, and supplied context? What is the model-based probability contrast between the training-fold 25th and 75th percentiles of this share at median ProductRelated count?",
+        "core": {
+          "object": "Session-level share of recorded duration attributed to product-related pages.",
+          "relation_or_action": "Compare identical held-out splits for logistic models with and without product-duration share and its interaction with ProductRelated count; exclude PageValues.",
+          "contrast": "Baseline versus augmented model; separately report the augmented model's predicted probability contrast across training-fold share quartiles.",
+          "prediction": "The augmented model will modestly improve held-out log loss and show a positive modeled contrast.",
+          "independent_unit": "Session, as described in the supplied dataset metadata."
+        },
+        "failure_condition": "No reproducible paired log-loss improvement, or the modeled contrast is uncertain across both directions.",
+        "assumptions": [
+          "The three duration fields can be summed for this descriptive share.",
+          "The share measures recorded duration composition, not attention or a causal lever.",
+          "Session-level splitting is appropriate for this within-dataset feasibility analysis but does not establish future deployment performance."
+        ],
+        "required_new_data": "Event-level timestamps and a defined prediction time to assess feature availability before purchase; external sessions for deployment validation.",
+        "feasible_with_current_data": true,
+        "domain_value": "Tests whether analytics distinguish duration composition from browsing volume without implying that changing browsing behavior would change purchases.",
+        "next_action": "test"
+      },
+      "final_record": {
+        "status": "revised",
+        "evidence_level": "proposal_only",
+        "what_changed": "Clarified the share denominator, specified that zero-total-duration sessions must be counted and reported separately, and narrowed interpretation to recorded-duration composition. The requested computation returned a clarification because external I/O/dynamic execution was prohibited, so no metrics or prevalence estimates were produced. The search returned general purchase-prediction work, not a direct test of this conditional allocation contrast.",
+        "what_is_known": "The bundle supplies 12,330 sessions and documents the duration fields and Revenue. It does not provide results for the proposed comparison. Compute request compute_0 did not execute. Search result search_1 was limited Crossref metadata; it does not establish whether close prior work exists.",
+        "new_hypothesis": "None supported by returned evidence. The original positive-association and predictive-improvement forecast remains an untested proposal.",
+        "next_falsifiable_test": "Execute the prespecified paired repeated stratified cross-validation comparison; report zero-total-duration count, paired held-out log-loss differences, and uncertainty and support for the share-quartile probability contrast. Separately obtain event timing or external data before making claims about decision-time availability or deployment.",
+        "nearest_work_comparison": "The returned 2026 paper concerns conversion-prediction and decision-support performance on this dataset. Its abstract does not report the conditional product-duration-share contrast proposed here. The dataset's 2019 introduction paper is also identified in the supplied metadata as prediction-focused. These records do not establish novelty or exclude closer work.",
+        "feedback_type": "uncertainty"
+      },
+      "actual_tools": [
+        {
+          "id": "allocation_cv",
+          "broker_id": "compute_0",
+          "type": "compute",
+          "request": {
+            "type": "compute",
+            "id": "compute_0",
+            "purpose": "Estimate paired held-out log-loss change and a supported model-based allocation contrast, while checking zero-duration prevalence. This tests feasibility and within-dataset association, not causality or future deployment.",
+            "model_spec": "Logistic regression with training-fold preprocessing; 5-fold stratified CV repeated 3 times; identical splits for baseline and augmented models. Baseline uses Administrative, Informational, ProductRelated counts, total of the three supplied duration fields, and supplied context (Month, Weekend, VisitorType, OperatingSystems, Browser, Region, TrafficType, SpecialDay). Augmented adds product-duration share and its interaction with ProductRelated. Set share to zero only for feature encoding when total duration is zero and report those sessions separately. Report paired fold log-loss differences and an augmented-model predicted probability contrast between training-fold share quartiles at median training-fold ProductRelated count, restricted to validation rows with positive total duration. Do not call the contrast causal.",
+            "code": "import numpy as np\nfrom sklearn.compose import ColumnTransformer\nfrom sklearn.preprocessing import OneHotEncoder, StandardScaler\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import RepeatedStratifiedKFold\nfrom sklearn.metrics import log_loss\n\nraw = TABLES['main'].copy()\ndur = ['Administrative_Duration', 'Informational_Duration', 'ProductRelated_Duration']\nraw['total_duration'] = raw[dur].sum(axis=1)\nraw['zero_total_duration'] = (raw['total_duration'] == 0).astype(int)\nraw['product_share'] = np.divide(raw['ProductRelated_Duration'], raw['total_duration'], out=np.zeros(len(raw), dtype=float), where=raw['total_duration'].to_numpy() > 0)\nraw['share_x_product_count'] = raw['product_share'] * raw['ProductRelated']\ny = raw['Revenue'].astype(int).to_numpy()\nnum0 = ['Administrative', 'Informational', 'ProductRelated', 'total_duration']\nnum1 = num0 + ['product_share', 'share_x_product_count']\ncat = ['Month', 'Weekend', 'VisitorType', 'OperatingSystems', 'Browser', 'Region', 'TrafficType', 'SpecialDay']\n\ndef model(num):\n    prep = ColumnTransformer([('num', StandardScaler(), num), ('cat', OneHotEncoder(handle_unknown='ignore'), cat)])\n    return make_pipeline(prep, LogisticRegression(max_iter=1000))\n\ncv = RepeatedStratifiedKFold(n_splits=5, n_repeats=3, random_state=20261102)\nrows = []\nfor tr, te in cv.split(raw, y):\n    b, a = model(num0), model(num1)\n    b.fit(raw.iloc[tr], y[tr]); a.fit(raw.iloc[tr], y[tr])\n    pb = b.predict_proba(raw.iloc[te])[:, 1]\n    pa = a.predict_proba(raw.iloc[te])[:, 1]\n    delta = log_loss(y[te], pb, labels=[0, 1]) - log_loss(y[te], pa, labels=[0, 1])\n    train = raw.iloc[tr]\n    q25, q75 = train.loc[train['total_duration'] > 0, 'product_share'].quantile([0.25, 0.75]).to_numpy()\n    med_count = train['ProductRelated'].median()\n    valid = raw.iloc[te].loc[raw.iloc[te]['total_duration'] > 0].copy()\n    lo, hi = valid.copy(), valid.copy()\n    lo['product_share'] = q25; hi['product_share'] = q75\n    lo['share_x_product_count'] = q25 * med_count; hi['share_x_product_count'] = q75 * med_count\n    contrast = float(np.mean(a.predict_proba(hi)[:, 1] - a.predict_proba(lo)[:, 1])) if len(valid) else None\n    rows.append({'logloss_improvement': float(delta), 'share_q25': float(q25), 'share_q75': float(q75), 'median_product_count': float(med_count), 'modeled_probability_contrast': contrast})\nprint(__import__('json').dumps({'n': len(raw), 'zero_total_n': int(raw['zero_total_duration'].sum()), 'zero_total_fraction': float(raw['zero_total_duration'].mean()), 'folds': rows}, separators=(',', ':')))"
+          },
+          "result": {
+            "status": "clarification",
+            "code_sha256": "2fba2d0733bf5d82b15f30fcdc11d530e94c052d600d45f6214dedc69cd13c40",
+            "data_sha256": "b3055ee355f59134d851d32641183cb4a8b45def7124d2f50442a042f358e0d9",
+            "reason": "External I/O/dynamic execution prohibited"
+          }
+        },
+        {
+          "id": "allocation_prior_work",
+          "broker_id": "search_1",
+          "type": "search",
+          "request": {
+            "type": "search",
+            "id": "search_1",
+            "query": "Studies using the UCI Online Shoppers Purchasing Intention Dataset or comparable e-commerce session analytics that test whether product-page dwell-time share predicts purchase conditional on page counts and total session duration; look for compositional or time-allocation analyses, not generic conversion prediction.",
+            "missing_relation": "Whether conditional product-duration allocation beyond browsing volume has already been directly tested, and how its measurement and decision-time availability have been handled.",
+            "change_if_found": "If a close study tests the same conditional contrast, revise I1 toward a genuinely discriminating extension supported by this dataset (or withdraw a novelty implication); if none is found, retain I1 only as a candidate question and do not treat a limited search as proof of novelty."
+          },
+          "result": {
+            "status": "returned",
+            "sources": [
+              {
+                "doi": "10.70267/icrafm.202617509516",
+                "title": "Predicting E-Commerce Purchase Intention from Web Session Behavior: Feature Engineering, Imbalanced Learning, and Conversion Decision Support E-Commerce Purchase Intention Prediction",
+                "date": [
+                  2026,
+                  10,
+                  19
+                ],
+                "abstract": " Online purchase intention prediction is valuable for e-commerce operations, but the positive purchase class is rare and purely accuracy-oriented models can mislead conversion decisions. This paper studies a reproducible decision-support pipeline, FIDDS, for session-level purchase prediction from web behavior. FIDDS combines behavior-driven interaction features, imbalance-aware learning, probability calibration, and utility-based threshold selection. Experiments use the real UCI Online Shoppers Purchasing Intention Dataset with 12,330 sessions, 1,908 purchase sessions, and five stratified random seeds. Random Forest achieves the highest PR-AUC at 0.7453, while FIDDS achieves PR-AUC 0.7426, ROC-AUC 0.9301, F1 0.5723, recall 0.9173, lift at the top 10% of sessions 5.0233, and expected utility 0.1321. The results indicate that conversion-oriented evaluation changes how a model should be selected: the strongest classifier is not always the clearest operating policy. The evidence is limited to one public benchmark and should be read as decision-support validation rather than proof of platform-wide causal uplift. "
+              },
+              {
+                "doi": "10.7717/peerj-cs.59/table-1",
+                "title": "Table 1: Details about the data corpora employed, including counts of session, talk turn, and word token, and also total time duration.",
+                "date": [],
+                "abstract": ""
+              },
+              {
+                "doi": "10.22271/27084515.2024.v5.i2h.407",
+                "title": "Real-time prediction of online shoppers' purchase intent",
+                "date": [
+                  2024,
+                  7,
+                  1
+                ],
+                "abstract": ""
+              },
+              {
+                "doi": "10.7554/elife.07460.013",
+                "title": "Figure 3—figure supplement 1. Daily distribution of Fraxinus game visits.",
+                "date": [],
+                "abstract": ""
+              },
+              {
+                "doi": "10.47738/ijaim.v4i2.81",
+                "title": "Using Random Forest and Support Vector Machine Algorithms to Predict Online Shopper Purchase Intention from E-Commerce Session Data",
+                "date": [
+                  2024,
+                  6,
+                  1
+                ],
+                "abstract": ""
+              },
+              {
+                "doi": "10.1007/s00521-018-3523-0",
+                "title": "Real-time prediction of online shoppers’ purchasing intention using multilayer perceptron and LSTM recurrent neural networks",
+                "date": [
+                  2018,
+                  5,
+                  9
+                ],
+                "abstract": ""
+              }
+            ],
+            "scope": "Crossref metadata, not exhaustive novelty evidence",
+            "transport_failures": []
+          }
+        }
+      ],
+      "id": "K013"
+    },
+    {
+      "stage": "initial",
+      "candidate": {
+        "title": "Is the product-page-depth gradient mostly a session-mix effect?",
+        "question": "How much of the observed Revenue-rate difference between low- and high-ProductRelated-count sessions remains after standardizing both groups to the same VisitorType, TrafficType, Month, and Weekend composition?",
+        "core": {
+          "object": "Session-level Revenue rates across the lower and upper quartiles of ProductRelated page count.",
+          "relation_or_action": "Estimate the marginal rate difference, then estimate the difference after standardizing both count groups to a shared distribution of VisitorType, TrafficType, Month, and Weekend among cells with support.",
+          "contrast": "Marginal low-versus-high count contrast versus the context-standardized contrast.",
+          "prediction": "Standardization will attenuate the marginal difference, but a positive within-context difference will remain.",
+          "independent_unit": "Session, as described in the supplied metadata."
+        },
+        "failure_condition": "The standardized contrast is near zero or changes direction, or common support is too sparse to estimate it reliably.",
+        "assumptions": [
+          "The specified context fields capture a useful, but incomplete, portion of session-composition differences.",
+          "ProductRelated count quartiles are defined over all supplied sessions before outcome comparison.",
+          "The standardized association is observational and does not estimate the effect of causing a session to visit more pages."
+        ],
+        "required_new_data": "None for this within-dataset decomposition; user and campaign identifiers plus external sessions would help assess residual composition and transportability.",
+        "feasible_with_current_data": true,
+        "domain_value": "Distinguishes whether a session-depth association is broadly present within observed contexts or largely reflects which kinds of sessions reach different depths.",
+        "next_action": "test"
+      },
+      "id": "K014"
+    },
+    {
+      "stage": "initial",
+      "candidate": {
+        "title": "Does browsing-time allocation relate to purchases beyond browsing volume?",
+        "question": "Among sessions with comparable page counts and total recorded browsing duration, is a larger share of recorded duration spent on product-related pages associated with a higher probability of Revenue=true?",
+        "core": {
+          "object": "Session-level allocation of recorded duration across product-related and other page categories",
+          "relation_or_action": "Compare purchase rates across product-duration shares while adjusting for page counts, total duration, Month, Weekend, VisitorType, and other supplied context",
+          "contrast": "A model with page counts and total duration versus the same model adding product-duration share and its interaction with product-page count",
+          "prediction": "The added allocation terms improve held-out log loss and show a positive conditional association with Revenue",
+          "independent_unit": "Session; the metadata says sessions belong to different users"
+        },
+        "failure_condition": "The allocation terms provide no reproducible held-out improvement or show no conditional association after accounting for counts and total duration.",
+        "assumptions": [
+          "Recorded duration categories are comparable within a session.",
+          "Sessions are independent as described in the documentation.",
+          "Revenue associations are observational and do not establish that changing browsing allocation changes purchasing."
+        ],
+        "required_new_data": "None for the proposed association test; event-level timestamps and page sequences would be needed to validate the interpretation as attention allocation.",
+        "feasible_with_current_data": true,
+        "domain_value": "Could inform whether analytics should distinguish browsing volume from how session time is allocated, without treating either as a proven intervention lever.",
+        "next_action": "test"
+      },
+      "id": "K015"
+    },
+    {
+      "stage": "initial",
+      "candidate": {
+        "title": "Does the dwell proxy–purchase association flatten at higher dwell levels?",
+        "question": "Among sessions with ProductRelated > 0 and VisitorType in {New_Visitor, Returning_Visitor}, does the association between log1p(ProductRelated_Duration / ProductRelated) and Revenue flatten at higher values, and does that shape differ by visitor type, conditional on log1p(ProductRelated) and Month?",
+        "core": {
+          "object": "Session-level aggregate proxy log1p(ProductRelated_Duration / ProductRelated), not page-level dwell time",
+          "relation_or_action": "Estimate a prespecified nonlinear association with Revenue and its interaction with VisitorType",
+          "contrast": "Curved versus linear proxy association, and the curve for New_Visitor versus Returning_Visitor sessions",
+          "prediction": "Before computation, predict a positive association that flattens at high proxy values, with stronger flattening for Returning_Visitor sessions.",
+          "independent_unit": "One session; the supplied metadata describes different users across sessions in the dataset"
+        },
+        "failure_condition": "The nonlinear term is negligible or reverses under the prespecified upper-tail sensitivity, or its uncertainty is too broad to distinguish flattening from a linear association.",
+        "assumptions": [
+          "The aggregate duration-to-count ratio is interpretable as a session-level average proxy, though it does not identify page-level dwell distributions.",
+          "The association is observational; conditioning on page count and Month does not establish causality.",
+          "Other visitor types are excluded from the contrast."
+        ],
+        "required_new_data": "None for the proxy association; timestamped page events are needed to validate the proxy against page-level dwell.",
+        "feasible_with_current_data": true,
+        "domain_value": "Could show whether a simple engagement summary has a limited range of association with purchases, informing how cautiously teams interpret unusually high session averages.",
+        "next_action": "test"
+      },
+      "id": "K016"
+    },
+    {
+      "stage": "initial",
+      "candidate": {
+        "title": "Does an information-to-product return precede higher purchase frequency?",
+        "question": "In timestamped shopping sessions, among sessions with comparable page-category counts and durations, is Revenue more frequent when a visitor returns to product pages after viewing an informational page?",
+        "core": {
+          "object": "Within-session page-category sequence and Revenue",
+          "relation_or_action": "Compare Revenue frequency by whether an informational-to-product return occurred before the outcome",
+          "contrast": "Sessions with versus without the return sequence at comparable aggregate browsing volume",
+          "prediction": "Before measurement, predict higher Revenue frequency among sessions with the return sequence.",
+          "independent_unit": "One visitor-session"
+        },
+        "failure_condition": "The sequence contrast is absent or reversed in an independent sample after the specified volume adjustment, or event timestamps cannot establish that the sequence preceded the transaction.",
+        "assumptions": [
+          "Page-category events and transaction timing are recorded consistently.",
+          "Volume adjustment does not make the groups incomparable through sparse overlap.",
+          "An observational sequence association does not identify the effect of prompting a return."
+        ],
+        "required_new_data": "Timestamped page-category events, session boundaries, visitor type, aggregate page counts and durations, and transaction timing for an independent sample; compare sequence groups within prespecified volume strata.",
+        "feasible_with_current_data": false,
+        "domain_value": "Could identify a navigation pattern hidden by the supplied aggregate session summaries and motivate a separately randomized navigation-support test.",
+        "next_action": "measure"
+      },
+      "id": "K017"
+    },
+    {
+      "stage": "initial",
+      "candidate": {
+        "title": "Does product-page dwell relate differently to purchase across visitor types?",
+        "question": "Among sessions with at least one product page, is the association between mean ProductRelated_Duration per ProductRelated page and Revenue different for New_Visitor and Returning_Visitor sessions, after accounting for product-page count and Month?",
+        "core": {
+          "object": "Session-level product-page dwell per page, calculated as ProductRelated_Duration / ProductRelated",
+          "relation_or_action": "Estimate its association with Revenue and its interaction with VisitorType",
+          "contrast": "New_Visitor versus Returning_Visitor sessions, adjusting for ProductRelated and Month",
+          "prediction": "Before computation, predict a stronger positive dwell association for New_Visitor sessions than for Returning_Visitor sessions.",
+          "independent_unit": "One session, reported as belonging to a different user within the dataset's one-year period"
+        },
+        "failure_condition": "The estimated interaction is near zero or has the opposite sign, with uncertainty spanning effects large enough to matter.",
+        "assumptions": [
+          "ProductRelated_Duration divided by ProductRelated is a meaningful session-level dwell summary when ProductRelated is positive.",
+          "Adjustment for page count and Month does not make the association causal."
+        ],
+        "required_new_data": "None for the proposed association analysis; timestamped events and randomized assignment would be needed to test mechanisms or interventions.",
+        "feasible_with_current_data": true,
+        "domain_value": "Could indicate whether a site's visitor-type segmentation changes how product exploration is interpreted, while avoiding a claim that dwell causes purchases.",
+        "next_action": "test"
+      },
+      "id": "K018"
+    },
+    {
+      "stage": "initial",
+      "candidate": {
+        "title": "Does SpecialDay add a signal beyond Month?",
+        "question": "After accounting for Month, session activity, and supplied traffic context, does SpecialDay provide reproducible information about Revenue?",
+        "core": {
+          "object": "The conditional association between SpecialDay and session-level Revenue.",
+          "relation_or_action": "Compare identical held-out predictions from a model with Month and supplied session context against the same model adding SpecialDay.",
+          "contrast": "Month and context alone versus those features plus SpecialDay.",
+          "prediction": "Adding SpecialDay will modestly improve held-out log loss, indicating that its graded calendar-proximity value contains information beyond the coarse Month category.",
+          "independent_unit": "Session, as described in the supplied metadata."
+        },
+        "failure_condition": "The added feature does not reproducibly improve held-out log loss, or its conditional association is too uncertain to distinguish from no association.",
+        "assumptions": [
+          "SpecialDay is measured consistently across sessions.",
+          "The one-year data can assess within-dataset incremental association, not year-to-year stability.",
+          "An observational association does not establish that a promotion or other intervention on SpecialDay changes purchases."
+        ],
+        "required_new_data": "None for the proposed within-dataset comparison; multiple years of dated sessions would be needed to assess stability across years.",
+        "feasible_with_current_data": true,
+        "domain_value": "Could determine whether a graded special-day calendar signal adds information beyond month-level seasonality when evaluating session analytics.",
+        "next_action": "test"
+      },
+      "id": "K019"
+    },
+    {
+      "stage": "initial",
+      "candidate": {
+        "title": "Is SpecialDay associated with conversion within the same month?",
+        "question": "Within Month, do sessions with nonzero SpecialDay scores have different Revenue rates from sessions with SpecialDay equal to zero after adjustment for the other supplied session features, excluding PageValues?",
+        "core": {
+          "object": "Session-level Revenue rates across SpecialDay scores",
+          "relation_or_action": "Estimate the adjusted association between SpecialDay score and Revenue, allowing a categorical score effect",
+          "contrast": "Nonzero versus zero SpecialDay scores within Month",
+          "prediction": "At least one nonzero score category will have a different adjusted Revenue rate from the zero category.",
+          "independent_unit": "Session represented by one row"
+        },
+        "failure_condition": "The prediction fails if category contrasts are small or too uncertain to distinguish from zero after accounting for sparse score-by-month groups.",
+        "assumptions": [
+          "SpecialDay scores are consistently recorded and comparable within Month.",
+          "The score categories and available covariates support the prespecified contrasts.",
+          "Month adjustment cannot identify a causal effect of holidays or promotions."
+        ],
+        "required_new_data": [],
+        "feasible_with_current_data": true,
+        "domain_value": "Tests whether the supplied holiday-proximity score contains conversion-related information beyond broad monthly composition, helping determine whether date-level records are needed for further analysis.",
+        "next_action": "test"
+      },
+      "id": "K020"
+    },
+    {
+      "stage": "final",
+      "candidate": {
+        "title": "Does the supplied dataset support within-month SpecialDay comparisons?",
+        "question": "Do the supplied sessions contain enough within-Month overlap and outcome observations to estimate adjusted Revenue contrasts between nonzero SpecialDay scores and zero without relying on unsupported extrapolation?",
+        "core": {
+          "object": "Observed SpecialDay scores and Revenue within Month",
+          "relation_or_action": "Audit score-by-month overlap and conversion counts before estimating adjusted contrasts",
+          "contrast": "Months and score categories with observed support versus absent or sparse cells",
+          "prediction": "Support will be concentrated in a small subset of Month × SpecialDay cells, limiting the scope of within-month comparisons.",
+          "independent_unit": "Session represented by one row"
+        },
+        "failure_condition": "The prediction fails if multiple months have adequate observations across zero and nonzero score categories to support the prespecified contrasts.",
+        "assumptions": [
+          "The supplied Month and SpecialDay values are recorded consistently.",
+          "Cell counts describe available support but do not establish a causal effect.",
+          "Adequate support requires prespecified outcome precision criteria, which this bundle does not provide."
+        ],
+        "required_new_data": [
+          "For broader within-month comparisons, obtain date-level session records with exact visit date, SpecialDay construction, Revenue, and relevant campaign or promotion context; compare score groups within the same calendar periods with adequate overlap."
+        ],
+        "feasible_with_current_data": true,
+        "domain_value": "Determines whether this dataset can answer the proposed within-month question or whether finer date and campaign data are needed.",
+        "next_action": "measure"
+      },
+      "final_record": {
+        "status": "revised",
+        "evidence_level": "computed_feasibility",
+        "what_changed": "The compute return showed that nonzero SpecialDay scores occur only in February and May; several February cells have fewer than 20 sessions, and all other months have no nonzero-score observations. The requested model-standardized probabilities set each score across all rows, so they extrapolate beyond observed Month × score support and do not establish within-month contrasts. The revision limits the question to support and estimability.",
+        "what_is_known": "In compute_0, May has observed zero and nonzero score groups; February has 105 zero-score sessions and nonzero groups of 5 to 21 sessions. The returned score-by-month table has no nonzero scores for the other observed months. The returned standardized mean predicted rates are model-generated under score assignments across all rows, not observed within-month rates or causal effects. No uncertainty estimates for adjusted contrasts were returned.",
+        "new_hypothesis": "The dataset's SpecialDay–Revenue comparison is primarily constrained by sparse and geographically concentrated score support; broader within-month inference requires finer date-level data and adequate overlap.",
+        "next_falsifiable_test": "With date-level records and a prespecified minimum cell-size and precision rule, enumerate within-period score groups and estimate adjusted Revenue contrasts only where both zero and nonzero scores have support. If several periods meet the rule and yield stable contrasts, the support-limitation hypothesis is weakened.",
+        "nearest_work_comparison": "The supplied documentation cites a real-time purchase-intention prediction paper. The search return search_1 found several dataset prediction papers but no clear direct match for this specific within-month SpecialDay analysis; its Crossref metadata is not exhaustive and does not verify a literature gap.",
+        "feedback_type": "data_gap"
+      },
+      "actual_tools": [
+        {
+          "id": "C1",
+          "broker_id": "compute_0",
+          "type": "compute",
+          "request": {
+            "type": "compute",
+            "id": "compute_0",
+            "purpose": "Check whether within-Month SpecialDay contrasts have observed support, and summarize model-standardized associations under a fixed specification. Sparse or absent score-by-month cells could make the requested contrasts unreliable.",
+            "model_spec": "Use all supplied rows. Report counts and Revenue rates by Month × SpecialDay. Fit one logistic-regression pipeline excluding PageValues and Revenue, with Month and SpecialDay treated categorically, one-hot encoding for categorical/bool columns, and standardized numeric columns. For each observed SpecialDay score, report the mean predicted Revenue probability when setting that score for every row, plus the difference from score zero. Treat these as model-standardized descriptive contrasts, not causal effects or independent confidence intervals. Also report which Month × score cells are empty or have fewer than 20 sessions.",
+            "code": "import json\nimport numpy as np\nfrom sklearn.compose import ColumnTransformer\nfrom sklearn.preprocessing import OneHotEncoder, StandardScaler\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.linear_model import LogisticRegression\n\ndf = TABLES['main'].copy()\ndf['Revenue'] = df['Revenue'].astype(int)\ndf['SpecialDay'] = df['SpecialDay'].astype(str)\ncounts = df.groupby(['Month', 'SpecialDay'], observed=True).agg(n=('Revenue', 'size'), conversions=('Revenue', 'sum'), rate=('Revenue', 'mean')).reset_index()\nfeatures = df.drop(columns=['Revenue', 'PageValues'])\ny = df['Revenue']\ncat = [c for c in features.columns if str(features[c].dtype) in ('object', 'bool', 'category', 'str')]\nnum = [c for c in features.columns if c not in cat]\nprep = ColumnTransformer([('num', StandardScaler(), num), ('cat', OneHotEncoder(handle_unknown='ignore'), cat)])\nmodel = make_pipeline(prep, LogisticRegression(max_iter=1000))\nmodel.fit(features, y)\nbase = features.copy()\nmargins = {}\nfor score in sorted(features['SpecialDay'].unique(), key=float):\n    cf = base.copy()\n    cf['SpecialDay'] = score\n    margins[score] = float(model.predict_proba(cf)[:, 1].mean())\nref = margins.get('0.0', margins.get('0'))\nprint(json.dumps({'cells': counts.to_dict(orient='records'), 'sparse_or_empty_cells': [{'Month': m, 'SpecialDay': s, 'n': n} for m, s, n in [(m, s, int(n)) for m in sorted(df['Month'].unique()) for s in sorted(df['SpecialDay'].unique(), key=float) for n in [int(((df['Month'] == m) & (df['SpecialDay'] == s)).sum())]] if n < 20], 'standardized_mean_predicted_rates': margins, 'differences_vs_zero': {s: v - ref for s, v in margins.items()}}, separators=(',', ':')))"
+          },
+          "result": {
+            "status": "executed",
+            "code_sha256": "9d5d9f8e127c024830f4c6dab5eb1a0e500d8175b42a6baf0a8ff1b27fe5c736",
+            "data_sha256": "b3055ee355f59134d851d32641183cb4a8b45def7124d2f50442a042f358e0d9",
+            "returncode": 0,
+            "stdout": "{\"cells\":[{\"Month\":\"Aug\",\"SpecialDay\":\"0.0\",\"n\":433,\"conversions\":76,\"rate\":0.17551963048498845},{\"Month\":\"Dec\",\"SpecialDay\":\"0.0\",\"n\":1727,\"conversions\":216,\"rate\":0.1250723798494499},{\"Month\":\"Feb\",\"SpecialDay\":\"0.0\",\"n\":105,\"conversions\":1,\"rate\":0.009523809523809525},{\"Month\":\"Feb\",\"SpecialDay\":\"0.2\",\"n\":15,\"conversions\":0,\"rate\":0.0},{\"Month\":\"Feb\",\"SpecialDay\":\"0.4\",\"n\":21,\"conversions\":0,\"rate\":0.0},{\"Month\":\"Feb\",\"SpecialDay\":\"0.6\",\"n\":19,\"conversions\":0,\"rate\":0.0},{\"Month\":\"Feb\",\"SpecialDay\":\"0.8\",\"n\":19,\"conversions\":1,\"rate\":0.05263157894736842},{\"Month\":\"Feb\",\"SpecialDay\":\"1.0\",\"n\":5,\"conversions\":1,\"rate\":0.2},{\"Month\":\"Jul\",\"SpecialDay\":\"0.0\",\"n\":432,\"conversions\":66,\"rate\":0.1527777777777778},{\"Month\":\"June\",\"SpecialDay\":\"0.0\",\"n\":288,\"conversions\":29,\"rate\":0.10069444444444445},{\"Month\":\"Mar\",\"SpecialDay\":\"0.0\",\"n\":1907,\"conversions\":192,\"rate\":0.10068169900367069},{\"Month\":\"May\",\"SpecialDay\":\"0.0\",\"n\":2192,\"conversions\":290,\"rate\":0.1322992700729927},{\"Month\":\"May\",\"SpecialDay\":\"0.2\",\"n\":163,\"conversions\":14,\"rate\":0.08588957055214724},{\"Month\":\"May\",\"SpecialDay\":\"0.4\",\"n\":222,\"conversions\":13,\"rate\":0.05855855855855856},{\"Month\":\"May\",\"SpecialDay\":\"0.6\",\"n\":332,\"conversions\":29,\"rate\":0.08734939759036145},{\"Month\":\"May\",\"SpecialDay\":\"0.8\",\"n\":306,\"conversions\":10,\"rate\":0.032679738562091505},{\"Month\":\"May\",\"SpecialDay\":\"1.0\",\"n\":149,\"conversions\":9,\"rate\":0.06040268456375839},{\"Month\":\"Nov\",\"SpecialDay\":\"0.0\",\"n\":2998,\"conversions\":760,\"rate\":0.25350233488992663},{\"Month\":\"Oct\",\"SpecialDay\":\"0.0\",\"n\":549,\"conversions\":115,\"rate\":0.20947176684881602},{\"Month\":\"Sep\",\"SpecialDay\":\"0.0\",\"n\":448,\"conversions\":86,\"rate\":0.19196428571428573}],\"sparse_or_empty_cells\":[{\"Month\":\"Aug\",\"SpecialDay\":\"0.2\",\"n\":0},{\"Month\":\"Aug\",\"SpecialDay\":\"0.4\",\"n\":0},{\"Month\":\"Aug\",\"SpecialDay\":\"0.6\",\"n\":0},{\"Month\":\"Aug\",\"SpecialDay\":\"0.8\",\"n\":0},{\"Month\":\"Aug\",\"SpecialDay\":\"1.0\",\"n\":0},{\"Month\":\"Dec\",\"SpecialDay\":\"0.2\",\"n\":0},{\"Month\":\"Dec\",\"SpecialDay\":\"0.4\",\"n\":0},{\"Month\":\"Dec\",\"SpecialDay\":\"0.6\",\"n\":0},{\"Month\":\"Dec\",\"SpecialDay\":\"0.8\",\"n\":0},{\"Month\":\"Dec\",\"SpecialDay\":\"1.0\",\"n\":0},{\"Month\":\"Feb\",\"SpecialDay\":\"0.2\",\"n\":15},{\"Month\":\"Feb\",\"SpecialDay\":\"0.6\",\"n\":19},{\"Month\":\"Feb\",\"SpecialDay\":\"0.8\",\"n\":19},{\"Month\":\"Feb\",\"SpecialDay\":\"1.0\",\"n\":5},{\"Month\":\"Jul\",\"SpecialDay\":\"0.2\",\"n\":0},{\"Month\":\"Jul\",\"SpecialDay\":\"0.4\",\"n\":0},{\"Month\":\"Jul\",\"SpecialDay\":\"0.6\",\"n\":0},{\"Month\":\"Jul\",\"SpecialDay\":\"0.8\",\"n\":0},{\"Month\":\"Jul\",\"SpecialDay\":\"1.0\",\"n\":0},{\"Month\":\"June\",\"SpecialDay\":\"0.2\",\"n\":0},{\"Month\":\"June\",\"SpecialDay\":\"0.4\",\"n\":0},{\"Month\":\"June\",\"SpecialDay\":\"0.6\",\"n\":0},{\"Month\":\"June\",\"SpecialDay\":\"0.8\",\"n\":0},{\"Month\":\"June\",\"SpecialDay\":\"1.0\",\"n\":0},{\"Month\":\"Mar\",\"SpecialDay\":\"0.2\",\"n\":0},{\"Month\":\"Mar\",\"SpecialDay\":\"0.4\",\"n\":0},{\"Month\":\"Mar\",\"SpecialDay\":\"0.6\",\"n\":0},{\"Month\":\"Mar\",\"SpecialDay\":\"0.8\",\"n\":0},{\"Month\":\"Mar\",\"SpecialDay\":\"1.0\",\"n\":0},{\"Month\":\"Nov\",\"SpecialDay\":\"0.2\",\"n\":0},{\"Month\":\"Nov\",\"SpecialDay\":\"0.4\",\"n\":0},{\"Month\":\"Nov\",\"SpecialDay\":\"0.6\",\"n\":0},{\"Month\":\"Nov\",\"SpecialDay\":\"0.8\",\"n\":0},{\"Month\":\"Nov\",\"SpecialDay\":\"1.0\",\"n\":0},{\"Month\":\"Oct\",\"SpecialDay\":\"0.2\",\"n\":0},{\"Month\":\"Oct\",\"SpecialDay\":\"0.4\",\"n\":0},{\"Month\":\"Oct\",\"SpecialDay\":\"0.6\",\"n\":0},{\"Month\":\"Oct\",\"SpecialDay\":\"0.8\",\"n\":0},{\"Month\":\"Oct\",\"SpecialDay\":\"1.0\",\"n\":0},{\"Month\":\"Sep\",\"SpecialDay\":\"0.2\",\"n\":0},{\"Month\":\"Sep\",\"SpecialDay\":\"0.4\",\"n\":0},{\"Month\":\"Sep\",\"SpecialDay\":\"0.6\",\"n\":0},{\"Month\":\"Sep\",\"SpecialDay\":\"0.8\",\"n\":0},{\"Month\":\"Sep\",\"SpecialDay\":\"1.0\",\"n\":0}],\"standardized_mean_predicted_rates\":{\"0.0\":0.15758402104488947,\"0.2\":0.12975983110728143,\"0.4\":0.10219057386809052,\"0.6\":0.14992648022923144,\"0.8\":0.06911832093109702,\"1.0\":0.10977393035590907},\"differences_vs_zero\":{\"0.0\":0.0,\"0.2\":-0.027824189937608046,\"0.4\":-0.05539344717679895,\"0.6\":-0.007657540815658032,\"0.8\":-0.08846570011379246,\"1.0\":-0.0478100906889804}}\n",
+            "stderr": "",
+            "stdout_truncated": false
+          }
+        },
+        {
+          "id": "S1",
+          "broker_id": "search_1",
+          "type": "search",
+          "request": {
+            "type": "search",
+            "id": "search_1",
+            "query": "Online Shoppers Purchasing Intention dataset analyses SpecialDay Revenue association adjusted for Month; studies of holiday proximity score and conversion in this dataset",
+            "missing_relation": "Whether this specific within-Month SpecialDay–Revenue association on the UCI dataset has already been directly analyzed, beyond the supplied prediction paper metadata.",
+            "change_if_found": "If a directly overlapping analysis exists, treat this as a replication or refine the question around a documented limitation; if none is found, retain only a cautious claim of an unverified candidate gap."
+          },
+          "result": {
+            "status": "returned",
+            "sources": [
+              {
+                "doi": "10.31289/jite.v3i1.2599.s170",
+                "title": "Online Shoppers Purchasing Intention Dataset Data Set",
+                "date": [],
+                "abstract": ""
+              },
+              {
+                "doi": "10.47297/wspciwsp2516-252730.20210506",
+                "title": "Prediction of Online Shoppers’ Purchasing Intention Using Support Vector Machines(SVM)",
+                "date": [
+                  2021
+                ],
+                "abstract": ""
+              },
+              {
+                "doi": "10.1109/aemcse55572.2022.00074",
+                "title": "Predicting the Intention of Online Shoppers’ Purchasing",
+                "date": [
+                  2022,
+                  4
+                ],
+                "abstract": ""
+              },
+              {
+                "doi": "10.1109/iisec59749.2023.10391024",
+                "title": "An Online Shoppers Purchasing Intention Model Based on Ensemble Learning",
+                "date": [
+                  2023,
+                  12,
+                  21
+                ],
+                "abstract": ""
+              },
+              {
+                "doi": "10.36341/rabit.v11i1.7575",
+                "title": "ASSOCIATION RULE MINING PADA POLA PEMBELIAN FURNITURE ONLINE STUDI KASUS DATASET SPARSE TAHUN 2025",
+                "date": [
+                  2026,
+                  2,
+                  2
+                ],
+                "abstract": " The rapid growth of e-commerce has driven an increase in household product transactions, including furniture, resulting in large-scale and diverse transactional data. However, most furniture transaction datasets exhibit sparse characteristics, as each order typically contains only one or a small number of items, making it difficult to generate frequent itemset combinations in association rule analysis. This study applies the Apriori algorithm to analyze online furniture sales transaction data from 2025, consisting of 1,938 records and 14 attributes. The research stages include data cleaning, transaction transformation, one-hot encoding, and the determination of a minimum support threshold of 0.0005 and a minimum confidence threshold of 0.1, adjusted to the characteristics of the dataset. The results indicate the formation of 421 frequent itemsets that meet the specified criteria, with a dominance of single-item itemsets caused by the low variation of items within each transaction. The analysis further shows that the generation of association rules is highly limited and fails to produce meaningful product relationship patterns. This limitation is primarily attributed to the highly sparse nature of the dataset, with an average of one item per transaction. This study demonstrates that applying the Apriori algorithm to highly sparse datasets results in very limited patterns and is dominated by single-item itemsets. These findings serve as an empirical study and a cautionary tale regarding the limitations of the Apriori algorithm when applied to transaction data with an average of one item per transaction, particularly in generating longer itemsets. Overall, this research contributes as an empirical warning on the limitations of applying the Apriori algorithm to highly sparse transaction datasets and emphasizes the importance of analyzing data characteristics prior to implementing association rule mining on e-commerce platforms.\n  "
+              },
+              {
+                "doi": "10.1037/t53782-000",
+                "title": "Consumer Product Perception and Purchasing Intention Survey",
+                "date": [
+                  2015
+                ],
+                "abstract": ""
+              }
+            ],
+            "scope": "Crossref metadata, not exhaustive novelty evidence",
+            "transport_failures": []
+          }
+        }
+      ],
+      "id": "K021"
+    },
+    {
+      "stage": "initial",
+      "candidate": {
+        "title": "Do product revisits after information pages mark a purchase-oriented path?",
+        "question": "At comparable total page counts and durations, are sessions that return to product pages after viewing informational pages more likely to end in Revenue than sessions without that sequence?",
+        "core": {
+          "object": "Within-session page-category sequence and Revenue",
+          "relation_or_action": "Compare purchase frequency by whether an informational-to-product return occurred",
+          "contrast": "Sessions with versus without the sequence, matched or adjusted on category page counts, total durations, VisitorType, and Month",
+          "prediction": "Predict higher Revenue frequency for sessions with the return sequence.",
+          "independent_unit": "One visitor-session"
+        },
+        "failure_condition": "The sequence contrast is absent or reversed after adjustment, or it cannot be measured reliably from event logs.",
+        "assumptions": [
+          "The event sequence is recorded consistently and precedes the session outcome.",
+          "An observational sequence association does not identify the effect of prompting such a return."
+        ],
+        "required_new_data": "Timestamped page-category events, session boundaries, visitor type, and transaction outcomes for an independent set of sessions; compare sequence groups at similar aggregate browsing volume.",
+        "feasible_with_current_data": false,
+        "domain_value": "Could reveal a browsing pattern hidden by aggregate counts and durations, informing where to test product-navigation support.",
+        "next_action": "measure"
+      },
+      "id": "K022"
+    },
+    {
+      "stage": "initial",
+      "candidate": {
+        "title": "Does informational-page visitation distinguish calendar effects from visitor composition?",
+        "question": "Among sessions with no informational-page views, does the Revenue rate differ between SpecialDay-proximate and other sessions, and is that contrast similar for New_Visitor and Returning_Visitor sessions?",
+        "core": {
+          "object": "Session-level Revenue among sessions with Informational = 0",
+          "relation_or_action": "Compare Revenue rates by SpecialDay status and visitor type",
+          "contrast": "SpecialDay > 0 versus SpecialDay = 0 within New_Visitor and Returning_Visitor groups",
+          "prediction": "Before computation, predict a larger SpecialDay-associated increase for New_Visitor sessions.",
+          "independent_unit": "One visitor-session"
+        },
+        "failure_condition": "The within-group contrasts are absent, reverse direction, or are too imprecise to distinguish between visitor types.",
+        "assumptions": [
+          "SpecialDay status is a calendar-proximity indicator, not randomized treatment.",
+          "Sessions with Informational = 0 form a relevant but restricted population.",
+          "Month adjustment and group comparisons do not remove all confounding."
+        ],
+        "required_new_data": "None for the association comparison; exact dates and campaign exposure would be needed to attribute differences to a campaign or calendar mechanism.",
+        "feasible_with_current_data": true,
+        "domain_value": "Could show whether calendar-proximity conversion patterns persist among visitors who do not browse informational pages, helping interpret the selected candidate's comparison.",
+        "next_action": "test"
+      },
+      "id": "K023"
+    },
+    {
+      "stage": "initial",
+      "candidate": {
+        "title": "Does PageValues' predictive contribution persist across months?",
+        "question": "Does adding PageValues improve held-out Revenue prediction when each Month is held out in turn, compared with models using the same features and pipeline but excluding PageValues?",
+        "core": {
+          "object": "Revenue prediction from the supplied session features",
+          "relation_or_action": "Compare full-feature and no-PageValues models under leave-one-Month-out evaluation",
+          "contrast": "Adding versus excluding PageValues on identical held-out Month sessions",
+          "prediction": "The full model will have lower log loss and higher average precision in most held-out months.",
+          "independent_unit": "Session represented by one row; held-out Month is the evaluation group"
+        },
+        "failure_condition": "The prediction fails if the full model does not improve both prespecified metrics in a majority of held-out months, or if sparse months prevent interpretable estimates.",
+        "assumptions": [
+          "Month categories provide an adequate, though coarse, proxy for temporal variation.",
+          "Each model uses the same preprocessing and fixed settings.",
+          "Performance differences do not establish PageValues' availability before a transaction."
+        ],
+        "required_new_data": [],
+        "feasible_with_current_data": true,
+        "domain_value": "Checks whether PageValues' predictive contribution is concentrated in particular months, which would affect how broadly this benchmark result can be used.",
+        "next_action": "test"
+      },
+      "id": "K024"
+    },
+    {
+      "stage": "initial",
+      "candidate": {
+        "title": "Does a randomized product-navigation aid change completed purchases?",
+        "question": "For eligible shoppers who have viewed at least one product page, does offering a clearly labeled, optional product-category navigation aid change the probability of completing a purchase during that visit?",
+        "core": {
+          "object": "Visit-level purchase completion among shoppers eligible after a product-page view.",
+          "relation_or_action": "Randomly assign shoppers to see the optional navigation aid or the usual interface, with assignment persisted across their sessions during the experiment.",
+          "contrast": "Purchase completion by randomized assignment, analyzed by intention to treat.",
+          "prediction": "The aid will increase purchase completion by reducing navigation friction.",
+          "independent_unit": "Shopper, with persistent assignment to prevent repeat-session crossover."
+        },
+        "failure_condition": "The intention-to-treat purchase difference is zero or negative with an adequately powered experiment, or exposure and shopper-level assignment cannot be measured reliably.",
+        "assumptions": [
+          "The navigation aid is usable and does not change price, inventory, or product eligibility.",
+          "The observational dataset does not establish that navigation friction limits purchases or that this interface change will help."
+        ],
+        "required_new_data": "A randomized live test with shopper-level assignment, eligibility and exposure logs, repeat-visit linkage, and completed-purchase outcomes; compare intention-to-treat rates with uncertainty.",
+        "feasible_with_current_data": false,
+        "domain_value": "Tests a concrete, reversible interface intervention against a purchase outcome rather than treating observational page activity as a causal lever.",
+        "next_action": "measure"
+      },
+      "id": "K025"
+    },
+    {
+      "stage": "initial",
+      "candidate": {
+        "title": "Does a product comparison aid change conversion for first-time shoppers?",
+        "question": "On a retail site, among first-time visitors who have viewed at least two product pages but have not started checkout, does randomly showing a concise product-comparison aid change transaction completion within that session?",
+        "core": {
+          "object": "Transaction completion within the assigned session",
+          "relation_or_action": "Randomly assign a comparison aid or the usual page after the second product-page view",
+          "contrast": "Aid versus control among eligible first-time visitors",
+          "prediction": "Before the experiment, predict higher session conversion in the aid arm.",
+          "independent_unit": "Visitor, assigned once at the first eligible session"
+        },
+        "failure_condition": "The randomized conversion difference is zero or negative, or assignment and exposure cannot be measured reliably.",
+        "assumptions": [
+          "Eligibility is established before assignment.",
+          "Visitors are assigned consistently and repeat sessions are handled by the visitor-level assignment.",
+          "Transaction completion is measured within a prespecified session window."
+        ],
+        "required_new_data": "A live-site randomized experiment with visitor assignment, product-page events, checkout-start and transaction timestamps, aid exposure, and session boundaries; estimate the intention-to-treat conversion difference.",
+        "feasible_with_current_data": false,
+        "domain_value": "Tests a concrete decision aid against usual experience and estimates an intervention effect, which the supplied observational aggregates cannot identify.",
+        "next_action": "measure"
+      },
+      "id": "K026"
+    },
+    {
+      "stage": "final",
+      "candidate": {
+        "title": "Is product-page duration share nonlinearly associated with Revenue?",
+        "question": "Among sessions with positive total recorded category duration, does ProductRelated_Duration divided by total recorded category duration show a nonlinear conditional association with Revenue after accounting for total duration, page counts, Month, VisitorType, and TrafficType, excluding PageValues?",
+        "core": {
+          "object": "Revenue and product-page share of recorded Administrative, Informational, and ProductRelated duration",
+          "relation_or_action": "Estimate a prespecified nonlinear conditional association between product-page duration share and Revenue",
+          "contrast": "A nonlinear share term versus a linear share term, using the same adjustment variables and eligible sessions",
+          "prediction": "A nonlinear share term will improve out-of-sample log loss over the linear term; the observed decile rates do not support predicting a monotonic direction.",
+          "independent_unit": "Session represented by one row"
+        },
+        "failure_condition": "The nonlinear term does not improve held-out log loss under a prespecified split and model, or its estimated pattern is unstable across reasonable specifications.",
+        "assumptions": [
+          "The three duration measures are comparable enough to define their sum and a product-page share; this measurement meaning is not established by the bundle.",
+          "Sessions with zero total recorded duration are excluded, and conclusions apply only to eligible sessions.",
+          "Adjustment describes conditional association and does not establish that changing time allocation changes conversion.",
+          "The split and nonlinear model are fixed before evaluating held-out results."
+        ],
+        "required_new_data": [
+          "Documentation confirming whether the three duration fields represent comparable, non-overlapping time; event-level timestamps would be needed to establish temporal ordering relative to purchase intent or transaction."
+        ],
+        "feasible_with_current_data": true,
+        "domain_value": "Tests whether the recorded allocation of browsing duration contains descriptive information beyond total duration and page counts, and whether a simple linear summary is inadequate.",
+        "next_action": "test"
+      },
+      "final_record": {
+        "status": "revised",
+        "evidence_level": "computed_feasibility",
+        "what_changed": "The actual compute return found 720 of 12,330 sessions with zero total recorded category duration, leaving 11,610 eligible sessions (9,705 Revenue=False; 1,905 Revenue=True). Revenue rates across equal-count product-share deciles were nonmonotonic, so I removed the proposed directional prediction and revised the question to test nonlinearity. No adjusted model, uncertainty estimate, or held-out comparison was returned; feasibility summaries do not establish an association.",
+        "what_is_known": "In compute_0, product-share decile conversion rates ranged from about 0.049 to 0.250 and did not change monotonically. The share's correlation with total duration was about 0.066; its correlations with Administrative, Informational, and ProductRelated page counts were about -0.394, -0.232, and 0.118. These summaries do not establish adequate conditional overlap across categorical covariates or support for an adjusted estimate. The duration fields' measurement comparability and timing are unresolved.",
+        "new_hypothesis": "The product-page duration share may have a nonlinear descriptive association with Revenue, but the supplied feasibility summaries neither confirm that relationship nor distinguish it from confounding, measurement structure, or selection into positive-duration sessions.",
+        "next_falsifiable_test": "On eligible sessions, compare prespecified linear and restricted-spline product-share terms in otherwise identical models with the stated adjustment variables, excluding PageValues. Use a fixed session-level held-out split; report held-out log loss, uncertainty appropriate to the split design, overlap, and sensitivity to the zero-duration exclusion. No improvement or an unstable pattern would fail the nonlinear-association prediction.",
+        "nearest_work_comparison": "The supplied history includes questions about ProductRelated_Duration per ProductRelated page and its interaction with VisitorType. This proposal changes the focal measure to a category-duration share and tests functional form, but remains related to those prior duration–Revenue questions. The bundle contains no current-round literature search result, so literature novelty is unverified.",
+        "feedback_type": "uncertainty"
+      },
+      "actual_tools": [
+        {
+          "id": "C1",
+          "broker_id": "compute_0",
+          "type": "compute",
+          "request": {
+            "type": "compute",
+            "id": "compute_0",
+            "purpose": "在拟合解释性模型前检查份额定义的适用范围、排除数量，以及产品时长份额与拟议调整变量的实际重叠；结果可决定该候选是否能按当前估计目标实施。",
+            "model_spec": "使用全部 supplied rows。定义 total_duration 为 Administrative_Duration + Informational_Duration + ProductRelated_Duration；仅对 total_duration > 0 的 session 计算 product_share = ProductRelated_Duration / total_duration。报告总行数、total_duration 为零及被排除的行数、Revenue 分组的纳入数。报告 product_share 的总体及 Revenue 分组分位数，并报告它与 total_duration、Administrative、Informational、ProductRelated、Month、VisitorType、TrafficType 的相关或分组支持摘要。报告 Revenue 分组的 product_share 十分位计数和转化率。只做可行性描述，不把这些摘要当作假设检验或因果证据。",
+            "code": "import json\nimport numpy as np\nimport pandas as pd\n\ndf = TABLES['main'].copy()\ncols = ['Administrative_Duration', 'Informational_Duration', 'ProductRelated_Duration']\ntotal = df[cols].sum(axis=1)\nvalid = total > 0\nx = df.loc[valid].copy()\nx['total_duration'] = total.loc[valid]\nx['product_share'] = x['ProductRelated_Duration'] / x['total_duration']\ny = x['Revenue'].astype(int)\nquantiles = [0, .1, .25, .5, .75, .9, 1]\nby_revenue = {}\nfor label, group in x.groupby('Revenue', observed=True):\n    by_revenue[str(label)] = {'n': int(len(group)), 'share_quantiles': {str(q): float(group['product_share'].quantile(q)) for q in quantiles}}\nx['share_decile'] = pd.qcut(x['product_share'].rank(method='first'), 10, labels=False)\ndeciles = x.groupby('share_decile', observed=True).agg(n=('Revenue', 'size'), conversions=('Revenue', 'sum'), rate=('Revenue', 'mean')).reset_index().to_dict(orient='records')\ncorrelations = {c: float(x['product_share'].corr(x[c])) for c in ['total_duration', 'Administrative', 'Informational', 'ProductRelated']}\nprint(json.dumps({'n_total': int(len(df)), 'n_zero_total_duration': int((~valid).sum()), 'n_included': int(valid.sum()), 'included_by_revenue': {str(k): int(v) for k, v in x['Revenue'].value_counts().items()}, 'share_quantiles_by_revenue': by_revenue, 'share_deciles': deciles, 'share_correlations': correlations, 'month_counts': x['Month'].value_counts().to_dict(), 'visitor_type_counts': x['VisitorType'].value_counts().to_dict(), 'traffic_type_counts': x['TrafficType'].value_counts().to_dict()}, separators=(',', ':')))"
+          },
+          "result": {
+            "status": "executed",
+            "code_sha256": "7f5b7880218663a611426cad819793d764c9c0eec968d294556cf62b7ca56a9a",
+            "data_sha256": "b3055ee355f59134d851d32641183cb4a8b45def7124d2f50442a042f358e0d9",
+            "returncode": 0,
+            "stdout": "{\"n_total\":12330,\"n_zero_total_duration\":720,\"n_included\":11610,\"included_by_revenue\":{\"False\":9705,\"True\":1905},\"share_quantiles_by_revenue\":{\"False\":{\"n\":9705,\"share_quantiles\":{\"0\":0.0,\"0.1\":0.6640052488418691,\"0.25\":0.8672199170124482,\"0.5\":0.9837193993880139,\"0.75\":1.0,\"0.9\":1.0,\"1\":1.0}},\"True\":{\"n\":1905,\"share_quantiles\":{\"0\":0.0,\"0.1\":0.6869835323858537,\"0.25\":0.8551003574374485,\"0.5\":0.9461394956971776,\"0.75\":0.9961741720126489,\"0.9\":1.0,\"1\":1.0}}},\"share_deciles\":[{\"share_decile\":0,\"n\":1161,\"conversions\":172,\"rate\":0.14814814814814814},{\"share_decile\":1,\"n\":1161,\"conversions\":218,\"rate\":0.18776916451335057},{\"share_decile\":2,\"n\":1161,\"conversions\":260,\"rate\":0.2239448751076658},{\"share_decile\":3,\"n\":1161,\"conversions\":274,\"rate\":0.2360034453057709},{\"share_decile\":4,\"n\":1161,\"conversions\":290,\"rate\":0.24978466838931956},{\"share_decile\":5,\"n\":1161,\"conversions\":236,\"rate\":0.20327304048234282},{\"share_decile\":6,\"n\":1161,\"conversions\":57,\"rate\":0.04909560723514212},{\"share_decile\":7,\"n\":1161,\"conversions\":81,\"rate\":0.06976744186046512},{\"share_decile\":8,\"n\":1161,\"conversions\":172,\"rate\":0.14814814814814814},{\"share_decile\":9,\"n\":1161,\"conversions\":145,\"rate\":0.12489233419465978}],\"share_correlations\":{\"total_duration\":0.06584861098937571,\"Administrative\":-0.3935022388098072,\"Informational\":-0.23215524927660436,\"ProductRelated\":0.1179715529730798},\"month_counts\":{\"May\":3144,\"Nov\":2845,\"Mar\":1771,\"Dec\":1625,\"Oct\":542,\"Sep\":442,\"Aug\":421,\"Jul\":409,\"June\":261,\"Feb\":150},\"visitor_type_counts\":{\"Returning_Visitor\":9877,\"New_Visitor\":1665,\"Other\":68},\"traffic_type_counts\":{\"2\":3851,\"1\":2211,\"3\":1866,\"4\":1033,\"13\":654,\"10\":432,\"6\":419,\"8\":332,\"5\":253,\"11\":233,\"20\":179,\"7\":40,\"9\":37,\"15\":28,\"19\":16,\"14\":13,\"18\":8,\"16\":3,\"12\":1,\"17\":1}}\n",
+            "stderr": "",
+            "stdout_truncated": false
+          }
+        }
+      ],
+      "id": "K027"
+    },
+    {
+      "stage": "final",
+      "candidate": {
+        "title": "Does the purchase association of an aggregate product-dwell proxy differ in shape by visitor type?",
+        "question": "Among sessions with ProductRelated > 0 and VisitorType in {New_Visitor, Returning_Visitor}, how does the conditional association between log1p(ProductRelated_Duration / ProductRelated) and Revenue vary across the 5th–95th proxy percentiles by visitor type, adjusting for log1p(ProductRelated) and Month?",
+        "core": {
+          "object": "Session-level aggregate proxy log1p(ProductRelated_Duration / ProductRelated), not page-level dwell time",
+          "relation_or_action": "Estimate visitor-specific quadratic associations with Revenue using a logistic model",
+          "contrast": "The proxy slope across the 5th–95th percentiles for New_Visitor versus Returning_Visitor sessions",
+          "prediction": "The prespecified prediction was positive flattening in both groups, with stronger flattening for Returning_Visitor sessions. The observed fitted slopes instead decline from 2.052 to -0.048 for Returning_Visitor and rise from 0.375 to 0.664 for New_Visitor; this reverses the predicted shape for New_Visitor.",
+          "independent_unit": "One session; the supplied metadata describes different users across sessions in the dataset"
+        },
+        "failure_condition": "The visitor-specific curve shapes fail to reproduce in an independent sample, or the fitted differences are materially altered by a prespecified alternative measurement or model.",
+        "assumptions": [
+          "The ratio of aggregate duration to page count is an interpretable session-level proxy, but cannot recover page-level dwell distributions.",
+          "The logistic quadratic is a descriptive approximation over the reported percentile range, not a causal model.",
+          "Adjustment for log page count and Month does not eliminate unmeasured confounding.",
+          "Other visitor types are outside the specified comparison."
+        ],
+        "required_new_data": "An independent session-level sample with the same aggregate fields and outcome, plus timestamped page events if the proxy is to be validated against page-level dwell.",
+        "feasible_with_current_data": true,
+        "domain_value": "Could clarify whether the same aggregate engagement proxy has different purchase associations across visitor types, while limiting interpretation to the measured session summaries.",
+        "next_action": "test"
+      },
+      "final_record": {
+        "status": "revised",
+        "evidence_level": "observational_support",
+        "what_changed": "The requested computation completed as compute_0. The common prediction of positive flattening in both groups was not supported: fitted slopes rise across the evaluated range for New_Visitor and decline to slightly below zero for Returning_Visitor. The returning-group quadratic term was -0.241 (95% Wald CI [-0.347, -0.135]); its interaction with New_Visitor was 0.274 (95% CI [0.109, 0.440]). The 99th-percentile cap produced similar terms (-0.241 and 0.311). Both fits reported convergence. I revised the proposed comparison to describe this observed difference in shape, pending independent confirmation.",
+        "what_is_known": "The eligible sample was 12,207 sessions: New_Visitor 1,687 (420 Revenue=true), Returning_Visitor 10,520 (1,466 Revenue=true); 123 Other sessions were excluded. The analysis is observational and uses an aggregate proxy. The fitted New_Visitor slope rises from 0.375 to 0.664 across its proxy 5th and 95th percentiles; the Returning_Visitor slope declines from 2.052 to -0.048. These slopes and coefficients are from the supplied model and data (compute_0), not independent confirmation. The requested output did not provide uncertainty intervals for slopes or the combined New_Visitor curvature.",
+        "new_hypothesis": "In this dataset, the proxy–Revenue association may flatten across the evaluated range for Returning_Visitor sessions but not for New_Visitor sessions; whether that difference generalizes is unknown.",
+        "next_falsifiable_test": "Fit the prespecified model in an independent sample, reporting group-specific curvature and slope uncertainty over the 5th–95th proxy range, with the same cap-99 sensitivity and eligibility rules. Treat the shape hypothesis as unsupported if the visitor-specific slope patterns do not reproduce or the interaction is compatible with no meaningful difference.",
+        "nearest_work_comparison": "search_1 returned Crossref metadata, including a dataset-related record and broad shopping or purchase-intention studies, but did not establish a direct overlap with this nonlinear dwell-proxy comparison by visitor type. Its scope was explicitly non-exhaustive; it establishes neither a verified gap nor novelty.",
+        "feedback_type": "uncertainty"
+      },
+      "actual_tools": [
+        {
+          "id": "R2-C1",
+          "broker_id": "compute_0",
+          "type": "compute",
+          "request": {
+            "type": "compute",
+            "id": "compute_0",
+            "purpose": "Operationalize the curvature and visitor-type curvature contrast, report eligible counts and uncertainty, and check the pre-stated shape prediction. This is an observational analysis, not a causal test.",
+            "model_spec": "Use rows with ProductRelated > 0 and VisitorType in {New_Visitor, Returning_Visitor}. Fit logistic Revenue on z, z^2, New_Visitor, z*New_Visitor, z^2*New_Visitor, log1p(ProductRelated), and Month indicators, where z is standardized log1p(ProductRelated_Duration / ProductRelated). Report group sample and outcome counts; coefficients and Wald 95% intervals for z^2 and z^2*New_Visitor; and the estimated dwell-proxy slope at the 5th and 95th percentiles for each group. Repeat after capping the unstandardized proxy at its 99th percentile and recomputing z. Omit PageValues. Treat the result as observational and do not extrapolate beyond the reported percentile range.",
+            "code": "import json\nimport numpy as np\nimport pandas as pd\nfrom scipy.optimize import minimize\n\nx = DF.loc[(DF['ProductRelated'] > 0) & DF['VisitorType'].isin(['New_Visitor', 'Returning_Visitor'])].copy().reset_index(drop=True)\ny = x['Revenue'].astype(int).to_numpy()\nnew = (x['VisitorType'].to_numpy() == 'New_Visitor').astype(float)\nraw = np.log1p((x['ProductRelated_Duration'] / x['ProductRelated']).to_numpy(dtype=float))\ncount = np.log1p(x['ProductRelated'].to_numpy(dtype=float))\nmonths = pd.get_dummies(x['Month'], drop_first=True, dtype=float).to_numpy()\n\ndef analyze(v):\n    z = (v - v.mean()) / (v.std() or 1.0)\n    X = np.column_stack([np.ones(len(z)), z, z*z, new, z*new, z*z*new, count, months])\n    def objective(b):\n        eta = np.clip(X @ b, -30, 30)\n        return np.logaddexp(0, eta).sum() - y @ eta + 1e-8*(b @ b)\n    res = minimize(objective, np.zeros(X.shape[1]), method='L-BFGS-B')\n    b = res.x\n    p = 1/(1+np.exp(-np.clip(X @ b, -30, 30)))\n    H = X.T @ (X * (p*(1-p))[:,None]) + np.eye(X.shape[1])*1e-8\n    cov = np.linalg.pinv(H)\n    ids = [2,5]\n    terms = {str(i): {'estimate':float(b[i]),'ci95':[float(b[i]-1.96*np.sqrt(max(cov[i,i],0))),float(b[i]+1.96*np.sqrt(max(cov[i,i],0)))]} for i in ids}\n    q = np.quantile(z,[.05,.95])\n    slopes = {'Returning_Visitor':[float(b[1]+2*b[2]*t) for t in q], 'New_Visitor':[float(b[1]+b[4]+2*(b[2]+b[5])*t) for t in q]}\n    return {'success':bool(res.success),'curvature_terms':terms,'slope_at_proxy_p05_p95':slopes}\n\ncounts = x.groupby(['VisitorType','Revenue']).size().unstack(fill_value=0).to_dict(orient='index')\ncap = np.minimum(raw, np.quantile(raw,.99))\nprint(json.dumps({'n':len(x),'counts':counts,'ordinary':analyze(raw),'cap99':analyze(cap)},separators=(',',':')))"
+          },
+          "result": {
+            "status": "executed",
+            "code_sha256": "457bc5f2f720e5c0965879f7b69e6af6c1ae0b69caa9fa864ed304b46a8b4188",
+            "data_sha256": "b3055ee355f59134d851d32641183cb4a8b45def7124d2f50442a042f358e0d9",
+            "returncode": 0,
+            "stdout": "{\"n\":12207,\"counts\":{\"New_Visitor\":{\"false\":1267,\"true\":420},\"Returning_Visitor\":{\"false\":9054,\"true\":1466}},\"ordinary\":{\"success\":true,\"curvature_terms\":{\"2\":{\"estimate\":-0.2410091653239806,\"ci95\":[-0.3467099193485684,-0.1353084112993928]},\"5\":{\"estimate\":0.2742146628951237,\"ci95\":[0.10862409120243352,0.43980523458781384]}},\"slope_at_proxy_p05_p95\":{\"Returning_Visitor\":[2.0519955901734566,-0.04795388127344735],\"New_Visitor\":[0.3746660893293789,0.6639906342275693]}},\"cap99\":{\"success\":true,\"curvature_terms\":{\"2\":{\"estimate\":-0.24113361470397193,\"ci95\":[-0.3549107932531466,-0.12735643615479725]},\"5\":{\"estimate\":0.3112033365375313,\"ci95\":[0.14199977012659254,0.48040690294847005]}},\"slope_at_proxy_p05_p95\":{\"Returning_Visitor\":[2.059710456337943,-0.06275257623075436],\"New_Visitor\":[0.15026886122793376,0.7670239929281668]}}}\n",
+            "stderr": "",
+            "stdout_truncated": false
+          }
+        },
+        {
+          "id": "R2-S1",
+          "broker_id": "search_1",
+          "type": "search",
+          "request": {
+            "type": "search",
+            "id": "search_1",
+            "query": "Studies of the UCI Online Shoppers Purchasing Intention Dataset or comparable session-level ecommerce datasets that model nonlinear or saturating product-page duration/dwell associations with purchase, especially curvature differences between new and returning visitors.",
+            "missing_relation": "Whether nonlinear or saturating session dwell-purchase associations, including visitor-type moderation, have already been directly studied.",
+            "change_if_found": "If close work exists, frame this as a replication or identify a distinct measurement or comparison before making a novelty claim; metadata-only search results do not verify a gap."
+          },
+          "result": {
+            "status": "returned",
+            "sources": [
+              {
+                "doi": "10.31289/jite.v3i1.2599.s170",
+                "title": "Online Shoppers Purchasing Intention Dataset Data Set",
+                "date": [],
+                "abstract": ""
+              },
+              {
+                "doi": "10.17051/ilkonline.2021.03.138",
+                "title": "Can POP Ads about organic ingredients lower the informational purchasing barrier and raise the purchase intention? : perspective of franchise and new product",
+                "date": [
+                  2021,
+                  1,
+                  1
+                ],
+                "abstract": ""
+              },
+              {
+                "doi": "10.9790/487x-2702078087",
+                "title": "Artificial Intelligence–Driven Personalization in ECommerce and Its Influence on Consumer Trust and Purchase Intention: An Empirical Study of Online Shoppers in Varanasi",
+                "date": [
+                  2025,
+                  2
+                ],
+                "abstract": " The rapid advancement of artificial intelligence (AI) has significantly transformed the e-commerce sector by\nenabling platforms to deliver personalized shopping experiences. AI-driven personalization utilizes machine\nlearning algorithms, recommendation systems, and predictive analytics to analyze consumer behavior and\nprovide customized product suggestions, targeted advertisements, and tailored services. These technological\ninnovations have enhanced the efficiency of online retailing and improved customer engagement. However, the\nincreasing reliance on AI technologies also raises important questions regarding consumer trust, privacy\nconcerns, and purchasing behavior. The present study investigates the impact of AI-driven personalization on\nconsumer trust and purchase intention in e-commerce platforms with specific reference to the city of Varanasi.\nThe research adopts a quantitative research design and collects primary data from 200 online shoppers using a\nstructured questionnaire. The questionnaire measures consumer perceptions regarding personalized\nrecommendations, targeted advertisements, AI-based customer assistance, consumer trust in e-commerce\nplatforms, and their intention to purchase products online.\nThe collected data were analyzed using statistical techniques including descriptive statistics, reliability analysis,\ncorrelation analysis, and regression analysis. The results indicate that consumers in Varanasi demonstrate a high\nlevel of awareness of AI-driven personalization features in e-commerce platforms. The findings reveal a\nsignificant positive relationship between AI-driven personalization and consumer trust. Additionally, the study\nshows that both AI-driven personalization and consumer trust have a strong positive influence on consumer\npurchase intention. The regression results further confirm that consumer trust plays a mediating role in\nstrengthening the relationship between personalization and purchase intention. The study concludes that AIdriven personalization significantly enhances consumer engagement and purchasing behavior when implemented\ntransparently and ethically. However, privacy concerns and data security remain important factors that influence\nconsumer trust. The findings provide valuable insights for e-commerce companies, marketers, and policymakers\nseeking to develop consumer-centric AI strategies that balance personalization with ethical data practices. The\nresearch also contributes to the growing body of literature on artificial intelligence in digital commerce,\nparticularly in the context of emerging urban markets in India. "
+              },
+              {
+                "doi": "10.2139/ssrn.2782299",
+                "title": "Structural Equation Model of Purchase Intention of Online Shoppers in Digos City",
+                "date": [
+                  2016
+                ],
+                "abstract": " This study intended to develop a structural model that characterizes the purchase intention of online shoppers in Digos City. It also sought to investigate whether the exogenous variables composed of attitude towards online shopping, consumer innovativeness and subjective norm have significant causal attribution with purchase intention in the context of online shopping. Descriptive and causal methods were used and primary data were gathered through the use of survey questionnaires distributed to n=200 consumers who have experienced to shop online. In the analysis of the data, weighted mean was used while in the model estimation procedure, structural equation modeling (SEM) was used with six fit indices as guide towards determining the best model of purchase intention of online shoppers. Results revealed a high extent of online shoppers’ attitude towards online shopping, high level of consumer innovativeness and high level of subjective. The overall level purchase intention of online shoppers was found to be high. Structural equation estimation revealed that the best fit model of purchase intention of online shoppers in Digos City is a newly-generated and re-specified model which passed all of the six goodness-of-fit indices, having CMIN/DF less than 3.0, GFI, TLI, CFI greater than 0.90, and RMSEA less than 0.08 with a PCLOSE greater than 0.05. "
+              },
+              {
+                "doi": "10.1109/iisec59749.2023.10391024",
+                "title": "An Online Shoppers Purchasing Intention Model Based on Ensemble Learning",
+                "date": [
+                  2023,
+                  12,
+                  21
+                ],
+                "abstract": ""
+              },
+              {
+                "doi": "10.1037/t9999-98444-000",
+                "title": "Internal Motivations, Consumer Upcycling Intention, and Upcycled Product Purchase Intention--Measurement Model",
+                "date": [
+                  2025
+                ],
+                "abstract": ""
+              }
+            ],
+            "scope": "Crossref metadata, not exhaustive novelty evidence",
+            "transport_failures": []
+          }
+        }
+      ],
+      "id": "K028"
+    },
+    {
+      "stage": "initial",
+      "candidate": {
+        "title": "Does a delivery-information prompt change conversion near special days?",
+        "question": "Among eligible shopping sessions near a special day, does showing a delivery-date and cutoff-time message change purchase completion compared with the site's usual page?",
+        "core": {
+          "object": "Purchase completion after a randomized delivery-information prompt.",
+          "relation_or_action": "Randomize eligible sessions to receive a clear delivery-date/cutoff message or the usual experience, then compare Revenue rates.",
+          "contrast": "Prompt shown versus usual experience among sessions eligible under a prespecified calendar rule.",
+          "prediction": "The prompt will increase purchase completion when delivery timing is relevant to the special-day purchase window.",
+          "independent_unit": "Eligible shopper, with assignment persisted across their sessions during the experiment."
+        },
+        "failure_condition": "The prespecified difference in purchase rates is zero or negative, or the experiment cannot maintain assignment and outcome measurement at the shopper level.",
+        "assumptions": [
+          "Delivery timing is a meaningful purchase constraint for the tested products.",
+          "The prompt does not alter price or product availability.",
+          "The supplied SpecialDay field alone does not establish customer intent or intervention benefit."
+        ],
+        "required_new_data": "A live randomized test with shopper-level assignment, eligibility dates, prompt exposure, and completed-purchase outcomes; compare purchase rates and report uncertainty by assigned group.",
+        "feasible_with_current_data": false,
+        "domain_value": "Tests a concrete operational intervention tied to delivery timing rather than treating an observational calendar feature as a causal lever.",
+        "next_action": "measure"
+      },
+      "id": "K029"
+    },
+    {
+      "stage": "initial",
+      "candidate": {
+        "title": "Does a comparison aid increase conversion for high-dwell new visitors?",
+        "question": "On an operating retail site, does randomly showing a concise product-comparison aid to New_Visitor sessions with high product-page dwell increase session conversion relative to the site's usual page?",
+        "core": {
+          "object": "Conversion within the assigned session",
+          "relation_or_action": "Randomly assign a comparison aid or usual page",
+          "contrast": "Aid versus control among eligible high-dwell New_Visitor sessions",
+          "prediction": "Predict higher conversion in the aid arm, with the effect concentrated among sessions with high pre-assignment dwell.",
+          "independent_unit": "A visitor, assigned once at the first eligible session"
+        },
+        "failure_condition": "The randomized conversion difference is zero or negative, or the high-dwell subgroup effect does not exceed the corresponding low-dwell subgroup effect.",
+        "assumptions": [
+          "Eligibility and dwell are measured before assignment.",
+          "Assignment is retained for analysis and repeat visits are handled at the visitor level."
+        ],
+        "required_new_data": "An experiment on a retail site: visitor-level assignment, pre-assignment page events and dwell, eligibility, aid exposure, and completed transaction within a prespecified session window; compare conversion by randomized arm.",
+        "feasible_with_current_data": false,
+        "domain_value": "Tests whether a targeted decision aid changes purchases, which an observational association in this dataset cannot establish.",
+        "next_action": "measure"
+      },
+      "id": "K030"
+    },
+    {
+      "stage": "final",
+      "candidate": {
+        "title": "Does SpecialDay add information beyond Month?",
+        "question": "After accounting for Month, session activity, and supplied traffic context, does SpecialDay provide reproducible incremental information about Revenue within this dataset?",
+        "core": {
+          "object": "The conditional association between SpecialDay and session-level Revenue.",
+          "relation_or_action": "Compare identical held-out predictions from otherwise identical models with and without categorical SpecialDay.",
+          "contrast": "Month and session context versus the same features plus SpecialDay.",
+          "prediction": "Adding SpecialDay will produce a small positive held-out log-loss improvement.",
+          "independent_unit": "Session, as described in the supplied metadata."
+        },
+        "failure_condition": "The improvement is not reproducible on new sessions, or an adequately supported conditional association cannot be distinguished from no association.",
+        "assumptions": [
+          "SpecialDay is measured consistently across sessions.",
+          "Its association is observational and does not establish an intervention effect.",
+          "Repeated cross-validation splits estimate within-dataset predictive feasibility, not year-to-year stability."
+        ],
+        "required_new_data": "Multiple years of dated sessions to assess calendar stability; randomized exposure data to estimate an intervention effect.",
+        "feasible_with_current_data": true,
+        "domain_value": "Tests whether a graded calendar-proximity feature adds information beyond month-level seasonality.",
+        "next_action": "test"
+      },
+      "final_record": {
+        "status": "retained",
+        "evidence_level": "computed_feasibility",
+        "what_changed": "The requested paired comparison ran as compute_0. Baseline-minus-augmented held-out log-loss improvement averaged 0.000358, 0.000402, and 0.000539 across the three repeats. Individual folds included negative differences, so the gain is small and not uniformly positive. SpecialDay was nonzero in 1,251 of 12,330 sessions; all such sessions were in February or May. The returned search_1 metadata covered general conversion prediction, not this specific contrast.",
+        "what_is_known": "For the specified logistic models and repeated stratified splits, adding categorical SpecialDay yielded a small positive mean log-loss difference in each repeat. The feature's nonzero support was confined to February and May, mostly May. The computation did not report a conditional coefficient or its uncertainty. Repeated folds reuse observations, so they are not independent replications.",
+        "new_hypothesis": "The small incremental gain may be driven by within-month SpecialDay variation in February and May; the supplied results do not establish this explanation.",
+        "next_falsifiable_test": "Report uncertainty for the SpecialDay conditional association and assess whether incremental performance persists within February and May using a prespecified evaluation. Use new years of dated sessions to test calendar stability.",
+        "nearest_work_comparison": "The returned records concern general purchase prediction on this dataset and do not report the SpecialDay-beyond-Month contrast. The search was limited Crossref metadata, so it does not establish a literature gap.",
+        "feedback_type": "uncertainty"
+      },
+      "actual_tools": [
+        {
+          "id": "specialday_cv",
+          "broker_id": "compute_0",
+          "type": "compute",
+          "request": {
+            "type": "compute",
+            "id": "compute_0",
+            "purpose": "Compare incremental held-out information from SpecialDay beyond Month and session context, while reporting its level counts and within-Month support. This tests predictive feasibility, not a causal effect.",
+            "model_spec": "Use 5-fold stratified cross-validation repeated 3 times with identical splits for baseline and augmented logistic regression models. Baseline numeric features: Administrative, Informational, ProductRelated, the sum of the three duration fields, BounceRates, and ExitRates. Context categorical features: Month, Weekend, VisitorType, OperatingSystems, Browser, Region, and TrafficType. Exclude PageValues. Augmented model adds SpecialDay as a categorical feature. Fit scaling and one-hot encoding within each training fold. Report the 15 paired validation log-loss differences (baseline minus augmented), per-repeat mean differences, SpecialDay level counts, and Month-by-SpecialDay counts. Do not treat the 15 folds as independent replications or call the comparison causal.",
+            "code": "import json\nimport numpy as np\nfrom sklearn.compose import ColumnTransformer\nfrom sklearn.preprocessing import OneHotEncoder, StandardScaler\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import RepeatedStratifiedKFold\nfrom sklearn.metrics import log_loss\n\nraw = TABLES['main'].copy()\ndur = ['Administrative_Duration', 'Informational_Duration', 'ProductRelated_Duration']\nraw['total_duration'] = raw[dur].sum(axis=1)\nraw['SpecialDay_level'] = raw['SpecialDay'].astype(str)\ny = raw['Revenue'].astype(int).to_numpy()\nnum = ['Administrative', 'Informational', 'ProductRelated', 'total_duration', 'BounceRates', 'ExitRates']\ncat = ['Month', 'Weekend', 'VisitorType', 'OperatingSystems', 'Browser', 'Region', 'TrafficType']\n\ndef model(add_specialday):\n    cats = cat + (['SpecialDay_level'] if add_specialday else [])\n    prep = ColumnTransformer([('num', StandardScaler(), num), ('cat', OneHotEncoder(handle_unknown='ignore'), cats)])\n    return make_pipeline(prep, LogisticRegression(max_iter=1000))\n\ncv = RepeatedStratifiedKFold(n_splits=5, n_repeats=3, random_state=20261102)\nfolds = []\nfor split_id, (tr, te) in enumerate(cv.split(raw, y)):\n    base, aug = model(False), model(True)\n    base.fit(raw.iloc[tr], y[tr]); aug.fit(raw.iloc[tr], y[tr])\n    lb = log_loss(y[te], base.predict_proba(raw.iloc[te])[:, 1], labels=[0, 1])\n    la = log_loss(y[te], aug.predict_proba(raw.iloc[te])[:, 1], labels=[0, 1])\n    folds.append({'repeat': split_id // 5, 'fold': split_id % 5, 'improvement': float(lb - la)})\nrepeat_means = [{'repeat': r, 'mean_improvement': float(np.mean([f['improvement'] for f in folds if f['repeat'] == r]))} for r in range(3)]\nlevel_counts = {str(k): int(v) for k, v in raw['SpecialDay_level'].value_counts().sort_index().items()}\nmonth_level_counts = {str(m): {str(k): int(v) for k, v in g['SpecialDay_level'].value_counts().sort_index().items()} for m, g in raw.groupby('Month', sort=True)}\nprint(json.dumps({'n': len(raw), 'level_counts': level_counts, 'month_level_counts': month_level_counts, 'folds': folds, 'repeat_means': repeat_means}, separators=(',', ':')))"
+          },
+          "result": {
+            "status": "executed",
+            "code_sha256": "62b7a92652949b30ed753ac7d46878a95305b3f64c10df9af7472d9eec35440e",
+            "data_sha256": "b3055ee355f59134d851d32641183cb4a8b45def7124d2f50442a042f358e0d9",
+            "returncode": 0,
+            "stdout": "{\"n\":12330,\"level_counts\":{\"0.0\":11079,\"0.2\":178,\"0.4\":243,\"0.6\":351,\"0.8\":325,\"1.0\":154},\"month_level_counts\":{\"Aug\":{\"0.0\":433},\"Dec\":{\"0.0\":1727},\"Feb\":{\"0.0\":105,\"0.2\":15,\"0.4\":21,\"0.6\":19,\"0.8\":19,\"1.0\":5},\"Jul\":{\"0.0\":432},\"June\":{\"0.0\":288},\"Mar\":{\"0.0\":1907},\"May\":{\"0.0\":2192,\"0.2\":163,\"0.4\":222,\"0.6\":332,\"0.8\":306,\"1.0\":149},\"Nov\":{\"0.0\":2998},\"Oct\":{\"0.0\":549},\"Sep\":{\"0.0\":448}},\"folds\":[{\"repeat\":0,\"fold\":0,\"improvement\":-9.26290765992932e-05},{\"repeat\":0,\"fold\":1,\"improvement\":0.000567154359288391},{\"repeat\":0,\"fold\":2,\"improvement\":0.0005704341223681797},{\"repeat\":0,\"fold\":3,\"improvement\":0.000780970087242927},{\"repeat\":0,\"fold\":4,\"improvement\":-3.644091637045044e-05},{\"repeat\":1,\"fold\":0,\"improvement\":-8.195124091475714e-05},{\"repeat\":1,\"fold\":1,\"improvement\":0.0008787870578064183},{\"repeat\":1,\"fold\":2,\"improvement\":0.0011911012241084817},{\"repeat\":1,\"fold\":3,\"improvement\":0.001123227761349932},{\"repeat\":1,\"fold\":4,\"improvement\":-0.0011014452459965907},{\"repeat\":2,\"fold\":0,\"improvement\":8.731743428680439e-05},{\"repeat\":2,\"fold\":1,\"improvement\":0.0005744393287162586},{\"repeat\":2,\"fold\":2,\"improvement\":0.0008039243263509577},{\"repeat\":2,\"fold\":3,\"improvement\":0.0008226303630187171},{\"repeat\":2,\"fold\":4,\"improvement\":0.0004076345295291328}],\"repeat_means\":[{\"repeat\":0,\"mean_improvement\":0.0003578977151859508},{\"repeat\":1,\"mean_improvement\":0.00040194391127069685},{\"repeat\":2,\"mean_improvement\":0.0005391891963803741}]}\n",
+            "stderr": "",
+            "stdout_truncated": false
+          }
+        },
+        {
+          "id": "specialday_prior_work",
+          "broker_id": "search_1",
+          "type": "search",
+          "request": {
+            "type": "search",
+            "id": "search_1",
+            "query": "Research using the UCI Online Shoppers Purchasing Intention Dataset or comparable e-commerce session data that evaluates the incremental association or predictive value of SpecialDay/calendar-proximity features conditional on Month and session context; distinguish this from generic conversion prediction.",
+            "missing_relation": "Whether the conditional SpecialDay-beyond-Month contrast has been directly evaluated and how the feature’s date-derived meaning is interpreted.",
+            "change_if_found": "If a close study tests this contrast, revise toward a discriminating extension or withdraw any novelty implication. If none is returned, retain novelty as unverified."
+          },
+          "result": {
+            "status": "returned",
+            "sources": [
+              {
+                "doi": "10.31289/jite.v3i1.2599.s170",
+                "title": "Online Shoppers Purchasing Intention Dataset Data Set",
+                "date": [],
+                "abstract": ""
+              },
+              {
+                "doi": "10.70267/icrafm.202617509516",
+                "title": "Predicting E-Commerce Purchase Intention from Web Session Behavior: Feature Engineering, Imbalanced Learning, and Conversion Decision Support E-Commerce Purchase Intention Prediction",
+                "date": [
+                  2026,
+                  10,
+                  19
+                ],
+                "abstract": " Online purchase intention prediction is valuable for e-commerce operations, but the positive purchase class is rare and purely accuracy-oriented models can mislead conversion decisions. This paper studies a reproducible decision-support pipeline, FIDDS, for session-level purchase prediction from web behavior. FIDDS combines behavior-driven interaction features, imbalance-aware learning, probability calibration, and utility-based threshold selection. Experiments use the real UCI Online Shoppers Purchasing Intention Dataset with 12,330 sessions, 1,908 purchase sessions, and five stratified random seeds. Random Forest achieves the highest PR-AUC at 0.7453, while FIDDS achieves PR-AUC 0.7426, ROC-AUC 0.9301, F1 0.5723, recall 0.9173, lift at the top 10% of sessions 5.0233, and expected utility 0.1321. The results indicate that conversion-oriented evaluation changes how a model should be selected: the strongest classifier is not always the clearest operating policy. The evidence is limited to one public benchmark and should be read as decision-support validation rather than proof of platform-wide causal uplift. "
+              },
+              {
+                "doi": "10.47297/wspciwsp2516-252730.20210506",
+                "title": "Prediction of Online Shoppers’ Purchasing Intention Using Support Vector Machines(SVM)",
+                "date": [
+                  2021
+                ],
+                "abstract": ""
+              },
+              {
+                "doi": "10.64971/j.cph.ijsdip.v13.i3.5.2025",
+                "title": "Prediction of Online Shoppers Intention using Ensemble Learning Model after Treating Imbalance and Outlier Data",
+                "date": [],
+                "abstract": ""
+              },
+              {
+                "doi": "10.47738/ijaim.v4i2.81",
+                "title": "Using Random Forest and Support Vector Machine Algorithms to Predict Online Shopper Purchase Intention from E-Commerce Session Data",
+                "date": [
+                  2024,
+                  6,
+                  1
+                ],
+                "abstract": ""
+              },
+              {
+                "doi": "10.4018/ijsir.397667",
+                "title": "Prediction of Online Shoppers' Purchasing Intention Based on SHAP-IGWO-EM Method",
+                "date": [
+                  2026,
+                  1,
+                  13
+                ],
+                "abstract": " Predicting online shoppers' purchasing intention is crucial for e-commerce management. This study proposes SHAP-IGWO-EM, a hybrid ensemble framework to enhance prediction accuracy and interpretability for high-dimensional, imbalanced behavioral data. The method integrates XGB, LGBM, and GBM within a stacking architecture, optimized via an enhanced Grey Wolf Optimizer featuring a nonlinear convergence factor, improved leader selection, and Lévy flight perturbations to escape local optima. SHAP analysis identifies key features, reducing redundancy and enabling transparent model interpretation. Experiments on a public e-commerce dataset demonstrate SHAP-IGWO-EM's superior performance over baseline and ensemble models. Ablation studies validate the optimization strategy and SHAP-based feature selection. By uncovering critical drivers of purchase behavior, the model not only boosts predictive power but also provides actionable insights for personalized marketing and operations. "
+              }
+            ],
+            "scope": "Crossref metadata, not exhaustive novelty evidence",
+            "transport_failures": []
+          }
+        }
+      ],
+      "id": "K031"
+    },
+    {
+      "stage": "initial",
+      "candidate": {
+        "title": "Does product-page dwell per page carry signal beyond browsing depth?",
+        "question": "Among sessions with at least one product page, is ProductRelated_Duration per ProductRelated page associated with Revenue after accounting for page count and the other recorded features except PageValues?",
+        "core": {
+          "object": "Revenue among sessions with ProductRelated greater than zero",
+          "relation_or_action": "Estimate the association of per-page product dwell with Revenue while adjusting for ProductRelated count and other recorded features",
+          "contrast": "Sessions with different per-page dwell at comparable product-page counts",
+          "prediction": "Higher per-page dwell will be associated with higher Revenue odds after adjustment.",
+          "independent_unit": "Session represented by one row"
+        },
+        "failure_condition": "The prediction fails if the adjusted per-page dwell association is near zero, unstable across reasonable functional forms, or reverses direction.",
+        "assumptions": [
+          "ProductRelated_Duration divided by ProductRelated is a meaningful session-level dwell summary.",
+          "PageValues is excluded because its construction and transaction timing are unresolved.",
+          "Adjustment yields an observational association, not an intervention effect."
+        ],
+        "required_new_data": [],
+        "feasible_with_current_data": true,
+        "domain_value": "Separates browsing depth from time per product page, which could help identify whether follow-up instrumentation should capture page-level engagement rather than session totals.",
+        "next_action": "test"
+      },
+      "id": "K032"
+    },
+    {
+      "stage": "initial",
+      "candidate": {
+        "title": "Is PageValues a label-proximal measurement channel?",
+        "question": "How much of the apparent session-level association with Revenue depends on PageValues, compared with the other recorded session features?",
+        "core": {
+          "object": "Revenue classification from the supplied session features",
+          "relation_or_action": "Compare held-out performance and calibration for a model using PageValues alone, all features, and all features except PageValues",
+          "contrast": "PageValues included versus excluded, with identical session-level splits and modeling procedure",
+          "prediction": "Including PageValues will substantially improve held-out performance over the model without it; if the no-PageValues model performs similarly, PageValues is not the main source of predictive signal in this dataset.",
+          "independent_unit": "Session, as represented by one row"
+        },
+        "failure_condition": "The prediction fails if excluding PageValues does not produce a material, uncertainty-supported decline in held-out performance relative to the full-feature model.",
+        "assumptions": [
+          "The supplied rows and labels are accurately represented.",
+          "The fixed dataset split and evaluation procedure avoid tuning on held-out results.",
+          "Predictive dependence does not establish that PageValues causes conversion or is available before conversion."
+        ],
+        "required_new_data": [],
+        "feasible_with_current_data": true,
+        "domain_value": "Tests whether reported conversion prediction relies on a metric whose documentation ties it to pages visited before a transaction, helping distinguish potentially actionable session signals from a label-proximal metric.",
+        "next_action": "test"
+      },
+      "id": "K033"
+    },
+    {
+      "stage": "initial",
+      "candidate": {
+        "title": "Does checkout transparency improve conversion after product exploration?",
+        "question": "Among first-time visitors who have viewed at least two product pages and added an item to cart, does showing the full estimated delivery cost before checkout increase transaction completion compared with the usual checkout flow?",
+        "core": {
+          "object": "Transaction completion within a prespecified session window",
+          "relation_or_action": "Randomly assign early delivery-cost disclosure or the usual flow",
+          "contrast": "Disclosure versus control among eligible first-time visitors",
+          "prediction": "Before the experiment, predict higher completion in the disclosure arm.",
+          "independent_unit": "Visitor, assigned once at the first eligible session"
+        },
+        "failure_condition": "The intention-to-treat conversion difference is zero or negative, or eligibility, assignment, and exposure cannot be measured reliably.",
+        "assumptions": [
+          "Eligibility is determined before randomization.",
+          "Delivery-cost estimates are available and sufficiently accurate at assignment.",
+          "Repeat visits follow the visitor-level assignment."
+        ],
+        "required_new_data": "A retail-site randomized experiment recording visitor assignment, product-page events, cart addition, disclosed cost, checkout events, and transaction completion.",
+        "feasible_with_current_data": false,
+        "domain_value": "Tests a concrete checkout change that could reduce late purchase abandonment, with an intervention effect measured directly.",
+        "next_action": "measure"
+      },
+      "id": "K034"
+    },
+    {
+      "stage": "initial",
+      "candidate": {
+        "title": "Does the allocation of browsing time across page categories matter?",
+        "question": "Among sessions with positive total recorded duration across Administrative_Duration, Informational_Duration, and ProductRelated_Duration, is the share of that duration spent on product pages associated with Revenue when comparing sessions with similar total duration and page counts, excluding PageValues?",
+        "core": {
+          "object": "Revenue and session-level allocation of recorded duration across page categories",
+          "relation_or_action": "Estimate the association of ProductRelated_Duration divided by total recorded category duration, adjusting for total duration, category page counts, Month, VisitorType, and TrafficType",
+          "contrast": "Sessions with different product-page duration shares at similar total recorded duration and page counts",
+          "prediction": "A higher product-page duration share will be associated with higher Revenue odds.",
+          "independent_unit": "Session represented by one row"
+        },
+        "failure_condition": "The prediction fails if the adjusted share association is near zero, unstable across reasonable functional forms, or reverses direction.",
+        "assumptions": [
+          "The three duration fields are comparable and their sum is a meaningful recorded-duration total.",
+          "Sessions with zero total recorded duration are excluded by a prespecified rule.",
+          "The association is observational; matching recorded totals does not establish a causal reallocation effect."
+        ],
+        "required_new_data": [],
+        "feasible_with_current_data": true,
+        "domain_value": "Distinguishes browsing-time allocation from total recorded time, helping determine whether future instrumentation should preserve page-category time rather than only session totals.",
+        "next_action": "test"
+      },
+      "id": "K035"
+    },
+    {
+      "stage": "initial",
+      "candidate": {
+        "title": "Does the product-duration association vary by month?",
+        "question": "Does the conditional association between ProductRelated_Duration and Revenue differ across Month after accounting for product-page count and recorded context?",
+        "core": {
+          "object": "Month-specific association between product-related duration and Revenue",
+          "relation_or_action": "Estimate and compare duration associations across months with adequate sample support",
+          "contrast": "A shared duration association across months versus month-varying associations",
+          "prediction": "A shared association will not describe all months equally well",
+          "independent_unit": "Session"
+        },
+        "failure_condition": "Month interactions do not improve held-out prediction or estimates are too uncertain in sparsely represented months.",
+        "assumptions": [
+          "Month labels are valid calendar categories.",
+          "Differences between months are descriptive and may reflect unmeasured campaigns or traffic composition."
+        ],
+        "required_new_data": "Campaign and date-level traffic context would be needed to interpret month differences.",
+        "feasible_with_current_data": true,
+        "domain_value": "Could indicate whether a single session-analytics relationship is stable across the observed calendar categories.",
+        "next_action": "test"
+      },
+      "id": "K036"
+    }
+  ]
+}

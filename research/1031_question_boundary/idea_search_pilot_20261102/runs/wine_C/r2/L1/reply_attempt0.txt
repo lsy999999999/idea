@@ -1,0 +1,109 @@
+{
+  "recognition": "这是 UCI Wine Quality 数据集，包含葡萄牙 Vinho Verde 红、白葡萄酒样本的理化测量和质量评分。我知道该数据集的常见用途；此处只依据给定 bundle，且不把数据集元数据当作发现。",
+  "candidates": [
+    {
+      "id": "I1",
+      "title": "柠檬酸是否改变挥发酸与质量评分的关系？",
+      "question": "在红、白葡萄酒各自内部，控制其他已测理化变量后，volatile_acidity 与 quality 的关联是否随 citric_acid 水平而改变？",
+      "core": {
+        "object": "单个葡萄酒样本的测量化学特征与质量评分",
+        "relation_or_action": "citric_acid 对 volatile_acidity–quality 条件关联的调节",
+        "contrast": "在较低与较高 citric_acid 水平下，volatile_acidity 与 quality 的调整后关联",
+        "prediction": "事前预测在至少一种颜色中，较高 citric_acid 会减弱 volatile_acidity 与 quality 的负向关联；若共同支持范围内的交互接近零或方向相反，则该预测不获支持。",
+        "independent_unit": "单个样本；生产批次、酒庄和评审依赖关系未知。"
+      },
+      "failure_condition": "在颜色内共同支持范围和合理的序数模型规格下，交互接近零或方向不稳定。",
+      "assumptions": [
+        "quality 是序数感官评分，不等同消费者偏好。",
+        "citric_acid 只是已测化学指标，不直接测量感知酸度或缓冲能力。",
+        "观察性关联不识别调配或发酵干预效果。"
+      ],
+      "required_new_data": "当前数据可检验条件关联。若要检验干预效果，需要按颜色制作独立酒批次，在控制其他条件下操纵两种酸相关成分，并由盲法评审重复评分。",
+      "feasible_with_current_data": true,
+      "domain_value": "可判断挥发酸与评分的关系是否依赖另一种酸相关成分，从而为后续盲法感官实验提供具体交互假设；不会单凭现有数据导出酿造建议。",
+      "history_match": "none",
+      "history_relation": "new_family",
+      "discriminating_delta": "历史候选检验 alcohol × residual_sugar、硫测量构成及颜色条件差异；本候选改检验两种酸相关测量之间的条件交互。",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    },
+    {
+      "id": "I2",
+      "title": "酒精度与评分的关系是否在高酒精区间弯曲？",
+      "question": "在各颜色的测量范围内，控制其余理化变量后，alcohol 与 quality 的条件关联是否呈现可重复的非线性，而不是单一线性斜率？",
+      "core": {
+        "object": "单个葡萄酒样本的 alcohol、其他理化测量与 quality",
+        "relation_or_action": "alcohol–quality 条件关联的曲率",
+        "contrast": "线性关联与预先规定的平滑非线性关联，在共同数据支持范围内比较",
+        "prediction": "事前预测至少一种颜色中存在非零曲率，表现为高 alcohol 区间的边际关联较低；若曲线相对线性模型没有稳定改善且曲率不确定性覆盖零，则预测失败。",
+        "independent_unit": "单个样本；样本间的酒庄、批次或评审依赖未知。"
+      },
+      "failure_condition": "在颜色内共同支持范围、预设曲线复杂度和敏感性分析下，曲率不稳定或没有可辨别的拟合差异。",
+      "assumptions": [
+        "质量分数按序数结果处理，非线性结论依赖所选连接函数与曲线形式。",
+        "理化条件调整不能排除未测混杂。",
+        "外推到样本稀少的 alcohol 极值不构成预测证据。"
+      ],
+      "required_new_data": "观察性曲率可用当前数据检验；验证生产干预需独立酒批次、控制 alcohol 水平及盲法重复感官评分。",
+      "feasible_with_current_data": true,
+      "domain_value": "可检验线性摘要是否掩盖 alcohol 关联的区间差异，并为后续独立样本验证指明需要覆盖的 alcohol 范围。",
+      "history_match": "I1",
+      "history_relation": "refinement",
+      "discriminating_delta": "历史 I1 检验 alcohol × residual_sugar 交互；本候选检验 alcohol 主关联本身的曲率，不把交互当作非线性证据。",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    },
+    {
+      "id": "I3",
+      "title": "挥发酸与评分的关联是否因酒色而异？",
+      "question": "在红、白葡萄酒的理化特征有共同支持的样本中，调整其他测量后，volatile_acidity 与 quality 的条件关联是否在两种颜色间不同？",
+      "core": {
+        "object": "共同理化特征范围内的红、白酒样本",
+        "relation_or_action": "颜色对 volatile_acidity–quality 条件关联的效应修饰",
+        "contrast": "共同支持区域中红、白酒各自的调整后挥发酸关联及其差值",
+        "prediction": "事前预测红酒中的负向关联更强；若关联差值接近零、反向或依赖共同支持区域之外的样本，则该预测不获支持。",
+        "independent_unit": "单个样本；颜色与未观测生产来源或评审差异可能相关。"
+      },
+      "failure_condition": "共同支持不足，或调整后颜色间关联差在合理规格下接近零或反向。",
+      "assumptions": [
+        "颜色不是随机分配的处理。",
+        "两类样本的评分可比较，但评审流程信息缺失。",
+        "估计结果仅表示条件关联，不表示改变颜色或挥发酸的因果效果。"
+      ],
+      "required_new_data": "当前数据可做共同支持限制下的关联分析。若需分离颜色感知与生产差异，应由同一评审组盲评匹配酒批次。",
+      "feasible_with_current_data": true,
+      "domain_value": "可检验一种挥发酸关联是否适用于两类酒，或是否需要分颜色验证；可为后续独立批次研究提供分层假设。",
+      "history_match": "I3",
+      "history_relation": "refinement",
+      "discriminating_delta": "历史 I3 比较调整理化特征后的总体红白评分差；本候选聚焦挥发酸关联的颜色间差异。",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    }
+  ],
+  "selected_id": "I1",
+  "selection_reason": "三个候选的四项自评门槛均通过且都可用当前数据检验。I1 与历史候选属于新问题族；I2、I3 分别是历史 alcohol 关联和颜色比较问题的细化。按给定排序规则，I1 胜出。事前预测是：至少一种颜色中，较高 citric_acid 会减弱 volatile_acidity 与 quality 的负向条件关联；这是待检验假设，不是结果。",
+  "method_ids": [
+    "M17",
+    "M21",
+    "M36"
+  ],
+  "task": {
+    "deliverable": "按颜色报告序数质量模型中的 volatile_acidity × citric_acid 交互估计与不确定性，说明变量尺度、共同支持范围及影响点敏感性，并区分样本级关联与因果效果。",
+    "acceptance": "分别呈现红、白样本的预设交互估计与不确定性；核查二者联合支持；说明行级独立性无法由现有元数据验证；不得把不显著结果解释为无效应，也不得把观察性关联写成干预结论。"
+  }
+}

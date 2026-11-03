@@ -1,0 +1,367 @@
+{
+  "candidates": [
+    {
+      "distinguishing_experiment": "Compare E1 with E3 at h=0.5: their early versus late positive pulses give different exponentially weighted summaries. Compare E5 with E7 to reverse alternating histories. At both contrasts, the model predicts a difference if p[3] is nonzero; no outcomes are supplied.",
+      "id": "R1",
+      "operation": "Predict raw response from current drive, elapsed time, and an exponentially decayed integral of the recorded pre-response drive history.",
+      "parameters": [
+        {
+          "initial": 2.0,
+          "lower": 0.05,
+          "name": "tau",
+          "unit": "s",
+          "upper": 10.0
+        },
+        {
+          "initial": 0.0,
+          "lower": -10.0,
+          "name": "baseline",
+          "unit": "response units",
+          "upper": 10.0
+        },
+        {
+          "initial": 1.0,
+          "lower": -10.0,
+          "name": "drive coefficient",
+          "unit": "response units per dimensionless drive",
+          "upper": 10.0
+        },
+        {
+          "initial": 1.0,
+          "lower": -10.0,
+          "name": "history coefficient",
+          "unit": "response units per dimensionless drive",
+          "upper": 10.0
+        }
+      ],
+      "quantities": [
+        {
+          "availability": "Before response, from the complete supplied history record.",
+          "definition": "Exponentially weighted history integral: sum(history * exp(times / tau)) * dt / tau.",
+          "initialization_and_future": "Use the supplied pre-response intervals. For future predictions, evaluate from the history record available before that response; do not use its response.",
+          "name": "Weighted history",
+          "units": "dimensionless drive"
+        }
+      ],
+      "scope": "Complete predictive candidate using only available recorded inputs and exactly four shared parameters. Refit on fit only and evaluate raw response on dev. It can represent history-sensitive prediction but does not establish direct history causation or a physical mechanism.",
+      "tree": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "args": [],
+                    "op": "p1",
+                    "value": null
+                  },
+                  {
+                    "args": [],
+                    "op": "mul",
+                    "value": null
+                  }
+                ],
+                "op": "add",
+                "value": null
+              },
+              {
+                "args": [
+                  {
+                    "args": [],
+                    "op": "p2",
+                    "value": null
+                  },
+                  {
+                    "args": [],
+                    "op": "u",
+                    "value": null
+                  }
+                ],
+                "op": "mul",
+                "value": null
+              }
+            ],
+            "op": "add",
+            "value": null
+          },
+          {
+            "args": [
+              {
+                "args": [],
+                "op": "p3",
+                "value": null
+              },
+              {
+                "args": [
+                  {
+                    "args": [
+                      {
+                        "args": [
+                          {
+                            "args": [],
+                            "op": "history",
+                            "value": null
+                          },
+                          {
+                            "args": [
+                              {
+                                "args": [
+                                  {
+                                    "args": [],
+                                    "op": "times",
+                                    "value": null
+                                  },
+                                  {
+                                    "args": [],
+                                    "op": "p0",
+                                    "value": null
+                                  }
+                                ],
+                                "op": "div",
+                                "value": null
+                              }
+                            ],
+                            "op": "exp",
+                            "value": null
+                          }
+                        ],
+                        "op": "mul",
+                        "value": null
+                      }
+                    ],
+                    "op": "sum",
+                    "value": null
+                  },
+                  {
+                    "args": [
+                      {
+                        "args": [],
+                        "op": "dt",
+                        "value": null
+                      },
+                      {
+                        "args": [],
+                        "op": "p0",
+                        "value": null
+                      }
+                    ],
+                    "op": "div",
+                    "value": null
+                  }
+                ],
+                "op": "mul",
+                "value": null
+              }
+            ],
+            "op": "add",
+            "value": null
+          }
+        ],
+        "op": "constant",
+        "value": 0
+      }
+    },
+    {
+      "distinguishing_experiment": "Compare E1 and E3 at h=0.5 and E2 and E4 at h=2.2. This model predicts equality for each pair because each history has the same sum; E1 versus E5 has sums 1 and 0 and can distinguish the model if p[3] is nonzero.",
+      "id": "R2",
+      "operation": "Replace exponential weighting with the mean of the full recorded history and use it with current drive and elapsed time to predict raw response.",
+      "parameters": [
+        {
+          "initial": 0.0,
+          "lower": -10.0,
+          "name": "baseline",
+          "unit": "response units",
+          "upper": 10.0
+        },
+        {
+          "initial": 1.0,
+          "lower": -10.0,
+          "name": "drive coefficient",
+          "unit": "response units per dimensionless drive",
+          "upper": 10.0
+        },
+        {
+          "initial": 0.0,
+          "lower": -10.0,
+          "name": "elapsed-time coefficient",
+          "unit": "response units per s",
+          "upper": 10.0
+        },
+        {
+          "initial": 1.0,
+          "lower": -10.0,
+          "name": "history-mean coefficient",
+          "unit": "response units per dimensionless drive",
+          "upper": 10.0
+        }
+      ],
+      "quantities": [
+        {
+          "availability": "Before response, from the supplied full pre-response history.",
+          "definition": "Arithmetic mean of the recorded history values; for the provided equal-duration intervals this is also the duration-weighted mean.",
+          "initialization_and_future": "Recompute from the history record available before each future response.",
+          "name": "History mean",
+          "units": "dimensionless drive"
+        }
+      ],
+      "scope": "Complete predictive candidate with four shared parameters and no unavailable measurements. It tests a different history summary from R1; neither history sensitivity nor this summary's sufficiency identifies a mechanism.",
+      "tree": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [],
+                "op": "p0",
+                "value": null
+              },
+              {
+                "args": [],
+                "op": "u",
+                "value": null
+              }
+            ],
+            "op": "mul",
+            "value": null
+          },
+          {
+            "args": [
+              {
+                "args": [],
+                "op": "p1",
+                "value": null
+              },
+              {
+                "args": [],
+                "op": "h",
+                "value": null
+              }
+            ],
+            "op": "mul",
+            "value": null
+          }
+        ],
+        "op": "add",
+        "value": null
+      }
+    },
+    {
+      "distinguishing_experiment": "Compare E1 and E5 at h=0.5: the first has history mean 0.25 and the second mean 0, while their second moment also differs. E1 and E3 have identical moments through this order and thus are predicted equal. These are prospective formula-based contrasts, not observed outcomes.",
+      "id": "R3",
+      "operation": "Use a nonlinear moment summary of the recorded history, interacting its mean with current drive, as a complete predictive revision.",
+      "parameters": [
+        {
+          "initial": 0.0,
+          "lower": -10.0,
+          "name": "baseline",
+          "unit": "response units",
+          "upper": 10.0
+        },
+        {
+          "initial": 1.0,
+          "lower": -10.0,
+          "name": "drive coefficient",
+          "unit": "response units per dimensionless drive",
+          "upper": 10.0
+        },
+        {
+          "initial": 1.0,
+          "lower": -10.0,
+          "name": "history mean coefficient",
+          "unit": "response units per dimensionless drive",
+          "upper": 10.0
+        },
+        {
+          "initial": 0.0,
+          "lower": -10.0,
+          "name": "history second-moment coefficient",
+          "unit": "response units per squared dimensionless drive",
+          "upper": 10.0
+        }
+      ],
+      "quantities": [
+        {
+          "availability": "Before response, from the supplied full pre-response history.",
+          "definition": "Mean of history values.",
+          "initialization_and_future": "Recompute from the pre-response record for each prediction.",
+          "name": "History mean",
+          "units": "dimensionless drive"
+        },
+        {
+          "availability": "Before response, from the supplied full pre-response history.",
+          "definition": "Mean of squared history values.",
+          "initialization_and_future": "Recompute from the pre-response record for each prediction.",
+          "name": "History second moment",
+          "units": "squared dimensionless drive"
+        }
+      ],
+      "scope": "Complete four-parameter predictor using the recorded history directly. It provides a nonlinear history-summary alternative to R1 and R2. Its predictive performance is untested and it does not identify a physical mechanism.",
+      "tree": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [],
+                "op": "p0",
+                "value": null
+              },
+              {
+                "args": [
+                  {
+                    "args": [],
+                    "op": "p1",
+                    "value": null
+                  },
+                  {
+                    "args": [],
+                    "op": "u",
+                    "value": null
+                  }
+                ],
+                "op": "mul",
+                "value": null
+              }
+            ],
+            "op": "add",
+            "value": null
+          },
+          {
+            "args": [
+              {
+                "args": [],
+                "op": "p2",
+                "value": null
+              },
+              {
+                "args": [
+                  {
+                    "args": [
+                      {
+                        "args": [],
+                        "op": "history",
+                        "value": null
+                      }
+                    ],
+                    "op": "mean",
+                    "value": null
+                  },
+                  {
+                    "args": [],
+                    "op": "p3",
+                    "value": null
+                  }
+                ],
+                "op": "mul",
+                "value": null
+              }
+            ],
+            "op": "add",
+            "value": null
+          }
+        ],
+        "op": "add",
+        "value": null
+      }
+    }
+  ],
+  "scientific_notes": "The old model's dev RMSE indicates poor transfer for that fitted linear specification. Separately, the certified matched-input history contrasts reject deterministic prediction from (u,h) alone under the stated matching, shared-parameter, determinism, stable-measurement, and absolute-error premises: observed gaps exceed the 0.030 maximum attributable to readout error. This does not establish direct history dependence or a physical mechanism. R1-R3 are executable alternatives with exactly four parameter slots each; their parameters must be refit on fit only, and dev must be scored against raw o. No candidate fit or experiment outcome is available in the bundle."
+}

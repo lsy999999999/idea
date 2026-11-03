@@ -1,0 +1,50 @@
+{
+  "recognition": {
+    "recognized_dataset": true,
+    "identity": "UCI Online Shoppers Purchasing Intention Dataset (UCI ID 468), identified from the supplied metadata.",
+    "basis": "Dataset recognition comes from the bundle; no independent retrieval or analysis was performed."
+  },
+  "selected_id": "I1",
+  "final": {
+    "status": "revised",
+    "candidate": {
+      "id": "I1",
+      "title": "Does product-duration share add information beyond browsing volume?",
+      "question": "Among sessions with positive total recorded duration, does ProductRelated_Duration divided by the sum of the three supplied duration fields improve held-out prediction of Revenue beyond page counts, total recorded duration, and supplied context? What is the model-based probability contrast between the training-fold 25th and 75th percentiles of this share at median ProductRelated count?",
+      "core": {
+        "object": "Session-level share of recorded duration attributed to product-related pages.",
+        "relation_or_action": "Compare identical held-out splits for logistic models with and without product-duration share and its interaction with ProductRelated count; exclude PageValues.",
+        "contrast": "Baseline versus augmented model; separately report the augmented model's predicted probability contrast across training-fold share quartiles.",
+        "prediction": "The augmented model will modestly improve held-out log loss and show a positive modeled contrast.",
+        "independent_unit": "Session, as described in the supplied dataset metadata."
+      },
+      "failure_condition": "No reproducible paired log-loss improvement, or the modeled contrast is uncertain across both directions.",
+      "assumptions": [
+        "The three duration fields can be summed for this descriptive share.",
+        "The share measures recorded duration composition, not attention or a causal lever.",
+        "Session-level splitting is appropriate for this within-dataset feasibility analysis but does not establish future deployment performance."
+      ],
+      "required_new_data": "Event-level timestamps and a defined prediction time to assess feature availability before purchase; external sessions for deployment validation.",
+      "feasible_with_current_data": true,
+      "domain_value": "Tests whether analytics distinguish duration composition from browsing volume without implying that changing browsing behavior would change purchases.",
+      "history_match": "none",
+      "history_relation": "new_family",
+      "discriminating_delta": "Conditions product-duration share on page counts and total duration, then reports a supported model-based contrast rather than a single feature association.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    },
+    "evidence_level": "proposal_only",
+    "what_changed": "Clarified the share denominator, specified that zero-total-duration sessions must be counted and reported separately, and narrowed interpretation to recorded-duration composition. The requested computation returned a clarification because external I/O/dynamic execution was prohibited, so no metrics or prevalence estimates were produced. The search returned general purchase-prediction work, not a direct test of this conditional allocation contrast.",
+    "what_is_known": "The bundle supplies 12,330 sessions and documents the duration fields and Revenue. It does not provide results for the proposed comparison. Compute request compute_0 did not execute. Search result search_1 was limited Crossref metadata; it does not establish whether close prior work exists.",
+    "new_hypothesis": "None supported by returned evidence. The original positive-association and predictive-improvement forecast remains an untested proposal.",
+    "next_falsifiable_test": "Execute the prespecified paired repeated stratified cross-validation comparison; report zero-total-duration count, paired held-out log-loss differences, and uncertainty and support for the share-quartile probability contrast. Separately obtain event timing or external data before making claims about decision-time availability or deployment.",
+    "nearest_work_comparison": "The returned 2026 paper concerns conversion-prediction and decision-support performance on this dataset. Its abstract does not report the conditional product-duration-share contrast proposed here. The dataset's 2019 introduction paper is also identified in the supplied metadata as prediction-focused. These records do not establish novelty or exclude closer work.",
+    "novelty_status": "Unverified; the limited search found no direct overlap in the returned abstracts, which is not evidence of a literature gap.",
+    "feedback_type": "uncertainty"
+  }
+}

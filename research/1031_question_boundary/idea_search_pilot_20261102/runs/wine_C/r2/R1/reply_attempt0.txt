@@ -1,0 +1,35 @@
+{
+  "recognition": "This is the UCI Wine Quality dataset, with red and white Portuguese Vinho Verde samples. That identifies the supplied data; it is not evidence for the proposed interaction.",
+  "critique": [
+    "The directional prediction is interpretable: if volatile_acidity has a negative association with quality, a positive interaction would mean that association is weaker at higher citric_acid. But “in at least one color” permits a favorable result from either of two analyses. Define whether the claim is color-specific or shared, and assess uncertainty accordingly.",
+    "The question specifies an adjusted association but leaves its estimand underspecified. Interaction direction and size depend on predictor scales and the ordinal outcome model. The task asks for ordinal models, but the contrast should identify the transformations and interaction scale before looking at results.",
+    "Citric acid and volatile acidity may have limited joint support or correlated relationships with other chemistry. A fitted interaction could depend on sparse regions or adjustment choices. Check joint support and avoid interpreting extrapolated contrasts.",
+    "The bundle supplies sample rows but no producer, batch, panel, or sampling structure. Sample-level uncertainty relies on unverified independence; it cannot establish precision for a population of wines or lots.",
+    "The proposed application to blending or fermentation is only a motivation. These observational measurements cannot show that changing either acid changes sensory scores. The stated controlled-lot experiment would be needed for an intervention claim.",
+    "The proposed contrast may overlap prior analyses of wine chemistry and sensory quality. The previous round's search concerned a different interaction and failed, so it does not resolve overlap for this candidate."
+  ],
+  "feedback_type": "uncertainty",
+  "requests": [
+    {
+      "type": "compute",
+      "id": "C2",
+      "purpose": "Estimate the color-specific volatile_acidity-by-citric_acid interaction on an ordinal outcome scale, with row-bootstrap uncertainty, to assess the proposed direction descriptively. This does not resolve unknown clustering or identify an intervention effect.",
+      "model_spec": "Within each color, fit a proportional-odds cumulative-logit model for quality using standardized volatile_acidity and citric_acid, their product, and the remaining measured chemistry as standardized covariates. Report the interaction coefficient and percentile interval from 80 row-bootstrap resamples, plus sample size and marginal 5th–95th percentile ranges of both interaction variables. Bootstrap assumes independent rows; treat results as exploratory.",
+      "code": "import json\nimport numpy as np\nfrom scipy.optimize import minimize\nfrom scipy.special import expit\n\nchem=['fixed_acidity','volatile_acidity','citric_acid','residual_sugar','chlorides','free_sulfur_dioxide','total_sulfur_dioxide','density','pH','sulphates','alcohol']\nresults=[]\ndef fit_ord(X,y,k):\n    n,p=X.shape\n    counts=np.bincount(y,minlength=k).astype(float)\n    cum=np.cumsum(counts)[:-1]/len(y)\n    init_thr=np.log(np.clip(cum,1e-5,1-1e-5)/(1-np.clip(cum,1e-5,1-1e-5)))\n    init=np.r_[np.zeros(p),init_thr[0],np.log(np.maximum(np.diff(init_thr),0.05))]\n    def unpack(q):\n        z=q[p:]\n        th=np.r_[z[0],z[0]+np.cumsum(np.exp(np.clip(z[1:],-8,8)))]\n        return q[:p],th\n    def loss(q):\n        b,th=unpack(q); c=expit(th[None,:]-X@b[:,None])\n        probs=np.column_stack([c[:,0],np.diff(c,axis=1),1-c[:,-1]])\n        return -np.log(np.clip(probs[np.arange(n),y],1e-12,1)).sum()\n    r=minimize(loss,init,method='L-BFGS-B',options={'maxiter':250,'ftol':1e-8})\n    return r.x[3],bool(r.success)\nfor color,g0 in DF.groupby('color'):\n    g=g0.reset_index(drop=True); raw=g[chem].astype(float).to_numpy()\n    mu=raw.mean(axis=0); sd=raw.std(axis=0); sd[sd==0]=1\n    z=(raw-mu)/sd; ia=chem.index('volatile_acidity'); ic=chem.index('citric_acid')\n    interaction=z[:,ia]*z[:,ic]\n    cols=[z[:,ia],z[:,ic],interaction]+[z[:,j] for j in range(len(chem)) if j not in (ia,ic)]\n    X=np.column_stack(cols); cats=sorted(g['quality'].astype(int).unique()); mp={v:i for i,v in enumerate(cats)}\n    y=g['quality'].astype(int).map(mp).to_numpy(); k=len(cats)\n    est,ok=fit_ord(X,y,k); rng=np.random.default_rng(20261102); boot=[]\n    for _ in range(80):\n        ix=rng.integers(0,len(y),len(y))\n        try:\n            b,s=fit_ord(X[ix],y[ix],k)\n            if s and np.isfinite(b): boot.append(float(b))\n        except Exception: pass\n    results.append({'color':str(color),'n':len(y),'interaction_log_odds':float(est),'fit_success':ok,'bootstrap_successes':len(boot),'bootstrap_2_5_97_5':np.quantile(boot,[.025,.975]).tolist() if boot else None,'volatile_acidity_q05_q95':np.quantile(raw[:,ia],[.05,.95]).tolist(),'citric_acid_q05_q95':np.quantile(raw[:,ic],[.05,.95]).tolist()})\nprint(json.dumps({'model':'proportional odds; standardized predictors; row bootstrap assumes independent samples; not causal','results':results},separators=(',',':')))"
+    },
+    {
+      "type": "search",
+      "id": "S2",
+      "query": "Studies using the UCI Wine Quality dataset or comparable sensory wine data that estimate a volatile_acidity by citric_acid interaction for ordinal quality, including color-stratified estimates and sampling unit.",
+      "missing_relation": "Whether this specific interaction and estimand have already been studied, and how closely prior analyses match the within-color ordinal contrast.",
+      "change_if_found": "If a close analysis exists, narrow the question to a distinct prespecified contrast or an independent-lot sensory design; if no close work is found, describe the candidate as a possible extension without claiming verified novelty."
+    }
+  ],
+  "acceptance_checks": [
+    "Report color-specific ordinal interaction estimates and uncertainty, and state the coefficient's scale and predictor transformations.",
+    "Check whether the joint volatile_acidity–citric_acid region supports the comparison; do not infer a stable effect from extrapolated or sparse combinations.",
+    "Treat row-bootstrap intervals as conditional on an unverified independent-row assumption; they do not address producer, batch, or panel clustering.",
+    "Classify the directional prediction as supported, contradicted, or inconclusive based on the returned estimates and uncertainty, without converting association into an intervention claim.",
+    "Use any literature result only after it is returned; distinguish a failed search from evidence of novelty."
+  ]
+}

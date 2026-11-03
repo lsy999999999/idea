@@ -1,0 +1,84 @@
+{
+  "evidence_refs": [
+    "evidence.metadata.old_model_fit_rmse=0.25494593733150495; dev_rmse=0.8751739349958023 despite a global least-squares fit, so the current linear form is inadequate.",
+    "At fixed u=0.4 and h=0.3, dev responses average about 1.313 for all-positive history versus -0.721 for all-negative history: history matters strongly beyond u,h.",
+    "At fixed u=0.4 and all-positive history, the dev means fall from about 1.313 at h=0.3 to 0.976 at h=1.2, indicating waiting-time dependence of the history contribution.",
+    "At fixed u=0.65 and h=0.5, observed_A means are about 0.644 for [1,0,0,0] and 0.941 for [0,0,0,1]; equal-duration histories with different temporal placement produce different responses."
+  ],
+  "experiments": [
+    {
+      "h": 0.5,
+      "history": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "purpose": "Anchor a positive pulse in the oldest interval at an intermediate drive and short wait; compare its age-specific response with the reversed pulse and the existing observed_A result.",
+      "u": 0.3
+    },
+    {
+      "h": 0.5,
+      "history": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "purpose": "Reverse the isolated pulse placement while holding drive and wait fixed; tests whether history is temporally weighted rather than summarized by its mean or sum.",
+      "u": 0.3
+    },
+    {
+      "h": 1.5,
+      "history": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "purpose": "Repeat the oldest-pulse condition after a longer wait to test decay of remembered drive.",
+      "u": 0.3
+    },
+    {
+      "h": 1.5,
+      "history": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "purpose": "Paired long-wait recent-pulse condition distinguishes age weighting and waiting-time decay.",
+      "u": 0.3
+    }
+  ],
+  "exposed_inputs": [
+    "u",
+    "h",
+    "history",
+    "times",
+    "dt"
+  ],
+  "measurement_requests": [
+    "Use four repeats per condition as specified; preserve the calibrated reference-channel bound of 0.015 response units."
+  ],
+  "parameters": [
+    {
+      "dimension": [
+        0,
+        0
+      ],
+      "initial": 0.5,
+      "lower": 0.01,
+      "name": "tau",
+      "upper": 8.0
+    }
+  ],
+  "quantities": [
+    {
+      "expression": "sum(history*exp(times/tau)*dt)",
+      "interpretation": "Exponentially age-weighted prior drive integral over the supplied intervals; times are negative relative to the current drive, so older inputs receive less weight for positive tau.",
+      "name": "memory"
+    }
+  ],
+  "rationale": "This is a partial construction: it adds one computable, dimensionless history summary and leaves the response law unfinished. The large history contrast at matched u,h supports adding history dependence; the oldest-versus-newest pulse contrast at matched u,h shows that an unweighted mean or sum is insufficient. The all-positive history contrast across waits motivates making the memory weight depend on elapsed time. A single shared decay time tau is a compact, testable first representation; the proposed paired pulse experiments vary pulse age and wait while holding u fixed, supplying leverage to estimate tau and check whether exponential decay is plausible. This does not claim that memory alone explains the response or achieves the acceptance RMSE."
+}

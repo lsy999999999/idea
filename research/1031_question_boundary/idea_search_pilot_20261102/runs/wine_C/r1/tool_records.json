@@ -1,0 +1,50 @@
+[
+  {
+    "id": "C1",
+    "broker_id": "compute_0",
+    "type": "compute",
+    "request": {
+      "type": "compute",
+      "id": "compute_0",
+      "purpose": "Estimate the color-specific alcohol-by-residual_sugar association with a transparent exploratory model and row-bootstrap uncertainty. Check whether the forecast is descriptively supported; do not interpret this as causal evidence or as resolving unknown clustering.",
+      "model_spec": "For each color, fit OLS of quality on centered standardized alcohol, centered standardized log1p(residual_sugar), their interaction, and the remaining measured chemistry covariates. Report the interaction coefficient and percentile interval from 300 row-bootstrap resamples. This uses an interval-score approximation and an unverified independent-row assumption; it is a diagnostic, not the requested ordinal analysis.",
+      "code": "import json\nimport numpy as np\nimport pandas as pd\n\nrows=[]\nchem=['fixed_acidity','volatile_acidity','citric_acid','residual_sugar','chlorides','free_sulfur_dioxide','total_sulfur_dioxide','density','pH','sulphates','alcohol']\nfor color,g0 in DF.groupby('color'):\n    g=g0.copy().reset_index(drop=True)\n    x=np.log1p(g['residual_sugar'].astype(float).to_numpy())\n    a=g['alcohol'].astype(float).to_numpy()\n    x=(x-x.mean())/(x.std() or 1.0); a=(a-a.mean())/(a.std() or 1.0)\n    cols=[np.ones(len(g)),a,x,a*x]\n    for c in chem:\n        if c not in ('alcohol','residual_sugar'):\n            v=g[c].astype(float).to_numpy(); sd=v.std()\n            cols.append((v-v.mean())/(sd if sd else 1.0))\n    X=np.column_stack(cols); y=g['quality'].astype(float).to_numpy()\n    beta=np.linalg.lstsq(X,y,rcond=None)[0]\n    rng=np.random.default_rng(20261102); vals=[]\n    for _ in range(300):\n        ix=rng.integers(0,len(y),len(y))\n        try: vals.append(float(np.linalg.lstsq(X[ix],y[ix],rcond=None)[0][3]))\n        except Exception: pass\n    rows.append({'color':str(color),'n':len(y),'interaction_ols':float(beta[3]),'bootstrap_2_5_97_5':np.quantile(vals,[.025,.975]).tolist(),'sugar_q05_q95':np.quantile(g['residual_sugar'].astype(float),[.05,.95]).tolist()})\nprint(json.dumps({'diagnostic':'OLS interval-score approximation; row bootstrap assumes independent samples; not causal','results':rows},separators=(',',':')))"
+    },
+    "result": {
+      "status": "executed",
+      "code_sha256": "264911ae7df6babf214f2b587426a00881274555ba9e1086bb44a1f7be60128a",
+      "data_sha256": "428bd8df7313b159988405ae5e3be6d363993d73f7ffc2adedfdc1d496508191",
+      "returncode": 0,
+      "stdout": "{\"diagnostic\":\"OLS interval-score approximation; row bootstrap assumes independent samples; not causal\",\"results\":[{\"color\":\"red\",\"n\":1599,\"interaction_ols\":-0.02791549067348975,\"bootstrap_2_5_97_5\":[-0.07356313003195868,0.01857449721362653],\"sugar_q05_q95\":[1.5900000000000007,5.1]},{\"color\":\"white\",\"n\":4898,\"interaction_ols\":-0.02683177003644993,\"bootstrap_2_5_97_5\":[-0.06811449503827421,0.00026084688011609655],\"sugar_q05_q95\":[1.1,15.7]}]}\n",
+      "stderr": "",
+      "stdout_truncated": false
+    }
+  },
+  {
+    "id": "S1",
+    "broker_id": "search_1",
+    "type": "search",
+    "request": {
+      "type": "search",
+      "id": "search_1",
+      "query": "Prior studies using the UCI Wine Quality data or related blinded sensory wine evaluations that specifically estimate an alcohol by residual sugar interaction for sensory quality, including outcome scale, wine-color stratification, and independent sampling unit.",
+      "missing_relation": "Whether the proposed alcohol-by-residual_sugar interaction and within-color sensory contrast have already been directly examined, and how closely prior estimands match this one.",
+      "change_if_found": "If a close prior analysis exists, narrow the question to a prespecified color-specific difference or a stronger independent-lot sensory design; if not, retain it only as a candidate extension, not a verified novel finding."
+    },
+    "result": {
+      "status": "failed",
+      "failures": [
+        {
+          "attempt": 0,
+          "error": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1081)>",
+          "time": "2026-11-02T14:49:17.332807+00:00"
+        },
+        {
+          "attempt": 1,
+          "error": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1081)>",
+          "time": "2026-11-02T14:49:25.344285+00:00"
+        }
+      ]
+    }
+  }
+]

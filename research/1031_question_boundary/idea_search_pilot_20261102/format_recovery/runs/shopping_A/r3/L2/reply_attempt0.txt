@@ -1,0 +1,46 @@
+{
+  "recognition": "Recognized from the supplied metadata as the UCI Online Shoppers Purchasing Intention Dataset (UCI ID 468). This is dataset recognition, not a discovery.",
+  "selected_id": "I1",
+  "final": {
+    "status": "revised",
+    "candidate": {
+      "id": "I1",
+      "title": "Does SpecialDay proximity modify the purchase association of informational-page duration?",
+      "question": "Among sessions with Informational > 0, does the association between log1p(Informational_Duration) and Revenue differ between SpecialDay > 0 and SpecialDay = 0, conditional on log1p(Informational), VisitorType, and Month?",
+      "core": {
+        "object": "Session-level log1p(Informational_Duration), an aggregate duration measure",
+        "relation_or_action": "Estimate its interaction with the indicator SpecialDay > 0 in a logistic model for Revenue",
+        "contrast": "SpecialDay-proximate versus other sessions among sessions with Informational > 0",
+        "prediction": "The prespecified forecast was a more positive duration-Revenue association when SpecialDay > 0; the computed interaction did not support this forecast.",
+        "independent_unit": "One session, as described in the supplied dataset metadata"
+      },
+      "failure_condition": "In an adequately sized independent sample, the interaction remains near zero or its uncertainty continues to span both negligible and meaningful differences.",
+      "assumptions": [
+        "SpecialDay > 0 indicates calendar proximity, not confirmed promotion exposure.",
+        "Informational_Duration is an aggregate session total, not page-level dwell.",
+        "The adjusted association is observational and does not establish a causal effect."
+      ],
+      "required_new_data": "An independent session sample with the same measures; exact session dates and campaign exposure are needed to distinguish calendar proximity from promotion exposure.",
+      "feasible_with_current_data": true,
+      "domain_value": "The analysis checks whether calendar proximity meaningfully changes the observed association between informational browsing duration and purchase, while limiting interpretation to the supplied measures.",
+      "history_match": "none",
+      "history_relation": "new_family",
+      "discriminating_delta": "Tests a SpecialDay-by-informational-duration interaction, distinct from the earlier rounds' product-duration and visitor-type contrasts.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "measure"
+    },
+    "evidence_level": "negative_result",
+    "what_changed": "The executed analysis did not support the forecast. The interaction estimate was -0.0048 log-odds (95% Wald CI [-0.406, 0.397]); excluding VisitorType = Other gave -0.0040 (95% CI [-0.406, 0.398]). Fits converged. SpecialDay-proximate sessions were relatively few: 189 eligible sessions, including 27 purchases, versus 2,442 sessions and 586 purchases at SpecialDay = 0. The wide intervals do not establish that the interaction is absent.",
+    "what_is_known": "Among sessions with Informational > 0, the prespecified conditional interaction estimate was close to zero and highly uncertain; excluding Other barely changed it (compute_0). The analysis is observational. The search returned broad or unrelated Crossref records, including a dataset-related record, and was explicitly non-exhaustive; it did not verify direct overlap or a literature gap (search_1).",
+    "new_hypothesis": "This dataset provides no clear evidence that SpecialDay proximity modifies the conditional association between aggregate informational duration and Revenue, but the small SpecialDay-proximate group leaves meaningful differences unresolved.",
+    "next_falsifiable_test": "Estimate the prespecified interaction in an independent session dataset with substantially more SpecialDay-proximate sessions, reporting group counts and uncertainty. Record exact dates and campaign exposure to test whether any moderation is associated with actual promotion exposure rather than calendar proximity alone.",
+    "nearest_work_comparison": "search_1 returned a dataset-related citation and broad shopping or prediction papers, but no supplied evidence directly testing this interaction. The search was non-exhaustive and supports neither a verified gap nor a novelty claim.",
+    "novelty_status": "Unverified; no novelty claim is supported by the returned search.",
+    "feedback_type": "uncertainty"
+  }
+}

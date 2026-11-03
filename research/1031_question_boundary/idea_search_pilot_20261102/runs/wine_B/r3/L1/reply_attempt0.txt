@@ -1,0 +1,109 @@
+{
+  "recognition": "这是 UCI Wine Quality 数据集（UCI ID 186）：葡萄牙 vinho verde 红、白葡萄酒样本的理化测量及 sensory quality 分数。数据集识别和已有元数据不是发现；这些观察记录不能证明干预效果。",
+  "candidates": [
+    {
+      "id": "I1",
+      "title": "Do chemical associations shift every adjacent quality threshold in the same way?",
+      "question": "Within each wine color, does a common latent ordinal model adequately describe how the 11 measured chemical variables relate to quality, or do particular variables have materially different associations at different adjacent quality-score thresholds?",
+      "core": {
+        "object": "Observed integer quality score for one wine sample",
+        "relation_or_action": "Association between measured chemistry and crossing adjacent quality-score thresholds",
+        "contrast": "A proportional-odds model with common chemistry slopes versus a partial proportional-odds model allowing prespecified threshold-specific slopes",
+        "prediction": "Most chemistry slopes will be directionally consistent across thresholds, but at least one will vary materially across thresholds in one or both colors.",
+        "independent_unit": "One wine row; producer, lot, and panelist clustering are unknown."
+      },
+      "failure_condition": "Threshold-specific slopes do not improve prespecified held-out ordinal log loss beyond uncertainty, or their apparent differences are unstable across color and resampling.",
+      "assumptions": [
+        "The integer score is an ordered outcome, though equal numeric spacing is not assumed.",
+        "The available chemistry measures have adequate support across adjacent score categories within color.",
+        "Row-based resampling is exploratory because sampling clusters are unavailable."
+      ],
+      "required_new_data": "For confirmation of score-generation differences, independently sampled wines with lot identifiers and repeated blinded ratings from a shared panel.",
+      "feasible_with_current_data": true,
+      "domain_value": "Shows whether a single sensory ordering can summarize chemistry-score associations or whether particular score transitions warrant separate sensory or process investigation.",
+      "history_match": "none",
+      "history_relation": "new_family",
+      "discriminating_delta": "Tests the structure of the ordinal measurement relationship across score thresholds, rather than local score concordance, chemical rarity, or a specified chemical interaction.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    },
+    {
+      "id": "I2",
+      "title": "Does oxygen exposure change sulfur-dioxide loss differently across wine pH?",
+      "question": "In independently prepared wine batches, does controlled oxygen exposure cause a different time-course of free_sulfur_dioxide loss at lower versus higher pH, and does that difference predict blinded sensory oxidation ratings?",
+      "core": {
+        "object": "Free sulfur dioxide concentration and blinded sensory oxidation rating over storage time",
+        "relation_or_action": "Effect of assigned oxygen exposure on sulfur-dioxide loss, conditional on measured pH",
+        "contrast": "Repeated measurements in oxygen-exposed versus oxygen-limited aliquots across prespecified pH strata",
+        "prediction": "Oxygen exposure produces faster free_sulfur_dioxide loss, with a larger loss at higher pH; sensory oxidation ratings rise with the loss.",
+        "independent_unit": "Independently prepared wine batch; aliquots and repeated panelist ratings are nested observations."
+      },
+      "failure_condition": "The oxygen-by-pH contrast in sulfur loss is absent or reverses across batches, or sulfur loss does not track blinded oxidation ratings.",
+      "assumptions": [
+        "Oxygen exposure can be varied without unintended differences in storage temperature, light, or handling.",
+        "Repeated free_sulfur_dioxide measurements use a consistent assay.",
+        "The supplied cross-sectional data motivate variable choices but do not estimate storage or intervention effects."
+      ],
+      "required_new_data": "Randomized storage aliquots from multiple batches, repeated free_sulfur_dioxide and pH measurements, controlled oxygen and temperature records, and blinded repeated sensory ratings.",
+      "feasible_with_current_data": false,
+      "domain_value": "Could connect a controllable storage condition to a chemical change and a sensory outcome, informing follow-up on wine storage practices.",
+      "history_match": "round1:I2",
+      "history_relation": "new_family",
+      "discriminating_delta": "Moves from a static conditional association between sulfur measures and quality to a randomized oxygen-exposure time course with pH and sensory oxidation outcomes.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": false,
+        "worth_testing": true
+      },
+      "next_action": "measure"
+    },
+    {
+      "id": "I3",
+      "title": "Are quality scores reproducible across repeated blind ratings?",
+      "question": "For wines spanning the observed quality range, does within-wine disagreement across repeated blinded ratings vary by score category, and is it greater near category transitions than for wines consistently rated within one category?",
+      "core": {
+        "object": "Repeated blinded ordinal ratings of the same wine sample",
+        "relation_or_action": "Relate within-wine rating disagreement to the wine's rating distribution and category",
+        "contrast": "Within-wine disagreement for samples whose ratings span adjacent categories versus samples whose ratings remain in one category",
+        "prediction": "Ratings will disagree more often for samples whose repeat ratings straddle adjacent categories than for samples whose ratings remain in one category.",
+        "independent_unit": "Wine sample, with repeated ratings nested within wine and panelist."
+      },
+      "failure_condition": "Category-straddling samples do not show greater within-wine disagreement, or the difference vanishes after accounting for panelist and session.",
+      "assumptions": [
+        "The same samples can be presented repeatedly under blinded, randomized order.",
+        "Panelists and sessions are recorded so rating dependence can be modeled.",
+        "The supplied quality score does not reveal its replication or panel structure."
+      ],
+      "required_new_data": "A set of independently sampled wines rated repeatedly by multiple blinded panelists across randomized sessions, with wine, panelist, and session identifiers.",
+      "feasible_with_current_data": false,
+      "domain_value": "Separates stable sample-level score differences from rating variation and can identify categories where sensory assessment needs closer calibration.",
+      "history_match": "round2:I1",
+      "history_relation": "new_family",
+      "discriminating_delta": "Directly measures repeat-rating reliability, which the prior nearest-neighbor comparison of single stored scores could not distinguish from sample, batch, or panel variation.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": false,
+        "worth_testing": true
+      },
+      "next_action": "measure"
+    }
+  ],
+  "selected_id": "I1",
+  "selection_reason": "I1 is testable with the supplied rows and addresses a distinct question: whether chemistry-score associations share a common ordinal structure across adjacent score thresholds. Before computation, I predict broadly consistent slope directions but at least one material threshold-specific difference. The comparison is exploratory and does not identify sensory mechanisms or establish literature novelty.",
+  "method_ids": [
+    "M31",
+    "M29",
+    "M33"
+  ],
+  "task": {
+    "deliverable": "Within each color, compare a proportional-odds model with a partial proportional-odds alternative for the 11 chemistry variables. Report threshold-specific associations, held-out ordinal log-loss differences with uncertainty, category support, and sensitivity to row resampling.",
+    "acceptance": "Define the model comparison and meaningful difference before inspecting results. Preserve the forecasted direction for each color, report failures or instability, and state that unknown lot, producer, and panel dependence limits inference. Do not interpret model comparison as causal evidence or as proof of score-generation mechanisms."
+  }
+}

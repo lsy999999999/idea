@@ -1,0 +1,100 @@
+[
+  {
+    "id": "R1-C1",
+    "broker_id": "compute_0",
+    "type": "compute",
+    "request": {
+      "type": "compute",
+      "id": "compute_0",
+      "purpose": "Check group outcome counts, estimate the prespecified observational dwell-by-visitor-type interaction with uncertainty, and assess sensitivity to the upper dwell tail. This evaluates feasibility and the forecast; it does not establish causality.",
+      "model_spec": "Among rows with ProductRelated > 0 and VisitorType in {New_Visitor, Returning_Visitor}, fit logistic regression for Revenue using log1p(ProductRelated_Duration / ProductRelated), its interaction with New_Visitor, log1p(ProductRelated), and Month indicators. Report group sample and outcome counts, the interaction log-odds estimate and session bootstrap 95% interval, and the interaction estimate after winsorizing the dwell measure at its 99th percentile. Treat each row as one session; omit PageValues.",
+      "code": "import json\nimport numpy as np\nimport pandas as pd\nfrom scipy.optimize import minimize\n\nx = DF.loc[(DF['ProductRelated'] > 0) & DF['VisitorType'].isin(['New_Visitor', 'Returning_Visitor'])].copy().reset_index(drop=True)\ny = x['Revenue'].astype(int).to_numpy()\nnew = (x['VisitorType'].to_numpy() == 'New_Visitor').astype(float)\ndwell = np.log1p((x['ProductRelated_Duration'] / x['ProductRelated']).to_numpy(dtype=float))\ncount = np.log1p(x['ProductRelated'].to_numpy(dtype=float))\nmonths = pd.get_dummies(x['Month'], drop_first=True, dtype=float).to_numpy()\n\ndef design(d):\n    z = (d - d.mean()) / (d.std() or 1.0)\n    return np.column_stack([np.ones(len(z)), z, new, z * new, count, months])\n\ndef fit(X, yy):\n    def objective(b):\n        eta = np.clip(X @ b, -30, 30)\n        return np.logaddexp(0, eta).sum() - yy @ eta + 1e-6 * (b @ b)\n    result = minimize(objective, np.zeros(X.shape[1]), method='L-BFGS-B')\n    return result.x if result.success else None\n\nX = design(dwell)\nb = fit(X, y)\ncounts = x.groupby(['VisitorType', 'Revenue']).size().unstack(fill_value=0).to_dict(orient='index')\nrng = np.random.default_rng(20261102)\nboot = []\nfor _ in range(300):\n    idx = rng.integers(0, len(y), len(y))\n    if len(np.unique(y[idx])) < 2:\n        continue\n    bb = fit(X[idx], y[idx])\n    if bb is not None:\n        boot.append(float(bb[3]))\nq99 = float(np.quantile(dwell, .99))\ncap = np.minimum(dwell, q99)\nbcap = fit(design(cap), y)\nprint(json.dumps({'n':len(x),'counts':counts,'interaction_log_odds':None if b is None else float(b[3]),'bootstrap_95_ci':None if len(boot)<30 else [float(v) for v in np.quantile(boot,[.025,.975])],'bootstrap_successes':len(boot),'winsor99_interaction_log_odds':None if bcap is None else float(bcap[3])},separators=(',',':')))"
+    },
+    "result": {
+      "status": "failed",
+      "code_sha256": "cae935baf5e56505d520ff34118d780d5670859e02d9dda213f3ad202b344775",
+      "data_sha256": "b3055ee355f59134d851d32641183cb4a8b45def7124d2f50442a042f358e0d9",
+      "reason": "30s timeout",
+      "stdout": "None",
+      "stderr": "None"
+    }
+  },
+  {
+    "id": "R1-S1",
+    "broker_id": "search_1",
+    "type": "search",
+    "request": {
+      "type": "search",
+      "id": "search_1",
+      "query": "Prior studies using the UCI Online Shoppers Purchasing Intention Dataset or comparable session-level ecommerce data to estimate whether product-page dwell or dwell per product page interacts with new versus returning visitor status in association with purchase/conversion; identify close empirical and methodological overlaps.",
+      "missing_relation": "Whether the proposed dwell-by-visitor-type interaction is already a routine or directly studied contrast, especially in this dataset.",
+      "change_if_found": "If closely overlapping work exists, do not claim novelty for I1; revise toward a distinct, timestamped sequence or experimental question, or retain I1 only as a replication."
+    },
+    "result": {
+      "status": "returned",
+      "sources": [
+        {
+          "doi": "10.17051/ilkonline.2021.03.138",
+          "title": "Can POP Ads about organic ingredients lower the informational purchasing barrier and raise the purchase intention? : perspective of franchise and new product",
+          "date": [
+            2021,
+            1,
+            1
+          ],
+          "abstract": ""
+        },
+        {
+          "doi": "10.15444/gfmc2024.03.04.05",
+          "title": "CLICK TO CHIC: DECODING THE IMPACT OF FASHION PRODUCT PAGE DESIGN ON ONLINE PURCHASE INTENTION",
+          "date": [
+            2024,
+            7,
+            11
+          ],
+          "abstract": ""
+        },
+        {
+          "doi": "10.15719/geba.15.6.201412.167",
+          "title": "Influence which purchase situation information exposed to webpage prior to click has over product evaluation and purchase intention - With focus on the number of purchasers, satisfaction level, and price discount rate -",
+          "date": [
+            2014,
+            12
+          ],
+          "abstract": ""
+        },
+        {
+          "doi": "10.1080/20932685.2025.2491327",
+          "title": "Click to chic: Decoding the impact of fashion product page design on online purchase intention",
+          "date": [
+            2025,
+            5,
+            21
+          ],
+          "abstract": ""
+        },
+        {
+          "doi": "10.15341/jbe(2155-7950)/01.10.2019/003",
+          "title": "The Webmosphirics Effects on Shopping Behavior: The Influences of Web Page Color Displays on Online Impulse Purchasing Intention",
+          "date": [
+            2019,
+            1,
+            20
+          ],
+          "abstract": " It is interesting to note that even though the studies of atmospheric effects in physical stores have been abundant, knowledge of ambient factor effects in the online retailing context has been limited. This study investigates the influence of webmospheric effect, web page color displays on respondents’ emotional reactions and subsequent online impulse buying intention. A Stimulus-Organism-Responses (S-O-R) model was used as the basic framework and a laboratory experiment was conducted to test the hypotheses in this study.  The results demonstrated that web page color displays had a significant effect on participants’ emotional response, eventually influencing their intention to purchase impulsively online. Specifically, respondents felt more aroused and experienced greater pleasure when they were exposed to chromatic web page displays than achromatic one. Additionally, both pleasure and arousal emotions played an intervening role between web page color displays and online impulse purchasing intention. Personality traits and product involvement were proved to moderate the relationship between atmospheric cues and impulse shopping intention. These findings suggest that the website design with effective web page color displays would create a desirable environment and thus prompt consumers to buy impulsively. Finally, research implications of the model and proposition are presented. "
+        },
+        {
+          "doi": "10.1257/rct.12307",
+          "title": "Suspense as a persuader",
+          "date": [
+            2023,
+            10,
+            16
+          ],
+          "abstract": ""
+        }
+      ],
+      "scope": "Crossref metadata, not exhaustive novelty evidence",
+      "transport_failures": []
+    }
+  }
+]

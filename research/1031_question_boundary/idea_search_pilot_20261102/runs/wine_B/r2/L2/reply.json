@@ -1,0 +1,50 @@
+{
+  "recognition": "这是 UCI Wine Quality 数据集（UCI ID 186），包含红、白 vinho verde 样本。数据集识别及其元数据不是发现；这些观察记录不能证明干预效果。",
+  "selected_id": "I1",
+  "final": {
+    "status": "retained",
+    "candidate": {
+      "id": "I1",
+      "title": "How much quality disagreement remains among chemically similar wines?",
+      "question": "Within each color, do wines paired by nearest-neighbor distance across the 11 measured physicochemical variables have smaller absolute quality-score differences than a reference formed by permuting quality within coarse chemistry strata?",
+      "core": {
+        "object": "Absolute difference in observed quality scores between paired wine samples",
+        "relation_or_action": "Relate multivariate physicochemical similarity to quality-score agreement",
+        "contrast": "Observed mean absolute quality difference for unique nearest-neighbor pairs versus within-stratum quality-permutation values",
+        "prediction": "Nearest-neighbor pairs show smaller score differences than the permutation reference in both colors, while their mean score difference remains above zero.",
+        "independent_unit": "A wine row; pairs share rows, and lot, producer, and panel identifiers are unavailable."
+      },
+      "failure_condition": "Nearest-neighbor disagreement is not lower than the permutation reference in either color, or the result depends strongly on the chosen distance or strata.",
+      "assumptions": [
+        "Z-scaled Euclidean distance across the 11 measured variables is a useful chemistry-similarity measure.",
+        "Permuting quality within the 16 PCA-quartile strata provides a descriptive reference; its interpretation depends on within-stratum exchangeability.",
+        "The dataset does not identify sampling clusters or sources of score variation."
+      ],
+      "required_new_data": "For validation, independently sampled wines with lot and producer identifiers, repeated blinded sensory ratings, and the same physicochemical measurements.",
+      "feasible_with_current_data": true,
+      "domain_value": "Estimates whether measured chemistry is locally associated with quality scores and whether appreciable score disagreement remains among chemically similar samples.",
+      "history_match": "round1:I1",
+      "history_relation": "new_family",
+      "discriminating_delta": "Tests local chemistry-score concordance against a conditional permutation reference, rather than a specific chemical interaction or a red-white score gap.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "measure"
+    },
+    "evidence_level": "observational_support",
+    "what_changed": "The requested computation ran successfully. In both colors, observed nearest-neighbor score disagreement was below the 500-permutation reference interval: red 0.381 versus mean 0.631 (95% permutation interval 0.602–0.661), and white 0.373 versus mean 0.714 (0.695–0.732). None of the 500 permutations was as favorable as the observed value in either color. The forecasted direction was observed. The search returned broad wine sensory-analysis and instrumental-assessment sources, but its Crossref metadata scope is not exhaustive and does not resolve whether this exact question has been studied.",
+    "what_is_known": "For the specified scaling, nearest-neighbor rule, and PCA-quartile strata, chemically nearest pairs had lower mean absolute quality-score differences than the permutation references. Their observed disagreement was still nonzero. Pair counts were 1,350 red and 4,241 white; the 16 strata per color had minimum sizes 66 and 269, respectively. Pair counts are not independent replication. The permutation comparison assumes within-stratum exchangeability and does not account for unknown lot, producer, or panel structure. These results describe association in this dataset; they do not show that chemistry is sufficient, explain disagreement, or establish sensory-rating reliability.",
+    "new_hypothesis": "Measured chemistry contains local information about quality scores beyond the coarse PCA-quartile permutation reference, while additional unmeasured factors or score variation may contribute to the remaining disagreement. This dataset cannot distinguish those explanations.",
+    "next_falsifiable_test": "Evaluate the prespecified distance and reference on independently sampled wines with lot and producer identifiers and repeated blinded ratings. Before collection, specify the chemistry-distance rule, score-disagreement outcome, and comparison; test whether the lower disagreement among nearest neighbors replicates and estimate how much variation is attributable to batches and raters.",
+    "nearest_work_comparison": "The supplied dataset documentation describes physicochemical modeling of quality and mentions feature relevance and outlier detection. The returned sources include general sensory analysis and instrumental assessment of wine, but no abstracts establishing whether they test local multivariate chemistry similarity against score disagreement. The result therefore distinguishes this question from the supplied general modeling objective only; it does not establish a literature gap.",
+    "novelty_status": "Unverified. The search was limited to Crossref metadata and returned broad sources without enough detail to establish overlap or novelty.",
+    "feedback_type": "uncertainty",
+    "tool_return_ids": [
+      "compute_0",
+      "search_1"
+    ]
+  }
+}

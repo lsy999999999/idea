@@ -1,0 +1,47 @@
+{
+  "recognition": "Recognized from the supplied metadata as the UCI Online Shoppers Purchasing Intention Dataset (UCI ID 468). This is dataset recognition, not a discovery.",
+  "selected_id": "I1",
+  "final": {
+    "status": "revised",
+    "candidate": {
+      "id": "I1",
+      "title": "Does the purchase association of an aggregate product-dwell proxy differ in shape by visitor type?",
+      "question": "Among sessions with ProductRelated > 0 and VisitorType in {New_Visitor, Returning_Visitor}, how does the conditional association between log1p(ProductRelated_Duration / ProductRelated) and Revenue vary across the 5th–95th proxy percentiles by visitor type, adjusting for log1p(ProductRelated) and Month?",
+      "core": {
+        "object": "Session-level aggregate proxy log1p(ProductRelated_Duration / ProductRelated), not page-level dwell time",
+        "relation_or_action": "Estimate visitor-specific quadratic associations with Revenue using a logistic model",
+        "contrast": "The proxy slope across the 5th–95th percentiles for New_Visitor versus Returning_Visitor sessions",
+        "prediction": "The prespecified prediction was positive flattening in both groups, with stronger flattening for Returning_Visitor sessions. The observed fitted slopes instead decline from 2.052 to -0.048 for Returning_Visitor and rise from 0.375 to 0.664 for New_Visitor; this reverses the predicted shape for New_Visitor.",
+        "independent_unit": "One session; the supplied metadata describes different users across sessions in the dataset"
+      },
+      "failure_condition": "The visitor-specific curve shapes fail to reproduce in an independent sample, or the fitted differences are materially altered by a prespecified alternative measurement or model.",
+      "assumptions": [
+        "The ratio of aggregate duration to page count is an interpretable session-level proxy, but cannot recover page-level dwell distributions.",
+        "The logistic quadratic is a descriptive approximation over the reported percentile range, not a causal model.",
+        "Adjustment for log page count and Month does not eliminate unmeasured confounding.",
+        "Other visitor types are outside the specified comparison."
+      ],
+      "required_new_data": "An independent session-level sample with the same aggregate fields and outcome, plus timestamped page events if the proxy is to be validated against page-level dwell.",
+      "feasible_with_current_data": true,
+      "domain_value": "Could clarify whether the same aggregate engagement proxy has different purchase associations across visitor types, while limiting interpretation to the measured session summaries.",
+      "history_match": "I1",
+      "history_relation": "refinement",
+      "discriminating_delta": "The fitted curvature differs by visitor type: the quadratic interaction is positive, and fitted slopes decline for Returning_Visitor while rising for New_Visitor across the reported range. This revises the earlier common-shape prediction; it does not establish a behavioral mechanism.",
+      "quality_gate": {
+        "specific": true,
+        "testable": true,
+        "coherent_feasible": true,
+        "worth_testing": true
+      },
+      "next_action": "test"
+    },
+    "evidence_level": "observational_support",
+    "what_changed": "The requested computation completed as compute_0. The common prediction of positive flattening in both groups was not supported: fitted slopes rise across the evaluated range for New_Visitor and decline to slightly below zero for Returning_Visitor. The returning-group quadratic term was -0.241 (95% Wald CI [-0.347, -0.135]); its interaction with New_Visitor was 0.274 (95% CI [0.109, 0.440]). The 99th-percentile cap produced similar terms (-0.241 and 0.311). Both fits reported convergence. I revised the proposed comparison to describe this observed difference in shape, pending independent confirmation.",
+    "what_is_known": "The eligible sample was 12,207 sessions: New_Visitor 1,687 (420 Revenue=true), Returning_Visitor 10,520 (1,466 Revenue=true); 123 Other sessions were excluded. The analysis is observational and uses an aggregate proxy. The fitted New_Visitor slope rises from 0.375 to 0.664 across its proxy 5th and 95th percentiles; the Returning_Visitor slope declines from 2.052 to -0.048. These slopes and coefficients are from the supplied model and data (compute_0), not independent confirmation. The requested output did not provide uncertainty intervals for slopes or the combined New_Visitor curvature.",
+    "new_hypothesis": "In this dataset, the proxy–Revenue association may flatten across the evaluated range for Returning_Visitor sessions but not for New_Visitor sessions; whether that difference generalizes is unknown.",
+    "next_falsifiable_test": "Fit the prespecified model in an independent sample, reporting group-specific curvature and slope uncertainty over the 5th–95th proxy range, with the same cap-99 sensitivity and eligibility rules. Treat the shape hypothesis as unsupported if the visitor-specific slope patterns do not reproduce or the interaction is compatible with no meaningful difference.",
+    "nearest_work_comparison": "search_1 returned Crossref metadata, including a dataset-related record and broad shopping or purchase-intention studies, but did not establish a direct overlap with this nonlinear dwell-proxy comparison by visitor type. Its scope was explicitly non-exhaustive; it establishes neither a verified gap nor novelty.",
+    "novelty_status": "Unverified. The returned search does not support a novelty claim.",
+    "feedback_type": "uncertainty"
+  }
+}

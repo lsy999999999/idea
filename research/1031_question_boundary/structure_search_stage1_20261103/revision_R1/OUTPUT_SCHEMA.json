@@ -1,0 +1,167 @@
+{
+  "type": "object",
+  "properties": {
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "quantities": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "definition": {
+                  "type": "string"
+                },
+                "units": {
+                  "type": "string"
+                },
+                "availability": {
+                  "type": "string"
+                },
+                "initialization_and_future": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "definition",
+                "units",
+                "availability",
+                "initialization_and_future"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "tree": {
+            "$ref": "#/$defs/node"
+          },
+          "parameters": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "unit": {
+                  "type": "string"
+                },
+                "initial": {
+                  "type": "number"
+                },
+                "lower": {
+                  "type": "number"
+                },
+                "upper": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "name",
+                "unit",
+                "initial",
+                "lower",
+                "upper"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 4,
+            "maxItems": 4
+          },
+          "scope": {
+            "type": "string"
+          },
+          "distinguishing_experiment": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "operation",
+          "quantities",
+          "tree",
+          "parameters",
+          "scope",
+          "distinguishing_experiment"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "scientific_notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "candidates",
+    "scientific_notes"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "node": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "type": "string",
+          "enum": [
+            "u",
+            "h",
+            "history",
+            "times",
+            "dt",
+            "p0",
+            "p1",
+            "p2",
+            "p3",
+            "constant",
+            "sum",
+            "mean",
+            "exp",
+            "log",
+            "sqrt",
+            "abs",
+            "sin",
+            "cos",
+            "tanh",
+            "add",
+            "sub",
+            "mul",
+            "div",
+            "pow"
+          ]
+        },
+        "value": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "args": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/node"
+          },
+          "maxItems": 2
+        }
+      },
+      "required": [
+        "op",
+        "value",
+        "args"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

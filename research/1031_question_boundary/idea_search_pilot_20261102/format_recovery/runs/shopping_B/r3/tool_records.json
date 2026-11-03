@@ -1,0 +1,101 @@
+[
+  {
+    "id": "depth_standardization",
+    "broker_id": "compute_0",
+    "type": "compute",
+    "request": {
+      "type": "compute",
+      "id": "compute_0",
+      "purpose": "Estimate marginal and shared-support context-standardized Revenue contrasts between low- and high-ProductRelated-count sessions, including session-bootstrap uncertainty and overlap diagnostics. This is an observational decomposition, not a causal effect.",
+      "model_spec": "Define low and high groups as ProductRelated at or below its full-sample 25th percentile and at or above its 75th percentile. Context cells are the exact cross-product of VisitorType, TrafficType, Month, and Weekend. Estimate the marginal high-minus-low Revenue-rate difference. For the standardized difference, retain only cells with at least one session in each group and weight each retained cell by its pooled low-plus-high count, normalized over retained cells. Report quartile cutoffs, group sizes and rates, numbers of shared and nonshared cells, fraction of group sessions excluded for lack of overlap, and both differences with percentile 95% intervals from 300 session-level bootstrap resamples. Recompute the quartile cutoffs within each bootstrap sample. Report failed bootstrap replicates. Do not interpret either contrast causally.",
+      "code": "import json\nimport numpy as np\nimport pandas as pd\n\nraw = TABLES['main'].copy()\nx = raw['ProductRelated'].to_numpy(dtype=float)\ny = raw['Revenue'].astype(int).to_numpy()\nctx = ['VisitorType', 'TrafficType', 'Month', 'Weekend']\ncodes, uniques = pd.factorize(pd.MultiIndex.from_frame(raw[ctx]), sort=False)\nn_cells = len(uniques)\n\ndef estimate(idx):\n    xx, yy, cc = x[idx], y[idx], codes[idx]\n    q25, q75 = np.quantile(xx, [0.25, 0.75])\n    grp = np.where(xx <= q25, 0, np.where(xx >= q75, 1, -1))\n    keep = grp >= 0\n    grp, yy, cc = grp[keep], yy[keep], cc[keep]\n    # Flatten cell/group pairs for vectorized counts and outcome sums.\n    key = cc * 2 + grp\n    count = np.bincount(key, minlength=n_cells * 2).reshape(n_cells, 2)\n    wins = np.bincount(key, weights=yy, minlength=n_cells * 2).reshape(n_cells, 2)\n    rates = np.divide(wins, count, out=np.zeros_like(wins), where=count > 0)\n    shared = (count[:, 0] > 0) & (count[:, 1] > 0)\n    weights = count[shared].sum(axis=1).astype(float)\n    weights /= weights.sum() if weights.sum() else 1.0\n    std = float(np.sum(weights * (rates[shared, 1] - rates[shared, 0]))) if shared.any() else np.nan\n    marginal = float(yy[grp == 1].mean() - yy[grp == 0].mean()) if (grp == 0).any() and (grp == 1).any() else np.nan\n    excluded = float(count[~shared].sum() / count.sum()) if count.sum() else np.nan\n    return {'q25': float(q25), 'q75': float(q75), 'n_low': int((grp == 0).sum()), 'n_high': int((grp == 1).sum()), 'rate_low': float(yy[grp == 0].mean()), 'rate_high': float(yy[grp == 1].mean()), 'marginal': marginal, 'standardized': std, 'n_shared_cells': int(shared.sum()), 'n_nonshared_cells': int((~shared).sum()), 'fraction_group_sessions_excluded': excluded}\n\nbase = estimate(np.arange(len(raw)))\nrng = np.random.default_rng(20261102)\nboots = []\nfor _ in range(300):\n    b = estimate(rng.integers(0, len(raw), len(raw)))\n    if np.isfinite(b['marginal']) and np.isfinite(b['standardized']):\n        boots.append([b['marginal'], b['standardized']])\narr = np.asarray(boots)\nci = np.quantile(arr, [0.025, 0.975], axis=0).tolist() if len(arr) else None\nprint(json.dumps({'n': len(raw), 'point_estimates': base, 'bootstrap_replicates_requested': 300, 'bootstrap_replicates_valid': len(boots), 'ci95_marginal_then_standardized': ci}, separators=(',', ':')))"
+    },
+    "result": {
+      "status": "executed",
+      "code_sha256": "564f8b66c8e53fd5d2ad627db4deb1805f695851e3c529d88b55a8ea7779fa8e",
+      "data_sha256": "b3055ee355f59134d851d32641183cb4a8b45def7124d2f50442a042f358e0d9",
+      "returncode": 0,
+      "stdout": "{\"n\":12330,\"point_estimates\":{\"q25\":7.0,\"q75\":38.0,\"n_low\":3156,\"n_high\":3106,\"rate_low\":0.05101394169835234,\"rate_high\":0.23502897617514487,\"marginal\":0.18401503447679252,\"standardized\":0.15428556430750223,\"n_shared_cells\":181,\"n_nonshared_cells\":167,\"fraction_group_sessions_excluded\":0.04040242733950814},\"bootstrap_replicates_requested\":300,\"bootstrap_replicates_valid\":300,\"ci95_marginal_then_standardized\":[[0.16740612304933775,0.13557642342296203],[0.1994054005716958,0.17749683504403582]]}\n",
+      "stderr": "",
+      "stdout_truncated": false
+    }
+  },
+  {
+    "id": "depth_standardization_prior_work",
+    "broker_id": "search_1",
+    "type": "search",
+    "request": {
+      "type": "search",
+      "id": "search_1",
+      "query": "Studies of the UCI Online Shoppers Purchasing Intention Dataset or comparable e-commerce session data that compare marginal purchase rates across product-page depth or page-count groups with covariate standardization, stratification, or common-support adjustment for visitor type, traffic source, month, and weekend.",
+      "missing_relation": "Whether a session-depth-to-purchase contrast decomposed into marginal and context-standardized components has already been studied, and how overlap and session-level dependence were handled.",
+      "change_if_found": "If a close study performs this decomposition, revise toward a distinct, testable extension supported by the supplied fields or withdraw novelty implications; absence from returned metadata leaves novelty unverified."
+    },
+    "result": {
+      "status": "returned",
+      "sources": [
+        {
+          "doi": "10.31289/jite.v3i1.2599.s170",
+          "title": "Online Shoppers Purchasing Intention Dataset Data Set",
+          "date": [],
+          "abstract": ""
+        },
+        {
+          "doi": "10.2139/ssrn.4507948",
+          "title": "Research on the Influence of Cross-Border E-Commerce Product Page Value on Consumers' Purchase Intention",
+          "date": [
+            2023
+          ],
+          "abstract": ""
+        },
+        {
+          "doi": "10.1016/j.dss.2016.06.009",
+          "title": "The effect of product review balance and volume on online Shoppers' risk perception and purchase intention",
+          "date": [
+            2016,
+            9
+          ],
+          "abstract": ""
+        },
+        {
+          "doi": "10.52783/mjble.395",
+          "title": "Impact of AI-Driven Personalized Product Recommendation Systems on Online Purchase Intention: Indian E-Commerce Shoppers' Perceived Relevance and Trust",
+          "date": [
+            2026,
+            4,
+            15
+          ],
+          "abstract": " The rapid development of artificial intelligence (AI) in e-commerce has altered how customers look for, evaluate, and purchase goods online. AI-powered tailored recommendation systems are essential in influencing shopping decisions. This study examines how Indian e-commerce customers' intents to make online purchases are impacted by these AI-driven recommendation systems, with a particular emphasis on the roles of perceived relevance and consumer trust. We used a structured questionnaire to gather data from 160 Indian online shoppers using a quantitative research design. The investigation used SPSS and Partial Least Squares Structural Equation Modeling (PLS-SEM) to evaluate both the measurement and structural models. The findings demonstrate that customer trust is significantly increased by the degree of recommendation customisation and the transparency of AI recommendations. In the meantime, perceived relevance is mostly impacted by suggestion accuracy. Online purchase intentions are positively impacted by both perceived relevance and customer trust, with perceived relevance being a stronger predictor. Mediation study demonstrates that trust and perceived relevance are major psychological elements via which the features of AI recommendation systems affect purchase intentions. The results show that without clear and tailored recommendations, algorithmic accuracy alone is insufficient to influence consumer behaviour. By offering data from the Indian e-commerce scene, a new digital sector that has not yet received much attention, this study contributes to the expanding corpus of research on AI in marketing. The results provide useful information for e-commerce platforms, highlighting the significance of developing AI recommendation systems that prioritize relevance, transparency, and customisation in order to foster customer confidence and boost purchase intentions. "
+        },
+        {
+          "doi": "10.47738/ijaim.v4i2.81",
+          "title": "Using Random Forest and Support Vector Machine Algorithms to Predict Online Shopper Purchase Intention from E-Commerce Session Data",
+          "date": [
+            2024,
+            6,
+            1
+          ],
+          "abstract": ""
+        },
+        {
+          "doi": "10.4018/ijsodit.2013100102",
+          "title": "How Does a Social Network Site Fan Page Influence Purchase Intention of Online Shoppers",
+          "date": [
+            2013,
+            10,
+            1
+          ],
+          "abstract": " This research revisited how fan pages in the social network site created by online merchants affects the purchase intention of online shoppers using qualitative research methods. Through fine-tuning the research model developed by Jahn and Kunz (2012) which is grounded on the Uses and Gratifications Theory, the authors conducted a qualitative study through interviewing consumers who participated in fan pages. Based on their responses in the interviews, the authors reconfirmed that content-oriented needs and social interaction value of relationship-oriented needs had positive impacts on fan page usage intensity and fan page engagement, respectively. Plus, the authors discovered that content-oriented needs had a positive impact on fan page engagement. The theoretical contributions, managerial implications of this study are also discussed. "
+        }
+      ],
+      "scope": "Crossref metadata, not exhaustive novelty evidence",
+      "transport_failures": [
+        {
+          "attempt": 0,
+          "error": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1081)>",
+          "time": "2026-11-02T14:54:16.031854+00:00"
+        }
+      ]
+    }
+  }
+]

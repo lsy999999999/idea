@@ -1,0 +1,302 @@
+{
+  "round": 2,
+  "replies": [
+    {
+      "stage": "L1",
+      "reply": {
+        "recognition": {
+          "recognized_dataset": true,
+          "identity": "UCI Online Shoppers Purchasing Intention Dataset (UCI ID 468), also identified in the supplied bundle with its 2019 introduction paper.",
+          "basis": "Recognition comes from the supplied metadata; I have not independently retrieved or analyzed the dataset."
+        },
+        "candidates": [
+          {
+            "id": "I1",
+            "title": "Does SpecialDay add a signal beyond Month?",
+            "question": "After accounting for Month, session activity, and supplied traffic context, does SpecialDay provide reproducible information about Revenue?",
+            "core": {
+              "object": "The conditional association between SpecialDay and session-level Revenue.",
+              "relation_or_action": "Compare identical held-out predictions from a model with Month and supplied session context against the same model adding SpecialDay.",
+              "contrast": "Month and context alone versus those features plus SpecialDay.",
+              "prediction": "Adding SpecialDay will modestly improve held-out log loss, indicating that its graded calendar-proximity value contains information beyond the coarse Month category.",
+              "independent_unit": "Session, as described in the supplied metadata."
+            },
+            "failure_condition": "The added feature does not reproducibly improve held-out log loss, or its conditional association is too uncertain to distinguish from no association.",
+            "assumptions": [
+              "SpecialDay is measured consistently across sessions.",
+              "The one-year data can assess within-dataset incremental association, not year-to-year stability.",
+              "An observational association does not establish that a promotion or other intervention on SpecialDay changes purchases."
+            ],
+            "required_new_data": "None for the proposed within-dataset comparison; multiple years of dated sessions would be needed to assess stability across years.",
+            "feasible_with_current_data": true,
+            "domain_value": "Could determine whether a graded special-day calendar signal adds information beyond month-level seasonality when evaluating session analytics.",
+            "history_match": "none",
+            "history_relation": "new_family",
+            "discriminating_delta": "Tests whether a calendar-proximity measure adds information conditional on Month and session context; prior candidates focused on duration composition, PageValues timing, and month-varying duration associations.",
+            "quality_gate": {
+              "specific": true,
+              "testable": true,
+              "coherent_feasible": true,
+              "worth_testing": true
+            },
+            "next_action": "test"
+          },
+          {
+            "id": "I2",
+            "title": "Does a delivery-information prompt change conversion near special days?",
+            "question": "Among eligible shopping sessions near a special day, does showing a delivery-date and cutoff-time message change purchase completion compared with the site's usual page?",
+            "core": {
+              "object": "Purchase completion after a randomized delivery-information prompt.",
+              "relation_or_action": "Randomize eligible sessions to receive a clear delivery-date/cutoff message or the usual experience, then compare Revenue rates.",
+              "contrast": "Prompt shown versus usual experience among sessions eligible under a prespecified calendar rule.",
+              "prediction": "The prompt will increase purchase completion when delivery timing is relevant to the special-day purchase window.",
+              "independent_unit": "Eligible shopper, with assignment persisted across their sessions during the experiment."
+            },
+            "failure_condition": "The prespecified difference in purchase rates is zero or negative, or the experiment cannot maintain assignment and outcome measurement at the shopper level.",
+            "assumptions": [
+              "Delivery timing is a meaningful purchase constraint for the tested products.",
+              "The prompt does not alter price or product availability.",
+              "The supplied SpecialDay field alone does not establish customer intent or intervention benefit."
+            ],
+            "required_new_data": "A live randomized test with shopper-level assignment, eligibility dates, prompt exposure, and completed-purchase outcomes; compare purchase rates and report uncertainty by assigned group.",
+            "feasible_with_current_data": false,
+            "domain_value": "Tests a concrete operational intervention tied to delivery timing rather than treating an observational calendar feature as a causal lever.",
+            "history_match": "none",
+            "history_relation": "new_family",
+            "discriminating_delta": "Introduces randomized exposure and a delivery-timing intervention, unlike the prior observational comparisons of session features.",
+            "quality_gate": {
+              "specific": true,
+              "testable": true,
+              "coherent_feasible": true,
+              "worth_testing": true
+            },
+            "next_action": "measure"
+          },
+          {
+            "id": "I3",
+            "title": "Do BounceRates and ExitRates carry distinct session-level signals?",
+            "question": "After accounting for page counts, recorded durations, and supplied context, does each of BounceRates and ExitRates provide distinct information about Revenue, or does one add little once the other is included?",
+            "core": {
+              "object": "The conditional associations of BounceRates and ExitRates with session-level Revenue.",
+              "relation_or_action": "Compare otherwise identical held-out models using neither metric, each metric separately, and both together.",
+              "contrast": "Incremental held-out contribution of each metric when the other and supplied session context are present.",
+              "prediction": "The two metrics will not be fully interchangeable: at least one will retain incremental association when conditioned on the other and session activity.",
+              "independent_unit": "Session, as described in the supplied metadata."
+            },
+            "failure_condition": "Neither metric reproducibly adds held-out information when the other and activity measures are included.",
+            "assumptions": [
+              "The supplied aggregate fields correspond to the documented analytics measures.",
+              "Distinct predictive information would not establish distinct behavioral mechanisms or causal effects.",
+              "Model results may depend on functional form and overlap among session metrics."
+            ],
+            "required_new_data": "None for the proposed conditional association; page-level event data and metric-generation details would be needed to validate the fields as measures of separate session processes.",
+            "feasible_with_current_data": true,
+            "domain_value": "Could clarify whether two commonly used analytics fields warrant separate monitoring in session-level analyses.",
+            "history_match": "none",
+            "history_relation": "new_family",
+            "discriminating_delta": "Examines whether two documented analytics measures are conditionally distinct, rather than testing purchase prediction generally or duration allocation.",
+            "quality_gate": {
+              "specific": true,
+              "testable": true,
+              "coherent_feasible": true,
+              "worth_testing": true
+            },
+            "next_action": "test"
+          }
+        ],
+        "selected_id": "I1",
+        "selection_reason": "I1 is a focused comparison that the supplied rows can support. It separates graded special-day proximity from the coarser Month category and makes a falsifiable incremental-information prediction. Its result would remain observational and limited to this dataset.",
+        "method_ids": [
+          "M33",
+          "M36",
+          "M43"
+        ],
+        "task": {
+          "deliverable": "Using all supplied rows, compare paired held-out Revenue log loss for otherwise identical models with Month, session activity, and supplied context, with and without SpecialDay. Use session-level splits and training-only preprocessing. Report paired differences and uncertainty across repeated splits, the conditional SpecialDay association with uncertainty, and the feature definitions. Exclude PageValues from both models to avoid relying on its documented outcome-adjacent meaning.",
+          "acceptance": "Before computation, forecast that adding SpecialDay will modestly improve held-out log loss. Use identical splits for both models and report the result whether positive, null, or negative. Treat the comparison as within-dataset observational evidence, not an intervention effect or proof of year-to-year stability. If the gain is not reproducible or the association is too uncertain to establish direction, record that I1 is not supported."
+        }
+      }
+    },
+    {
+      "stage": "R1",
+      "reply": {
+        "recognition": {
+          "recognized_dataset": true,
+          "identity": "UCI Online Shoppers Purchasing Intention Dataset (UCI ID 468).",
+          "basis": "The supplied metadata identifies it; I did not independently retrieve or analyze the dataset."
+        },
+        "critique": "I1 asks whether SpecialDay adds information beyond Month, which is a distinct direction from the prior duration-allocation proposal. The contrast is testable with the supplied rows, but the measure’s interpretation needs care: SpecialDay is a graded calendar-proximity feature, not a randomized exposure, and its values may be determined by dates that are unavailable here. A conditional association therefore cannot show that changing a promotion or calendar condition would change purchases.\n\nThe proposed model comparison also needs to specify how SpecialDay is represented. Treating its numeric values as a linear predictor assumes equal steps have equal effects; treating levels categorically avoids that assumption but uses more parameters. Report level counts and Month-by-SpecialDay support so a held-out gain is not mistaken for evidence across combinations with little or no data. A gain could reflect within-month calendar structure, but the supplied fields cannot identify the dates or the underlying reason for that structure.\n\nThe dataset is described as covering one year. Session-level repeated stratified splits can estimate within-dataset predictive feasibility, but they do not test stability across years or future deployment. Repeated folds also share observations, so their spread should not be presented as independent-replication uncertainty. Keep the comparison paired on identical splits and summarize variation across repeats without treating folds as independent samples. Excluding PageValues is appropriate given its documented outcome-adjacent definition; it does not resolve timing or confounding for other session features.\n\nBefore computation, the forecast is that adding SpecialDay will modestly improve held-out log loss. This is a forecast, not evidence. I request a paired comparison with a prespecified categorical encoding and support diagnostics. A focused literature search could also change how the question is framed, but a limited search result cannot establish novelty.",
+        "feedback_type": "uncertainty",
+        "requests": [
+          {
+            "type": "compute",
+            "id": "specialday_cv",
+            "purpose": "Compare incremental held-out information from SpecialDay beyond Month and session context, while reporting its level counts and within-Month support. This tests predictive feasibility, not a causal effect.",
+            "model_spec": "Use 5-fold stratified cross-validation repeated 3 times with identical splits for baseline and augmented logistic regression models. Baseline numeric features: Administrative, Informational, ProductRelated, the sum of the three duration fields, BounceRates, and ExitRates. Context categorical features: Month, Weekend, VisitorType, OperatingSystems, Browser, Region, and TrafficType. Exclude PageValues. Augmented model adds SpecialDay as a categorical feature. Fit scaling and one-hot encoding within each training fold. Report the 15 paired validation log-loss differences (baseline minus augmented), per-repeat mean differences, SpecialDay level counts, and Month-by-SpecialDay counts. Do not treat the 15 folds as independent replications or call the comparison causal.",
+            "code": "import json\nimport numpy as np\nfrom sklearn.compose import ColumnTransformer\nfrom sklearn.preprocessing import OneHotEncoder, StandardScaler\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import RepeatedStratifiedKFold\nfrom sklearn.metrics import log_loss\n\nraw = TABLES['main'].copy()\ndur = ['Administrative_Duration', 'Informational_Duration', 'ProductRelated_Duration']\nraw['total_duration'] = raw[dur].sum(axis=1)\nraw['SpecialDay_level'] = raw['SpecialDay'].astype(str)\ny = raw['Revenue'].astype(int).to_numpy()\nnum = ['Administrative', 'Informational', 'ProductRelated', 'total_duration', 'BounceRates', 'ExitRates']\ncat = ['Month', 'Weekend', 'VisitorType', 'OperatingSystems', 'Browser', 'Region', 'TrafficType']\n\ndef model(add_specialday):\n    cats = cat + (['SpecialDay_level'] if add_specialday else [])\n    prep = ColumnTransformer([('num', StandardScaler(), num), ('cat', OneHotEncoder(handle_unknown='ignore'), cats)])\n    return make_pipeline(prep, LogisticRegression(max_iter=1000))\n\ncv = RepeatedStratifiedKFold(n_splits=5, n_repeats=3, random_state=20261102)\nfolds = []\nfor split_id, (tr, te) in enumerate(cv.split(raw, y)):\n    base, aug = model(False), model(True)\n    base.fit(raw.iloc[tr], y[tr]); aug.fit(raw.iloc[tr], y[tr])\n    lb = log_loss(y[te], base.predict_proba(raw.iloc[te])[:, 1], labels=[0, 1])\n    la = log_loss(y[te], aug.predict_proba(raw.iloc[te])[:, 1], labels=[0, 1])\n    folds.append({'repeat': split_id // 5, 'fold': split_id % 5, 'improvement': float(lb - la)})\nrepeat_means = [{'repeat': r, 'mean_improvement': float(np.mean([f['improvement'] for f in folds if f['repeat'] == r]))} for r in range(3)]\nlevel_counts = {str(k): int(v) for k, v in raw['SpecialDay_level'].value_counts().sort_index().items()}\nmonth_level_counts = {str(m): {str(k): int(v) for k, v in g['SpecialDay_level'].value_counts().sort_index().items()} for m, g in raw.groupby('Month', sort=True)}\nprint(json.dumps({'n': len(raw), 'level_counts': level_counts, 'month_level_counts': month_level_counts, 'folds': folds, 'repeat_means': repeat_means}, separators=(',', ':')))"
+          },
+          {
+            "type": "search",
+            "id": "specialday_prior_work",
+            "query": "Research using the UCI Online Shoppers Purchasing Intention Dataset or comparable e-commerce session data that evaluates the incremental association or predictive value of SpecialDay/calendar-proximity features conditional on Month and session context; distinguish this from generic conversion prediction.",
+            "missing_relation": "Whether the conditional SpecialDay-beyond-Month contrast has been directly evaluated and how the feature’s date-derived meaning is interpreted.",
+            "change_if_found": "If a close study tests this contrast, revise toward a discriminating extension or withdraw any novelty implication. If none is returned, retain novelty as unverified."
+          }
+        ],
+        "acceptance_checks": [
+          "Preserve the prespecified forecast that adding SpecialDay will modestly improve held-out log loss as a forecast, not a finding.",
+          "Report paired log-loss differences on identical splits, per-repeat summaries, level counts, and Month-by-SpecialDay support.",
+          "Do not treat repeated folds as independent replications; report the result whether positive, null, or negative.",
+          "Interpret results as within-dataset observational predictive evidence, not an intervention effect, a mechanism, or evidence of stability across years.",
+          "If computation or search does not return usable results, leave the relevant question unresolved."
+        ]
+      }
+    },
+    {
+      "stage": "L2",
+      "reply": {
+        "recognition": {
+          "recognized_dataset": true,
+          "identity": "UCI Online Shoppers Purchasing Intention Dataset (UCI ID 468)",
+          "basis": "Identified from the supplied bundle; no independent retrieval or analysis."
+        },
+        "selected_id": "I1",
+        "final": {
+          "status": "retained",
+          "candidate": {
+            "id": "I1",
+            "title": "Does SpecialDay add information beyond Month?",
+            "question": "After accounting for Month, session activity, and supplied traffic context, does SpecialDay provide reproducible incremental information about Revenue within this dataset?",
+            "core": {
+              "object": "The conditional association between SpecialDay and session-level Revenue.",
+              "relation_or_action": "Compare identical held-out predictions from otherwise identical models with and without categorical SpecialDay.",
+              "contrast": "Month and session context versus the same features plus SpecialDay.",
+              "prediction": "Adding SpecialDay will produce a small positive held-out log-loss improvement.",
+              "independent_unit": "Session, as described in the supplied metadata."
+            },
+            "failure_condition": "The improvement is not reproducible on new sessions, or an adequately supported conditional association cannot be distinguished from no association.",
+            "assumptions": [
+              "SpecialDay is measured consistently across sessions.",
+              "Its association is observational and does not establish an intervention effect.",
+              "Repeated cross-validation splits estimate within-dataset predictive feasibility, not year-to-year stability."
+            ],
+            "required_new_data": "Multiple years of dated sessions to assess calendar stability; randomized exposure data to estimate an intervention effect.",
+            "feasible_with_current_data": true,
+            "domain_value": "Tests whether a graded calendar-proximity feature adds information beyond month-level seasonality.",
+            "history_match": "none",
+            "history_relation": "new_family",
+            "discriminating_delta": "Tests a calendar feature conditional on Month, unlike prior candidates about duration composition, PageValues timing, or month-varying duration associations.",
+            "quality_gate": {
+              "specific": true,
+              "testable": true,
+              "coherent_feasible": true,
+              "worth_testing": true
+            },
+            "next_action": "test"
+          },
+          "evidence_level": "computed_feasibility",
+          "what_changed": "The requested paired comparison ran as compute_0. Baseline-minus-augmented held-out log-loss improvement averaged 0.000358, 0.000402, and 0.000539 across the three repeats. Individual folds included negative differences, so the gain is small and not uniformly positive. SpecialDay was nonzero in 1,251 of 12,330 sessions; all such sessions were in February or May. The returned search_1 metadata covered general conversion prediction, not this specific contrast.",
+          "what_is_known": "For the specified logistic models and repeated stratified splits, adding categorical SpecialDay yielded a small positive mean log-loss difference in each repeat. The feature's nonzero support was confined to February and May, mostly May. The computation did not report a conditional coefficient or its uncertainty. Repeated folds reuse observations, so they are not independent replications.",
+          "new_hypothesis": "The small incremental gain may be driven by within-month SpecialDay variation in February and May; the supplied results do not establish this explanation.",
+          "next_falsifiable_test": "Report uncertainty for the SpecialDay conditional association and assess whether incremental performance persists within February and May using a prespecified evaluation. Use new years of dated sessions to test calendar stability.",
+          "nearest_work_comparison": "The returned records concern general purchase prediction on this dataset and do not report the SpecialDay-beyond-Month contrast. The search was limited Crossref metadata, so it does not establish a literature gap.",
+          "novelty_status": "Unverified; the returned search did not identify a direct overlap but was not exhaustive.",
+          "feedback_type": "uncertainty"
+        }
+      }
+    }
+  ],
+  "effective_selected_id": "I1",
+  "tools": [
+    {
+      "id": "specialday_cv",
+      "broker_id": "compute_0",
+      "type": "compute",
+      "request": {
+        "type": "compute",
+        "id": "compute_0",
+        "purpose": "Compare incremental held-out information from SpecialDay beyond Month and session context, while reporting its level counts and within-Month support. This tests predictive feasibility, not a causal effect.",
+        "model_spec": "Use 5-fold stratified cross-validation repeated 3 times with identical splits for baseline and augmented logistic regression models. Baseline numeric features: Administrative, Informational, ProductRelated, the sum of the three duration fields, BounceRates, and ExitRates. Context categorical features: Month, Weekend, VisitorType, OperatingSystems, Browser, Region, and TrafficType. Exclude PageValues. Augmented model adds SpecialDay as a categorical feature. Fit scaling and one-hot encoding within each training fold. Report the 15 paired validation log-loss differences (baseline minus augmented), per-repeat mean differences, SpecialDay level counts, and Month-by-SpecialDay counts. Do not treat the 15 folds as independent replications or call the comparison causal.",
+        "code": "import json\nimport numpy as np\nfrom sklearn.compose import ColumnTransformer\nfrom sklearn.preprocessing import OneHotEncoder, StandardScaler\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import RepeatedStratifiedKFold\nfrom sklearn.metrics import log_loss\n\nraw = TABLES['main'].copy()\ndur = ['Administrative_Duration', 'Informational_Duration', 'ProductRelated_Duration']\nraw['total_duration'] = raw[dur].sum(axis=1)\nraw['SpecialDay_level'] = raw['SpecialDay'].astype(str)\ny = raw['Revenue'].astype(int).to_numpy()\nnum = ['Administrative', 'Informational', 'ProductRelated', 'total_duration', 'BounceRates', 'ExitRates']\ncat = ['Month', 'Weekend', 'VisitorType', 'OperatingSystems', 'Browser', 'Region', 'TrafficType']\n\ndef model(add_specialday):\n    cats = cat + (['SpecialDay_level'] if add_specialday else [])\n    prep = ColumnTransformer([('num', StandardScaler(), num), ('cat', OneHotEncoder(handle_unknown='ignore'), cats)])\n    return make_pipeline(prep, LogisticRegression(max_iter=1000))\n\ncv = RepeatedStratifiedKFold(n_splits=5, n_repeats=3, random_state=20261102)\nfolds = []\nfor split_id, (tr, te) in enumerate(cv.split(raw, y)):\n    base, aug = model(False), model(True)\n    base.fit(raw.iloc[tr], y[tr]); aug.fit(raw.iloc[tr], y[tr])\n    lb = log_loss(y[te], base.predict_proba(raw.iloc[te])[:, 1], labels=[0, 1])\n    la = log_loss(y[te], aug.predict_proba(raw.iloc[te])[:, 1], labels=[0, 1])\n    folds.append({'repeat': split_id // 5, 'fold': split_id % 5, 'improvement': float(lb - la)})\nrepeat_means = [{'repeat': r, 'mean_improvement': float(np.mean([f['improvement'] for f in folds if f['repeat'] == r]))} for r in range(3)]\nlevel_counts = {str(k): int(v) for k, v in raw['SpecialDay_level'].value_counts().sort_index().items()}\nmonth_level_counts = {str(m): {str(k): int(v) for k, v in g['SpecialDay_level'].value_counts().sort_index().items()} for m, g in raw.groupby('Month', sort=True)}\nprint(json.dumps({'n': len(raw), 'level_counts': level_counts, 'month_level_counts': month_level_counts, 'folds': folds, 'repeat_means': repeat_means}, separators=(',', ':')))"
+      },
+      "result": {
+        "status": "executed",
+        "code_sha256": "62b7a92652949b30ed753ac7d46878a95305b3f64c10df9af7472d9eec35440e",
+        "data_sha256": "b3055ee355f59134d851d32641183cb4a8b45def7124d2f50442a042f358e0d9",
+        "returncode": 0,
+        "stdout": "{\"n\":12330,\"level_counts\":{\"0.0\":11079,\"0.2\":178,\"0.4\":243,\"0.6\":351,\"0.8\":325,\"1.0\":154},\"month_level_counts\":{\"Aug\":{\"0.0\":433},\"Dec\":{\"0.0\":1727},\"Feb\":{\"0.0\":105,\"0.2\":15,\"0.4\":21,\"0.6\":19,\"0.8\":19,\"1.0\":5},\"Jul\":{\"0.0\":432},\"June\":{\"0.0\":288},\"Mar\":{\"0.0\":1907},\"May\":{\"0.0\":2192,\"0.2\":163,\"0.4\":222,\"0.6\":332,\"0.8\":306,\"1.0\":149},\"Nov\":{\"0.0\":2998},\"Oct\":{\"0.0\":549},\"Sep\":{\"0.0\":448}},\"folds\":[{\"repeat\":0,\"fold\":0,\"improvement\":-9.26290765992932e-05},{\"repeat\":0,\"fold\":1,\"improvement\":0.000567154359288391},{\"repeat\":0,\"fold\":2,\"improvement\":0.0005704341223681797},{\"repeat\":0,\"fold\":3,\"improvement\":0.000780970087242927},{\"repeat\":0,\"fold\":4,\"improvement\":-3.644091637045044e-05},{\"repeat\":1,\"fold\":0,\"improvement\":-8.195124091475714e-05},{\"repeat\":1,\"fold\":1,\"improvement\":0.0008787870578064183},{\"repeat\":1,\"fold\":2,\"improvement\":0.0011911012241084817},{\"repeat\":1,\"fold\":3,\"improvement\":0.001123227761349932},{\"repeat\":1,\"fold\":4,\"improvement\":-0.0011014452459965907},{\"repeat\":2,\"fold\":0,\"improvement\":8.731743428680439e-05},{\"repeat\":2,\"fold\":1,\"improvement\":0.0005744393287162586},{\"repeat\":2,\"fold\":2,\"improvement\":0.0008039243263509577},{\"repeat\":2,\"fold\":3,\"improvement\":0.0008226303630187171},{\"repeat\":2,\"fold\":4,\"improvement\":0.0004076345295291328}],\"repeat_means\":[{\"repeat\":0,\"mean_improvement\":0.0003578977151859508},{\"repeat\":1,\"mean_improvement\":0.00040194391127069685},{\"repeat\":2,\"mean_improvement\":0.0005391891963803741}]}\n",
+        "stderr": "",
+        "stdout_truncated": false
+      }
+    },
+    {
+      "id": "specialday_prior_work",
+      "broker_id": "search_1",
+      "type": "search",
+      "request": {
+        "type": "search",
+        "id": "search_1",
+        "query": "Research using the UCI Online Shoppers Purchasing Intention Dataset or comparable e-commerce session data that evaluates the incremental association or predictive value of SpecialDay/calendar-proximity features conditional on Month and session context; distinguish this from generic conversion prediction.",
+        "missing_relation": "Whether the conditional SpecialDay-beyond-Month contrast has been directly evaluated and how the feature’s date-derived meaning is interpreted.",
+        "change_if_found": "If a close study tests this contrast, revise toward a discriminating extension or withdraw any novelty implication. If none is returned, retain novelty as unverified."
+      },
+      "result": {
+        "status": "returned",
+        "sources": [
+          {
+            "doi": "10.31289/jite.v3i1.2599.s170",
+            "title": "Online Shoppers Purchasing Intention Dataset Data Set",
+            "date": [],
+            "abstract": ""
+          },
+          {
+            "doi": "10.70267/icrafm.202617509516",
+            "title": "Predicting E-Commerce Purchase Intention from Web Session Behavior: Feature Engineering, Imbalanced Learning, and Conversion Decision Support E-Commerce Purchase Intention Prediction",
+            "date": [
+              2026,
+              10,
+              19
+            ],
+            "abstract": " Online purchase intention prediction is valuable for e-commerce operations, but the positive purchase class is rare and purely accuracy-oriented models can mislead conversion decisions. This paper studies a reproducible decision-support pipeline, FIDDS, for session-level purchase prediction from web behavior. FIDDS combines behavior-driven interaction features, imbalance-aware learning, probability calibration, and utility-based threshold selection. Experiments use the real UCI Online Shoppers Purchasing Intention Dataset with 12,330 sessions, 1,908 purchase sessions, and five stratified random seeds. Random Forest achieves the highest PR-AUC at 0.7453, while FIDDS achieves PR-AUC 0.7426, ROC-AUC 0.9301, F1 0.5723, recall 0.9173, lift at the top 10% of sessions 5.0233, and expected utility 0.1321. The results indicate that conversion-oriented evaluation changes how a model should be selected: the strongest classifier is not always the clearest operating policy. The evidence is limited to one public benchmark and should be read as decision-support validation rather than proof of platform-wide causal uplift. "
+          },
+          {
+            "doi": "10.47297/wspciwsp2516-252730.20210506",
+            "title": "Prediction of Online Shoppers’ Purchasing Intention Using Support Vector Machines(SVM)",
+            "date": [
+              2021
+            ],
+            "abstract": ""
+          },
+          {
+            "doi": "10.64971/j.cph.ijsdip.v13.i3.5.2025",
+            "title": "Prediction of Online Shoppers Intention using Ensemble Learning Model after Treating Imbalance and Outlier Data",
+            "date": [],
+            "abstract": ""
+          },
+          {
+            "doi": "10.47738/ijaim.v4i2.81",
+            "title": "Using Random Forest and Support Vector Machine Algorithms to Predict Online Shopper Purchase Intention from E-Commerce Session Data",
+            "date": [
+              2024,
+              6,
+              1
+            ],
+            "abstract": ""
+          },
+          {
+            "doi": "10.4018/ijsir.397667",
+            "title": "Prediction of Online Shoppers' Purchasing Intention Based on SHAP-IGWO-EM Method",
+            "date": [
+              2026,
+              1,
+              13
+            ],
+            "abstract": " Predicting online shoppers' purchasing intention is crucial for e-commerce management. This study proposes SHAP-IGWO-EM, a hybrid ensemble framework to enhance prediction accuracy and interpretability for high-dimensional, imbalanced behavioral data. The method integrates XGB, LGBM, and GBM within a stacking architecture, optimized via an enhanced Grey Wolf Optimizer featuring a nonlinear convergence factor, improved leader selection, and Lévy flight perturbations to escape local optima. SHAP analysis identifies key features, reducing redundancy and enabling transparent model interpretation. Experiments on a public e-commerce dataset demonstrate SHAP-IGWO-EM's superior performance over baseline and ensemble models. Ablation studies validate the optimization strategy and SHAP-based feature selection. By uncovering critical drivers of purchase behavior, the model not only boosts predictive power but also provides actionable insights for personalized marketing and operations. "
+          }
+        ],
+        "scope": "Crossref metadata, not exhaustive novelty evidence",
+        "transport_failures": []
+      }
+    }
+  ]
+}
