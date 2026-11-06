@@ -1,0 +1,156 @@
+{
+  "summary": "核对当前 ledger、bridge 和 experiment_00 的实际记录后，保留未决的 C3 reader-age 强代理假说及 C1/C2 策略比较。提出两个互斥预测可检验的后续方案，选择在固定 snapshot/end-mark 与 WAL head 下直接改变 reader 年龄的 E03；本阶段未执行实验。",
+  "artifacts": [
+    {
+      "path": "runs/v2_sqlite_001/stages/plan_01/attempt-001/workspace/report_zh.md",
+      "kind": "interpretation",
+      "description": "本阶段中文规划报告；区分 ledger/实验观察与计划者选择。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/snapshots/ledger_01.json",
+      "kind": "observation",
+      "description": "读取的当前账本快照：C3 未测试，C1/C2 为 E02 后 inconclusive。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/classification.json",
+      "kind": "observation",
+      "description": "E02 机器分类为 uncertain_or_tradeoff。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/raw_trials.json",
+      "kind": "observation",
+      "description": "E02 72 次真实 SQLite 策略回放的逐次原始记录。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/bridge/attempt-001/workspace/report.md",
+      "kind": "interpretation",
+      "description": "Bridge 对已知 end-mark 机制、文献范围和未决问题的综合。"
+    }
+  ],
+  "evidence": [
+    {
+      "type": "ledger_state",
+      "source": "runs/v2_sqlite_001/snapshots/ledger_01.json",
+      "details": "C3 预测在 snapshot position、活动状态和 WAL head 相同时，较长 reader 年龄仍对应更少 checkpointed_frames；状态为 untested。C1/C2 均因 E02 标记 inconclusive。"
+    },
+    {
+      "type": "experiment_observation",
+      "source": "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/result.json",
+      "details": "E02 完成 72 个运行、204 次 PASSIVE 调用；所有运行末尾 residual_frames 为 0。Heldout_H1 中 lifecycle 对 fixed-period 的时间差 95% CI 为 [-0.0296, 0.0796] ms，对 WAL-growth 为 [-0.0301, 0.0669] ms；两个区间均含零，预定分类为 uncertain_or_tradeoff。"
+    },
+    {
+      "type": "protocol_gap",
+      "source": "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/preregistration.md",
+      "details": "E02 的计划明确只指定一个 held-out H1，但 lifecycle_gain 与 baseline_sufficient 都要求两个 held-out shape，故明确策略类别无法成立。"
+    },
+    {
+      "type": "known_mechanism_and_prior_work",
+      "source": "runs/v2_sqlite_001/stages/bridge/attempt-001/workspace/report.md",
+      "details": "SQLite 官方 WAL 文档说明 reader end mark 可限制 checkpoint；Walack 摘要构成按读写请求调整 checkpoint 频率的先前策略基线。两者都不证明 C1/C2 的本地收益。"
+    }
+  ],
+  "claims": [
+    "E02 没有显示 lifecycle 策略在已测 held-out H1 上有明确成本优势；结果保持不确定，不更新为支持或反驳 C1/C2。",
+    "C3 将一个尚未验证的 reader-age 代理与已知 end-mark 状态分开，E03 可以直接区分其预测；结果至多适用于指定 SQLite build 与轨迹。",
+    "reader end-mark 限制是已知行为；任何按读写负载自适应 checkpoint 的一般主张也需面对 Walack 先前工作，当前没有新颖性结论。"
+  ],
+  "limitations": [
+    "没有执行 E03 或 E04，也没有新增外部检索；本结果是规划而非实验发现。",
+    "E02 是串行事件回放，延迟不等于并发客户端服务分布；其跨 WAL reset 帧比较也有限制。",
+    "E03 的年龄效应阈值只判断重复方向的一致性，不表示预先指定了实际意义的最小效应；细小差异即使方向一致也不能自动成为有用调度信号。",
+    "项目要求请求模型为 gpt-6-luna；未独立验证后端权重。"
+  ],
+  "next_actions": [
+    "冻结并执行所选 E03；每对使用新鲜临时数据库，先以 SELECT 建立同一 snapshot，再等待短或长间隔，执行相同写入，确认 log_frames 和 WAL bytes 匹配后调用一次 PASSIVE。",
+    "若执行 E03，报告 checkpointed_frames 配对差、WAL/帧匹配情况与调用时间；不要将结果解释为新发现已知 end-mark 机制。",
+    "E04 留作下一项可行方案：先定义第二个 held-out release/burst shape，再按新种子重做三策略比较；E02 H1 只能作为已见的探索性上下文。"
+  ],
+  "decision": "experiment",
+  "proposals": [],
+  "plans": [
+    {
+      "id": "E03",
+      "question": "在 reader 的 SQLite snapshot position、活动状态、写入轨迹和 WAL head 相同时，reader 墙钟年龄本身是否降低当前 PASSIVE 可完成帧数？",
+      "hypothesis_ids": ["C3", "B1"],
+      "intervention": "在项目 .venv 的 Python sqlite3 与本地临时 WAL 数据库上使用固定 SQLite build、page size、同步设置、SQL、事务边界及 checkpoint 模式。每个配对条件用新数据库：读事务执行 SELECT 建立初始 snapshot；短龄条件等待 1 ms、长龄条件等待 100 ms；然后执行完全相同的固定写入 burst，读者在 PASSIVE 时均保持活动。配对须具有相同 log_frames 和 WAL 文件字节数，否则按预先规则记为无效，不重调输入凑配。每次只调用一次 PASSIVE，记录 busy、log_frames、checkpointed_frames、WAL bytes、耗时。使用 12 个配对种子 20261116–20261127，每个种子用其固定伪随机顺序决定短/长条件先后；每次均为新鲜数据库。",
+      "outcome_measure": "主要测量每个有效配对的 Δ=长龄 checkpointed_frames−短龄 checkpointed_frames；报告逐对值、方向计数、中位配对差、12 对有效率与次要调用时间。仅当同一配对的数据库设置、reader snapshot 构造、写入数、log_frames 与 WAL bytes 匹配时计为有效。目标 12 对；少于 10 个有效配对一律 uncertain。",
+      "predictions": [
+        {
+          "hypothesis_id": "C3",
+          "expected_outcome": "长龄条件在至少 10/12 个有效配对中 checkpointed_frames 严格较少，方向性支持 reader age 在固定 snapshot position/head 下有额外作用。",
+          "outcome_id": "age_penalty"
+        },
+        {
+          "hypothesis_id": "B1",
+          "expected_outcome": "在至少 10/12 个有效配对中，长龄 checkpointed_frames 不低于短龄；年龄本身未表现为固定 end-mark 之外的稳定进度约束。",
+          "outcome_id": "no_age_penalty"
+        }
+      ],
+      "outcome_classes": [
+        {
+          "id": "age_penalty",
+          "description": "至少 10/12 个有效配对 Δ<0；至少 10 对有效且 WAL/head 控制均满足。否则不可归入本类。",
+          "effects": {"C3": "supports", "B1": "contradicts"}
+        },
+        {
+          "id": "no_age_penalty",
+          "description": "至少 10/12 个有效配对 Δ>=0；至少 10 对有效且 WAL/head 控制均满足。平局归入无额外年龄惩罚方向。",
+          "effects": {"C3": "contradicts", "B1": "supports"}
+        },
+        {
+          "id": "uncertain",
+          "description": "有效配对少于 10，或方向未达到任一 10/12 规则，或控制失败/结果落在未覆盖情形。",
+          "effects": {"C3": "inconclusive", "B1": "inconclusive"}
+        }
+      ],
+      "cost_minutes": 3,
+      "feasibility": "项目 brief 和 E02 已在本项目环境用 Python 标准库 sqlite3 成功操作真实临时 WAL 数据库。24 个小型 fresh-DB 运行和约 100 ms 配对等待远低于 600 秒预算；此规划阶段没有执行它。",
+      "selection_reason": "相对 E04，E03 以较小成本直接分离年龄与 snapshot/end-mark 位置，给未检验的强代理假说明确反例机会；它也避免重复 E02 的策略回放和服务延迟解释问题。其结论范围有限且不等于新颖性。",
+      "replication": true
+    },
+    {
+      "id": "E04",
+      "question": "在 E02 未见过的第二种 release/burst 顺序上，策略可见的 reader lifecycle 是否比固定周期及 WAL 大小基线降低 checkpoint 调用成本且不损害完成与服务指标？",
+      "hypothesis_ids": ["C1", "C2"],
+      "intervention": "使用真实新鲜临时 WAL 数据库和相同事务 SQL/提交数，新增并在执行前冻结一个 release/burst 排列不同于 development 与 H1 的 H2 trace。比较 fixed-period、WAL-growth 和仅用当前应用可见 reader lifecycle 的策略；不向策略泄露未来 release。固定 build、page size、durability 与自动 checkpoint 设置。用 12 个新次序种子 20261116–20261127 随机化策略执行顺序。完成规则是在无活动 reader 的统一末次 PASSIVE 中 residual_frames=0，并核对各策略 committed rows/checksum 相同。记录累计 PASSIVE 时间与调用数、reader delay、writer p95/p99。E02 H1 不并入本计划的分类，只列为已经见过的探索性上下文。",
+      "outcome_measure": "每个策略和 H2 种子独立新数据库，按种子配对计算 lifecycle 减每个基线的累计 PASSIVE 时间差，并用固定种子 9173 的 10,000 次配对 bootstrap 得 95% 区间；延迟指标同法。完成约束必须满足行数/checksum 相同且末次统一无 reader checkpoint 无残余帧。先报告每对原始值与有效运行数。",
+      "predictions": [
+        {
+          "hypothesis_id": "C1",
+          "expected_outcome": "H2 上 lifecycle 对两个基线的 checkpoint 时间差区间上界均小于零，完成相同且 reader delay、writer p95/p99 的差值区间上界均不大于零。",
+          "outcome_id": "lifecycle_gain"
+        },
+        {
+          "hypothesis_id": "C2",
+          "expected_outcome": "H2 完成量相同，且至少一个简单基线对 lifecycle 的累计 checkpoint 时间不高于 lifecycle：对应 lifecycle-minus-baseline 差值区间下界大于零。",
+          "outcome_id": "baseline_advantage"
+        }
+      ],
+      "outcome_classes": [
+        {
+          "id": "lifecycle_gain",
+          "description": "完成约束满足，lifecycle 对两个基线的时间差区间上界均<0，且三个预定延迟差区间上界均<=0。",
+          "effects": {"C1": "supports", "C2": "contradicts"}
+        },
+        {
+          "id": "baseline_advantage",
+          "description": "完成约束满足，且至少一个基线的 lifecycle-minus-baseline 时间差区间下界>0。即该基线在 H2 上明确更省 checkpoint 时间；不推广到其他轨迹。",
+          "effects": {"C1": "contradicts", "C2": "supports"}
+        },
+        {
+          "id": "uncertain_or_tradeoff",
+          "description": "其余结果，包括区间含零、延迟损害、完成约束失败、有效种子不足或策略方向不一致。",
+          "effects": {"C1": "inconclusive", "C2": "inconclusive"}
+        }
+      ],
+      "cost_minutes": 10,
+      "feasibility": "E02 的 run_e02.py 和真实 SQLite WAL 环境已执行 72 个类似小型策略运行；新 H2 是有限 trace，12 个种子可在 600 秒内完成。需在实验执行前冻结 H2 事件顺序与所有阈值。",
+      "selection_reason": "此方案检验更直接的策略价值，并修复 E02 只执行一个 held-out shape 的缺口；成本高于 E03，且继续受串行回放服务延迟解释限制，故本轮不选。",
+      "replication": true
+    }
+  ],
+  "selected_plan_id": "E03",
+  "selection_reason": "E03 能以真实 SQLite 输出直接对比 C3 与已知 end-mark 解释在同一可观测条件下的不同预测，运行简单且成本较低。E04 仍值得后续执行，但需更多策略运行，并且其结论仅适用于新增 H2 和现有串行回放。",
+  "requested_model": "gpt-6-luna",
+  "backend_weights_verified": false
+}

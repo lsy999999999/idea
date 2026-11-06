@@ -1,0 +1,45 @@
+{
+  "summary": "E03 已完成 72 次真实 SQLite WAL 运行（H2/H3 各 12 个随机策略顺序种子、每次独立数据库）；每次提交 240 行且摘要一致，最终 residual_frames 均为 0。冻结规则分类为 uncertain_or_tradeoff：lifecycle 对 WAL-growth 的 checkpoint 成本区间跨零，且若干 writer/reader 延迟差区间上界大于零，故两类明确规则均不成立。",
+  "artifacts": [
+    {"path": "runs/v2_sqlite_goal_guard_002/stages/experiment_01/attempt-001/workspace/run_e03.py", "type": "executable_code", "description": "执行固定 H2/H3 轨迹、72 次真实 WAL 数据库试次及配对 bootstrap 分类。"},
+    {"path": "runs/v2_sqlite_goal_guard_002/stages/experiment_01/attempt-001/workspace/raw_trials.json", "type": "raw_observations", "description": "逐次数据库结果、所有 PASSIVE 调用、API tuple、调用耗时、WAL bytes、延迟、随机运行顺序及轨迹事件表。"},
+    {"path": "runs/v2_sqlite_goal_guard_002/stages/experiment_01/attempt-001/workspace/classification.json", "type": "classification_calculation", "description": "冻结 bootstrap 方法、控制条件、每形状配对区间和实际分类判断。"},
+    {"path": "runs/v2_sqlite_goal_guard_002/stages/experiment_01/attempt-001/workspace/report_zh.md", "type": "interpretation", "description": "中文报告，区分原始观测、按冻结规则的分类、操作化和适用限制。"},
+    {"path": "runs/v2_sqlite_goal_guard_002/stages/experiment_01/attempt-001/workspace/result.json", "type": "runtime_and_v2_result", "description": "本阶段运行字段和 V2 observation。"}
+  ],
+  "evidence": [
+    {"type": "execution_observation", "source": "runs/v2_sqlite_goal_guard_002/stages/experiment_01/attempt-001/workspace/raw_trials.json", "observation": "72/72 运行完成；24 次提交各写入 10 行；H2、H3 各自跨 36 个策略运行的内容 SHA-256 相同；所有运行 final_residual_frames=0。SQLite 3.51.3，WAL，4096-byte page。"},
+    {"type": "paired_measurement", "source": "runs/v2_sqlite_goal_guard_002/stages/experiment_01/attempt-001/workspace/classification.json", "observation": "按固定 bootstrap seed 3104，H2 lifecycle-minus-fixed checkpoint 时间均值 -0.0798 ms，95% CI [-0.1170,-0.0504]；minus-WAL-growth -0.0213 ms，CI [-0.0700,+0.0167]。H3 相应为 -0.0467 ms，CI [-0.1755,+0.0851]；及 +0.1552 ms，CI [+0.0502,+0.2688]。"},
+    {"type": "paired_latency_measurement", "source": "runs/v2_sqlite_goal_guard_002/stages/experiment_01/attempt-001/workspace/classification.json", "observation": "多个延迟差 CI 上界大于零，包括 H2 lifecycle-minus-fixed writer p95 +0.0042 ms、H2 lifecycle-minus-WAL-growth reader max delay +0.0679 ms、H3 lifecycle-minus-fixed writer p95 +0.0212 ms、writer p99 +0.0308 ms、H3 lifecycle-minus-WAL-growth reader max delay +0.1811 ms。"},
+    {"type": "classification", "source": "runs/v2_sqlite_goal_guard_002/stages/experiment_01/attempt-001/workspace/classification.json", "observation": "实际数字符合冻结规则 uncertain_or_tradeoff。lifecycle_gain 受 lifecycle 对 WAL-growth checkpoint 时间 CI 跨零且延迟不匹配所限；baseline_sufficient 受延迟 CI 上界超过零所限。两类均未成立。"}
+  ],
+  "claims": [
+    "在两个执行的本地轨迹形状中，lifecycle 相对 fixed-period 的累计 PASSIVE 时间区间上界小于零；相对 WAL-growth 的区间包含零。",
+    "虽然所有运行完成相同数据库工作且 residual_frames 为零，配对延迟条件不满足明确 outcome class 的要求；按冻结规则应为 uncertain_or_tradeoff。该实验结果不构成假说状态更新。"
+  ],
+  "limitations": [
+    "计划对 H2/H3 提供定性轨迹描述，执行时将其落实为代码中记录的具体提交索引事件表；事件表与计划形状文字相符，但不是计划中已有的逐提交数值表。",
+    "回放按提交索引串行推进，writer commit 和 reader completion 延迟不代表并发客户端服务延迟。",
+    "结果仅来自本地临时数据库、SQLite 3.51.3 与小型合成轨迹；不支持生产性能或世界新颖性结论。"
+  ],
+  "next_actions": [
+    "复核角色应独立重算至少一个关键配对区间和分类规则。",
+    "若未来继续实验，新的轨迹索引与指标应在执行前冻结；本次 held-out 数据不得在后续被描述为未见证据。"
+  ],
+  "observation": {
+    "experiment_id": "E03",
+    "execution_status": "completed",
+    "observed_outcome_id": "uncertain_or_tradeoff",
+    "summary": "完成 72 次运行，数据库工作与内容摘要一致且所有末次 residual_frames=0。H2/H3 上 lifecycle 减 fixed-period checkpoint 时间 CI 上界分别为 -0.0504/+0.0851 ms；减 WAL-growth 分别为 +0.0167/+0.2688 ms。多项延迟差 CI 上界超过零。实际数字仅满足冻结 outcome rule uncertain_or_tradeoff：lifecycle_gain 所需的两基线成本及延迟条件不全成立，baseline_sufficient 所需的延迟匹配条件也不成立。",
+    "artifacts": [
+      "runs/v2_sqlite_goal_guard_002/stages/experiment_01/attempt-001/workspace/run_e03.py",
+      "runs/v2_sqlite_goal_guard_002/stages/experiment_01/attempt-001/workspace/raw_trials.json",
+      "runs/v2_sqlite_goal_guard_002/stages/experiment_01/attempt-001/workspace/classification.json",
+      "runs/v2_sqlite_goal_guard_002/stages/experiment_01/attempt-001/workspace/report_zh.md"
+    ],
+    "limitations": [
+      "定性轨迹描述需落实为提交索引事件表，事件定义见 report_zh.md 与 raw_trials.json。",
+      "串行回放延迟不能解释真实并发服务表现；结果限于当前 SQLite build 和小型本地轨迹。"
+    ]
+  }
+}

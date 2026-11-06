@@ -1,0 +1,100 @@
+{
+  "summary": "对已看过的 USGS/GHCN 文件和既有探索进行独立探索性复核。复算精确复现 11,535 个合格配对行与原时间留出点估计。气温日较差与水温日较差 MAE 改善 0.0585°C，28 日同步日历块95%区间为 0.0344–0.0851°C；但低流量交互斜率区间跨零，且留站结果不一致。当前仅支持待独立复制的条件预测关联，不支持新物理机制或低流量增强机制。",
+  "artifacts": [
+    {
+      "path": "runs/pilot_001/stages/r02_skeptic/attempt-001/workspace/recompute_skeptic.py",
+      "description": "可复现的数据解析、拟合、28日时间块不确定性、交互系数区块重采样和留站复算脚本。使用项目 .venv Python。"
+    },
+    {
+      "path": "runs/pilot_001/stages/r02_skeptic/attempt-001/workspace/recomputed_results.json",
+      "description": "完整结构化复算输出、质量标记统计、区块区间、留站结果和样本依赖诊断。"
+    },
+    {
+      "path": "runs/pilot_001/stages/r02_skeptic/attempt-001/workspace/recomputed_paired_panel.csv",
+      "description": "独立解析和构建的 2014–2024 合格配对面板。"
+    },
+    {
+      "path": "runs/pilot_001/stages/r02_skeptic/attempt-001/workspace/metrics_table.csv",
+      "description": "水温日较差、日均值、日最高值的测试 MAE/RMSE/R2 表。"
+    },
+    {
+      "path": "runs/pilot_001/stages/r02_skeptic/attempt-001/workspace/skeptic_report_zh.md",
+      "description": "中文科学复核报告、竞争解释、反对候选结果和建议的新数据检验。"
+    },
+    {
+      "path": "runs/pilot_001/stages/r02_skeptic/attempt-001/workspace/result.json",
+      "description": "本阶段机器可读结果。"
+    }
+  ],
+  "evidence": [
+    {
+      "type": "observation",
+      "source": "runs/pilot_001/parallel_exploration/exploration.py; runs/pilot_001/parallel_exploration/numeric_results.json; runs/pilot_001/parallel_exploration/paired_daily_panel.csv; runs/pilot_001/stages/r02_skeptic/attempt-001/workspace/recomputed_results.json",
+      "detail": "独立解析的 11,535 行面板与原面板样本数相同；基础模型、加入气温日较差模型、加入交互模型的时间留出结果精确复现。水温日较差 MAE 为 0.84658、0.78885、0.78117°C，n=5,380。",
+      "interpretation": "点估计不是原分析的列错位或数值复算错误导致；但时间相关性和观测选择仍限制推断。"
+    },
+    {
+      "type": "observation",
+      "source": "runs/pilot_001/stages/r02_skeptic/attempt-001/workspace/recomputed_results.json:time_holdout_mae_difference_calendar_block_bootstrap",
+      "detail": "同一测试日同步抽取所有站点、按年抽取连续28日块，600次复抽。水温日较差基础减加气温日较差 MAE=0.05853°C，95%区间[0.03443,0.08513]；加交互相对只加气温日较差再改善0.00755°C，区间[0.00404,0.01087]。水温均值的日较差增益0.01629°C[0.00819,0.02459]；水温最高值的增益为-0.00071°C[-0.00150,0.00000]。",
+      "interpretation": "时间块下水温日较差关联仍明显，日均值增益较小，日最高值没有单变量增益；块区间仍是已观察数据上的探索性不确定性估计。"
+    },
+    {
+      "type": "observation",
+      "source": "runs/pilot_001/stages/r02_skeptic/attempt-001/workspace/recomputed_results.json:training_interaction_calendar_block_bootstrap",
+      "detail": "训练期水温日较差气温日较差斜率0.10847°C/°C；与低流量交互系数为-0.01123°C/°C，28日块95%区间[-0.03140,0.00275]；低流量时合计斜率估计0.09724，区间[0.07507,0.11566]。",
+      "interpretation": "交互区间含零，未建立低流量增强关联的证据。增加交互后 MAE 小幅降低不能单独证明该交互稳定或物理上真实。"
+    },
+    {
+      "type": "observation",
+      "source": "runs/pilot_001/stages/r02_skeptic/attempt-001/workspace/recomputed_results.json:leave_site_out_range_2020_2024; runs/pilot_001/parallel_exploration/numeric_results.json:site_holdout",
+      "detail": "留站测试和原结果一致。基础/加气温日较差 MAE：10396000为1.601/1.654°C，11501000为0.724/0.735°C，11502500为0.992/0.961°C。",
+      "interpretation": "站点结果不一致。10396000是唯一使用不同气象代理 OPHI 的站，且其水温日较差分布较宽；另两站共享 OCHI，名义留站时同一气象序列已存在于训练。该切分同时跨年份，因此不能解释为纯站点迁移检验。"
+    },
+    {
+      "type": "observation",
+      "source": "runs/pilot_001/stages/r00_boundary/attempt-001/workspace/data/usgs_daily_values_2000_to_2026.rdb; runs/pilot_001/stages/r00_boundary/attempt-001/workspace/data/ghcn_USR0000OPHI.dly; runs/pilot_001/stages/r00_boundary/attempt-001/workspace/data/ghcn_USR0000OCHI.dly; runs/pilot_001/stages/r00_boundary/attempt-001/workspace/coverage_report_zh.md",
+      "detail": "RDB 11列与参数/统计代码相符，原脚本的位置映射在当前文件上正确。原始规则要求四个 USGS 限定符以A开头，保留A:e；主样本中流量A:e为386行。GHCN值、mflag、qflag、sflag位置正确，非空qflag剔除；每站/日/要素未见重复。测试为2014–2019训练、2020–2024测试，按日历日期合并。",
+      "interpretation": "未发现 USGS列映射、日值单位转换、qflag位置、日期配对或低流量阈值测试泄漏错误。mflag/sflag未筛选是已知实现选择，应分标记复核而非直接视为数据错误。"
+    },
+    {
+      "type": "observation",
+      "source": "runs/pilot_001/stages/r02_skeptic/attempt-001/workspace/recomputed_results.json:effective_independence_notes; runs/pilot_001/stages/r01_boundary/attempt-001/workspace/noaa_inventory_conflict_audit.json",
+      "detail": "测试有5,380站日行、1,827个不同日期，OCHI同时配给两条河流站；测试期几乎每天连续。NOAA库存列OPHI/OCHI TMAX/TMIN止于2023年，但本地.dly有2024–2025值。",
+      "interpretation": "行数不能代表独立气象样本量；日序列持续相关、站点共享代理且2024年来源范围存在未解决冲突，降低独立性与时间外结论强度。"
+    }
+  ],
+  "claims": [
+    {
+      "claim": "在这三个选择性 USGS 站、两座 NOAA 近邻气象代理和当前日尺度切分上，气温日较差提供水温日较差的额外预测信息；28日块复核后的 MAE 增益约0.059°C。",
+      "status": "exploratory_association",
+      "basis": "独立复算精确重现原点估计，联合日期块区间仍为正。"
+    },
+    {
+      "claim": "当前数据没有稳健支持气温日较差与低流量的特异交互，也没有证明跨站迁移。",
+      "status": "supported_limitation",
+      "basis": "交互系数的28日块区间跨零；留站 MAE 变化不一致且气象代理并不独立。"
+    },
+    {
+      "claim": "该预测关联不构成新的物理机制证据。",
+      "status": "interpretation_boundary",
+      "basis": "未测量短波辐射、河岸气温、遮荫/暴露及历史观测方法变化，存在天气型和季节内混杂解释。"
+    }
+  ],
+  "limitations": [
+    "数据已被并行探索和本复核查看，所有新增区间和敏感性均属探索性，不是新数据验证。",
+    "28日块重采样保留相邻日期依赖并同步共享代理站天气，但块长选择和仅5个测试年份仍带来不确定性。",
+    "两座气象站对应三个河温站，两个河温站复用完全相同的 OCHI 日序列；只有两个独立气象时间序列。",
+    "NOAA清单与.dly文件在2024年后冲突，2024测试值需谨慎；本轮未另行截断2023重拟合。",
+    "气温日较差可能代理短波辐射、云量或季节内天气型；无直接辐射、岸边气温和遮荫观测。",
+    "留站评估把站点外推和年份外推绑在一起，且不同站水温日较差尺度不同；不能独立识别站点迁移效果。",
+    "GHCN mflag/sflag被保留、USGS A:e流量被保留。原精确A限定符敏感性分析结果相似，但没有逐标记估计主结果。"
+  ],
+  "next_actions": [
+    {
+      "action": "在一个气象代理独立的新河站开展预先冻结的单暖季复现，同时记录15分钟水温、流量、河岸气温和短波辐射。冻结质量筛选、日期切分和MAE差主分析；先检验气温日较差是否在基础气温/流量/月模型之外改善水温日较差，再估计低流量交互。",
+      "why_informative": "为气象暴露提供真正独立的站点序列，并加入短波辐射以区分空气温差关联与共同天气/辐射代理解释。",
+      "status": "recommended_new_data_test"
+    }
+  ]
+}

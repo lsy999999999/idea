@@ -1,0 +1,3 @@
+已完成 plan_01 规划，并在阶段工作区写入有效的 [result.json](/Applications/ideas/1103_boundary_discovery/runs/v2_sqlite_001/stages/plan_01/attempt-001/workspace/result.json) 和 [中文报告](/Applications/ideas/1103_boundary_discovery/runs/v2_sqlite_001/stages/plan_01/attempt-001/workspace/report_zh.md)。
+
+我核对了 ledger 与 E02 原始结果：E02 分类为 `uncertain_or_tradeoff`，且只测了一个 held-out 轨迹。提出 E03（固定快照与 WAL head，检验 reader 年龄是否独立影响进度）和 E04（补测第二种 held-out 轨迹），选择成本更低、能直接区分 C3 与 B1 预测的 E03。计划已写明互斥结果类别、配对规则和种子。本阶段未执行实验；JSON 字段检查通过。

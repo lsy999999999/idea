@@ -1,0 +1,3 @@
+复核已完成，结果写入 [result.json](/Applications/ideas/1103_boundary_discovery/runs/v2_sqlite_001/stages/review/attempt-001/workspace/result.json)。从原始测量独立重算后，E02 的 `uncertain_or_tradeoff`、E03 的 `no_age_penalty` 和 E04 的 `position_order` 均符合各自冻结规则。
+
+主要限制是：E02 只执行了规则要求的两个 held-out shape 中的一个；E03 固定了 snapshot 位置，因此不验证位置效应；E04 的位置效应与 SQLite 已公开的 end-mark 机制一致，不能作为新关系或新颖性的证据。复算代码、数值和来源核查分别保存在 `recompute_review.py`、`recomputation.json` 和 `source_checks.json`。`result.json` 已通过 JSON 校验。

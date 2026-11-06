@@ -1,0 +1,111 @@
+{
+  "summary": "根据当前 ledger 与 E02 原始结果，本阶段冻结了两个可行的 anchor 目标测试并选择 E03：在两个新的 reader-release/write-burst held-out 形状上比较应用可见 reader lifecycle、fixed-period 与 WAL-size PASSIVE 调度。E02 仍为 uncertain_or_tradeoff；不声称已有策略收益或新发现。",
+  "artifacts": [
+    {
+      "path": "runs/v2_sqlite_goal_guard_002/stages/plan_01/attempt-001/workspace/result.json",
+      "kind": "decision_and_plan",
+      "description": "本阶段结构化决策、竞争解释、两项计划及选定计划。"
+    },
+    {
+      "path": "runs/v2_sqlite_goal_guard_002/stages/plan_01/attempt-001/workspace/report_zh.md",
+      "kind": "interpretation",
+      "description": "中文规划报告，区分 ledger 观察、既有解释与本阶段决定。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/classification.json",
+      "kind": "observation_and_classification",
+      "description": "E02 逐 shape 汇总和冻结 outcome 分类；原实验结果，不是本阶段新观测。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/raw_trials.json",
+      "kind": "raw_observations",
+      "description": "E02 真实 SQLite 回放逐次测量；本规划阶段未执行新实验。"
+    }
+  ],
+  "evidence": [
+    {
+      "type": "ledger_observation",
+      "source": "runs/v2_sqlite_goal_guard_002/snapshots/ledger_01.json",
+      "details": "当前 ledger 中 E02 为唯一已完成实验，observed_outcome_id=uncertain_or_tradeoff；C1/C2 状态均为 inconclusive。"
+    },
+    {
+      "type": "prior_experiment_observation",
+      "source": "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/classification.json",
+      "details": "heldout_H1 lifecycle 减 fixed-period checkpoint 时间差 95% 配对 bootstrap 区间 [-0.0296,0.0796] ms，减 WAL-growth 为 [-0.0301,0.0669] ms；均包含零。末次 residual frames 为零，但 heldout_H1 lifecycle 末次 API tuple 帧数低于基线。"
+    },
+    {
+      "type": "prior_experiment_scope_limit",
+      "source": "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/result.json",
+      "details": "E02 的已冻结干预含一个 held-out shape；明确策略结论要求两个 held-out shape，故结果保持不确定。"
+    },
+    {
+      "type": "known_mechanism_and_prior_work",
+      "source": "bootstrap/v2_scout/FOLLOWUP_SCOPE.md",
+      "details": "SQLite 文档已说明 reader end mark 可限制 checkpoint 进度，默认自动阈值及频繁/较少 checkpoint 的读写权衡均为已知背景；不能把 end-mark 重现称为新发现。"
+    }
+  ],
+  "claims": [
+    "观测：E02 在本地 SQLite 3.51.3、所测小型串行回放中没有达到预注册的明确策略分类；解释：现有证据不能区分 C1 与 C2。",
+    "本计划试图改变的决策是：是否继续把当前可见 reader lifecycle 当作简单周期或 WAL-size 策略之外的实用调度信号；已知 end-mark 行为不构成该决策的证据。",
+    "结果范围限于未来明确冻结的 SQLite build、临时数据库设置和两种 held-out 轨迹；本阶段没有运行实验，也没有评估世界新颖性。"
+  ],
+  "limitations": [
+    "E02 的 heldout_H1 已使用；本阶段不将其作为新的确认性 held-out 形状。",
+    "E02 是串行回放，reader completion delay 不能代表并发服务端延迟分布。E03 沿用相同的本地回放边界，不能外推生产环境。",
+    "E02 末次 API 帧数可能受 WAL 重启影响，不能跨调用直接累加；E03 的完成判据使用等量提交、所有运行结束时 residual frames 为零及完整数据库内容一致性，而不把单次末端 frame tuple 当作累计工作量。",
+    "Walack 的摘要/元数据构成 adaptive checkpoint frequency 的先前工作边界；全文重合程度尚未审阅，不作新颖性结论。"
+  ],
+  "next_actions": [
+    "先冻结 E03 的两个新 held-out trace、代码、随机种子、配对 bootstrap 规则和分类阈值，然后再执行；每个 trace 至少 12 个新 order seeds。",
+    "若 E03 lifecycle_gain：只在该本地设置和两种轨迹上保留条件性收益主张，并设计更真实并发延迟测量；若 baseline_sufficient：停止当前轨迹族的 lifecycle 增益主张；若 uncertain_or_tradeoff：指出是精度、完成量还是延迟约束造成的不确定。"
+  ],
+  "anchor_question": "在匹配已完成数据库工作、计入全部探测成本并约束读写服务延迟后，应用可见的当前 reader 生命周期信息能否在未见过的轨迹形状上改善 PASSIVE checkpoint 调度，或明确指出其收益的条件和代价？重现已知 end-mark 行为本身不解决这个问题。",
+  "decision": "experiment",
+  "proposals": [],
+  "plans": [
+    {
+      "id": "E03",
+      "question": "在两个未用于 E02、release/burst 排列不同的新轨迹形状上，当前应用可见 reader lifecycle 信息是否能使 PASSIVE checkpoint 调度在完成相同数据库工作且不损害 reader/writer 延迟时，降低累计 checkpoint 时间，相比 fixed-period 与 WAL-size 策略？",
+      "hypothesis_ids": ["C1", "C2"],
+      "intervention": "使用项目 .venv/bin/python、标准库 sqlite3 和每次新建的真实临时 WAL 数据库。比较 fixed-period、WAL-growth (32 KiB 增长触发) 与 reader_lifecycle (仅依据当前活动 reader 与其释放事件；不看未来释放) 三策略。冻结两个此前未测的 held-out shape：H2 为长 reader 跨越单次写入 burst、随后 quiet window、再短 reader 与第二 burst；H3 为短 reader 在 burst 间交错、随后一个长 reader 覆盖末段 burst。每个 shape 使用 12 个新 order seeds（20261116–20261127），每个 seed 随机化三个策略运行顺序；每个策略/shape/seed 使用全新数据库。固定 SQLite build、4096-byte page、WAL、synchronous=NORMAL、关闭 autocheckpoint、相同表结构、24 次各 10 行提交及相同读者到达/释放轨迹。记录所有 PASSIVE 调用耗时、返回 tuple、WAL bytes、提交延迟分布、reader 完成延迟；所有调用计入累计成本。结束时每个运行均释放 reader 并以相同规则清理 checkpoint，检查提交行数及内容摘要一致、residual_frames=0。总工作量 72 个小型运行，目标计算时间低于 120 秒，阶段预算上限 600 秒。",
+      "outcome_measure": "每个 shape 分别以 seed 配对 lifecycle 减两个基线的累计 PASSIVE wall time、writer commit p95/p99、reader completion delay max 的 bootstrap 95% 区间评估（固定 bootstrap seed=3104，10,000 次重采样）；报告调用数、峰值 WAL bytes、返回 frame tuple 与 residual frames。执行前固定规则：数据库工作相同要求每次均提交 240 行、内容摘要相同且最终 residual_frames=0；任何策略不满足即不得判为明确获益/基线充分。‘lifecycle_gain’要求 H2 与 H3 各自相对两个基线的 checkpoint-time 差值区间上界都 <0，且 writer p95、writer p99 和 reader delay 差值区间上界均 <=0。‘baseline_sufficient’要求 H2 与 H3 均完成相同工作、延迟匹配（各延迟差值区间上界 <=0），并且在每个 shape 上至少一个基线相对 lifecycle 的 checkpoint-time 差值区间上界 <=0（该简单基线成本不高于 lifecycle）。两类规则互斥；其余所有情况，包括区间跨零、shape 间方向冲突、工作/延迟不匹配或控制失败，均为 uncertain_or_tradeoff。分类和阈值在任何新实验执行前冻结。",
+      "predictions": [
+        {"hypothesis_id": "C1", "expected_outcome": "若 lifecycle 信号在新轨迹形状上有成本匹配后的实用收益，H2 与 H3 均满足相同工作、三项延迟不劣，并且对两个基线的累计 PASSIVE 时间差区间上界均小于零。", "outcome_id": "lifecycle_gain"},
+        {"hypothesis_id": "C2", "expected_outcome": "若简单基线已足够，两个新 shape 均完成相同工作且延迟匹配，并在每个 shape 至少有一个基线的 checkpoint 成本不高于 lifecycle（区间规则满足）。", "outcome_id": "baseline_sufficient"}
+      ],
+      "outcome_classes": [
+        {"id": "lifecycle_gain", "description": "H2 和 H3 均满足提交行数/内容摘要相同且 residual_frames=0；在每一 shape 上，lifecycle 减 fixed-period 与 lifecycle 减 WAL-growth 的累计 PASSIVE 时间配对 bootstrap 95% CI 上界均 < 0；writer p95、writer p99、reader delay 三项 lifecycle 减基线差值 CI 上界均 <= 0。", "effects": {"C1": "supports", "C2": "contradicts"}},
+        {"id": "baseline_sufficient", "description": "H2 和 H3 均满足相同完成工作及延迟匹配（所有 lifecycle 减基线延迟 CI 上界 <= 0）；且在每个 shape 至少一个简单基线的 checkpoint-time 差值（baseline 减 lifecycle）95% 配对 CI 上界 <= 0，表明该基线成本不高于 lifecycle。该条件与 lifecycle_gain 的严格负 lifecycle-minus-baseline 时间上界互斥。", "effects": {"C1": "contradicts", "C2": "supports"}},
+        {"id": "uncertain_or_tradeoff", "description": "未满足上述任一明确类：例如任一形状工作内容或 residual frames 不匹配、延迟变差、成本区间跨零、H2/H3 结果冲突、bootstrap 资料不足或执行控制失败。", "effects": {"C1": "inconclusive", "C2": "inconclusive"}}
+      ],
+      "cost_minutes": 10,
+      "feasibility": "项目 brief 已确认 .venv、sqlite3 与临时真实 WAL 数据库可用；E02 的本地脚本已完成同规模 72-run 三策略框架。E03 需改为两个全新明确 shape、种子区间 20261116–20261127，并按每次独立数据库校验完整数据内容；总量相同且无需网络检索，预算内可运行。",
+      "selection_reason": "该行动直接测试 anchor，且补齐 E02 仅有一个 held-out shape 的关键覆盖缺口；它在两个新 shape 上重新检验相同的策略分歧，并使成本、完成量和服务延迟都进入决定。其明确结果会决定继续研究 lifecycle 的条件性收益、还是在此轨迹族接受简单基线。",
+      "replication": false,
+      "research_value": {"kind": "target_test", "unresolved_gap": "E02 对唯一 heldout_H1 的成本区间跨零，且没有满足要求的第二个 held-out shape；因此 C1 与 C2 仍不能区分。", "prior_work_boundary": "SQLite reader end-mark 限制及自动 checkpoint 阈值是文档已知机制；Walack 摘要已描述按读写请求调整 checkpoint 频率。本测试只评估两种新本地轨迹中额外 lifecycle 可见性相对简单策略的工程条件，不主张新算法或世界新颖性。", "decision_relevance": "lifecycle_gain 会支持在这些轨迹形状中继续开展条件性 lifecycle 调度研究；baseline_sufficient 会把当前信号的实用增益判断转向简单基线；tradeoff/inconclusive 将定位仍需测量的成本或延迟限制。", "ready": true, "blockers": [], "enables_plan_id": null}
+    },
+    {
+      "id": "E04",
+      "question": "在行动前公开 PASSIVE 遥测、WAL bytes 与写入历史匹配的时点，是否存在两种 reader-release 后续轨迹，其下一次 PASSIVE 的进度/成本存在可重复差异，从而说明公开聚合历史的可观测边界？",
+      "hypothesis_ids": ["B2", "C2"],
+      "intervention": "用真实临时 WAL 数据库和两个新建 shape，构造匹配的行动前提交历史与公开遥测，再改变唯一 reader 的释放时点及其后 burst 排列。每个配对至少 12 个新数据库 seed；只在预定决策点读取相同公开历史，之后执行各自冻结的 reader/burst 后缀并调用一次 PASSIVE。记录行动前公开输入、诊断用 reader 事件、返回 frame tuple、调用时间和后续提交延迟。此为匹配配对的测量，不训练策略，也不把未来事件作为行动时输入。",
+      "outcome_measure": "预先检查每对行动前公开历史逐字段相同。对两个 shape 分别计算 checkpointed_frames 配对差及 PASSIVE 调用时间差的 95% bootstrap 区间。`telemetry_counterexample` 要求两形状各有至少 10/12 配对在相同方向上表现出 >=1 frame 的进度差，且两形状合并 bootstrap 区间排除零；`no_detected_difference` 要求两形状进度差区间均含零且调用成本差区间均含零；其余归 inconclusive。即使发现差异也只证明所测行动点 telemetry 对下一次动作结果不充分，不直接证明 lifecycle 策略改善总成本。",
+      "predictions": [
+        {"hypothesis_id": "B2", "expected_outcome": "相同的行动前聚合遥测可能对应不同 reader-release/burst 后缀及可重复不同的下一次 PASSIVE 帧进度，预期 telemetry_counterexample。", "outcome_id": "telemetry_counterexample"},
+        {"hypothesis_id": "C2", "expected_outcome": "若简单聚合状态对该近端动作已充分，两个 shape 的配对进度与调用成本均无稳定差异，预期 no_detected_difference。", "outcome_id": "no_detected_difference"}
+      ],
+      "outcome_classes": [
+        {"id": "telemetry_counterexample", "description": "行动前公开历史完全匹配；H2/H3 各至少 10/12 配对在相同方向相差 >=1 checkpointed frame，且两个 shape 合并的进度差 95% bootstrap CI 不含 0。", "effects": {"B2": "supports", "C2": "contradicts"}},
+        {"id": "no_detected_difference", "description": "行动前公开历史完全匹配；H2 与 H3 的 checkpointed_frames 差 CI 均包含 0，且调用时间差 CI 均包含 0。", "effects": {"B2": "contradicts", "C2": "supports"}},
+        {"id": "inconclusive", "description": "行动前匹配失败、两指标结论不一致、配对不足或不满足任一明确类别。", "effects": {"B2": "inconclusive", "C2": "inconclusive"}}
+      ],
+      "cost_minutes": 8,
+      "feasibility": "标准库 SQLite 可在本地临时 WAL 库中冻结前缀并改变后缀；运行规模不超过 48 个短配对，低于 E03 三策略回放。无需网络或外部依赖。",
+      "selection_reason": "与 E03 相比，E04 更直接识别行动前聚合遥测的近端预测边界，但即使发现 counterexample 也不回答累计调度成本与读写延迟，且不能代替策略比较。",
+      "replication": false,
+      "research_value": {"kind": "target_test", "unresolved_gap": "在真实 SQLite 轨迹中，匹配的行动前公开遥测能否给出相同的近期 PASSIVE 结果尚未测量。", "prior_work_boundary": "官方文档界定 PASSIVE 可返回的观测字段；本测试只检查特定后缀配对，不主张普遍不可观测性。", "decision_relevance": "counterexample 会提示公开聚合遥测可能遗漏有决策价值的轨迹差异，但仍需策略实验确认是否可变成净收益；无差异会降低该特定近端边界主张的优先级。", "ready": true, "blockers": [], "enables_plan_id": null}
+    }
+  ],
+  "selected_plan_id": "E03",
+  "selection_reason": "E03 是 ready 的 target_test，直接回答固定 anchor，并用两个此前未测试的 held-out shape 补上 E02 的分类缺口。E04 可发现局部遥测反例，但无法说明生命周期策略是否在完成工作、探测成本和服务延迟约束后改善调度；因此优先 E03。"
+}

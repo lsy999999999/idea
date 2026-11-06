@@ -1,0 +1,170 @@
+{
+  "brief": "/Applications/ideas/1103_boundary_discovery/bootstrap/PILOT_BRIEF.md",
+  "actions": [
+    {
+      "role": "boundary",
+      "task": "审计河温候选的真实观测适用性。以已有 USGS 样本审计和 Oregon 活跃河流温度站点清单为起点，选取一个可复现且有明确选择规则的候选站点子集；查验逐站水温记录的可用年份、采样间隔、缺测/断档、参数与站点元数据变更，并检查同期气温和流量记录能否配对。不要拟合或执行候选预测实验。交付中文 result.json、源 URL/请求与检索时间、覆盖汇总表和一份说明哪些站点/时期足以进入后续检验、主要测量风险及推荐下一步的问题报告。若覆盖无法支撑留站或时间外测试，应据实建议缩小或放弃此候选。",
+      "result_path": "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/stages/r00_boundary/attempt-001/workspace/result.json",
+      "result": {
+        "summary": "依据预先限定为三个种子站与实时 Oregon 活跃 stream 水温站交集的规则，完成 USGS 2000-2026 日值覆盖、2020 年瞬时采样检查、近邻 NOAA GHCN 气温文件检查及逐日三源日期交集。日尺度联合资料可进入事件候选期整理，但尚不足以批准原定的多年份高频恢复轨迹、留站与时间外预测检验；本阶段未拟合或预测。",
+        "artifacts": [
+          {
+            "path": "runs/pilot_001/stages/r00_boundary/attempt-001/workspace/coverage_report_zh.md",
+            "description": "中文逐站适用性与测量风险报告。"
+          },
+          {
+            "path": "runs/pilot_001/stages/r00_boundary/attempt-001/workspace/coverage_summary.csv",
+            "description": "逐站汇总覆盖表。"
+          },
+          {
+            "path": "runs/pilot_001/stages/r00_boundary/attempt-001/workspace/coverage_by_site_year.csv",
+            "description": "逐年水温、流量及三源配对覆盖表。"
+          },
+          {
+            "path": "runs/pilot_001/stages/r00_boundary/attempt-001/workspace/coverage_audit.json",
+            "description": "完整请求日志、URL、检索时间、响应哈希、站点/年度统计及气温逐日交集。"
+          },
+          {
+            "path": "runs/pilot_001/stages/r00_boundary/attempt-001/workspace/audit_coverage.py",
+            "description": "抓取及统计脚本。"
+          },
+          {
+            "path": "runs/pilot_001/stages/r00_boundary/attempt-001/workspace/write_reports.py",
+            "description": "从审计 JSON 生成报告及 CSV 的脚本。"
+          },
+          {
+            "path": "runs/pilot_001/stages/r00_boundary/attempt-001/workspace/data/",
+            "description": "本次保存的 USGS RDB 与 NOAA 清单、近邻站原始 GHCN-Daily 文件。"
+          }
+        ],
+        "evidence": [
+          {
+            "type": "observation",
+            "source": "coverage_audit.json:selection",
+            "detail": "活跃 Oregon 水温 stream 清单返回 349 个唯一站号；三个样本站均入选。",
+            "interpretation": "站点子集是种子样本与指定实时清单的交集，不是随机或总体代表样本。"
+          },
+          {
+            "type": "observation",
+            "source": "coverage_summary.csv; coverage_by_site_year.csv",
+            "detail": "水温日均值起始日分别为 2010-10-14、2005-04-28、2007-10-17；流量日均值从 2000-01-01 到 2026-11-02 每日均有记录。",
+            "interpretation": "日尺度下存在可用多年重叠，但较早时段不能用于水温分析，个别年份仍有日缺测。"
+          },
+          {
+            "type": "observation",
+            "source": "coverage_audit.json:paired_daily_air_water_flow",
+            "detail": "将 USGS 水温日均值、流量日均值与最近 NOAA 站 TMAX/TMIN 按日期逐日交集；配对总日数及逐年数量已保存。最近代理站距离为 1.8-6.85 km。",
+            "interpretation": "满足日期同步的初步条件，但 NOAA 站的空间代表性和目录/文件年份冲突限制协变量可靠性。"
+          },
+          {
+            "type": "observation",
+            "source": "data/usgs_iv_water_and_air_2020.rdb",
+            "detail": "2020 瞬时水温返回 35136、35117、35111 点，间隔主体为 900 秒；三站各有 4 个重复本地墙钟时间，最多相邻间隔 4500 秒。请求 parameterCd=00010,00020 仅返回 00010 水温系列。",
+            "interpretation": "确认单年高频水温可访问，未确认更长时期高频记录或站点级瞬时气温；回拨时间需用带时区解析。"
+          },
+          {
+            "type": "observation",
+            "source": "coverage_audit.json:ghcn_daily_air_temperature_coverage and data/noaa_ghcnd_inventory.txt",
+            "detail": "NOAA 清单将 USR0000OPHI 和 USR0000OCHI 的 TMAX/TMIN 列到 2023 年，实际下载的 .dly 文件记录含 2024-2025 年。",
+            "interpretation": "文件数据与目录元数据冲突，2023 年后的气温记录暂不作为无争议验证数据。"
+          },
+          {
+            "type": "observation",
+            "source": "data/usgs_daily_values_2000_to_2026.rdb",
+            "detail": "日值表含 A/P/e 资格码，三个站均存在估算流量限定符；单个水温 IV_TS_ID 分别为 116483、116505、116513。",
+            "interpretation": "限定符须纳入过滤/敏感性方案；一个当前序列 ID 不能证实历史传感器或汇总方法未变化。"
+          }
+        ],
+        "claims": [
+          {
+            "claim": "2014-2024 在这三个站的日尺度上大体具备水温、流量及 NOAA 近邻气温代理的可配对观察，可作为列举事件候选窗口的开发数据。",
+            "status": "bounded_observation",
+            "not_claimed": "没有证明事件级高频水温多年份完整，也没有验证预测增益。"
+          },
+          {
+            "claim": "目前证据不足以支撑原计划的留整站和时间外恢复轨迹预测实验。",
+            "status": "interpretation",
+            "basis": "除 2020 年外尚未审计瞬时水温多年覆盖；三站样本小；历史传感器变化未核实；气温代理有元数据冲突。"
+          }
+        ],
+        "limitations": [
+          "USGS 高频温度仅对 2020 全年做了直接覆盖核查；其它年份的日统计不代表 15 分钟连续性。",
+          "USGS 当前 expanded site metadata 没有提供本审计所需的历史探头更换/位置变化日志；IV_TS_ID 稳定不等于传感器稳定。",
+          "气温来自邻近 NOAA 站，非河岸原位测量；最近站 `.dly` 与 NOAA 清单的年份范围存在差异。",
+          "USGS 记录有 provisional、estimated 数据标记；日汇总掩盖日内峰值与恢复曲线。",
+          "三站源于样本审计，不是代表 Oregon 活跃站的概率样本；站点留出只有极少数折。"
+        ],
+        "next_actions": [
+          "不拟合预测模型。先对 2014-2025 暖季做逐年 USGS IV 高频温度数据可用性、缺测/最长断档、DST 对齐和 IV_TS_ID/methodID 变化审计。",
+          "获取并核实 USGS 探头/站点历史记录；冻结 NOAA 配对站与年份规则，解释 GHCN inventory 与 .dly 文件的 2024-2025 差异。",
+          "若两个以上站在共同多年窗口满足高频温度、可配对流量、可靠气温和可追踪仪器记录，再预先注册时间外/留站事件测试；否则缩为单站单期描述性分析或放弃候选。"
+        ]
+      }
+    }
+  ],
+  "previous_decisions": [
+    {
+      "result_path": "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/stages/c00_coordinator/attempt-001/workspace/result.json",
+      "result": {
+        "summary": "基于 brief、侦察报告、USGS 样本审计和已有定向文献审计，选择河流热事件后的恢复轨迹作为暂定问题。现有证据只验证了三个站点在一个三日窗口内的 15 分钟数据可取且时间格完整，尚未验证多年的事件覆盖、跨站可比性或协变量可用性。派发 boundary 角色核查这些观测条件；本协调阶段没有执行实验。",
+        "artifacts": [
+          {
+            "path": "runs/pilot_001/stages/c00_coordinator/attempt-001/workspace/result.json",
+            "description": "本阶段协调决策、证据边界和下一角色任务。"
+          }
+        ],
+        "evidence": [
+          {
+            "type": "observation",
+            "source": "bootstrap/scout/evidence/usgs_sample_audit.json",
+            "detail": "USGS 站点 10396000、11501000、11502500 各返回 288 个水温观测，覆盖 2020-07-01 至 2020-07-03，当地时间间隔均为 900 秒，无重复或缺失的预期 15 分钟点；请求响应为 HTTP 200。",
+            "interpretation": "确认了短窗口数据获取和时间格完整性，不代表长期覆盖或足以检验候选问题。"
+          },
+          {
+            "type": "observation",
+            "source": "bootstrap/scout/SCOUT_REPORT.md",
+            "detail": "侦察报告将河温恢复候选排第一，原因是可立即取得真实多站观测；报告明示完整覆盖、气象协变量、传感器变更尚未审计，且热记忆、滞后和河流热浪研究成熟。",
+            "interpretation": "可行性依据尚窄，不能据此声称发现新机制。"
+          },
+          {
+            "type": "observation",
+            "source": "bootstrap/literature_audit/SEARCH_AND_OVERLAP.md",
+            "detail": "软件验证方向的定向文献审计发现自动数据验证、过程阶段约束和风险自适应测试均有近邻工作；审计非系统综述，未做全文或引文链检查。",
+            "interpretation": "该设计推荐的宽泛问题已有明显概念重叠，当前优先核查有真实观测支撑的河温候选；软件方向仍可在新证据下重开。"
+          }
+        ],
+        "claims": [
+          "当前最值得继续核查的问题是：在控制季节、气温和流量后，前一热事件后的实测水温恢复形状是否为下一次热事件峰值或超阈持续时间提供跨站可迁移的预测信息，且超过近期最大值与累计热暴露。",
+          "该问题是预测信息增量假设，不是河流中存在新物理状态或机制的证据。即使出现增益，也需要独立观察和最强替代解释检查。"
+        ],
+        "limitations": [
+          "现有水温样本仅覆盖三个站点的一个三日窗口，没有执行长期覆盖或协变量分析。",
+          "候选相关文献仅经侦察级 OpenAlex 检索；河流热浪和 2026 年河流温度滞后/滞回工作尚无全文重叠核查。",
+          "本阶段未执行任何数值实验，也没有模型输出或候选效果估计。",
+          "既有软件验证文献审计来自另一个初始方向，只作为当前设计推荐的重叠提示；不把它当作河温候选的证据。"
+        ],
+        "decision": "dispatch",
+        "research_status": "仅完成证据分流。河温候选有短窗口真实数据访问证据，但关键观测覆盖和测量适用性未明；尚不能判断其能否形成有区分力的天然观测检验。",
+        "candidate": {
+          "current_problem": "河流热事件之间的水温恢复轨迹是否包含超出季节、气温、流量、近期峰值和累计热暴露的信息，用于预测下一事件的峰值与超阈持续时间？",
+          "idea": "把前一热事件后的实测恢复曲线作为可操作的事件历史特征，检验其在留整站点条件下是否可迁移；不预设其物理成因。",
+          "evidence_status": "只有 USGS 三站点、三日窗口的完整 15 分钟采样记录访问核验；没有事件级、长期或跨站预测证据。",
+          "unresolved_question": "目标站点是否有足够连续多年的水温观测、可配对的气温与流量记录及可审计的传感器/站点元数据，以构造无泄漏的时间外和整站点留出检验？"
+        },
+        "next_actions": [
+          {
+            "role": "boundary",
+            "task": "审计河温候选的真实观测适用性。以已有 USGS 样本审计和 Oregon 活跃河流温度站点清单为起点，选取一个可复现且有明确选择规则的候选站点子集；查验逐站水温记录的可用年份、采样间隔、缺测/断档、参数与站点元数据变更，并检查同期气温和流量记录能否配对。不要拟合或执行候选预测实验。交付中文 result.json、源 URL/请求与检索时间、覆盖汇总表和一份说明哪些站点/时期足以进入后续检验、主要测量风险及推荐下一步的问题报告。若覆盖无法支撑留站或时间外测试，应据实建议缩小或放弃此候选。",
+            "inputs": [
+              "/Applications/ideas/1103_boundary_discovery/bootstrap/PILOT_BRIEF.md",
+              "/Applications/ideas/1103_boundary_discovery/bootstrap/scout/candidates.json",
+              "/Applications/ideas/1103_boundary_discovery/bootstrap/scout/evidence/usgs_sample_audit.json",
+              "/Applications/ideas/1103_boundary_discovery/bootstrap/scout/evidence/README.md",
+              "/Applications/ideas/1103_boundary_discovery/docs/DISCOVERY_PROTOCOL.md"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

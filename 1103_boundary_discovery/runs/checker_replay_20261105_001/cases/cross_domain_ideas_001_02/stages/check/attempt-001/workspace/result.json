@@ -1,0 +1,118 @@
+{
+  "schema_version": "claim-centric-v1",
+  "summary": "I-02 在概念层面无明显数学错误。公开来源显示免疫记忆更新、组织驻留细胞局部信号网络及保护效应已有研究，但当前证据仅支持局部重叠，未见单一来源覆盖候选提出的完整配置问题。由于多个检索服务限流或返回 503，方向相似度判断为 unclear，检索非穷尽。",
+  "artifacts": [
+    {"path": "runs/checker_replay_20261105_001/cases/cross_domain_ideas_001_02/stages/check/attempt-001/workspace/CHECK.md", "type": "report"},
+    {"path": "runs/checker_replay_20261105_001/cases/cross_domain_ideas_001_02/stages/check/attempt-001/workspace/retrieval_ledger.md", "type": "retrieval ledger"},
+    {"path": "runs/checker_replay_20261105_001/cases/cross_domain_ideas_001_02/stages/check/attempt-001/workspace/sources", "type": "source snapshots"}
+  ],
+  "evidence": [
+    "观察：How a well-adapting immune system remembers 的摘要提出动态贝叶斯免疫记忆更新，并称其平衡新病原遭遇证据与既往感染经验。",
+    "观察：A local macrophage chemokine network sustains protective tissue-resident memory CD4 T cells 的摘要报告局部巨噬细胞趋化因子网络维持生殖道 CD4 TRM，并与保护作用相关。",
+    "解释：两来源分别触及历史信息更新、局部规则和保护性组织记忆细胞，但没有证据显示它们提出候选的资源机会配置及保护—病理权衡整合框架。"
+  ],
+  "claims": [
+    {"idea_id": "I-02", "claim_id": "C1", "text": "将免疫记忆建模为由异质细胞局部因果响应规则构成、在无全局控制者时形成组织级配置的分布式制度。", "kind": "combination"},
+    {"idea_id": "I-02", "claim_id": "C2", "text": "研究局部信号、募集、迁移与存活规则如何由不完整威胁信息形成整体免疫响应。", "kind": "question"},
+    {"idea_id": "I-02", "claim_id": "C3", "text": "研究克隆特异性记忆、训练性广谱反应和组织驻留之间如何配置细胞、空间和响应资源，以应对复发威胁并限制局部持续损伤。", "kind": "question"}
+  ],
+  "limitations": [
+    "检索响应有限：OpenAlex 多次限流，Europe PMC 多次返回 503，NCBI E-utilities 返回 500。",
+    "仅深入审阅两篇摘要；未达到计划候选池或全文比较规模，不能据此判断世界范围内的新颖性。",
+    "Tissue-resident memory T cells: local specialists in immune defence 仅取得元数据，没有用于实质性覆盖判断。"
+  ],
+  "next_actions": [
+    "针对免疫记忆组织空间配置、克隆竞争与局部资源机会开展定向检索。",
+    "针对训练免疫与克隆特异性记忆在组织局部规则下的耦合开展补充检索。"
+  ],
+  "searches": [
+    {"query": "\"immune memory\" \"resource allocation\"", "url": "https://api.openalex.org/works?search=%22immune%20memory%22%20%22resource%20allocation%22&per-page=10", "status": "completed", "idea_ids": ["I-02"], "facet": "problem", "round": 1, "snapshot_path": "/Applications/ideas/1103_boundary_discovery/runs/checker_replay_20261105_001/cases/cross_domain_ideas_001_02/stages/check/attempt-001/workspace/search_snapshots/problem_openalex.json"},
+    {"query": "\"immune memory\" AND (tissue OR allocation OR organization)", "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=%22immune%20memory%22%20AND%20%28tissue%20OR%20allocation%20OR%20organization%29&format=json&pageSize=10", "status": "completed", "idea_ids": ["I-02"], "facet": "problem", "round": 1, "snapshot_path": "/Applications/ideas/1103_boundary_discovery/runs/checker_replay_20261105_001/cases/cross_domain_ideas_001_02/stages/check/attempt-001/workspace/search_snapshots/problem_europepmc.json"},
+    {"query": "\"immune memory\" \"mechanism design\"", "url": "https://api.openalex.org/works?search=%22immune%20memory%22%20%22mechanism%20design%22&per-page=10", "status": "failed", "failure_reason": "OpenAlex 返回匿名搜索限流响应。", "idea_ids": ["I-02"], "facet": "mechanism", "round": 1},
+    {"query": "\"local signals\" AND \"tissue-resident memory\"", "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=%22local%20signals%22%20AND%20%22tissue-resident%20memory%22&format=json&pageSize=10", "status": "failed", "failure_reason": "Europe PMC 返回 503 Search service is temporarily unavailable。", "idea_ids": ["I-02"], "facet": "mechanism", "round": 1},
+    {"query": "\"immune memory\" mechanism design", "url": "https://api.crossref.org/works?query=%22immune%20memory%22%20mechanism%20design&rows=10", "status": "completed", "idea_ids": ["I-02"], "facet": "mechanism", "round": 1, "snapshot_path": "/Applications/ideas/1103_boundary_discovery/runs/checker_replay_20261105_001/cases/cross_domain_ideas_001_02/stages/check/attempt-001/workspace/search_snapshots/mechanism_crossref.json"},
+    {"query": "\"tissue resident memory T cells\" organization pathology", "url": "https://api.openalex.org/works?search=%22tissue%20resident%20memory%20T%20cells%22%20organization%20pathology&per-page=10", "status": "failed", "failure_reason": "OpenAlex 返回匿名搜索限流响应。", "idea_ids": ["I-02"], "facet": "contribution", "round": 1},
+    {"query": "\"trained immunity\" AND \"tissue resident\" memory pathology", "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=%22trained%20immunity%22%20AND%20%22tissue%20resident%22%20memory%20pathology&format=json&pageSize=10", "status": "failed", "failure_reason": "Europe PMC 返回 503 Search service is temporarily unavailable。", "idea_ids": ["I-02"], "facet": "contribution", "round": 1},
+    {"query": "\"immune memory\" local rules tissue organization", "url": "https://api.crossref.org/works?query=%22immune%20memory%22%20local%20rules%20tissue%20organization&rows=10", "status": "completed", "idea_ids": ["I-02"], "facet": "contribution", "round": 1, "snapshot_path": "/Applications/ideas/1103_boundary_discovery/runs/checker_replay_20261105_001/cases/cross_domain_ideas_001_02/stages/check/attempt-001/workspace/search_snapshots/contribution_crossref.json"}
+  ],
+  "checks": [
+    {
+      "idea_id": "I-02",
+      "prior_work": {
+        "verdict": "unclear",
+        "reason": "发现免疫记忆历史更新和组织驻留细胞局部网络等相关研究，但当前只审阅两篇摘要且多个检索服务不可用；证据不足以判定该跨域配置方向已有非常相近的完整先例，也不足以作无近邻结论。",
+        "sources": [
+          {"source_id": "S1", "title": "How a well-adapting immune system remembers", "url": "https://doi.org/10.1073/pnas.1812810116", "accessed_on": "2026-11-05", "content_note": "OpenAlex 返回的摘要文本，讨论动态贝叶斯免疫记忆更新、平衡新遭遇与既往经验及预测未来威胁。", "similarity": "related_only", "evidence_level": "abstract", "snapshot_path": "/Applications/ideas/1103_boundary_discovery/runs/checker_replay_20261105_001/cases/cross_domain_ideas_001_02/stages/check/attempt-001/workspace/sources/well_adapting.txt"},
+          {"source_id": "S2", "title": "A local macrophage chemokine network sustains protective tissue-resident memory CD4 T cells", "url": "https://doi.org/10.21417/b71591", "accessed_on": "2026-11-05", "content_note": "OpenAlex 返回的摘要文本，报告局部巨噬细胞趋化因子网络维持组织驻留记忆 CD4 T 细胞及局部保护作用。", "similarity": "related_only", "evidence_level": "abstract", "snapshot_path": "/Applications/ideas/1103_boundary_discovery/runs/checker_replay_20261105_001/cases/cross_domain_ideas_001_02/stages/check/attempt-001/workspace/sources/local_network.txt"}
+        ]
+      },
+      "math": {"verdict": "no_obvious_error", "reason": "候选是概念框架与开放研究问题，没有给出相互矛盾的假设、错误公式或不可能的量纲/概率断言；把机制设计作为分析类比并明确排除细胞的策略性意识，在逻辑上可理解。", "errors": []},
+      "novelty": {
+        "idea_card": {
+          "problem": "免疫系统如何以分散的局部响应规则形成组织级记忆响应，并平衡保护与病理？",
+          "mechanism": "异质细胞的局部因果响应规则，涉及局部信号、募集、迁移和存活；不假设细胞具有意识或策略动机。",
+          "contribution": "把免疫记忆重述为分散信息下的局部规则与组织资源机会配置问题。",
+          "assumptions": "细胞携带不同历史、组织可达性和响应倾向；组织位点不可自由转让，迁移和占位受生理约束。",
+          "validation": "not specified",
+          "application": "复发威胁下，在克隆特异性记忆、训练性广谱反应和组织驻留之间配置资源并限制局部持续损伤。"
+        },
+        "claims": [
+          {"claim_id": "C1", "text": "将免疫记忆建模为由异质细胞局部因果响应规则构成、在无全局控制者时形成组织级配置的分布式制度。", "idea_quote": "将免疫记忆视为由携带不同历史、组织可达性和响应倾向的细胞构成的分布式配置制度", "kind": "combination", "coverage": "PARTIAL_OVERLAP"},
+          {"claim_id": "C2", "text": "研究局部信号、募集、迁移与存活规则如何由不完整威胁信息形成整体免疫响应。", "idea_quote": "研究局部信号、募集、迁移与存活规则如何从不完整的威胁信息形成整体响应", "kind": "question", "coverage": "PARTIAL_OVERLAP"},
+          {"claim_id": "C3", "text": "研究克隆特异性记忆、训练性广谱反应和组织驻留之间如何配置细胞、空间和响应资源，以应对复发威胁并限制局部持续损伤。", "idea_quote": "免疫系统如何在克隆特异性记忆、训练性广谱反应和组织驻留之间配置细胞、空间与响应资源，以应对复发威胁并限制局部持续损伤？", "kind": "question", "coverage": "PARTIAL_OVERLAP"}
+        ],
+        "evidence": [
+          {"evidence_id": "E1", "source_id": "S1", "quote": "In this light, we propose a view of the adaptive immune system as a dynamic Bayesian machinery that updates its memory repertoire by balancing evidence from new pathogen encounters against past experience of infection to predict and prepare for future threats.", "locator": "Abstract"},
+          {"evidence_id": "E2", "source_id": "S2", "quote": "Chemokines secreted by a local network of macrophages maintained vaginal CD4 T(RM) in memory lymphocyte clusters (MLCs), independently of circulating memory T cells.", "locator": "Abstract"},
+          {"evidence_id": "E3", "source_id": "S2", "quote": "CD8 tissue-resident memory T (T(RM)) cells provide efficient local control of viral infection, but the role of CD4 T(RM) is less clear.", "locator": "Abstract"},
+          {"evidence_id": "E4", "source_id": "S2", "quote": "Our results highlight the need for vaccine strategies that enable establishment of T(RM) cells for protection from a sexually transmitted virus and provide insights as to how such a pool might be established.", "locator": "Abstract"}
+        ],
+        "comparisons": [
+          {
+            "source_id": "S1",
+            "facets": {
+              "problem": {"relation": "PARTIAL_OVERLAP", "reason": "同样研究免疫系统如何利用新旧威胁信息形成对未来威胁的准备，但摘要聚焦记忆库更新。", "evidence_ids": ["E1"]},
+              "mechanism": {"relation": "RELATED_ONLY", "reason": "摘要提出动态贝叶斯更新；未描述候选所述局部募集、迁移、存活及组织机会规则。", "evidence_ids": ["E1"]},
+              "contribution": {"relation": "PARTIAL_OVERLAP", "reason": "其更新规则关联抗原受体竞争，但未见组织级资源配置或保护—病理权衡。", "evidence_ids": ["E1"]},
+              "assumptions": {"relation": "UNKNOWN", "reason": "摘要没有足够细节比较细胞层级假设、组织可达性或细胞主体性。", "evidence_ids": []},
+              "validation": {"relation": "UNKNOWN", "reason": "摘要提到与疫苗响应实验一致，但不足以比较具体验证方案。", "evidence_ids": []},
+              "application": {"relation": "PARTIAL_OVERLAP", "reason": "同样关注病原威胁与免疫保护，但没有候选列出的组织配置范围。", "evidence_ids": ["E1"]}
+            },
+            "claim_relations": [
+              {"claim_id": "C1", "relation": "PARTIAL_OVERLAP", "reason": "分散信息与免疫记忆更新相关，但其摘要框架是动态贝叶斯记忆库更新，并非细胞局部规则汇成组织配置。", "evidence_ids": ["E1"], "conditions": {"relation": "not_applicable", "reason": "非形式化定理主张。"}},
+              {"claim_id": "C2", "relation": "PARTIAL_OVERLAP", "reason": "涉及由新旧遭遇信息更新威胁预测，但摘要未提出局部信号、募集、迁移与存活如何共同形成组织响应的问题。", "evidence_ids": ["E1"], "conditions": {"relation": "not_applicable", "reason": "研究问题比较，无形式蕴含条件。"}},
+              {"claim_id": "C3", "relation": "RELATED_ONLY", "reason": "涉及免疫记忆与病原威胁，但摘要没有克隆特异性/训练性/驻留之间的空间资源配置或持续损伤权衡。", "evidence_ids": ["E1"], "conditions": {"relation": "not_applicable", "reason": "研究问题比较，无形式蕴含条件。"}}
+            ]
+          },
+          {
+            "source_id": "S2",
+            "facets": {
+              "problem": {"relation": "PARTIAL_OVERLAP", "reason": "研究组织驻留记忆细胞的局部维持及保护功能，与组织级免疫响应问题相邻。", "evidence_ids": ["E2", "E3"]},
+              "mechanism": {"relation": "PARTIAL_OVERLAP", "reason": "报告局部巨噬细胞趋化因子网络维持记忆细胞集群，具体展示局部信号机制。", "evidence_ids": ["E2"]},
+              "contribution": {"relation": "PARTIAL_OVERLAP", "reason": "指出局部 CD4 TRM 对保护的重要性，但没有比较多个记忆类型之间的机会配置。", "evidence_ids": ["E3", "E4"]},
+              "assumptions": {"relation": "UNKNOWN", "reason": "摘要只给特定组织、细胞和感染场景，无法判断其是否与候选的广泛假设相同或不同。", "evidence_ids": []},
+              "validation": {"relation": "PARTIAL_OVERLAP", "reason": "摘要明确提到旁系共生小鼠和 HSV-2 感染保护实验，但候选未指定验证设计。", "evidence_ids": ["E2"]},
+              "application": {"relation": "PARTIAL_OVERLAP", "reason": "局部感染保护与候选应用相邻，但其摘要没有持续病理风险或广谱/克隆特异响应配置。", "evidence_ids": ["E3", "E4"]}
+            },
+            "claim_relations": [
+              {"claim_id": "C1", "relation": "PARTIAL_OVERLAP", "reason": "展示局部网络与驻留记忆细胞组织集群，但没有将整体免疫记忆定义为一般分布式配置制度。", "evidence_ids": ["E2"], "conditions": {"relation": "not_applicable", "reason": "概念框架比较，无形式蕴含条件。"}},
+              {"claim_id": "C2", "relation": "PARTIAL_OVERLAP", "reason": "直接涉及局部趋化信号维持 TRM；摘要未涉及募集、迁移和存活规则共同处理不完整威胁信息。", "evidence_ids": ["E2"], "conditions": {"relation": "not_applicable", "reason": "研究问题比较，无形式蕴含条件。"}},
+              {"claim_id": "C3", "relation": "PARTIAL_OVERLAP", "reason": "局部记忆细胞和病毒保护被研究，但没有涵盖候选所列记忆类型间的细胞/空间/响应资源配置与持续损伤限制。", "evidence_ids": ["E3", "E4"], "conditions": {"relation": "not_applicable", "reason": "研究问题比较，无形式蕴含条件。"}}
+            ]
+          }
+        ],
+        "overall_status": "PARTIAL_OVERLAP",
+        "combination_assessment": {"status": "assessed_as_claims", "claim_ids": ["C1"], "reason": "原文明确把分散信息和机制设计式配置框架迁移到免疫记忆，作为组合性概念主张单列；两篇来源分别触及信息更新或局部免疫网络，但没有证据显示单篇来源提出该完整组合。"},
+        "remaining_difference": [
+          {"claim_id": "C1", "description": "尚未确认已有研究把免疫记忆作为无全局控制者下、由异质细胞局部规则形成的组织级配置制度来研究。"},
+          {"claim_id": "C2", "description": "尚未确认已有工作联合研究不完整威胁信息及局部信号、募集、迁移、存活规则如何形成整体响应。"},
+          {"claim_id": "C3", "description": "尚未确认已有工作比较克隆特异性记忆、训练性广谱反应和组织驻留间的组织机会配置及保护—持续损伤权衡。"}
+        ],
+        "recommended_action": "TARGETED_SEARCH",
+        "next_step": "围绕组织空间生态位竞争、免疫记忆克隆竞争、训练免疫与 TRM 共存及免疫病理代价检索全文，检查是否已有直接的组织资源配置问题表述。",
+        "search_exhaustive": false,
+        "search_summary": {"stop_reason": "access_limited", "limitations": "实际完成 3 个 API 查询（OpenAlex 1、Europe PMC 1、Crossref 2，其中 Crossref 两条，共4条有效成功查询）并审阅两篇摘要；3 个 API 查询失败。候选池、摘要阅读和全文比较均显著低于预算。完整查询和去重理由见 retrieval_ledger.md 与 search_snapshots/。"}
+      }
+    }
+  ]
+}

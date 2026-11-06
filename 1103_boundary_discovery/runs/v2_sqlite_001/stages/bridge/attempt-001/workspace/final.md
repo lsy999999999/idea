@@ -1,0 +1,3 @@
+Saved valid JSON to [result.json](/Applications/ideas/1103_boundary_discovery/runs/v2_sqlite_001/stages/bridge/attempt-001/workspace/result.json) and the synthesis to [report.md](/Applications/ideas/1103_boundary_discovery/runs/v2_sqlite_001/stages/bridge/attempt-001/workspace/report.md). JSON validation passed.
+
+A1/B1 describe the same documented SQLite reader end-mark constraint. A2/B2 are compatible, untested questions about whether reader release timing adds useful scheduling information. Walack is prior work on read/write-aware adaptive checkpoint frequency, so no new representation or novelty claim is justified yet. No experiment was run.

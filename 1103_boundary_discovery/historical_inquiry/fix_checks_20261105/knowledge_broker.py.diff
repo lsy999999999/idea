@@ -1,0 +1,36 @@
+--- before/knowledge_broker.py
+
++++ knowledge_broker.py
+
+@@ -33,7 +33,7 @@
+
+         text = json.dumps(value, ensure_ascii=False).casefold()
+         return any(d in text for d in self.dois) or any(t in text for t in self.titles)
+ 
+-    def rejection(self, source):
++    def rejection(self, source, *, require_content=True):
+         if self.forbidden(source):
+             return 'excluded_origin_or_content'
+         try:
+@@ -42,7 +42,7 @@
+
+             return 'publication_date_unknown'
+         if d >= self.cutoff:
+             return 'outside_task_date_boundary'
+-        if not source.get('text', '').strip():
++        if require_content and not source.get('text', '').strip():
+             return 'no_readable_content'
+         return None
+ 
+@@ -140,7 +140,9 @@
+
+                         rows = body.get('results', [])
+                     for ri, row in enumerate(rows):
+                         source = self.normalize(provider, row)
+-                        reason = self.policy.rejection(source)
++                        # Establish identity/date eligibility before trying to acquire text.
++                        # Missing index abstracts must not block an available PMC body.
++                        reason = self.policy.rejection(source, require_content=False)
+                         if reason:
+                             # Rejected scientific content is retained only in controller_only.
+                             attempts.append({'query': query, 'provider': provider, 'candidate': ri, 'status': reason})

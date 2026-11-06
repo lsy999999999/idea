@@ -1,0 +1,52 @@
+{
+  "id": "E02",
+  "question": "在匹配工作完成量与 reader/writer 服务结果时，策略可见的当前 reader lifecycle 信息是否能降低真实 SQLite PASSIVE checkpoint 总成本，优于固定周期与 WAL 大小触发？",
+  "hypothesis_ids": [
+    "C1",
+    "C2"
+  ],
+  "intervention": "使用真实临时 WAL 数据库及相同的预写 trace，比较三种策略：固定周期 PASSIVE、WAL 大小触发 PASSIVE、依据当前应用可见的活动 reader 状态决定尝试时机的简单策略。各策略收到相同写入和 reader 到达/释放轨迹；策略不得读取未来 release。固定 SQLite build/page size/durability/事务边界，禁用自动 checkpoint 以隔离策略；新数据库运行并随机化次序。至少 12 个执行次序种子，包含一个开发 trace shape 和一个预先冻结、release/burst 排列不同的 held-out shape。记录每次 API 返回值和调用成本，以及 commit/read 完成时间。总执行目标小于 120 秒，stage 上限 600 秒。",
+  "outcome_measure": "主要对比累计 PASSIVE 调用时间，并同时报告调用数、最终 checkpointed/log frames、残余工作、峰值 WAL bytes、writer commit p95/p99 与 reader completion delay。对每个 held-out shape 计算配对策略差及其 95% bootstrap 区间。若所有有效配对的 lifecycle 策略均在完成帧不低于两简单基线且两类延迟均不劣时减少累计 checkpoint 时间，则归为 lifecycle_gain；若在完成量和延迟匹配后，其成本差区间包含 0 或基线更低，则归为 baseline_sufficient；若所谓成本优势伴随少完成帧/更差延迟、两个 held-out shape 方向冲突、控制失败或数据不足，则归为 uncertain_or_tradeoff。阈值由方向、工作完成和配对区间预先定义，不宣称任意工程收益幅度。",
+  "predictions": [
+    {
+      "hypothesis_id": "C1",
+      "expected_outcome": "仅使用当下可见的 reader lifecycle 策略在 held-out trace 上完成同等工作且不损害两类延迟，并降低 checkpoint 调用总时间；预期 lifecycle_gain。",
+      "outcome_id": "lifecycle_gain"
+    },
+    {
+      "hypothesis_id": "C2",
+      "expected_outcome": "固定周期或 WAL 大小基线在完成量和延迟匹配后同等或更低成本；预期 baseline_sufficient。",
+      "outcome_id": "baseline_sufficient"
+    }
+  ],
+  "outcome_classes": [
+    {
+      "id": "lifecycle_gain",
+      "description": "两个 held-out shape 均达到相同或更高最终 checkpointed frames，lifecycle 的累计 PASSIVE 时间配对区间均低于两简单基线，且 writer/reader 延迟没有更差的配对区间。",
+      "effects": {
+        "C1": "supports",
+        "C2": "contradicts"
+      }
+    },
+    {
+      "id": "baseline_sufficient",
+      "description": "两 held-out shape 均满足完成量与延迟匹配；对每个 shape，至少一个简单基线的累计 PASSIVE 时间差区间包含零或优于 lifecycle。",
+      "effects": {
+        "C1": "contradicts",
+        "C2": "supports"
+      }
+    },
+    {
+      "id": "uncertain_or_tradeoff",
+      "description": "完成工作或延迟不匹配、held-out shape 结果方向冲突、有效数据不足或执行条件偏离冻结方案。",
+      "effects": {
+        "C1": "inconclusive",
+        "C2": "inconclusive"
+      }
+    }
+  ],
+  "cost_minutes": 10,
+  "feasibility": "brief 与 scout 已确认项目 .venv、标准库 sqlite3、临时真实 WAL 数据库可用。小型事务 trace、12 个配对次序和三种策略可在 600 秒总预算内执行；记录并校验每次 API 调用成本。",
+  "selection_reason": "E02 检验本项目未决的实际调度问题，并直接保留最强简单基线与服务成本约束；E01 主要检验已知机制的年龄代理边界。E02 的结果可支持继续做策略研究、否定额外信号价值，或暴露权衡。",
+  "replication": true
+}

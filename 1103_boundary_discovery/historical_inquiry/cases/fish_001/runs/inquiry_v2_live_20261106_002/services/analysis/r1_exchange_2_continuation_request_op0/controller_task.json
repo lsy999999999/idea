@@ -1,0 +1,60 @@
+{
+  "request": {
+    "kind": "analysis",
+    "question": "在 R07 中，加入前10帧平均相对位移的模型是否改善下一帧相对位移的按时间留出预测？",
+    "record_id": "R07",
+    "variables": [
+      {
+        "name": "r",
+        "expression": "positions[:,1,:]-positions[:,0,:]",
+        "meaning": "B相对A的二维位置向量",
+        "units": "原生图像坐标"
+      },
+      {
+        "name": "dr",
+        "expression": "diff(r,axis=0)",
+        "meaning": "相邻帧相对位移",
+        "units": "原生图像坐标/帧"
+      },
+      {
+        "name": "target",
+        "expression": "shift(dr,-1)",
+        "meaning": "下一帧的相对位移向量",
+        "units": "原生图像坐标/帧"
+      },
+      {
+        "name": "history10",
+        "expression": "rolling(dr,10)",
+        "meaning": "截至当前帧的前10个相对位移均值；需确认控制器 rolling 对窗口端点的定义",
+        "units": "原生图像坐标/帧"
+      },
+      {
+        "name": "valid",
+        "expression": "isfinite(r).all(axis=1) & isfinite(dr).all(axis=1) & isfinite(target).all(axis=1) & isfinite(history10).all(axis=1)",
+        "meaning": "两模型共用的有效样本掩码",
+        "units": "布尔值"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "target",
+        "expression": "target"
+      }
+    ],
+    "groups": [],
+    "model": {
+      "target": "target",
+      "features": [
+        "r",
+        "dr",
+        "history10"
+      ],
+      "train_fraction": 0.7
+    },
+    "start": 10
+  },
+  "reason": "Unsupported expression syntax: Call",
+  "status": "pending_controller",
+  "scientific_disposition": "Interface gap; the research question remains open.",
+  "execution_error": "ValueError: 当前执行接口不可用：工具环境拒绝运行命令（`code-mode host is disabled`），因此无法检查 `rolling` 窗口端点定义、验证表达式语法或将计划提交给控制器。原始分析请求仍待执行；不能据此判断模型是否改善预测。"
+}

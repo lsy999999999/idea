@@ -1,0 +1,61 @@
+--- before/inquiry_services.py
+
++++ inquiry_services.py
+
+@@ -7,6 +7,7 @@
+
+ from analysis_executor import AnalysisExecutor
+ from fish_materials import Broker, PROPOSAL, digest
+ from knowledge_broker import KnowledgeBroker, SourcePolicy
++from note_dependencies import SCHEMA as DEPENDENCY_SCHEMA
+ from prepare import save
+ 
+ 
+@@ -120,7 +121,7 @@
+
+         audits = list((run / 'stages').glob('*/attempt-*/execution_audit.json'))
+         if not audits or any(json.loads(p.read_text()).get('tool_events') != 0 for p in audits):
+             return None
+-        return {'sha256': item['sha256'], 'content_screened': True,
++        return {'sha256': item['sha256'], 'content_screened': True, 'dependency_schema': DEPENDENCY_SCHEMA,
+                 'source_dependencies': sorted(known),
+                 'basis': 'Frozen isolated fish-v1 source closure, output hash and zero-tool audit; excluded-content scan applied separately.'}
+ 
+@@ -142,7 +143,6 @@
+
+                     raise ValueError('Memory originating result hash changed')
+                 # A note may contain interpretations beyond its citations; old task notes need
+                 # an explicit field/content review, never infer eligibility from an old DOI alone.
+-                local = root == self.roots[0]
+                 review_path = self.broker.root / 'note_reviews.json'
+                 reviews = {}
+                 for previous in sorted((self.broker.case / 'runs').glob('*/services/note_reviews.json')):
+@@ -150,14 +150,15 @@
+
+                 if review_path.exists():
+                     reviews.update(json.loads(review_path.read_text()))
+                 review = reviews.get(str(path.resolve()), {})
+-                if not review:
++                if review.get('dependency_schema') != DEPENDENCY_SCHEMA:
+                     review = self.review_frozen_note(note, item) or {}
+-                reviewed = review.get('sha256') == item['sha256'] and review.get('content_screened') is True
++                reviewed = (review.get('sha256') == item['sha256'] and review.get('content_screened') is True
++                            and review.get('dependency_schema') == DEPENDENCY_SCHEMA)
+                 deps = review.get('source_dependencies', note.get('sources', []))
+                 reason = None
+                 if self.broker.policy.forbidden(note):
+                     reason = 'excluded_content'
+-                elif not local and not reviewed:
++                elif not reviewed:
+                     reason = 'prior_note_content_and_dependencies_need_review'
+                 elif not deps:
+                     reason = 'missing_source_dependencies'
+@@ -171,6 +172,7 @@
+
+                 seen.add(key)
+                 score = len(tokens(query) & tokens(json.dumps(note, ensure_ascii=False)))
+                 accepted.append({'overlap_score': score, 'note': note, 'source_dependencies': deps,
++                                 'dependency_schema': DEPENDENCY_SCHEMA,
+                                  'scope_check': 'Content and all declared scientific dependencies pass this task policy.'})
+         accepted.sort(key=lambda n: -n['overlap_score'])
+         save(Path(output).parent.parent / 'controller_only/note_screening' / Path(output).name,

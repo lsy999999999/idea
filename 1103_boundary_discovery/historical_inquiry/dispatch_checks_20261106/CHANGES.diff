@@ -1,0 +1,213 @@
+--- before/AGENTS.md
++++ after/AGENTS.md
+@@ -10,6 +10,7 @@
+ - Supply verified source-data/measurement context field by field; screen out the originating paper's explanations/conclusions. Knowledge requests trigger online search/reading automatically. Execute researcher-led analyses or return concrete controller capability tasks.
+ - Reuse stable identities and source-screened current note versions; preserve all original stores and frozen runs. Distinguish reading, explanation and use. Keep personal/shared question versions, specific next actions, stagnation causes and inference consequences.
+ - Research roles continue to request GPT-6 Luna; new code/config uses a new run ID. Internal verification returns to common discussion; final evaluation runs after generation freeze.
++- Explicit analyses in either `learning_request.operations` or top-level `analysis_plan` enter the same service queue, including when `needed` is false/absent. Exact duplicates within a response execute once. Preserve original output and request routing; return execution results or concrete pending tasks to discussion. `needed:false` disables knowledge search, not explicit computations. Tentative proposals belong in hypotheses/next actions, not execution fields.
+ - Notes require a complete `source-closure-v2` dependency audit before persistence and at retrieval; preserve inherited correction-report provenance. Post-freeze evaluation uses `final_evaluation.py` with the shared claim-centric-v2 checker and independent retrieval, separate from generation knowledge limits.
+ 
+ ## Current idea-first task (2026-11-04)
+--- before/historical_inquiry/OPEN_INQUIRY_V2_CN.md
++++ after/historical_inquiry/OPEN_INQUIRY_V2_CN.md
+@@ -52,6 +52,8 @@
+ 
+ 计算请求由研究者指定问题和操作性定义，完整协议见 `analysis_executor.py:PLAN_PROTOCOL`。命名为 `analysis/segment/compare/state/model` 的操作均可使用同一组合计划；暂不可表达的方法可用 `custom` 请求交给执行控制器。拟合当前支持有截距的最小二乘及按行顺序切分的留出误差，更复杂方法进入具体能力任务。
+ 
++2026-11-06 [补全分析请求调度](ANALYSIS_DISPATCH_FIX_20261106_CN.md)：推荐放在 `learning_request.operations`，顶层 `analysis_plan` 对象或对象数组也会执行；即使 `learning_request` 缺省或 `needed:false`，显式计算仍被调度，未申请的知识检索不会因此启动。同一回答中完全相同的方案只执行一次。无计算请求时使用 `analysis_plan:null/[]` 与空 `operations`，暂定设想放在假说或下一步建议中。结果通过 `broker_reply.computed` 返回，无法执行的方案通过 `controller_pending` 返回具体原因。每次来源映射保存在 `request_dispatch/` 并纳入生成冻结；补学后及请求预算末尾的方案同样进入此入口。
++
+ `diff(x)` 默认沿第 0 轴作时间差分；`norm(x)` 默认沿最后一轴逐向量计算。显式指定 `axis` 可以改变所选轴，接口行为与研究者收到的协议一致。
+ 
+ `services/knowledge/controller_only/` 保存原始检索响应和排除记录；研究角色收到 `replies/` 中通过筛选的文本。`services/analysis/<请求>/` 保存参数、控制器计划、执行器源码、结果和数组。`broker/` 保存实际返回研究者的材料。`memory_retrieval/` 保存当次取回的笔记，内容/依赖审核记录位于控制器目录。
+--- before/historical_inquiry/test_open_inquiry.py
++++ after/historical_inquiry/test_open_inquiry.py
+@@ -214,6 +214,13 @@
+                         'interface_gaps':[], 'next_action':'Compare definitions', 'stalled_reason':'', 'understanding_changed':True}
+                 if sid == '01_initial_0':
+                     r['evidence_claims'] = [claim('scope')]
++                    r['analysis_plan'] = {'kind': 'analysis', 'record_id': 'R01',
++                        'question': 'A requested coordinate summary', 'start': 0, 'stop': 20,
++                        'outputs': [{'name': 'mean', 'expression': 'mean(positions)'}]}
++                if sid == '01_initial_0_learn_0':
++                    r['analysis_plan'] = {'kind': 'analysis', 'record_id': 'R01',
++                        'question': 'A follow-up coordinate summary', 'start': 0, 'stop': 20,
++                        'outputs': [{'name': 'std', 'expression': 'std(positions)'}]}
+                 if sid.endswith('_verify'):
+                     r['findings'] = [{'claim_ref':t['ref'],'status':'needs_correction','reason':'The claimed inference exceeds the evidence',
+                         'evidence_refs':['motion:R01'],'corrected_claim':'Only a coordinate description is supported'} for t in c['targets']]
+@@ -254,6 +261,8 @@
+             self.assertIn('01_initial_0_learn_0',seen)
+             self.assertIn('r1_return_1_learn_0',seen)
+             self.assertEqual(len(searches), 6)
++            self.assertEqual(seen['01_initial_0_learn_0']['broker_reply']['computed'][0]['result']['status'], 'executed')
++            self.assertEqual(seen['01_initial_0_learn_1']['broker_reply']['computed'][0]['result']['status'], 'executed')
+             self.assertEqual(seen['01_initial_0_learn_0']['broker_reply']['sources'][0]['text'], 'A real concept and its conditions.')
+             self.assertEqual(seen['01_initial_0']['measurement_metadata']['measurement_context']['species']['value'],'Danio rerio (zebrafish)')
+             self.assertTrue(seen['04_fresh_continuation']['memory']['retrieved'])
+@@ -265,6 +274,8 @@
+                                seen['05_candidates'], False, False)
+             self.assertTrue(any('/hypothesis_state/' in p for p in
+                                 json.loads((pilot.run/'GENERATION_FREEZE.json').read_text())['files']))
++            self.assertTrue(any('/request_dispatch/' in p for p in
++                                json.loads((pilot.run/'GENERATION_FREEZE.json').read_text())['files']))
+             hypothesis_before = {str(p): digest(p) for p in pilot.hypotheses.root.rglob('*.json')}
+             before = {str(p):digest(p) for p in pilot.memory.root.rglob('*.json')}
+             with patch('fish_inquiry.invoke',side_effect=AssertionError('Must reuse accepted stages')), patch('final_evaluation.stage_run',side_effect=AssertionError('Must reuse final check')):
+--- before/historical_inquiry/fish_inquiry.py
++++ after/historical_inquiry/fish_inquiry.py
+@@ -61,6 +61,13 @@
+ urls:[optional identifiers or URLs to find and verify],source_ids:[],record_ids:[],operations:[]}.
+ Knowledge requests automatically trigger online search and reading, not human approval.
+ Only actually read, date-verified content is returned. You may ask again if a search fails.
++Put executable analyses in learning_request.operations. A top-level analysis_plan object
++or list of plan objects is also dispatched, even when learning_request.needed is false
++or absent. Any explicit operation requests execution; needed:false disables knowledge
++search, not explicit computations. Use analysis_plan:null/[] and operations:[] for no
++computation. Keep tentative proposals in hypothesis_updates or next_actions instead.
++Identical plans in both fields execute once within this response. Results or concrete
++pending capability tasks return through broker_reply.computed/controller_pending.
+ """ + PLAN_PROTOCOL + """
+ Return exploration:{missing_external_facts:[],unselected_definitions:[],interface_gaps:[],
+ next_action,stalled_reason,understanding_changed:boolean}. When progress stalls, choose
+@@ -72,6 +79,43 @@
+ 
+ def load(path):
+     return json.loads(Path(path).read_text())
++
++
++def service_request(answer):
++    """Route explicit requests without rewriting plans or the researcher's result."""
++    request = copy.deepcopy(answer.get('learning_request', {'needed': False}))
++    if not isinstance(request, dict) or type(request.get('needed')) is not bool:
++        raise ValueError('learning_request.needed must be a boolean')
++    for key in ('queries', 'urls', 'source_ids', 'record_ids', 'operations'):
++        if not isinstance(request.get(key, []), list):
++            raise ValueError('Request ' + key + ' must be an array')
++    operations = request.get('operations', [])
++    plans = answer.get('analysis_plan')
++    if plans is None:
++        plans = []
++    elif isinstance(plans, dict):
++        plans = [plans]
++    elif not isinstance(plans, list):
++        raise ValueError('analysis_plan must be a plan object, array of objects, or null')
++    merged, routes = [], []
++    for field, values in (('learning_request.operations', operations), ('analysis_plan', plans)):
++        for i, plan in enumerate(values):
++            if not isinstance(plan, dict):
++                raise ValueError(field + ' must contain plan objects')
++            # Exact equality only: do not infer equivalent scientific questions/expressions.
++            duplicate = plan in merged
++            if not duplicate:
++                merged.append(copy.deepcopy(plan))
++            routes.append({'field': field, 'index': i, 'operation_index': merged.index(plan),
++                           'deduplicated': duplicate})
++    knowledge_requested = request['needed']
++    if not knowledge_requested:
++        # A computation must not accidentally activate a declined literature search.
++        request['queries'], request['urls'] = [], []
++        request.pop('knowledge', None)
++    request['operations'] = merged
++    request['needed'] = knowledge_requested or bool(merged)
++    return request, {'knowledge_requested': knowledge_requested, 'routes': routes}
+ 
+ 
+ def admit_reference_layout(result, sid, broker):
+@@ -319,15 +363,8 @@
+                 p = Path(temp) / 'result.json'
+                 save(p, result)
+                 Memory(Path(temp) / 'memory').commit(role, self.task_id, sid, p)
+-        if 'learning_request' in result:
+-            req = result['learning_request']
+-            if not isinstance(req, dict) or not isinstance(req.get('needed'), bool):
+-                raise ValueError('learning_request.needed must be a boolean')
+-            for key in ('queries', 'urls', 'source_ids', 'record_ids', 'operations'):
+-                if not isinstance(req.get(key, []), list):
+-                    raise ValueError('Request ' + key + ' must be an array')
+-            if any(not isinstance(op, dict) for op in req.get('operations', [])):
+-                raise ValueError('Each computation request must be an object')
++        if 'learning_request' in result or 'analysis_plan' in result:
++            service_request(result)  # Reject malformed envelopes before stage admission.
+         if role == 'discussion_recorder':
+             if not isinstance(result.get('ideas'), list):
+                 raise ValueError('Recorder must return ideas array')
+@@ -504,16 +541,33 @@
+             reviews[str(Path(item['path']).resolve())] = {**prepared[note['key']], 'sha256': item['sha256']}
+         save(path, reviews)
+ 
++    def service_reply(self, step, source_stage, answer):
++        request, routing = service_request(answer)
++        dispatch = {'source_stage': source_stage, 'source_result_object_sha256': object_hash(answer),
++                    'request': request, **routing}
++        dispatch_path = self.run / 'request_dispatch' / (step + '.json')
++        if dispatch_path.exists():
++            if load(dispatch_path) != dispatch:
++                raise ValueError('Frozen service dispatch changed')
++        else:
++            save(dispatch_path, dispatch)
++        path = self.run / 'broker' / (step + '.json')
++        if not path.exists():
++            save(path, self.broker.request(request, step))
++        reply = load(path)
++        if reply.get('request') != request:
++            raise ValueError('Cached broker request changed')
++        return request, reply
++
+     def service(self, sid, rid, answer):
+         learned = []
++        source_stage = sid
+         for hop in range(self.config['max_request_hops']):
+-            request = answer.get('learning_request', {'needed': False})
++            request, _ = service_request(answer)
+             if not request.get('needed'):
+                 break
+             step = f'{sid}_learn_{hop}'
+-            path = self.run / 'broker' / (step + '.json')
+-            if not path.exists():
+-                save(path, self.broker.request(request, step))
++            request, reply = self.service_reply(step, source_stage, answer)
+             answer = self.call(step, rid, "Study the actual returned material/computation. Explain "
+                 "a useful concept or result with a worked example and scope. Return learning_change, "
+                 "remaining_gap, memory_notes and learning_request if another concrete gap remains. "
+@@ -521,15 +575,15 @@
+                 "capability tasks preserve the question and hypothesis; conceptual development can continue. "
+                 "Explain whether the material changes an assumption or its consequences; no forced change. "
+                 "Illustrative hypothetical examples must not be presented as measured results.",
+-                {'your_request': request, 'broker_reply': load(path)}, notes=True)
++                {'your_request': request, 'broker_reply': reply}, notes=True)
++            source_stage = step
+             learned.append({'researcher': rid, 'result': answer})
+-        if answer.get('learning_request', {}).get('needed'):
++        request, _ = service_request(answer)
++        if request['needed']:
+             # Execute the final request too; retain its result for the next common discussion.
+             step = f'{sid}_continuation_request'
+-            path = self.run / 'broker' / (step + '.json')
+-            if not path.exists():
+-                save(path, self.broker.request(answer['learning_request'], step))
+-            learned.append({'researcher': rid, 'continuation_material': load(path),
++            _, reply = self.service_reply(step, source_stage, answer)
++            learned.append({'researcher': rid, 'continuation_material': reply,
+                             'status': 'read_return_pending_next_discussion'})
+         return learned
+ 
+@@ -613,7 +667,7 @@
+         freeze = self.run / 'GENERATION_FREEZE.json'
+         if not freeze.exists():
+             paths = [self.run / 'ideas.json']
+-            for sub in ('stages', 'broker', 'services', 'question_state', 'hypothesis_state', 'internal_verification', 'memory_retrieval', 'progress'):
++            for sub in ('stages', 'broker', 'request_dispatch', 'services', 'question_state', 'hypothesis_state', 'internal_verification', 'memory_retrieval', 'progress'):
+                 paths.extend(p for p in (self.run / sub).rglob('*') if p.is_file() and '06_final_check' not in str(p))
+             save(freeze, {'files': {str(p.resolve()): digest(p) for p in paths},
+                           'external_feedback_used_for_generation': False})
+--- before/historical_inquiry/HYPOTHESIS_DEVELOPMENT_20261106_CN.md
++++ after/historical_inquiry/HYPOTHESIS_DEVELOPMENT_20261106_CN.md
+@@ -21,7 +21,7 @@
+ 
+ 三个稳定学科身份、`Memory` 实现、旧记忆版本、来源筛选、个人／共享问题、联网补学、计算接口、内部核查与最后两项检查均保留。未增加 Rank agent、总评分、可行性评审或新的科学假说示例。历史运行不被续写；修改源码后必须使用新 run-id。
+ 
+-本次未修复此前顶层 `analysis_plan` 未调度的问题；现有计算仍通过 `learning_request.operations` 执行。
++本次假说讨论改动当时未包含顶层 `analysis_plan` 的调度修复。随后已在[分析请求交接修复](ANALYSIS_DISPATCH_FIX_20261106_CN.md)中补上：两种写法进入同一执行入口。
+ 
+ ## 验证
+ 

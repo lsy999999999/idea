@@ -1,0 +1,91 @@
+{
+  "summary": "独立复核覆盖已执行的 E02 与 E03。两者报告的 uncertain_or_tradeoff 均符合冻结分类规则；从 E03 原始试次独立重算的关键配对区间与保存结果一致。已知 SQLite reader end-mark 机制是官方文档明确描述的既有关系，本地轨迹结果不构成新颖性或生产性能证据。",
+  "artifacts": [
+    {
+      "path": "runs/v2_sqlite_goal_guard_002/stages/review/attempt-001/workspace/recompute_review.py",
+      "type": "recomputation_code",
+      "description": "从保存的 E02/E03 原始试次重建配对检验并核对执行控制。"
+    },
+    {
+      "path": "runs/v2_sqlite_goal_guard_002/stages/review/attempt-001/workspace/recomputation.json",
+      "type": "recomputed_observations",
+      "description": "E03 对 WAL-growth 的 seed 配对耗时差及独立 bootstrap 区间；E02 heldout shape 数核对。"
+    },
+    {
+      "path": "runs/v2_sqlite_goal_guard_002/stages/review/attempt-001/workspace/source_checks.json",
+      "type": "source_observations_and_interpretations",
+      "description": "官方 SQLite WAL/API 文档和相邻 Walack checkpoint 工作的定向来源核对；观测与解释分列。"
+    },
+    {
+      "path": "runs/v2_sqlite_goal_guard_002/stages/review/attempt-001/workspace/result.json",
+      "type": "review_interpretation",
+      "description": "本阶段结构化独立复核结果。"
+    }
+  ],
+  "evidence": [
+    {
+      "type": "independent_recomputation",
+      "source": "runs/v2_sqlite_goal_guard_002/stages/review/attempt-001/workspace/recomputation.json",
+      "observation": "E03 从 raw_trials.json 重算 lifecycle-minus-WAL-growth checkpoint 时间：H2 均值 -0.0212674 ms，95% bootstrap CI [-0.0700071, 0.0167430]；H3 均值 +0.1551943 ms，CI [0.0501668, 0.2688403]。两者与执行结果一致。"
+    },
+    {
+      "type": "raw_control_check",
+      "source": "runs/v2_sqlite_goal_guard_002/stages/experiment_01/attempt-001/workspace/raw_trials.json",
+      "observation": "E03 有 72 次运行，H2/H3 各策略各 12 次；每个 shape 内 36 次策略运行均提交 240 行、内容摘要相同且最终 residual_frames=0。"
+    },
+    {
+      "type": "source_check",
+      "source": "runs/v2_sqlite_goal_guard_002/stages/review/attempt-001/workspace/source_checks.json",
+      "observation": "SQLite 官方 WAL 文档明示 reader end mark 可限制 checkpoint 前进；官方 PASSIVE API 文档说明操作可留下未完成帧。相邻的 2023 Walack 论文元数据表明已有 WAL 自适应 checkpoint 研究，但当前来源材料不足以判定方法是否直接等同于 reader lifecycle 信号。"
+    }
+  ],
+  "claims": [
+    "E02 分类有效（classification_valid=true）：唯一 heldout_H1 上两成本差区间均跨零，lifecycle 末次 API tuple 帧数低于基线；冻结明确分类要求两个 held-out shape，因此 uncertain_or_tradeoff 是规则允许的结论。",
+    "E03 分类有效（classification_valid=true）：H2 lifecycle 对 WAL-growth 的成本区间跨零，H3 区间完全为正；多个延迟区间上界大于零。lifecycle_gain 与 baseline_sufficient 的预设条件均失败，故 uncertain_or_tradeoff 正确。",
+    "E03 的 H2 lifecycle 相对 fixed-period 有成本优势的观测只覆盖这组固定回放和 SQLite 3.51.3；对 WAL-growth 的区间以及 H3 对照不支持普遍 lifecycle 优势。",
+    "所提 end-mark 约束关系已是 SQLite 文档中的已知机制；现有结果是本地操作化与小型策略对比，没有建立新关系或世界新颖性。"
+  ],
+  "limitations": [
+    "E02 计划的干预只含一个 heldout shape，但两种明确 outcome class 都要求两个；其明确假说区分能力先天不足。E02 的最终 API 帧数不能当作跨 WAL 重启累计完成工作量；零 residual 仅说明各自末次返回时 log 与 checkpointed 帧数相等。",
+    "E03 的 12 个 seeds 改变策略执行顺序而不改变同一 shape 的事件轨迹。它们提供 12 个新数据库的重复运行，但不是 12 个独立 workload realization；bootstrap 区间主要反映当前环境下配对测量变动，不能代表轨迹总体不确定性。",
+    "两项实验均为串行事件回放。writer 指标计时单次 commit 调用，reader delay 是回放事件间隔；它们不等于并发客户端服务延迟分布，也不足以支持实际服务 QoS 结论。",
+    "E03 明确控制数据库内容与终端 residual，但策略间仍有不同调用时点、调用数及峰值 WAL 大小；这些是策略效应的一部分。时间为亚毫秒量级，容易受本机调度和计时噪声影响。",
+    "Walack 仅有项目记录的 DOI/Crossref 元数据，未完成全文方法比较；文献检查为定向而非全面，不能据此宣称新颖。"
+  ],
+  "next_actions": [
+    "若继续研究策略性能，先固定真正独立的新 workload realizations 和并发延迟测量，再冻结分析；不能把当前 E02/E03 held-out 轨迹称为未见证据。",
+    "如需评估新颖性，取得并比较 Walack 全文及最近邻 WAL/SQLite checkpoint 调度研究；目前应保持新颖性未判定。"
+  ],
+  "review_findings": [
+    {
+      "experiment_id": "E02",
+      "classification_valid": true,
+      "reason": "raw_trials.json 有 development 与 heldout_H1 两种 shape，只有一个 held-out shape。冻结类别明确要求两个 held-out shape；且 H1 lifecycle-minus-fixed 与 lifecycle-minus-WAL-growth 的 95% 区间分别为 [-0.0296, 0.0796] ms、[-0.0301, 0.0669] ms，均跨零，lifecycle 末次 tuple 为 (0,4,4)，而基线为 (0,6,6) 和 (0,24,24)。uncertain_or_tradeoff 与预写规则一致。该分类有效性不代表试验能充分区分 C1/C2。",
+      "evidence_paths": [
+        "runs/v2_sqlite_001/frozen_plans/00_E02.json",
+        "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/preregistration.md",
+        "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/raw_trials.json",
+        "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/classification.json"
+      ]
+    },
+    {
+      "experiment_id": "E03",
+      "classification_valid": true,
+      "reason": "独立从 12 个相同 order_seed 配对差重算 H2/H3 lifecycle-minus-WAL-growth 的均值和 10,000 次 bootstrap CI，与执行保存值完全相符。H2 CI 上界 +0.016743 ms 不满足 lifecycle_gain 的严格小于零要求；H3 成本 CI 为正，且 H2/H3 存在多项延迟差 CI 上界大于零，因此两类明确规则都不成立，uncertain_or_tradeoff 正确。控制检查确认每个 shape 完成相同行数、内容和终端 residual 条件。",
+      "evidence_paths": [
+        "runs/v2_sqlite_goal_guard_002/frozen_plans/01_E03.json",
+        "runs/v2_sqlite_goal_guard_002/stages/experiment_01/attempt-001/workspace/raw_trials.json",
+        "runs/v2_sqlite_goal_guard_002/stages/experiment_01/attempt-001/workspace/classification.json",
+        "runs/v2_sqlite_goal_guard_002/stages/review/attempt-001/workspace/recomputation.json"
+      ]
+    }
+  ],
+  "runtime": {
+    "stage_id": "review",
+    "role": "v2_independent_reviewer",
+    "execution_status": "completed",
+    "requested_model": "gpt-6-luna per project instruction; backend weights not verified",
+    "source_scope": "read-only project inputs and public-source copies already saved by the project",
+    "write_scope": "assigned review workspace only"
+  }
+}

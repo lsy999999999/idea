@@ -1,0 +1,69 @@
+{
+  "summary": "依据首轮边界审计，日尺度水温、流量与近邻气温代理有多年配对记录，但尚无证据证明候选事件恢复分析所需的多年份高频水温连续性或历史观测方法稳定性。本协调阶段未执行实验；建议先补齐这项数据可行性审计，再决定是否派发预测检验。",
+  "artifacts": [
+    {
+      "path": "runs/pilot_001/stages/c01_coordinator/attempt-001/workspace/result.json",
+      "description": "协调决策、证据边界与下一步派发。"
+    }
+  ],
+  "evidence": [
+    {
+      "type": "observation",
+      "source": "runs/pilot_001/stages/r00_boundary/attempt-001/workspace/coverage_summary.csv",
+      "detail": "三个按预先规则选出的站点在日尺度上分别有 5692、7843、6685 天水温记录；2020 年瞬时水温点数分别为 35136、35117、35111。",
+      "interpretation": "多年日尺度可配对性及单年高频可访问性已得到支持，但不能据此推出多年份高频事件轨迹可用。"
+    },
+    {
+      "type": "observation",
+      "source": "runs/pilot_001/stages/r00_boundary/attempt-001/workspace/coverage_report_zh.md",
+      "detail": "首轮审计发现 2020 年序列以 900 秒间隔为主，重复本地墙钟时刻需要按夏令时处理；当前站点元数据不是历史探头或方法变更日志。NOAA 库存将两个近邻站列至 2023 年，而下载文件含 2024–2025 年记录。",
+      "interpretation": "仪器/方法稳定性和高频多年份覆盖仍是候选能否进入事件级检验的关键不确定性；2023 年后气温配对也需暂缓使用。"
+    },
+    {
+      "type": "interpretation",
+      "source": "runs/pilot_001/stages/c00_coordinator/attempt-001/workspace/result.json; runs/pilot_001/stages/r00_boundary/attempt-001/workspace/result.json",
+      "detail": "前序协调将候选限定为：前一河温热事件后的恢复轨迹是否在季节、气温、流量、近期峰值和累计热暴露之外，为下一事件峰值或超阈持续时间提供可迁移的预测信息。边界审计未拟合预测模型。",
+      "interpretation": "目前只是可检验的问题，不是已支持的增量预测效果或新物理机制。"
+    }
+  ],
+  "claims": [
+    {
+      "claim": "三站的日尺度数据可用于开发阶段列举候选事件窗口。",
+      "status": "bounded_observation",
+      "basis": "已逐日核查水温、流量和 NOAA 气温代理交集；站点为选择性种子交集，气温为空间代理。"
+    },
+    {
+      "claim": "现有资料尚不足以批准多年份高频恢复轨迹、时间外或留整站预测检验。",
+      "status": "interpretation",
+      "basis": "高频瞬时覆盖只在 2020 年完成直接审计，且历史传感器/方法变化未核实。"
+    }
+  ],
+  "limitations": [
+    "本协调阶段未执行数据抓取、模型拟合或预测实验。",
+    "现有高频采样审计仅覆盖 2020 年；日均值覆盖不等于日内序列连续。",
+    "近邻 NOAA 气温是空间代理，目录与文件年份冲突尚未解决。",
+    "三站来自种子样本与实时活跃站名单交集，不能代表 Oregon 河流总体。",
+    "没有完成河温恢复候选的系统性新颖性检索，也没有证据支持新的物理状态或机制。"
+  ],
+  "decision": "dispatch",
+  "research_status": "候选保留为待检验的预测信息假设。已有观测证明日尺度联合数据和 2020 年高频数据可取得，但没有跨年高频覆盖或测量稳定性的证据；下一步先解决这一数据适用性门槛。",
+  "candidate": {
+    "current_problem": "河流热事件之间的实测水温恢复轨迹，是否在控制季节、气温、流量、近期峰值与累计热暴露后，仍为下一事件峰值或超阈持续时间提供跨站预测信息？",
+    "idea": "把前一热事件后的高频实测恢复曲线作为事件历史特征，测试其增量预测价值；不预设其物理成因。",
+    "evidence_status": "三站多年日尺度水温/流量及邻近气温日期配对已审计；2020 年全年瞬时水温可访问。尚无多年份高频覆盖、跨站可迁移性或预测增益证据。",
+    "unresolved_question": "同一批站点是否在共同多年窗口内有可用且时间解析正确的高频水温记录，并能否从 USGS 站点记录追踪观测方法/仪器变化？"
+  },
+  "next_actions": [
+    {
+      "role": "boundary",
+      "task": "对已固定的 USGS 站点 10396000、11501000、11502500 做聚焦的高频可行性补充审计，不拟合或预测。优先检查 2014–2025 暖季逐年 IV 水温可用年份、服务端返回限制、实际 15 分钟时间格、连续可用日数和最长断档；正确处理 America/Los_Angeles 夏令时与 UTC 时间后报告覆盖。检索并保存 USGS 官方站点/水文记录中可取得的历史观测方法、传感器或站点变更信息，区分“未发现变更记录”与“证实稳定”。如服务端不支持所需历史 IV，请记录精确请求、状态与限制，不以日值替代。交付中文 result.json、可复现脚本、逐站逐年覆盖表和简短决策报告，明确哪些共同年份/站点（若有）足以支撑下一步事件分析；同时指出现有 NOAA 2024–2025 库存冲突对可用协变量窗口的影响。",
+      "inputs": [
+        "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/stages/r00_boundary/attempt-001/workspace/result.json",
+        "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/stages/r00_boundary/attempt-001/workspace/coverage_report_zh.md",
+        "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/stages/r00_boundary/attempt-001/workspace/coverage_audit.json",
+        "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/stages/r00_boundary/attempt-001/workspace/data/usgs_iv_water_and_air_2020.rdb",
+        "/Applications/ideas/1103_boundary_discovery/bootstrap/PILOT_BRIEF.md"
+      ]
+    }
+  ]
+}

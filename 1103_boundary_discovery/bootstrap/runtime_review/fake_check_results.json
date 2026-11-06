@@ -1,0 +1,66 @@
+[
+  {
+    "check": "dependency_fingerprint",
+    "observed": "KeyError: 'id'",
+    "confirmed": true,
+    "meaning": "A normal manifest stage record lacks id, so a dependent stage cannot fingerprint it."
+  },
+  {
+    "check": "shape_only_success",
+    "runtime_exit_code": 0,
+    "runtime_status": "success",
+    "accepted_result_fields": [
+      "summary",
+      "artifacts",
+      "evidence",
+      "claims",
+      "limitations",
+      "next_actions"
+    ],
+    "malformed_artifacts_value": null,
+    "confirmed": true,
+    "meaning": "Required keys alone are accepted even when artifacts/evidence/limitations have invalid shapes or empty content."
+  },
+  {
+    "check": "timeout_process_group",
+    "returncode": -15,
+    "timed_out": true,
+    "grandchild_pid_recorded": true,
+    "grandchild_survived_runner_return": true,
+    "confirmed": true,
+    "meaning": "If the direct child exits on SIGTERM but a descendant ignores it, wait() returns before SIGKILL and the descendant remains."
+  },
+  {
+    "check": "invalid_dispatch_resume",
+    "first_exit_code": 1,
+    "second_exit_code": 1,
+    "first_error": "KeyError: 'role'",
+    "second_error": "KeyError: 'role'",
+    "saved_decisions": 1,
+    "completed_actions": 0,
+    "coordinator_stages": 1,
+    "confirmed": true,
+    "meaning": "A malformed dispatch is persisted as a decision before validation; resume reuses it and fails identically without rerunning the coordinator or exposing a recovery path."
+  },
+  {
+    "check": "retry_same_config",
+    "first_exit_code": 1,
+    "second_exit_code": 0,
+    "invocations": 2,
+    "final_status": "success",
+    "attempts": [
+      "attempt-001",
+      "attempt-002"
+    ],
+    "confirmed": true,
+    "meaning": "A transient subprocess failure is retried as a new attempt with the unchanged config and succeeds."
+  },
+  {
+    "check": "complete_without_report",
+    "discover_exit_code": 0,
+    "state_status": "complete",
+    "report_exists": false,
+    "confirmed": true,
+    "meaning": "The controller marks the run complete from its JSON decision alone; the prompted reviewable REPORT.md is not checked."
+  }
+]

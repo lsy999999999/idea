@@ -1,0 +1,3 @@
+Completed the immunology input with three source-based structures and three open tensions. The downloaded PubMed abstract excerpts and retrieval notes are in [source_notes.md](/Applications/ideas/1103_boundary_discovery/runs/cross_domain_ideas_001/stages/domain_02/attempt-001/workspace/source_notes.md); the readable card is in [domain_card.md](/Applications/ideas/1103_boundary_discovery/runs/cross_domain_ideas_001/stages/domain_02/attempt-001/workspace/domain_card.md).
+
+[**result.json**](/Applications/ideas/1103_boundary_discovery/runs/cross_domain_ideas_001/stages/domain_02/attempt-001/workspace/result.json) was written and its JSON structure and required fields were checked.

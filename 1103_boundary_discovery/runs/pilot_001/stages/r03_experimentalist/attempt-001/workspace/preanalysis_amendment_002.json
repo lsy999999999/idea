@@ -1,0 +1,48 @@
+{
+  "frozen_at_utc": "2026-11-03T13:47:42Z",
+  "amends": ["preanalysis.json", "preanalysis_amendment_001.json"],
+  "reason": "首次候选14139940虽然出现在活跃参数目录，却不覆盖目标年份。为避免以结果选站，改用USGS seriesCatalogOutput=true的时间序列目录元数据（参数码、统计码、开始/结束日期）落实预先声明的可用性条件；不读取河温测量值。",
+  "selection_rule_v2": "在项目既有活跃Oregon 00010及00060日值站点交集中排除10396000、11501000、11502500。仅使用USGS时间序列目录元数据，要求站点分别列有00010/00001（日最高水温）、00010/00002（日最低水温）、00010/00003（日均水温）、00060/00003（日均流量），且每条目录起止日期覆盖2014-01-01至2023-12-31。对每站按坐标寻找最近的NOAA GHCN站，要求NOAA清单中该站TMAX及TMIN年份均覆盖2014-2023且站号不是USR0000OPHI或USR0000OCHI。按最近合格NOAA代理距离升序、USGS站号升序取第一站。目录筛选不使用水温或流量观测值。",
+  "catalog_screen": {
+    "usgs_water_temperature_active_dv_sites": 283,
+    "usgs_discharge_active_dv_sites": 283,
+    "intersection_after_three_exclusions": 203,
+    "series_catalog_rows": 20413,
+    "sites_with_all_four_required_series_covering_full_window": 88,
+    "selected_site": "14092500",
+    "selected_name": "DESCHUTES RIVER NEAR MADRAS, OR",
+    "selected_noaa_station": "USC00356532",
+    "distance_km": 0.1469366,
+    "usgs_series_catalog": {
+      "00010_00001": {"begin": "1952-03-11", "end": "2026-11-02", "ts_id": "113433"},
+      "00010_00002": {"begin": "1952-03-11", "end": "2026-11-02", "ts_id": "113434"},
+      "00010_00003": {"begin": "1986-10-01", "end": "2026-11-02", "ts_id": "113435"},
+      "00060_00003": {"begin": "1923-12-28", "end": "2026-11-02", "ts_id": "113436"}
+    },
+    "noaa_station_inventory": {
+      "latitude": 44.7247,
+      "longitude": -121.2464,
+      "tmax_years": [1958, 2026],
+      "tmin_years": [1958, 2026]
+    },
+    "first_candidate_excluded_by_metadata": {
+      "site_no": "14139940",
+      "water_max_begin": "2023-09-29",
+      "water_min_begin": "2023-09-29",
+      "water_mean_begin": "2023-09-29",
+      "flow_begin": "2024-06-13",
+      "reason": "USGS catalog dates do not cover 2014-2023"
+    }
+  },
+  "final_freeze": {
+    "training_period": ["2014-01-01", "2018-12-31"],
+    "test_period": ["2019-01-01", "2023-12-31"],
+    "main_response": "USGS daily water-temperature maximum minus minimum",
+    "controls": ["calendar month", "NOAA daily mean air temperature", "log10(USGS daily mean discharge)", "air daily temperature range added in expanded model"],
+    "positive_effect_direction": "baseline MAE minus expanded MAE > 0",
+    "uncertainty": "synchronized within-year moving 28-calendar-day blocks; 2000 bootstrap replicates; seed 20261103",
+    "specificity_controls": ["daily mean water temperature", "daily maximum water temperature"],
+    "quality_and_pairing": "按preanalysis.json冻结的A限定符、GHCN缺测/qflag规则及同日历日期内连接执行。"
+  },
+  "blinding_note": "本阶段早先下载了候选14139940的水温原始响应，分析程序仅尝试按字段名读取并在发现该候选无00060列后停止；没有查看或保存其温度数值、训练期/测试期统计或效果。该候选依据USGS系列目录日期被排除。最终站14092500的任何水温结果尚未请求或查看；本次为最终站新站验证。"
+}

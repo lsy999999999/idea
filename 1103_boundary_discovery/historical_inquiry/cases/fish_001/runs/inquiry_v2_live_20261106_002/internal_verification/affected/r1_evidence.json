@@ -1,0 +1,213 @@
+[
+  {
+    "id": "C1",
+    "text": "坐标可支持对A-B间距和间距变化的描述，但不单独识别行为或感觉机制。",
+    "kind": "observation",
+    "use": "research_decision",
+    "consequence": "把首轮问题限定为轨迹转移关联。",
+    "basis": {
+      "source_ids": [],
+      "record_ids": [
+        "R01",
+        "R02",
+        "R03",
+        "R04",
+        "R05",
+        "R06",
+        "R07",
+        "R08",
+        "R09",
+        "R10",
+        "R11",
+        "R12",
+        "R13"
+      ],
+      "measurement_sources": [
+        "measurements.json"
+      ]
+    },
+    "depends_on": [],
+    "ref": "01_initial_0:C1",
+    "stage": "01_initial_0",
+    "author": "animal_behaviorist"
+  },
+  {
+    "id": "C2",
+    "text": "局部维持接近的互动若存在，较近距离之后的距离增长预期较少；此方向是假设而非已证结论。",
+    "kind": "hypothesis",
+    "use": "exploratory",
+    "consequence": "比较记录内近远分位状态后的10帧距离变化。",
+    "basis": {
+      "source_ids": [
+        "F2"
+      ],
+      "record_ids": [
+        "R07",
+        "R13"
+      ],
+      "measurement_sources": [
+        "measurements.json"
+      ]
+    },
+    "depends_on": [
+      "01_initial_0:C1"
+    ],
+    "ref": "01_initial_0:C2",
+    "stage": "01_initial_0",
+    "author": "animal_behaviorist"
+  },
+  {
+    "id": "C1",
+    "text": "本轮返回的可读来源没有提供鱼类轨迹互动指标的操作定义或斑马鱼实例，因此不能用它们为近距离或滞后距离指标背书。",
+    "kind": "observation",
+    "use": "research_decision",
+    "consequence": "将外部方法依据分支暂缓；不据此改变坐标问题的可计算定义。",
+    "basis": {
+      "source_ids": [
+        "Kc37476a8d2f87191",
+        "Kf65b09652dc24e30",
+        "Ka87f19b59cd350d0",
+        "Kfcf508e6a76bb0f4"
+      ],
+      "record_ids": []
+    },
+    "depends_on": [],
+    "ref": "01_initial_0_learn_0:C1",
+    "stage": "01_initial_0_learn_0",
+    "author": "animal_behaviorist"
+  },
+  {
+    "id": "pair_distance_is_motion_ambiguous",
+    "text": "两条轨迹间距离的变化不区分运动来源：相同的距离缩小可能来自A移动、B移动或两者共同移动；因此近远状态后的距离变化可回答轨迹距离转移问题，但不能独自表明双方共同趋近或互动。",
+    "kind": "inference",
+    "use": "research_decision",
+    "consequence": "保留距离变化作为主要可计算结果，并把A、B各自位移大小作为并列描述量；不将距离缩小称为共同趋近或吸引。",
+    "basis": {
+      "source_ids": [],
+      "record_ids": [
+        "R07"
+      ]
+    },
+    "depends_on": [
+      "01_initial_0:C1"
+    ],
+    "ref": "r1_exchange_0:pair_distance_is_motion_ambiguous",
+    "stage": "r1_exchange_0",
+    "author": "animal_behaviorist"
+  },
+  {
+    "id": "conditional_distance_comparison",
+    "text": "记录内第25和第75距离分位数可作为研究者定义的近、远比较条件；只有当前距离与10帧后距离均有限的起点纳入，末端无法形成配对的行排除。该比较尚未计算。",
+    "kind": "inference",
+    "use": "exploratory",
+    "consequence": "对R07请求近、远组的10帧有向距离变化分布及样本数；结果按原生图像坐标单位报告，不作跨记录物理距离解释。",
+    "basis": {
+      "source_ids": [],
+      "record_ids": [
+        "R07"
+      ]
+    },
+    "depends_on": [
+      "01_initial_0:C1"
+    ],
+    "ref": "r1_exchange_0:conditional_distance_comparison",
+    "stage": "r1_exchange_0",
+    "author": "animal_behaviorist"
+  },
+  {
+    "id": "distance_change_ambiguous",
+    "text": "两标签间距离变化本身不能区分A移动、B移动或二者共同移动。",
+    "kind": "inference",
+    "use": "research_decision",
+    "consequence": "如进行近远状态比较，并列报告A、B各自位移，不将距离缩小称为共同趋近。",
+    "basis": {
+      "source_ids": [],
+      "record_ids": [
+        "R07"
+      ]
+    },
+    "depends_on": [
+      "r1_exchange_0:pair_distance_is_motion_ambiguous"
+    ],
+    "ref": "r1_exchange_0_learn_0:distance_change_ambiguous",
+    "stage": "r1_exchange_0_learn_0",
+    "author": "animal_behaviorist"
+  },
+  {
+    "id": "distance_change_does_not_identify_moving_fish",
+    "text": "相同的A-B距离缩小可由A移动、B移动或二者共同移动造成；距离变化本身无法区分这些贡献。",
+    "kind": "inference",
+    "use": "research_decision",
+    "consequence": "若执行近远状态比较，需并列报告A、B各自位移，且避免把距离缩小直接称作共同趋近或吸引。",
+    "basis": {
+      "source_ids": [],
+      "record_ids": [
+        "R07"
+      ]
+    },
+    "depends_on": [
+      "r1_exchange_0:pair_distance_is_motion_ambiguous"
+    ],
+    "ref": "r1_exchange_0_learn_1:distance_change_does_not_identify_moving_fish",
+    "stage": "r1_exchange_0_learn_1",
+    "author": "animal_behaviorist"
+  },
+  {
+    "id": "defer_distance_conclusion_without_arrays",
+    "text": "当前没有R07数组或本轮计算结果，因此不能判断近远状态之后10帧的距离变化是否不同。",
+    "kind": "observation",
+    "use": "research_decision",
+    "consequence": "保留比较问题，待取得数组并明确有效值和滞后配对规则后再报告经验结果。",
+    "basis": {
+      "source_ids": [],
+      "record_ids": [
+        "R07"
+      ]
+    },
+    "depends_on": [
+      "r1_exchange_0:conditional_distance_comparison"
+    ],
+    "ref": "r1_exchange_0_learn_1:defer_distance_conclusion_without_arrays",
+    "stage": "r1_exchange_0_learn_1",
+    "author": "animal_behaviorist"
+  },
+  {
+    "id": "distance_and_direction_are_distinct",
+    "text": "两标签距离变化与其位移方向相似度是不同的轨迹描述量；距离缩小本身不能推出两条轨迹同向运动。",
+    "kind": "inference",
+    "use": "research_decision",
+    "consequence": "近远状态后的距离变化作为主要结果；方向相似度若计算则单独列为次要描述，不以其替代距离转移。",
+    "basis": {
+      "source_ids": [],
+      "record_ids": [
+        "R07"
+      ]
+    },
+    "depends_on": [
+      "r1_exchange_0:pair_distance_is_motion_ambiguous"
+    ],
+    "ref": "r1_exchange_1:distance_and_direction_are_distinct",
+    "stage": "r1_exchange_1",
+    "author": "sensorimotor_biologist"
+  },
+  {
+    "id": "direction_definition",
+    "text": "若坐标差分得到两条轨迹的位移向量 vA(t)、vB(t)，可定义方向相似度为 vA·vB/(||vA|| ||vB||)，其值为 1 表示图像平面位移方向相同，-1 表示相反；该量描述坐标运动方向，不表示鱼体朝向或追随。",
+    "kind": "inference",
+    "use": "exploratory",
+    "consequence": "可将它作为 R07 的候选次要描述量，与距离转移和个体位移分开报告；零位移或短位移的有效性阈值仍需研究者定义并作敏感性检查。",
+    "basis": {
+      "source_ids": [],
+      "record_ids": [
+        "R07"
+      ]
+    },
+    "depends_on": [
+      "r1_exchange_1:coordinate_heading_distinction",
+      "r1_exchange_1:distance_and_direction_are_distinct"
+    ],
+    "ref": "r1_exchange_1_learn_0:direction_definition",
+    "stage": "r1_exchange_1_learn_0",
+    "author": "sensorimotor_biologist"
+  }
+]

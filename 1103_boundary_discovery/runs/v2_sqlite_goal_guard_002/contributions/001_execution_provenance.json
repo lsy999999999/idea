@@ -1,0 +1,20 @@
+{
+  "status": "completed_parent_provenance_check",
+  "created_at_utc": "2026-11-04T04:18:50.693664+00:00",
+  "source": "/Applications/ideas/1103_boundary_discovery/runs/v2_sqlite_goal_guard_002/stages/experiment_01/attempt-001/events.jsonl",
+  "source_sha256": "c02b5718122460a6ffb263b97d76ffc092b02e5cf77f028996afdf8710b5230d",
+  "completed_measurement_commands": [
+    {
+      "id": "item_10",
+      "command": "/bin/zsh -lc '/Applications/ideas/1103_boundary_discovery/.venv/bin/python run_e03.py'",
+      "exit_code": 0
+    },
+    {
+      "id": "item_16",
+      "command": "/bin/zsh -lc \"/Applications/ideas/1103_boundary_discovery/.venv/bin/python run_e03.py > execution_summary.json && /Applications/ideas/1103_boundary_discovery/.venv/bin/python -m json.tool result.json >/dev/null && /Applications/ideas/1103_boundary_discovery/.venv/bin/python -m json.tool raw_trials.json >/dev/null && /Applications/ideas/1103_boundary_discovery/.venv/bin/python -m json.tool classification.json >/dev/null && rg -n 'n_trials|classification|control_ok|latencies_ok|bootstrap_95_ci' execution_summary.json classification.json | head -40\"",
+      "exit_code": 0
+    }
+  ],
+  "finding": "The experiment event log records two successful full script executions. The agent stated it corrected bootstrap seeds to the frozen seed 3104 between them and reran the 72-trial workload. Final raw_trials.json contains the second 72-trial set; the first summary is retained in the tool log, but its raw measurements are not separately archived. Both executions reported uncertain_or_tradeoff.",
+  "review_request": "Check this against the event log and final script. State the rerun and its engineering reason; do not call the two executions independent confirmations or imply only 72 database runs occurred. Distinguish final saved measurements from all executed trials. No change to scientific outcome is requested."
+}

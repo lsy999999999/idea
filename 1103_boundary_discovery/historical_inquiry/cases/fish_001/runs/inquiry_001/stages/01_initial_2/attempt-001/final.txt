@@ -1,0 +1,112 @@
+{
+  "summary": "可用材料支持把轨迹看作有限观测下的状态序列：状态转变可作分析问题，但仅凭位置不能判定感觉、相互作用或记忆机制。示例中 R07 的两条轨迹在抽样窗口内呈现明显不同的位移方向；这只是坐标观察。",
+  "artifacts": [],
+  "evidence": [
+    {
+      "source": "https://doi.org/10.1006/jtbi.2002.3065",
+      "scope": "F2 摘要报告三维群体自组织模型中的集体行为转变及历史依赖；这是模型结果和作者报告的证据，不是本组测量的结论。"
+    },
+    {
+      "source": "https://doi.org/10.1242/jeb.007484",
+      "scope": "F3 摘要涉及不同体长斑马鱼的例行转弯运动学及发育变化；不能直接外推到未说明年龄、物种和任务的本记录。"
+    },
+    {
+      "source": "measurements.json",
+      "scope": "给出的 R01、R07、R13 抽样窗口及元数据；连续记录各有 44999 帧，位置为图像原生坐标，A/B 仅为记录内标签。"
+    }
+  ],
+  "claims": [
+    "状态转变与历史依赖是可提出的分析概念；F2 摘要仅支持其特定模型语境。",
+    "本记录没有物理标定、帧率、姿态、感觉输入或干预，坐标变化不能单独识别生物机制。"
+  ],
+  "limitations": [
+    "只获摘要与三个记录的稀疏抽样窗口，不能据此概括 R01-R13 的整体运动。",
+    "记录中的 tracker_score 含负码且语义未说明，不应当作概率或质量保证。",
+    "物种、年龄、任务及个体身份范围不明；不得用 F3 的特定斑马鱼发育任务代替这些信息。",
+    "无法解释这些轨迹的具体驱动机制，也不能从模型本身推断本记录的行为。"
+  ],
+  "next_actions": [
+    "若继续分析，可在完整坐标序列中明确选定状态变量与转移判据，并报告对抽样、缺失值和标签不确定性的敏感性。"
+  ],
+  "possible_pretraining_familiarity": "unknown",
+  "observation": "R07 抽样帧 1000 至 1156 中，A 的 x 从约 373 增至约 997，y 从约 208 增至约 928；B 的 x 从约 98 增至约 102 后又降至约 102，y 约在 105 至 49 间变化。仅陈述所给坐标，不推断边界或运动意图。",
+  "expectation": "若将轨迹离散成状态，邻近帧状态可能连续，也可能发生转移；是否有历史依赖需要与无记忆基线比较。",
+  "expectation_basis": "F2 摘要中的模型显示，群体结构历史可影响模型转变时的集体行为；它只提供提出检验问题的概念依据，并不预测本记录必然有记忆。",
+  "conditions": "以上观察限定于 R07、对象标签 A/B、给出的抽样帧与原生坐标。状态划分、时间间隔的物理含义及跨记录身份均未知；坐标不能直接测量感觉、姿态、力或意图。",
+  "initial_question": "在完整轨迹上，某个可操作定义的运动状态转变是否依赖此前的轨迹结构，而非只依赖当前坐标？",
+  "question_to_peers": "什么状态变量与无记忆基线能在不把坐标模式直接解释成感觉或记忆的前提下，检验历史依赖？",
+  "worked_example": {
+    "concept": "状态转变与历史依赖",
+    "example": "把 F2 摘要中的群体状态暂以类别 S 表示；比较相同当前状态下，不同先前状态历史是否对应不同的后续转移分布。这是分析设计示例，不是对当前鱼轨迹已观测到记忆的主张。",
+    "limits": "摘要未提供完整模型或判据；本数据只有二维位置样本，缺少姿态、环境与干预信息，无法把任何差异归因为相互作用或记忆。"
+  },
+  "evidence_claims": [
+    {
+      "id": "r07_coordinate_change",
+      "text": "给出的 R07 抽样坐标显示 A 在窗口首尾 x、y 均增加，而 B 的 x 先增加后减少、y 总体下降。",
+      "kind": "observation",
+      "use": "exploratory",
+      "consequence": "",
+      "basis": {
+        "source_ids": [],
+        "record_ids": ["R07"]
+      },
+      "depends_on": []
+    },
+    {
+      "id": "history_as_question",
+      "text": "F2 摘要报告特定自组织群体模型中，先前群体结构可影响集体行为转变；据此可提出对实测轨迹检验历史依赖的问题。",
+      "kind": "inference",
+      "use": "exploratory",
+      "consequence": "",
+      "basis": {
+        "source_ids": ["F2"],
+        "record_ids": []
+      },
+      "depends_on": []
+    },
+    {
+      "id": "measurement_scope",
+      "text": "测量元数据没有帧率、空间标定、姿态、实际感觉输入或干预信息，因此坐标本身不足以识别感觉、姿态、力、意图或因果机制。",
+      "kind": "observation",
+      "use": "research_decision",
+      "consequence": "将历史依赖保留为待检验问题，不把坐标变化表述成记忆或感知效应。",
+      "basis": {
+        "source_ids": [],
+        "record_ids": ["R01", "R02", "R03", "R04", "R05", "R06", "R07", "R08", "R09", "R10", "R11", "R12", "R13"]
+      },
+      "depends_on": []
+    }
+  ],
+  "doubts": [],
+  "memory_notes": [
+    {
+      "key": "group_state_history_model",
+      "title": "群体状态与历史依赖",
+      "kind": "source_knowledge",
+      "mastery": "explained",
+      "understanding": "F2 摘要称一个三维群体自组织模型中，先前群体结构可影响集体行为转变；这是特定模型结果，不是对本测量的实证说明。",
+      "conditions": "仅适用于该摘要所述模型背景；不能据此断言本记录的物种、任务或机制。",
+      "example": "可比较相同当前状态、不同先前历史下的后续转移分布；此处是分析例子，不是已完成分析。",
+      "open_questions": ["如何从二维轨迹定义可复现的状态？", "Unknown"],
+      "tags": ["collective memory", "state transition", "群体记忆", "状态转变"],
+      "sources": ["https://doi.org/10.1006/jtbi.2002.3065"],
+      "revision_reason": ""
+    },
+    {
+      "key": "trajectory_observation_limits",
+      "title": "轨迹观测的解释边界",
+      "kind": "interpretation",
+      "mastery": "used",
+      "understanding": "给出的二维坐标可支持对位置变化的描述，但元数据不支持把它们直接解释为感觉、姿态、力、意图或因果机制。",
+      "conditions": "适用于本次提供的 R01-R13 元数据与抽样窗口；没有跨记录身份保证或物理标定。",
+      "example": "R07 窗口中 A 首尾坐标增加、B 的 x 先增后减；将此报告为坐标观察，不称作回避或追随。",
+      "open_questions": ["完整序列中的转移模式如何随状态定义变化？", "Unknown"],
+      "tags": ["trajectory", "measurement limits", "轨迹", "测量边界"],
+      "sources": ["measurements.json"],
+      "revision_reason": ""
+    }
+  ],
+  "memory_use": [],
+  "cannot_explain_or_use": "目前不能说明轨迹的生物驱动机制，也不能由现有摘要重建模型细节，或判断未提供的物种、年龄和任务。"
+}

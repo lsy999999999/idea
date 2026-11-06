@@ -1,0 +1,65 @@
+[
+  {
+    "check": "dependency_fingerprint",
+    "observed": "no error",
+    "confirmed": true,
+    "meaning": "Fingerprinting uses declared dependency IDs paired with manifest records."
+  },
+  {
+    "check": "reject_malformed_stage_result",
+    "runtime_exit_code": 1,
+    "runtime_status": "incomplete",
+    "malformed_artifacts_value": null,
+    "confirmed": true,
+    "meaning": "Malformed required fields no longer count as a normally completed stage."
+  },
+  {
+    "check": "timeout_process_group",
+    "returncode": -15,
+    "timed_out": true,
+    "grandchild_pid_recorded": true,
+    "grandchild_survived_runner_return": false,
+    "confirmed": true,
+    "meaning": "Timeout cleanup kills the original process group even after its leader exits on SIGTERM."
+  },
+  {
+    "check": "invalid_dispatch_resume",
+    "first_exit_code": 1,
+    "second_exit_code": 1,
+    "first_error": "KeyError: 'role'",
+    "second_error": "KeyError: 'role'",
+    "saved_decisions": 1,
+    "completed_actions": 0,
+    "coordinator_stages": 1,
+    "confirmed": true,
+    "meaning": "A malformed dispatch is persisted as a decision before validation; resume reuses it and fails identically without rerunning the coordinator or exposing a recovery path."
+  },
+  {
+    "check": "retry_same_config",
+    "first_exit_code": 1,
+    "second_exit_code": 0,
+    "invocations": 2,
+    "final_status": "success",
+    "attempts": [
+      "attempt-001",
+      "attempt-002"
+    ],
+    "confirmed": true,
+    "meaning": "A transient subprocess failure is retried as a new attempt with the unchanged config and succeeds."
+  },
+  {
+    "check": "complete_without_report",
+    "discover_exit_code": 1,
+    "state_status": "running",
+    "report_exists_initially": false,
+    "error": "RuntimeError: Coordinator finalized without a nonempty REPORT.md; review before completing run",
+    "same_config_retry_exit_code": 1,
+    "state_after_retry": "running",
+    "coordinator_stages_after_retry": 1,
+    "manual_report_repair_exit_code": 0,
+    "state_after_manual_report_repair": "complete",
+    "coordinator_result_unchanged": true,
+    "confirmed": true,
+    "meaning": "Missing report stays incomplete on same-config resume; adding the missing report explicitly recovers without altering coordinator result.json."
+  }
+]

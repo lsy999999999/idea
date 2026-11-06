@@ -1,0 +1,82 @@
+{
+  "claims": [
+    {
+      "id": "coordinate",
+      "text": "谱50与谱88的峰频分别3150 Hz和1600 Hz，几乎相差一倍，因此它们反驳了fc/U坐标下的峰位对齐，应放弃该尺度。",
+      "kind": "inference",
+      "use": "research_decision",
+      "consequence": "以此为依据放弃fc/U尺度，改变研究路线",
+      "basis": {
+        "source_ids": [
+          "F1"
+        ],
+        "spectrum_ids": [
+          50,
+          88
+        ]
+      },
+      "depends_on": [],
+      "ref": "01_initial_0:coordinate",
+      "stage": "01_initial_0",
+      "author": "aeroacoustician"
+    },
+    {
+      "id": "tentative",
+      "text": "也许存在一种无量纲尺度能使谱形更可比较。",
+      "kind": "hypothesis",
+      "use": "exploratory",
+      "consequence": "",
+      "basis": {
+        "source_ids": [
+          "F1"
+        ],
+        "spectrum_ids": []
+      },
+      "depends_on": [],
+      "ref": "01_initial_1:tentative",
+      "stage": "01_initial_1",
+      "author": "nonequilibrium_physicist"
+    },
+    {
+      "id": "reliance",
+      "text": "我沿用对方关于峰频差异的判断，暂时转向寻找另一种尺度。",
+      "kind": "inference",
+      "use": "exploratory",
+      "consequence": "",
+      "basis": {
+        "source_ids": [],
+        "spectrum_ids": [
+          50,
+          88
+        ]
+      },
+      "depends_on": [
+        "01_initial_0:coordinate"
+      ],
+      "ref": "01_initial_1:reliance",
+      "stage": "01_initial_1",
+      "author": "nonequilibrium_physicist"
+    }
+  ],
+  "checks": [
+    {
+      "boundary": "02b_seeded",
+      "report_path": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/coordinate_replay_002/runs/seeded_replay_v3/stages/02b_seeded_verify/result.json",
+      "report_sha256": "ecddad34c63cae6b1ab7e9c0b7ad36754c55e7b39055d0e12072133bd276ea45",
+      "findings": [
+        {
+          "claim_ref": "01_initial_0:coordinate",
+          "status": "needs_correction",
+          "reason": "频率比3150/1600=1.96875，确实接近两倍；弦长也恰为两倍，且两谱来流速度相同。给定 fc/U 峰坐标为4.0409与4.1051，相对谱50约差1.59%。因此这两个采样峰与 fc/U 下近似对齐相容，不支持据此反驳或放弃该尺度。",
+          "evidence_refs": [
+            "spectrum:50",
+            "arithmetic:50",
+            "spectrum:88",
+            "arithmetic:88"
+          ],
+          "corrected_claim": "谱50与谱88的采样峰分别为3150 Hz和1600 Hz；其 fc/U 峰坐标约为4.041和4.105，呈近似对齐，不能据此放弃该尺度。"
+        }
+      ]
+    }
+  ]
+}

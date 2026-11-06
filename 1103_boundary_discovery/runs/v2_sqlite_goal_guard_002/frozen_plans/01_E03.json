@@ -1,0 +1,61 @@
+{
+  "id": "E03",
+  "question": "在两个未用于 E02、release/burst 排列不同的新轨迹形状上，当前应用可见 reader lifecycle 信息是否能使 PASSIVE checkpoint 调度在完成相同数据库工作且不损害 reader/writer 延迟时，降低累计 checkpoint 时间，相比 fixed-period 与 WAL-size 策略？",
+  "hypothesis_ids": [
+    "C1",
+    "C2"
+  ],
+  "intervention": "使用项目 .venv/bin/python、标准库 sqlite3 和每次新建的真实临时 WAL 数据库。比较 fixed-period、WAL-growth (32 KiB 增长触发) 与 reader_lifecycle (仅依据当前活动 reader 与其释放事件；不看未来释放) 三策略。冻结两个此前未测的 held-out shape：H2 为长 reader 跨越单次写入 burst、随后 quiet window、再短 reader 与第二 burst；H3 为短 reader 在 burst 间交错、随后一个长 reader 覆盖末段 burst。每个 shape 使用 12 个新 order seeds（20261116–20261127），每个 seed 随机化三个策略运行顺序；每个策略/shape/seed 使用全新数据库。固定 SQLite build、4096-byte page、WAL、synchronous=NORMAL、关闭 autocheckpoint、相同表结构、24 次各 10 行提交及相同读者到达/释放轨迹。记录所有 PASSIVE 调用耗时、返回 tuple、WAL bytes、提交延迟分布、reader 完成延迟；所有调用计入累计成本。结束时每个运行均释放 reader 并以相同规则清理 checkpoint，检查提交行数及内容摘要一致、residual_frames=0。总工作量 72 个小型运行，目标计算时间低于 120 秒，阶段预算上限 600 秒。",
+  "outcome_measure": "每个 shape 分别以 seed 配对 lifecycle 减两个基线的累计 PASSIVE wall time、writer commit p95/p99、reader completion delay max 的 bootstrap 95% 区间评估（固定 bootstrap seed=3104，10,000 次重采样）；报告调用数、峰值 WAL bytes、返回 frame tuple 与 residual frames。执行前固定规则：数据库工作相同要求每次均提交 240 行、内容摘要相同且最终 residual_frames=0；任何策略不满足即不得判为明确获益/基线充分。‘lifecycle_gain’要求 H2 与 H3 各自相对两个基线的 checkpoint-time 差值区间上界都 <0，且 writer p95、writer p99 和 reader delay 差值区间上界均 <=0。‘baseline_sufficient’要求 H2 与 H3 均完成相同工作、延迟匹配（各延迟差值区间上界 <=0），并且在每个 shape 上至少一个基线相对 lifecycle 的 checkpoint-time 差值区间上界 <=0（该简单基线成本不高于 lifecycle）。两类规则互斥；其余所有情况，包括区间跨零、shape 间方向冲突、工作/延迟不匹配或控制失败，均为 uncertain_or_tradeoff。分类和阈值在任何新实验执行前冻结。",
+  "predictions": [
+    {
+      "hypothesis_id": "C1",
+      "expected_outcome": "若 lifecycle 信号在新轨迹形状上有成本匹配后的实用收益，H2 与 H3 均满足相同工作、三项延迟不劣，并且对两个基线的累计 PASSIVE 时间差区间上界均小于零。",
+      "outcome_id": "lifecycle_gain"
+    },
+    {
+      "hypothesis_id": "C2",
+      "expected_outcome": "若简单基线已足够，两个新 shape 均完成相同工作且延迟匹配，并在每个 shape 至少有一个基线的 checkpoint 成本不高于 lifecycle（区间规则满足）。",
+      "outcome_id": "baseline_sufficient"
+    }
+  ],
+  "outcome_classes": [
+    {
+      "id": "lifecycle_gain",
+      "description": "H2 和 H3 均满足提交行数/内容摘要相同且 residual_frames=0；在每一 shape 上，lifecycle 减 fixed-period 与 lifecycle 减 WAL-growth 的累计 PASSIVE 时间配对 bootstrap 95% CI 上界均 < 0；writer p95、writer p99、reader delay 三项 lifecycle 减基线差值 CI 上界均 <= 0。",
+      "effects": {
+        "C1": "supports",
+        "C2": "contradicts"
+      }
+    },
+    {
+      "id": "baseline_sufficient",
+      "description": "H2 和 H3 均满足相同完成工作及延迟匹配（所有 lifecycle 减基线延迟 CI 上界 <= 0）；且在每个 shape 至少一个简单基线的 checkpoint-time 差值（baseline 减 lifecycle）95% 配对 CI 上界 <= 0，表明该基线成本不高于 lifecycle。该条件与 lifecycle_gain 的严格负 lifecycle-minus-baseline 时间上界互斥。",
+      "effects": {
+        "C1": "contradicts",
+        "C2": "supports"
+      }
+    },
+    {
+      "id": "uncertain_or_tradeoff",
+      "description": "未满足上述任一明确类：例如任一形状工作内容或 residual frames 不匹配、延迟变差、成本区间跨零、H2/H3 结果冲突、bootstrap 资料不足或执行控制失败。",
+      "effects": {
+        "C1": "inconclusive",
+        "C2": "inconclusive"
+      }
+    }
+  ],
+  "cost_minutes": 10,
+  "feasibility": "项目 brief 已确认 .venv、sqlite3 与临时真实 WAL 数据库可用；E02 的本地脚本已完成同规模 72-run 三策略框架。E03 需改为两个全新明确 shape、种子区间 20261116–20261127，并按每次独立数据库校验完整数据内容；总量相同且无需网络检索，预算内可运行。",
+  "selection_reason": "该行动直接测试 anchor，且补齐 E02 仅有一个 held-out shape 的关键覆盖缺口；它在两个新 shape 上重新检验相同的策略分歧，并使成本、完成量和服务延迟都进入决定。其明确结果会决定继续研究 lifecycle 的条件性收益、还是在此轨迹族接受简单基线。",
+  "replication": false,
+  "research_value": {
+    "kind": "target_test",
+    "unresolved_gap": "E02 对唯一 heldout_H1 的成本区间跨零，且没有满足要求的第二个 held-out shape；因此 C1 与 C2 仍不能区分。",
+    "prior_work_boundary": "SQLite reader end-mark 限制及自动 checkpoint 阈值是文档已知机制；Walack 摘要已描述按读写请求调整 checkpoint 频率。本测试只评估两种新本地轨迹中额外 lifecycle 可见性相对简单策略的工程条件，不主张新算法或世界新颖性。",
+    "decision_relevance": "lifecycle_gain 会支持在这些轨迹形状中继续开展条件性 lifecycle 调度研究；baseline_sufficient 会把当前信号的实用增益判断转向简单基线；tradeoff/inconclusive 将定位仍需测量的成本或延迟限制。",
+    "ready": true,
+    "blockers": [],
+    "enables_plan_id": null
+  }
+}

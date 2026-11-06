@@ -1,0 +1,215 @@
+{
+  "summary": "保留个人的近远距离转移问题，并接受当前共享问题聚焦历史特征的预测增量。R07 有 44999 帧且位置无非有限值，但历史分析仍处于 pending_controller，没有预测结果。",
+  "artifacts": [],
+  "evidence": [
+    {
+      "source_id": "measurement_context",
+      "detail": "测量背景称数据来自斑马鱼双体追踪，坐标为原生图像单位、时间为帧索引；任务、场景、帧率、空间校准、身份稳定性及追踪分数语义未核实。"
+    },
+    {
+      "source_id": "R07 metadata",
+      "record_id": "R07",
+      "detail": "R07 有 44999 帧，位置数组形状为 [44999,2,2]，非有限位置数为 0；这支持提出全记录分析请求，不表示分析已执行。"
+    },
+    {
+      "source_id": "F2",
+      "detail": "所给摘要介绍特定动物群体自组织模型中历史结构与集体行为转变的关系；它不是 R07 存在历史依赖的证据。"
+    },
+    {
+      "source_id": "K70e2c39209dc19e5",
+      "detail": "2008 年摘要介绍从离散随机过程时间序列中寻找使粗粒状态呈 Markov 动力学的投影；它不是鱼类双体轨迹方法，也未验证本记录的状态或滞后定义。"
+    },
+    {
+      "source_id": "K54a098e496a0b662",
+      "detail": "2007 年摘要讨论预测与因果建模的区别；可读内容不涉及动物轨迹，只作一般背景。"
+    },
+    {
+      "source_id": "controller_pending",
+      "record_id": "R07",
+      "detail": "历史预测请求因表达式调用语法不受执行接口支持而进入 pending_controller；未返回拟合或预测误差。"
+    }
+  ],
+  "claims": [],
+  "limitations": [
+    "R07 的近远距离比较与历史模型比较均无计算结果。",
+    "接口阻塞不能说明历史特征是否有预测增益。",
+    "任务、场景、帧率、物理尺度和身份稳定性未核实，坐标不能确定物理速度、行为类别或感觉机制。",
+    "本轮可读检索材料未提供鱼类双体轨迹指标的可用操作定义；检索未命中不证明相关文献不存在。"
+  ],
+  "next_actions": [
+    "历史预测分支待接口可执行时，比较当前状态基线与加入前10帧平均相对位移的模型，并使用共同有效行、相同目标对齐和时间留出段。",
+    "个人距离分支保留记录内第25和第75分位数近远条件，比较10帧后的有向距离变化，并列报告A、B各自位移。",
+    "将预测或距离差异限定为坐标分析结果，不解释为互动、追随或感觉引导。"
+  ],
+  "possible_pretraining_familiarity": "可能熟悉轨迹描述和时间序列预测的一般概念；本轮依据提供的摘要、测量元数据和控制器状态陈述，未将预训练熟悉度当作已核验方法证据。",
+  "changed_because": "共享问题已修订为历史特征预测比较；我据此把它作为当前共同讨论问题，同时保留个人距离转移问题。R07 元数据支持提出两类坐标分析，但历史模型计算尚未完成。",
+  "branches": [
+    {
+      "name": "共享：历史特征预测增量",
+      "status": "保留，待接口可执行",
+      "reason": "问题已明确当前状态、滞后特征和下一帧目标；当前请求因接口表达式问题 pending_controller，不能判断预测增益。"
+    },
+    {
+      "name": "个人：近远距离状态后的10帧转移",
+      "status": "保留，待计算",
+      "reason": "这是独立于历史预测的坐标比较；目前没有结果。"
+    },
+    {
+      "name": "行为或感觉机制解释",
+      "status": "暂缓",
+      "reason": "缺少独立行为标签、姿态、实验操控和身份稳定性信息。若这些资料或合适的实验设计可用，可重新评估；距离或预测关联本身不足以恢复机制解释。"
+    }
+  ],
+  "memory_notes": [
+    {
+      "key": "coordinates_do_not_identify_behavior",
+      "title": "坐标变化不等于行为机制",
+      "kind": "correction",
+      "mastery": "used",
+      "understanding": "二维追踪坐标支持距离、距离变化和单体位移描述；同一距离变化可由A、B或双方运动产生。明确操作定义的距离状态比较和预测比较仍可作为研究问题，但不单独识别行为、感觉机制或因果互动。",
+      "conditions": "适用于当前未校准的二维图像坐标；身份稳定性、任务、姿态、帧率和场景条件未核实。",
+      "example": "R07 可分别提出近远状态后的距离变化问题和历史特征预测问题；两者目前都没有计算结果，不能由问题定义推断数据模式。",
+      "open_questions": [
+        "R07近远状态后的10帧距离变化及两标签位移分布尚未计算。",
+        "历史增强模型是否改善共同时间留出段的预测未知。",
+        "当前坐标材料不能解释潜在关联是否由社会行为或感觉机制产生。"
+      ],
+      "tags": [
+        "tracking",
+        "distance",
+        "behavior",
+        "追踪",
+        "距离",
+        "行为",
+        "dyad",
+        "双体"
+      ],
+      "sources": [
+        "measurements.json",
+        "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/r1_evidence_verify/result.json",
+        "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_001/stages/r1_evidence_verify/result.json",
+        "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_001/stages/r2_evidence_verify/result.json"
+      ],
+      "revision_reason": "在既有修正基础上，纳入本轮 pending 执行状态：接口阻塞不是预测增益的证据；继续区分距离描述与机制解释，并保留未完成的两类分析问题。"
+    }
+  ],
+  "memory_use": [
+    {
+      "key": "coordinates_do_not_identify_behavior",
+      "source_task": "fish_001/inquiry_v2_live_20261106_002",
+      "used_for": "限定距离转移和历史预测的解释范围，并将未执行分析标为未完成。",
+      "scope_check": "当前仍是缺少任务、姿态和身份稳定性核验的二维追踪坐标；该笔记不提供 R07 计算结果。"
+    }
+  ],
+  "still_cannot_explain_or_use": "不能说明距离转移或潜在预测增益是否由社会互动、共同环境、追踪误差或感觉输入产生；也不能据此推断稳定个体身份或物理速度。",
+  "personal_question_update": {
+    "base": {
+      "id": "personal:animal_behaviorist",
+      "owner": "animal_behaviorist",
+      "version": 1
+    },
+    "action": "retain",
+    "question": "在每条记录内，A-B距离较近的时刻之后10帧，距离变化是否比距离较远的时刻更低？",
+    "reason": "共享问题已转向历史特征预测，但不回答近远距离状态后的距离转移；目前没有计算结果促使我修改个人问题。",
+    "influenced_by": [
+      {
+        "id": "shared:discussion",
+        "owner": "shared",
+        "version": 3
+      },
+      {
+        "id": "personal:nonequilibrium_physicist",
+        "owner": "nonequilibrium_physicist",
+        "version": 1
+      },
+      {
+        "id": "personal:sensorimotor_biologist",
+        "owner": "sensorimotor_biologist",
+        "version": 2
+      }
+    ]
+  },
+  "shared_question_update": null,
+  "evidence_claims": [
+    {
+      "id": "distance_question_remains_open",
+      "text": "R07 的近、远距离状态之后10帧距离变化及A、B各自位移尚无计算结果，因此不能判断这些条件下的变化分布是否不同。",
+      "kind": "observation",
+      "use": "research_decision",
+      "consequence": "保留距离转移为个人后续问题；如执行，按记录内距离第25和第75分位数定义近、远状态，并同时报告两标签各自位移。",
+      "basis": {
+        "source_ids": [],
+        "record_ids": [
+          "R07"
+        ]
+      },
+      "depends_on": [
+        "r1_exchange_0:conditional_distance_comparison"
+      ]
+    },
+    {
+      "id": "history_analysis_pending",
+      "text": "历史预测分析请求因执行接口表达式支持问题进入 pending_controller，未产生预测误差结果；这属于接口阻塞，不是对历史预测增益的支持或反证。",
+      "kind": "observation",
+      "use": "research_decision",
+      "consequence": "不判断历史特征有无增益；若重提请求，须使用接口支持的表达式，并保证基线和扩展模型在共同有效样本、同一目标对齐及同一时间留出段上比较。",
+      "basis": {
+        "source_ids": [],
+        "record_ids": [
+          "R07"
+        ]
+      },
+      "depends_on": [
+        "r1_exchange_2_learn_0:C2"
+      ]
+    },
+    {
+      "id": "prediction_gain_scope",
+      "text": "若历史增强模型在指定留出段上优于当前状态基线，最多说明所选历史特征在该记录与模型设定下增加预测信息；不能据此识别社会互动、因果效应或集体记忆。",
+      "kind": "inference",
+      "use": "research_decision",
+      "consequence": "将预测比较限定为模型条件下的坐标预测表现，不改称行为或机制证据。",
+      "basis": {
+        "source_ids": [
+          "K54a098e496a0b662",
+          "F2"
+        ],
+        "record_ids": [
+          "R07"
+        ]
+      },
+      "depends_on": [
+        "r1_exchange_2_learn_0:C2"
+      ]
+    }
+  ],
+  "doubts": [],
+  "learning_request": {
+    "needed": false,
+    "gap": "本轮可依据已提供的测量元数据、来源摘要和控制器状态推进；鱼类双体方法文献缺口限制领域方法背书，但不妨碍保留明确标为研究者定义的问题。",
+    "why_now": "当前未完成项是计算接口和R07结果，而非必须先补充的外部事实；本轮没有需要继续检索的新问题。",
+    "queries": [],
+    "urls": [],
+    "source_ids": [],
+    "record_ids": [],
+    "operations": []
+  },
+  "analysis_plan": null,
+  "exploration": {
+    "missing_external_facts": [
+      "R07 的任务、场景、帧率、物理校准和A/B身份稳定性仍未知。",
+      "本轮可读来源没有提供鱼类双体指标的操作定义；这只限定当前来源的支持范围。"
+    ],
+    "unselected_definitions": [
+      "个人距离问题可沿用每条记录内第25与第75分位数定义近远条件，并比较10帧后的有向距离变化；尚无计算结果。",
+      "共享历史问题需比较当前状态基线与加入过去10帧平均相对位移的模型，并固定有效行和时间留出区间。"
+    ],
+    "interface_gaps": [
+      "历史模型请求因表达式语法不受执行接口支持而处于 pending_controller；尚无预测误差或基线比较结果。",
+      "近远距离比较也没有控制器计算结果。"
+    ],
+    "next_action": "维持个人距离转移问题与共享历史预测问题为两个独立分支；待接口返回可执行结果后分别判断，并区分坐标关联与行为机制。",
+    "stalled_reason": "经验判断受缺少计算结果限制；历史分支受执行接口限制，机制分支受任务、姿态和身份信息缺失限制。",
+    "understanding_changed": true
+  }
+}

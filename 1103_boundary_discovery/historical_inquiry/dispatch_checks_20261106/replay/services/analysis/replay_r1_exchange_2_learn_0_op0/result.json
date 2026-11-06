@@ -1,0 +1,226 @@
+{
+  "request": {
+    "kind": "analysis",
+    "question": "在R07中，控制当前相对位置与相对位移后，前10帧平均相对位移是否改善对下一帧相对位移的时间顺序留出预测？",
+    "record_id": "R07",
+    "start": 0,
+    "stop": 44999,
+    "variables": [
+      {
+        "name": "relative_position",
+        "expression": "positions[:,0,:]-positions[:,1,:]",
+        "meaning": "A减B的二维相对坐标",
+        "units": "原生图像坐标单位"
+      },
+      {
+        "name": "relative_step",
+        "expression": "diff(relative_position,1,axis=0)",
+        "meaning": "相邻帧相对坐标变化；索引t对应从t-1到t的位移",
+        "units": "原生图像坐标单位/帧"
+      },
+      {
+        "name": "history_step_mean",
+        "expression": "rolling(relative_step,10)",
+        "meaning": "截至当前索引的过去10个相对位移的逐坐标均值；预测起点t时不含目标位移t+1",
+        "units": "原生图像坐标单位/帧"
+      },
+      {
+        "name": "target_next_step",
+        "expression": "shift(relative_step,-1)",
+        "meaning": "下一索引的相对位移，即相对坐标从t到t+1的变化",
+        "units": "原生图像坐标单位/帧"
+      },
+      {
+        "name": "valid_aligned",
+        "expression": "isfinite(relative_position[:,0])&isfinite(relative_position[:,1])&isfinite(relative_step[:,0])&isfinite(relative_step[:,1])&isfinite(history_step_mean[:,0])&isfinite(history_step_mean[:,1])&isfinite(target_next_step[:,0])&isfinite(target_next_step[:,1])",
+        "meaning": "位置、当前位移、历史均值和下一帧目标均为有限值的对齐行",
+        "units": "boolean"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "target_next_step",
+        "expression": "target_next_step"
+      },
+      {
+        "name": "history_step_mean",
+        "expression": "history_step_mean"
+      }
+    ],
+    "groups": [
+      {
+        "name": "aligned_finite_rows",
+        "where": "valid_aligned",
+        "values": [
+          "relative_position",
+          "relative_step",
+          "history_step_mean",
+          "target_next_step"
+        ]
+      }
+    ],
+    "model": {
+      "target": "target_next_step",
+      "features": [
+        "relative_position",
+        "relative_step",
+        "history_step_mean"
+      ],
+      "train_fraction": 0.7
+    }
+  },
+  "executed_plan": {
+    "kind": "analysis",
+    "question": "在R07中，控制当前相对位置与相对位移后，前10帧平均相对位移是否改善对下一帧相对位移的时间顺序留出预测？",
+    "record_id": "R07",
+    "start": 0,
+    "stop": 44999,
+    "variables": [
+      {
+        "name": "relative_position",
+        "expression": "positions[:,0,:]-positions[:,1,:]",
+        "meaning": "A减B的二维相对坐标",
+        "units": "原生图像坐标单位"
+      },
+      {
+        "name": "relative_step",
+        "expression": "diff(relative_position,1,axis=0)",
+        "meaning": "相邻帧相对坐标变化；索引t对应从t-1到t的位移",
+        "units": "原生图像坐标单位/帧"
+      },
+      {
+        "name": "history_step_mean",
+        "expression": "rolling(relative_step,10)",
+        "meaning": "截至当前索引的过去10个相对位移的逐坐标均值；预测起点t时不含目标位移t+1",
+        "units": "原生图像坐标单位/帧"
+      },
+      {
+        "name": "target_next_step",
+        "expression": "shift(relative_step,-1)",
+        "meaning": "下一索引的相对位移，即相对坐标从t到t+1的变化",
+        "units": "原生图像坐标单位/帧"
+      },
+      {
+        "name": "valid_aligned",
+        "expression": "isfinite(relative_position[:,0])&isfinite(relative_position[:,1])&isfinite(relative_step[:,0])&isfinite(relative_step[:,1])&isfinite(history_step_mean[:,0])&isfinite(history_step_mean[:,1])&isfinite(target_next_step[:,0])&isfinite(target_next_step[:,1])",
+        "meaning": "位置、当前位移、历史均值和下一帧目标均为有限值的对齐行",
+        "units": "boolean"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "target_next_step",
+        "expression": "target_next_step"
+      },
+      {
+        "name": "history_step_mean",
+        "expression": "history_step_mean"
+      }
+    ],
+    "groups": [
+      {
+        "name": "aligned_finite_rows",
+        "where": "valid_aligned",
+        "values": [
+          "relative_position",
+          "relative_step",
+          "history_step_mean",
+          "target_next_step"
+        ]
+      }
+    ],
+    "model": {
+      "target": "target_next_step",
+      "features": [
+        "relative_position",
+        "relative_step",
+        "history_step_mean"
+      ],
+      "train_fraction": 0.7
+    }
+  },
+  "result": {
+    "status": "pending_controller",
+    "capability_task": {
+      "request": {
+        "kind": "analysis",
+        "question": "在R07中，控制当前相对位置与相对位移后，前10帧平均相对位移是否改善对下一帧相对位移的时间顺序留出预测？",
+        "record_id": "R07",
+        "start": 0,
+        "stop": 44999,
+        "variables": [
+          {
+            "name": "relative_position",
+            "expression": "positions[:,0,:]-positions[:,1,:]",
+            "meaning": "A减B的二维相对坐标",
+            "units": "原生图像坐标单位"
+          },
+          {
+            "name": "relative_step",
+            "expression": "diff(relative_position,1,axis=0)",
+            "meaning": "相邻帧相对坐标变化；索引t对应从t-1到t的位移",
+            "units": "原生图像坐标单位/帧"
+          },
+          {
+            "name": "history_step_mean",
+            "expression": "rolling(relative_step,10)",
+            "meaning": "截至当前索引的过去10个相对位移的逐坐标均值；预测起点t时不含目标位移t+1",
+            "units": "原生图像坐标单位/帧"
+          },
+          {
+            "name": "target_next_step",
+            "expression": "shift(relative_step,-1)",
+            "meaning": "下一索引的相对位移，即相对坐标从t到t+1的变化",
+            "units": "原生图像坐标单位/帧"
+          },
+          {
+            "name": "valid_aligned",
+            "expression": "isfinite(relative_position[:,0])&isfinite(relative_position[:,1])&isfinite(relative_step[:,0])&isfinite(relative_step[:,1])&isfinite(history_step_mean[:,0])&isfinite(history_step_mean[:,1])&isfinite(target_next_step[:,0])&isfinite(target_next_step[:,1])",
+            "meaning": "位置、当前位移、历史均值和下一帧目标均为有限值的对齐行",
+            "units": "boolean"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "target_next_step",
+            "expression": "target_next_step"
+          },
+          {
+            "name": "history_step_mean",
+            "expression": "history_step_mean"
+          }
+        ],
+        "groups": [
+          {
+            "name": "aligned_finite_rows",
+            "where": "valid_aligned",
+            "values": [
+              "relative_position",
+              "relative_step",
+              "history_step_mean",
+              "target_next_step"
+            ]
+          }
+        ],
+        "model": {
+          "target": "target_next_step",
+          "features": [
+            "relative_position",
+            "relative_step",
+            "history_step_mean"
+          ],
+          "train_fraction": 0.7
+        }
+      },
+      "reason": "shape mismatch: objects cannot be broadcast to a single shape.  Mismatch is between arg 0 with shape (44999,) and arg 1 with shape (44998,).",
+      "status": "pending_controller",
+      "scientific_disposition": "Interface gap; the research question remains open."
+    }
+  },
+  "executor_sha256": "32e81e66d65aabdb4d8e82b4a275939fe3eeb0a693bf8f26ee5acc52a7472e08",
+  "artifacts": [
+    "/Users/LSY/.codex/worktrees/a57d/ideas/1103_boundary_discovery/historical_inquiry/dispatch_checks_20261106/replay/services/analysis/replay_r1_exchange_2_learn_0_op0/request.json",
+    "/Users/LSY/.codex/worktrees/a57d/ideas/1103_boundary_discovery/historical_inquiry/dispatch_checks_20261106/replay/services/analysis/replay_r1_exchange_2_learn_0_op0/controller_task.json",
+    "/Users/LSY/.codex/worktrees/a57d/ideas/1103_boundary_discovery/historical_inquiry/dispatch_checks_20261106/replay/services/analysis/replay_r1_exchange_2_learn_0_op0/executor.py"
+  ]
+}

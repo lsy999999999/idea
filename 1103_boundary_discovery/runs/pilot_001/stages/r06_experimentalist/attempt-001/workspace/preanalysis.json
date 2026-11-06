@@ -1,0 +1,57 @@
+{
+  "protocol_version": "r06_phase_asymmetry_holdout_v1",
+  "status": "frozen_before_2025_target_read",
+  "frozen_at_utc": "2026-11-03T14:14:54Z",
+  "question": "Does air daily temperature range relate more strongly to nighttime cooling and early-morning water minima than to daytime warming and afternoon water maxima in the fixed 2025 warm-season holdout?",
+  "fixed_window": {
+    "train": "May-September 2014-2022 inclusive",
+    "test": "May-September 2025",
+    "excluded_from_fit_and_tuning": [2023, 2024],
+    "sites": ["10396000", "11501000", "11502500"],
+    "no_year_or_site_substitution": true
+  },
+  "water_filter": {
+    "source": "USGS instantaneous-value water temperature parameter 00010",
+    "qualifier": "exactly A",
+    "timestamp_grid": "local wall-clock timestamps exactly on 15-minute grid",
+    "unique_timestamps": true,
+    "minimum_per_local_day": 87,
+    "maximum_expected_per_day": 96,
+    "units": "degrees C"
+  },
+  "daily_targets": {
+    "A24": "least-squares first-harmonic amplitude sqrt(beta_sin^2 + beta_cos^2), using local decimal hour over all retained observations for a date",
+    "S_night": "OLS slope in degrees C/hour over local timestamps [18:00, next day 06:00), calculated within same-date anchor; requires at least 40 retained points",
+    "S_day": "OLS slope in degrees C/hour over local timestamps [06:00, 18:00), requires at least 40 retained points",
+    "morning_valley": "minimum retained water temperature at local hours [04:00, 10:00) on the date",
+    "afternoon_peak": "maximum retained water temperature at local hours [12:00, 18:00) on the date",
+    "clear_slope_sign_prediction": "air_range coefficient negative for S_night and morning_valley; near zero for S_day and afternoon_peak",
+    "relative_association_prediction": "within each site, absolute standardized air_range coefficient is larger for S_night than S_day and for morning_valley than afternoon_peak"
+  },
+  "pairing_and_models": {
+    "panel": "parallel_exploration/paired_daily_panel.csv",
+    "join": "exact site and local calendar date; require finite air_mean, air_range, positive flow, and valid target",
+    "baseline": "OLS with intercept, month indicators May-September (May reference), air_mean, and natural log(flow)",
+    "expanded": "identical baseline plus air_range",
+    "fit": "separate models per site and target using only 2014-2022 rows; ordinary least squares; no tuning",
+    "prediction": "single 2025 holdout; report baseline MAE and expanded MAE, plus paired per-day MAE improvement baseline minus expanded"
+  },
+  "uncertainty": {
+    "method": "paired circular moving-block bootstrap of 2025 daily MAE improvements, 28 consecutive date rows per block, 2000 replicates, RNG seed 20261103, percentile 95% interval",
+    "time_order": "sort by date within site and target before resampling",
+    "n_blocks": "ceil(number of valid test rows / 28); sample block starts uniformly with replacement and truncate concatenated blocks to original n"
+  },
+  "reporting": {
+    "strata": "report all three water stations individually; identify 10396000 as OPHI weather source and 11501000/11502500 as shared OCHI source; do not count shared OCHI as independent meteorological replication",
+    "provenance_checks": ["NOAA GHCN inventory-vs-file year conflict", "USGS A qualifier retention and raw/eligible sample counts"],
+    "interpretation_boundary": "predictive improvement or association does not establish heat-exchange mechanism",
+    "failure_rule": "if fixed 2014-2022 IV files or exact-date paired covariates cannot be reproduced, stop primary comparison and report failure without replacing years, sites, filters, or metrics"
+  },
+  "inputs_frozen": [
+    "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/stages/r01_boundary/attempt-001/workspace/data/iv_{site}_{year}_may_sep.rdb",
+    "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/parallel_exploration/paired_daily_panel.csv",
+    "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/stages/r00_boundary/attempt-001/workspace/data/ghcn_USR0000OPHI.dly",
+    "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/stages/r00_boundary/attempt-001/workspace/data/ghcn_USR0000OCHI.dly",
+    "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/stages/r00_boundary/attempt-001/workspace/data/noaa_ghcnd_inventory.txt"
+  ]
+}

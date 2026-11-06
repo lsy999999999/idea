@@ -1,0 +1,26 @@
+{
+  "checked_at_utc": "2026-11-04",
+  "sources": [
+    {
+      "url": "https://www.sqlite.org/wal.html",
+      "local_copy": "bootstrap/v2_scout/sources_verified/wal.txt",
+      "retrieved_at_utc": "2026-11-03T18:15:59.191374+00:00",
+      "observed_text": "SQLite documents reader end marks and says a checkpoint must stop before overwriting pages beyond any current reader's end mark; PASSIVE can remain incomplete with concurrent readers or writers.",
+      "review_interpretation": "The end-mark constraint motivating the proposed relation is known prior art. These experiments do not establish that mechanism as novel."
+    },
+    {
+      "url": "https://www.sqlite.org/c3ref/wal_checkpoint_v2.html",
+      "local_copy": "bootstrap/v2_scout/sources_verified/checkpoint.txt",
+      "retrieved_at_utc": "2026-11-03T18:15:59.148993+00:00",
+      "observed_text": "PASSIVE attempts as much checkpoint work as possible without waiting; outputs include log and checkpointed frame counts, and concurrent readers/writers can leave work unfinished.",
+      "review_interpretation": "This explains API semantics. It does not support a claim that reader lifecycle scheduling improves net cost."
+    },
+    {
+      "url": "https://doi.org/10.1109/icpads60453.2023.00179",
+      "local_source_check": "runs/v2_sqlite_001/stages/review/attempt-001/workspace/source_checks.json",
+      "retrieval_evidence": "Project-saved Crossref metadata check (2026-11-04) identifies Zhu, Hu, and Wang, 'Asynchronous and Adaptive Checkpoint for WAL-based Data Storage Systems' (2023); no abstract/full text was available in that check.",
+      "review_interpretation": "An adjacent adaptive checkpoint policy is known. Its exact relation to application-visible SQLite reader lifecycle signals remains unresolved without full text; novelty is not established."
+    }
+  ],
+  "scope": "Targeted check of known SQLite WAL semantics and the nearest cited adaptive-checkpoint work; not a comprehensive literature review."
+}

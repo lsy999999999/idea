@@ -1,0 +1,674 @@
+{
+  "your_request": {
+    "needed": true,
+    "queries": [],
+    "urls": [],
+    "operations": [
+      {
+        "kind": "analysis",
+        "question": "在R07中比较记录内较近与较远距离状态之后10帧的距离变化，并描述A、B各自10帧位移大小。",
+        "record_id": "R07",
+        "start": 0,
+        "stop": 44999,
+        "variables": [
+          {
+            "name": "distance",
+            "expression": "norm(positions[:,0,:]-positions[:,1,:],axis=-1)",
+            "meaning": "A与B坐标间二维欧氏距离",
+            "units": "原生图像坐标单位"
+          },
+          {
+            "name": "change_10",
+            "expression": "shift(distance,-10)-distance",
+            "meaning": "10帧后距离减当前距离",
+            "units": "原生图像坐标单位/10帧"
+          },
+          {
+            "name": "A_displacement_10",
+            "expression": "norm(shift(positions[:,0,:],-10)-positions[:,0,:],axis=-1)",
+            "meaning": "A在10帧间隔上的位移大小",
+            "units": "原生图像坐标单位/10帧"
+          },
+          {
+            "name": "B_displacement_10",
+            "expression": "norm(shift(positions[:,1,:],-10)-positions[:,1,:],axis=-1)",
+            "meaning": "B在10帧间隔上的位移大小",
+            "units": "原生图像坐标单位/10帧"
+          },
+          {
+            "name": "valid_pair",
+            "expression": "isfinite(distance)&isfinite(change_10)&isfinite(A_displacement_10)&isfinite(B_displacement_10)",
+            "meaning": "当前与10帧后两标签坐标均有限",
+            "units": "boolean"
+          },
+          {
+            "name": "near_threshold",
+            "expression": "quantile(distance,0.25)",
+            "meaning": "R07全记录距离第25分位数",
+            "units": "原生图像坐标单位"
+          },
+          {
+            "name": "far_threshold",
+            "expression": "quantile(distance,0.75)",
+            "meaning": "R07全记录距离第75分位数",
+            "units": "原生图像坐标单位"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "distance",
+            "expression": "distance"
+          },
+          {
+            "name": "future_distance_change",
+            "expression": "change_10"
+          },
+          {
+            "name": "individual_displacements",
+            "expression": "A_displacement_10"
+          }
+        ],
+        "groups": [
+          {
+            "name": "near",
+            "where": "valid_pair&(distance<=near_threshold)",
+            "values": [
+              "distance",
+              "change_10",
+              "A_displacement_10",
+              "B_displacement_10"
+            ]
+          },
+          {
+            "name": "far",
+            "where": "valid_pair&(distance>=far_threshold)",
+            "values": [
+              "distance",
+              "change_10",
+              "A_displacement_10",
+              "B_displacement_10"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "broker_reply": {
+    "request": {
+      "needed": true,
+      "queries": [],
+      "urls": [],
+      "operations": [
+        {
+          "kind": "analysis",
+          "question": "在R07中比较记录内较近与较远距离状态之后10帧的距离变化，并描述A、B各自10帧位移大小。",
+          "record_id": "R07",
+          "start": 0,
+          "stop": 44999,
+          "variables": [
+            {
+              "name": "distance",
+              "expression": "norm(positions[:,0,:]-positions[:,1,:],axis=-1)",
+              "meaning": "A与B坐标间二维欧氏距离",
+              "units": "原生图像坐标单位"
+            },
+            {
+              "name": "change_10",
+              "expression": "shift(distance,-10)-distance",
+              "meaning": "10帧后距离减当前距离",
+              "units": "原生图像坐标单位/10帧"
+            },
+            {
+              "name": "A_displacement_10",
+              "expression": "norm(shift(positions[:,0,:],-10)-positions[:,0,:],axis=-1)",
+              "meaning": "A在10帧间隔上的位移大小",
+              "units": "原生图像坐标单位/10帧"
+            },
+            {
+              "name": "B_displacement_10",
+              "expression": "norm(shift(positions[:,1,:],-10)-positions[:,1,:],axis=-1)",
+              "meaning": "B在10帧间隔上的位移大小",
+              "units": "原生图像坐标单位/10帧"
+            },
+            {
+              "name": "valid_pair",
+              "expression": "isfinite(distance)&isfinite(change_10)&isfinite(A_displacement_10)&isfinite(B_displacement_10)",
+              "meaning": "当前与10帧后两标签坐标均有限",
+              "units": "boolean"
+            },
+            {
+              "name": "near_threshold",
+              "expression": "quantile(distance,0.25)",
+              "meaning": "R07全记录距离第25分位数",
+              "units": "原生图像坐标单位"
+            },
+            {
+              "name": "far_threshold",
+              "expression": "quantile(distance,0.75)",
+              "meaning": "R07全记录距离第75分位数",
+              "units": "原生图像坐标单位"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "distance",
+              "expression": "distance"
+            },
+            {
+              "name": "future_distance_change",
+              "expression": "change_10"
+            },
+            {
+              "name": "individual_displacements",
+              "expression": "A_displacement_10"
+            }
+          ],
+          "groups": [
+            {
+              "name": "near",
+              "where": "valid_pair&(distance<=near_threshold)",
+              "values": [
+                "distance",
+                "change_10",
+                "A_displacement_10",
+                "B_displacement_10"
+              ]
+            },
+            {
+              "name": "far",
+              "where": "valid_pair&(distance>=far_threshold)",
+              "values": [
+                "distance",
+                "change_10",
+                "A_displacement_10",
+                "B_displacement_10"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "sources": [],
+    "knowledge": null,
+    "record_metadata": [],
+    "computed": [
+      {
+        "request": {
+          "kind": "analysis",
+          "question": "在R07中比较记录内较近与较远距离状态之后10帧的距离变化，并描述A、B各自10帧位移大小。",
+          "record_id": "R07",
+          "start": 0,
+          "stop": 44999,
+          "variables": [
+            {
+              "name": "distance",
+              "expression": "norm(positions[:,0,:]-positions[:,1,:],axis=-1)",
+              "meaning": "A与B坐标间二维欧氏距离",
+              "units": "原生图像坐标单位"
+            },
+            {
+              "name": "change_10",
+              "expression": "shift(distance,-10)-distance",
+              "meaning": "10帧后距离减当前距离",
+              "units": "原生图像坐标单位/10帧"
+            },
+            {
+              "name": "A_displacement_10",
+              "expression": "norm(shift(positions[:,0,:],-10)-positions[:,0,:],axis=-1)",
+              "meaning": "A在10帧间隔上的位移大小",
+              "units": "原生图像坐标单位/10帧"
+            },
+            {
+              "name": "B_displacement_10",
+              "expression": "norm(shift(positions[:,1,:],-10)-positions[:,1,:],axis=-1)",
+              "meaning": "B在10帧间隔上的位移大小",
+              "units": "原生图像坐标单位/10帧"
+            },
+            {
+              "name": "valid_pair",
+              "expression": "isfinite(distance)&isfinite(change_10)&isfinite(A_displacement_10)&isfinite(B_displacement_10)",
+              "meaning": "当前与10帧后两标签坐标均有限",
+              "units": "boolean"
+            },
+            {
+              "name": "near_threshold",
+              "expression": "quantile(distance,0.25)",
+              "meaning": "R07全记录距离第25分位数",
+              "units": "原生图像坐标单位"
+            },
+            {
+              "name": "far_threshold",
+              "expression": "quantile(distance,0.75)",
+              "meaning": "R07全记录距离第75分位数",
+              "units": "原生图像坐标单位"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "distance",
+              "expression": "distance"
+            },
+            {
+              "name": "future_distance_change",
+              "expression": "change_10"
+            },
+            {
+              "name": "individual_displacements",
+              "expression": "A_displacement_10"
+            }
+          ],
+          "groups": [
+            {
+              "name": "near",
+              "where": "valid_pair&(distance<=near_threshold)",
+              "values": [
+                "distance",
+                "change_10",
+                "A_displacement_10",
+                "B_displacement_10"
+              ]
+            },
+            {
+              "name": "far",
+              "where": "valid_pair&(distance>=far_threshold)",
+              "values": [
+                "distance",
+                "change_10",
+                "A_displacement_10",
+                "B_displacement_10"
+              ]
+            }
+          ]
+        },
+        "executed_plan": {
+          "kind": "analysis",
+          "question": "在R07中比较记录内较近与较远距离状态之后10帧的距离变化，并描述A、B各自10帧位移大小。",
+          "record_id": "R07",
+          "start": 0,
+          "stop": 44999,
+          "variables": [
+            {
+              "name": "distance",
+              "expression": "norm(positions[:,0,:]-positions[:,1,:],axis=-1)",
+              "meaning": "A与B坐标间二维欧氏距离",
+              "units": "原生图像坐标单位"
+            },
+            {
+              "name": "change_10",
+              "expression": "shift(distance,-10)-distance",
+              "meaning": "10帧后距离减当前距离",
+              "units": "原生图像坐标单位/10帧"
+            },
+            {
+              "name": "A_displacement_10",
+              "expression": "norm(shift(positions[:,0,:],-10)-positions[:,0,:],axis=-1)",
+              "meaning": "A在10帧间隔上的位移大小",
+              "units": "原生图像坐标单位/10帧"
+            },
+            {
+              "name": "B_displacement_10",
+              "expression": "norm(shift(positions[:,1,:],-10)-positions[:,1,:],axis=-1)",
+              "meaning": "B在10帧间隔上的位移大小",
+              "units": "原生图像坐标单位/10帧"
+            },
+            {
+              "name": "valid_pair",
+              "expression": "isfinite(distance)&isfinite(change_10)&isfinite(A_displacement_10)&isfinite(B_displacement_10)",
+              "meaning": "当前与10帧后两标签坐标均有限",
+              "units": "boolean"
+            },
+            {
+              "name": "near_threshold",
+              "expression": "quantile(distance,0.25)",
+              "meaning": "R07全记录距离第25分位数",
+              "units": "原生图像坐标单位"
+            },
+            {
+              "name": "far_threshold",
+              "expression": "quantile(distance,0.75)",
+              "meaning": "R07全记录距离第75分位数",
+              "units": "原生图像坐标单位"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "distance",
+              "expression": "distance"
+            },
+            {
+              "name": "future_distance_change",
+              "expression": "change_10"
+            },
+            {
+              "name": "individual_displacements",
+              "expression": "A_displacement_10"
+            }
+          ],
+          "groups": [
+            {
+              "name": "near",
+              "where": "valid_pair&(distance<=near_threshold)",
+              "values": [
+                "distance",
+                "change_10",
+                "A_displacement_10",
+                "B_displacement_10"
+              ]
+            },
+            {
+              "name": "far",
+              "where": "valid_pair&(distance>=far_threshold)",
+              "values": [
+                "distance",
+                "change_10",
+                "A_displacement_10",
+                "B_displacement_10"
+              ]
+            }
+          ]
+        },
+        "result": {
+          "status": "executed",
+          "question": "在R07中比较记录内较近与较远距离状态之后10帧的距离变化，并描述A、B各自10帧位移大小。",
+          "outputs": {
+            "distance": {
+              "shape": [
+                44999
+              ],
+              "finite_values": 44999,
+              "mean": 426.3231293,
+              "quantiles_10_50_90": [
+                73.1113725,
+                309.62007,
+                925.761535
+              ],
+              "preview": [
+                482.2874701,
+                487.6126663,
+                489.5830424,
+                490.1779266,
+                489.1288963,
+                478.7157596,
+                452.5101569,
+                425.0887485
+              ]
+            },
+            "future_distance_change": {
+              "shape": [
+                44999
+              ],
+              "finite_values": 44989,
+              "mean": -0.0752553,
+              "quantiles_10_50_90": [
+                -126.1943898,
+                1.1032651,
+                123.5027646
+              ],
+              "preview": [
+                -139.3936248,
+                -167.4951789,
+                -189.8737195,
+                -208.1320476,
+                -224.3999436,
+                -230.1920194,
+                -218.259239,
+                -215.537952
+              ]
+            },
+            "individual_displacements": {
+              "shape": [
+                44999
+              ],
+              "finite_values": 44989,
+              "mean": 89.4034985,
+              "quantiles_10_50_90": [
+                49.2144338,
+                86.5380162,
+                131.4092636
+              ],
+              "preview": [
+                74.8466648,
+                72.2414094,
+                69.8061519,
+                71.648481,
+                77.4124015,
+                83.9584231,
+                79.037593,
+                76.5527661
+              ]
+            }
+          },
+          "groups": [
+            {
+              "name": "near",
+              "selected_rows": 11242,
+              "values": {
+                "distance": {
+                  "shape": [
+                    11242
+                  ],
+                  "finite_values": 11242,
+                  "mean": 79.1274916,
+                  "quantiles_10_50_90": [
+                    30.5665073,
+                    83.4126597,
+                    119.7877422
+                  ],
+                  "preview": [
+                    123.6846343,
+                    104.2449108,
+                    82.5460474,
+                    61.4856777,
+                    46.5175637,
+                    38.8094574,
+                    38.0855226,
+                    39.8631251
+                  ]
+                },
+                "change_10": {
+                  "shape": [
+                    11242
+                  ],
+                  "finite_values": 11242,
+                  "mean": 30.5277479,
+                  "quantiles_10_50_90": [
+                    -42.5826299,
+                    20.5204371,
+                    118.8212876
+                  ],
+                  "preview": [
+                    -54.8612391,
+                    -22.8097147,
+                    11.1636028,
+                    43.5602644,
+                    66.8794371,
+                    82.8833832,
+                    94.7140068,
+                    102.8110634
+                  ]
+                },
+                "A_displacement_10": {
+                  "shape": [
+                    11242
+                  ],
+                  "finite_values": 11242,
+                  "mean": 83.5947937,
+                  "quantiles_10_50_90": [
+                    42.743237,
+                    81.7087699,
+                    125.445613
+                  ],
+                  "preview": [
+                    97.92995,
+                    101.7328796,
+                    102.8937997,
+                    100.2512755,
+                    99.6406265,
+                    99.3822589,
+                    103.6936344,
+                    107.6318009
+                  ]
+                },
+                "B_displacement_10": {
+                  "shape": [
+                    11242
+                  ],
+                  "finite_values": 11242,
+                  "mean": 87.8297078,
+                  "quantiles_10_50_90": [
+                    40.252373,
+                    82.4701313,
+                    143.5173203
+                  ],
+                  "preview": [
+                    91.5352053,
+                    79.6505761,
+                    66.5070458,
+                    52.9909183,
+                    38.5360711,
+                    29.0570665,
+                    24.1533814,
+                    21.0986867
+                  ]
+                }
+              }
+            },
+            {
+              "name": "far",
+              "selected_rows": 11250,
+              "values": {
+                "distance": {
+                  "shape": [
+                    11250
+                  ],
+                  "finite_values": 11250,
+                  "mean": 918.2822819,
+                  "quantiles_10_50_90": [
+                    776.8535513,
+                    906.0655968,
+                    1077.2327992
+                  ],
+                  "preview": [
+                    742.4413017,
+                    756.2368857,
+                    774.9667241,
+                    793.453941,
+                    810.3428264,
+                    825.3274628,
+                    838.6302831,
+                    849.9143724
+                  ]
+                },
+                "change_10": {
+                  "shape": [
+                    11250
+                  ],
+                  "finite_values": 11250,
+                  "mean": -14.4935059,
+                  "quantiles_10_50_90": [
+                    -132.7114172,
+                    -6.8679991,
+                    95.7274707
+                  ],
+                  "preview": [
+                    132.6056471,
+                    125.1861733,
+                    112.9016552,
+                    100.6034672,
+                    88.972286,
+                    78.9901528,
+                    69.6208107,
+                    62.0091058
+                  ]
+                },
+                "A_displacement_10": {
+                  "shape": [
+                    11250
+                  ],
+                  "finite_values": 11250,
+                  "mean": 88.717043,
+                  "quantiles_10_50_90": [
+                    51.569977,
+                    86.0456465,
+                    129.9997669
+                  ],
+                  "preview": [
+                    59.4044739,
+                    68.8332215,
+                    79.6221026,
+                    88.5715226,
+                    97.6032278,
+                    103.2324566,
+                    105.3077347,
+                    106.9949475
+                  ]
+                },
+                "B_displacement_10": {
+                  "shape": [
+                    11250
+                  ],
+                  "finite_values": 11250,
+                  "mean": 107.1190944,
+                  "quantiles_10_50_90": [
+                    53.2802532,
+                    104.6056993,
+                    164.588252
+                  ],
+                  "preview": [
+                    127.9138916,
+                    124.7680389,
+                    116.1949443,
+                    107.2916017,
+                    98.0876622,
+                    92.847213,
+                    87.2466024,
+                    83.8350371
+                  ]
+                }
+              }
+            }
+          ],
+          "model": null,
+          "data_sha256": "2ee8550a211e76b60e7228306fa758bd43f37157352e5a7892955447d01cd8d5",
+          "full_outputs": "/Users/LSY/.codex/worktrees/a57d/ideas/1103_boundary_discovery/historical_inquiry/dispatch_checks_20261106/replay/services/analysis/replay_r1_exchange_1_learn_0_op0/outputs.npz",
+          "full_outputs_sha256": "e0a0bbe1616fd1144893ef88509217cc0d353b98c88349bbfec9536e12e27341"
+        },
+        "executor_sha256": "32e81e66d65aabdb4d8e82b4a275939fe3eeb0a693bf8f26ee5acc52a7472e08",
+        "artifacts": [
+          "/Users/LSY/.codex/worktrees/a57d/ideas/1103_boundary_discovery/historical_inquiry/dispatch_checks_20261106/replay/services/analysis/replay_r1_exchange_1_learn_0_op0/request.json",
+          "/Users/LSY/.codex/worktrees/a57d/ideas/1103_boundary_discovery/historical_inquiry/dispatch_checks_20261106/replay/services/analysis/replay_r1_exchange_1_learn_0_op0/outputs.npz",
+          "/Users/LSY/.codex/worktrees/a57d/ideas/1103_boundary_discovery/historical_inquiry/dispatch_checks_20261106/replay/services/analysis/replay_r1_exchange_1_learn_0_op0/executor.py"
+        ]
+      }
+    ],
+    "controller_pending": [],
+    "unavailable": [],
+    "measurement_context": {
+      "data_source": {
+        "repository": "Dryad",
+        "doi": "https://doi.org/10.5061/dryad.f0g32",
+        "license": "https://spdx.org/licenses/CC0-1.0.html",
+        "publication_date": "2017-03-28",
+        "scope": "Raw measurements and screened measurement facts are the task date exception."
+      },
+      "species": {
+        "value": "Danio rerio (zebrafish)",
+        "basis": "Data repository species keyword"
+      },
+      "recording": "13 records of two tracked fish; positions and tracker outputs, no supplied manipulation labels.",
+      "task": {
+        "value": null,
+        "status": "Specific experimental task/protocol not independently verified in screened metadata."
+      },
+      "scene_conditions": {
+        "value": null,
+        "status": "Arena geometry, lighting, age and preparation unknown from screened measurement sources."
+      },
+      "measurement_method": "Recorded two dimensional tracked image coordinates; camera/tracker implementation unspecified.",
+      "processing": "Archive arrays retained value-for-value, including NaN and negative tracker codes; no smoothing or quality exclusion.",
+      "units": "Native image coordinates and frame indices; physical scales/frame rate not independently verified.",
+      "quality": "Recorded tracker output; includes negative codes and fractional values. Not a calibrated probability. Semantics not documented in the measurement files.",
+      "screening": "Only source-data identity, species keyword, license, date, field layout and measurement facts supplied."
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "summary": "按给定采样峰处理，原主张需要修正：两条谱的采样峰在 fc/U 坐标下近似对齐，不支持据此放弃该尺度。",
+  "artifacts": [],
+  "evidence": [
+    {
+      "ref": "spectrum:50",
+      "detail": "谱50采样峰为3150 Hz；弦长0.0508 m、来流速度39.6 m/s。"
+    },
+    {
+      "ref": "arithmetic:50",
+      "detail": "给定采样峰坐标 fc/U=4.04090909090909。"
+    },
+    {
+      "ref": "spectrum:88",
+      "detail": "谱88采样峰为1600 Hz；弦长0.1016 m、来流速度39.6 m/s。"
+    },
+    {
+      "ref": "arithmetic:88",
+      "detail": "给定采样峰坐标 fc/U=4.105050505050505。"
+    }
+  ],
+  "claims": [
+    {
+      "claim_ref": "01_initial_0:coordinate",
+      "status": "needs_correction",
+      "reason": "频率比3150/1600=1.96875，确实接近两倍；弦长也恰为两倍，且两谱来流速度相同。给定 fc/U 峰坐标为4.0409与4.1051，相对谱50约差1.59%。因此这两个采样峰与 fc/U 下近似对齐相容，不支持据此反驳或放弃该尺度。",
+      "evidence_refs": [
+        "spectrum:50",
+        "arithmetic:50",
+        "spectrum:88",
+        "arithmetic:88"
+      ],
+      "corrected_claim": "谱50与谱88的采样峰分别为3150 Hz和1600 Hz；其 fc/U 峰坐标约为4.041和4.105，呈近似对齐，不能据此放弃该尺度。"
+    }
+  ],
+  "limitations": [
+    "依据是离散频点的采样最大值，不是连续峰估计。",
+    "两个采样峰不能证明完整谱形塌缩，也不能验证该尺度在其他条件下普遍有效。"
+  ],
+  "next_actions": [
+    "若研究决策涉及完整谱形，比较完整曲线并检查更多条件。"
+  ],
+  "possible_pretraining_familiarity": "unknown",
+  "findings": [
+    {
+      "claim_ref": "01_initial_0:coordinate",
+      "status": "needs_correction",
+      "reason": "频率比3150/1600=1.96875，确实接近两倍；弦长也恰为两倍，且两谱来流速度相同。给定 fc/U 峰坐标为4.0409与4.1051，相对谱50约差1.59%。因此这两个采样峰与 fc/U 下近似对齐相容，不支持据此反驳或放弃该尺度。",
+      "evidence_refs": [
+        "spectrum:50",
+        "arithmetic:50",
+        "spectrum:88",
+        "arithmetic:88"
+      ],
+      "corrected_claim": "谱50与谱88的采样峰分别为3150 Hz和1600 Hz；其 fc/U 峰坐标约为4.041和4.105，呈近似对齐，不能据此放弃该尺度。"
+    }
+  ],
+  "controller_admission": {
+    "changes": [
+      "Verifier claims copied verbatim to findings; unique local IDs resolved against exact supplied targets"
+    ],
+    "scientific_content_changed": false
+  }
+}

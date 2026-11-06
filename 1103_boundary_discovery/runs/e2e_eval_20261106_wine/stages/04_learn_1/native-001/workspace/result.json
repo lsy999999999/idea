@@ -1,0 +1,116 @@
+{
+  "summary": "我学到绝对评分一致与样本排序一致不是同一目标。Fully crossed 评分能揭示评分者系统偏移；weighted kappa 可按序数分歧幅度加权，但常见 Cohen 形式限两位评委。个体评分需与评委、酒样ID链接，才可能进一步区分评分者与酒样来源。UCI 的实际三人以上聚合数据缺少这些字段，仍不能据此选定序数多评委统计量或识别潜在感官属性。",
+  "artifacts": [
+    "LEARNING.md",
+    "result.json",
+    "source_hallgren_2012.html",
+    "source_hallgren_2012.txt",
+    "source_tidee_2020_abstract.txt",
+    "source_garras_2011.html",
+    "source_garras_2011.txt"
+  ],
+  "evidence": [
+    {
+      "source_id": "HALLGREN2012",
+      "url": "https://doi.org/10.20982/tqmp.08.1.p023",
+      "access": "full_text; PMC HTML saved locally and converted to text",
+      "quote": "If it is important for raters to provide scores that are similar in absolute value, then absolute agreement should be used, whereas if it’s more important that raters provide scores that are similar in rank order, then consistency should be used.",
+      "locator": "Common ICC variants",
+      "snapshot_path": "/Applications/ideas/1103_boundary_discovery/runs/e2e_eval_20261106_wine/stages/04_learn_1/native-001/workspace/source_hallgren_2012.txt"
+    },
+    {
+      "source_id": "HALLGREN2012",
+      "url": "https://doi.org/10.20982/tqmp.08.1.p023",
+      "access": "full_text; PMC HTML saved locally and converted to text",
+      "quote": "Although fully crossed designs can require a higher overall number of ratings to be made, they allow for systematic bias between coders to be assessed and controlled for in an IRR estimate",
+      "locator": "How are studies designed to assess IRR?",
+      "snapshot_path": "/Applications/ideas/1103_boundary_discovery/runs/e2e_eval_20261106_wine/stages/04_learn_1/native-001/workspace/source_hallgren_2012.txt"
+    },
+    {
+      "source_id": "TIDEE2020",
+      "url": "https://doi.org/10.18260/1-2--17920",
+      "access": "indexed abstract only, supplied in controller's authorized learning reply",
+      "quote": "the assessments were found to have scoring agreement of 85% to 100% within a one-point variation. Exact agreement ranged from a high of 60% to a low of 20%.",
+      "locator": "Abstract",
+      "snapshot_path": "/Applications/ideas/1103_boundary_discovery/runs/e2e_eval_20261106_wine/stages/04_learn_1/native-001/workspace/source_tidee_2020_abstract.txt"
+    }
+  ],
+  "claims": [
+    "Published methodological guidance: absolute agreement concerns similar absolute ratings; consistency concerns similar rank order. Selecting between them depends on the intended use.",
+    "Published methodological guidance: a fully crossed design can assess/control systematic coder bias; weighted kappa permits magnitude-sensitive ordinal disagreement but Cohen's form is a two-coder statistic.",
+    "Learning example (not wine data): A=[1,2,3,4,5], B=[2,3,4,5,6] gives identical rank order (Spearman rho=1), 0/5 exact matches and mean paired difference +1. This illustrates consistency versus exact/absolute agreement only; it does not calculate an ICC/Kappa.",
+    "Interpretation: the UCI table's quality median cannot estimate assessor-specific effects or agreement; individual scores linked to assessor and sample IDs would be needed to even formulate those analyses."
+  ],
+  "limitations": [
+    "Hallgren (2012) concerns behavioral observation, not wine sensory panels, and uses IRR/agreement terminology somewhat interchangeably; the distinction learned is specifically absolute-agreement versus rank-consistency ICC types.",
+    "The tutorial's Cohen weighted kappa discussion covers two raters. The wine data description says at least three experts, and no individual ratings are present; a suitable multi-rater ordinal statistic remains unresolved.",
+    "High agreement/reliability would not establish that ratings validly measure a latent sensory construct. The tutorial explicitly distinguishes reliability from validity.",
+    "A first direct PMC request failed DNS. One attempted alternative URL led to an unrelated particulate-measurement paper; it was not used. A relevant full-text source and one targeted indexed abstract were obtained, but no wine sensory measurement review was retrieved.",
+    "No wine data were analyzed and no statistical model was fitted. The worked calculation is illustrative only."
+  ],
+  "next_actions": [
+    "If discussion requires a specific multi-rater ordinal coefficient, obtain a methods source that treats three-or-more raters, ordinal categories, and the intended absolute-agreement or consistency estimand.",
+    "Keep separate the data requirements for the current median-prediction task, assessor agreement, and latent sensory validity; do not select a coefficient until the estimand and panel design are explicit."
+  ],
+  "learning_change": "原先我把逐位评分当成主要补充信息，但没有区分“评委数值接近”与“评委给样本的相对排序一致”。现在我知道同一评委组的完全交叉设计能使系统偏移可见；一致性ICC可在等级排序保留时容忍评分偏移，而绝对一致型指标不会。原始评分应尽量链接到评委和酒样；不过本轮学习没有确定 UCI 这种三评委以上、有序评分应采用的具体统计量，也没有提供潜在感官属性的效度识别方法。",
+  "memory_use": [
+    {
+      "key": "wine_quality_estimand_boundary",
+      "source_task": "e2e_eval_20261106_wine",
+      "used_for": "把聚合分预测、评委共识和潜在属性维持为不同目标，并在补学后具体化 agreement 与 consistency 的区别。",
+      "scope_check": "该笔记限定于 UCI 当前表格字段；新增的绝对一致/排序一致解释仅来自本轮 Hallgren 来源，不推断实际酒样的评委行为。"
+    },
+    {
+      "key": "wine_quality_median_information_loss",
+      "source_task": "e2e_eval_20261106_wine",
+      "used_for": "说明为何需要从中位数讨论转向逐位评分及其评委/酒样链接。",
+      "scope_check": "中位数信息损失仍仅为聚合数学性质；不将学习算例当作数据观察。"
+    }
+  ],
+  "memory_notes": [
+    {
+      "key": "ordinal_rater_agreement_reliability",
+      "title": "绝对评分一致与相对排序一致",
+      "kind": "source_knowledge",
+      "mastery": "used",
+      "understanding": "Hallgren 的 ICC 教程区分 absolute agreement（评委对样本给出相近绝对值）与 consistency（评委给出的相对排序相近）。评委对所有样本系统性偏高时，排序一致性可能高而绝对一致较低。完全交叉地由相同评委评价共同样本，有助于评估并控制评委系统偏差。来源将 IRR 与 inter-rater agreement 近似并称，故上述区分特指 ICC 的 agreement 与 consistency 类型，不是穷尽所有术语定义。",
+      "conditions": "Hallgren 是行为观察方法教程。具体 ICC 形式依评委抽样、完全交叉/非交叉及单评委/均值目标而定。Cohen weighted kappa 允许对序数差异按幅度惩罚，但来源介绍的是两位评委；不能直接推成 UCI 至少三位评委的最佳统计量。可靠性不等同构念效度。",
+      "example": "学习演示：评委A对五个样本打[1,2,3,4,5]，评委B打[2,3,4,5,6]。排序完全相同（Spearman rho=1），exact agreement为0/5，平均差为+1。它说明consistency与绝对值一致不同；不是实际数据，也未计算ICC或Kappa。",
+      "open_questions": [
+        "有序、三位以上评委且不完全交叉时，哪些多评委指标能分别估计绝对一致与排序一致？",
+        "评委严厉度、酒样效应及评委×酒样效应需要何种重复/交叉结构和假设？",
+        "Unknown: 当前 UCI 表只有中位数，不能估计上述评委层参数或证明潜在感官构念效度。"
+      ],
+      "tags": ["inter-rater agreement", "reliability", "ICC", "ordinal ratings", "评委一致性", "信度", "序数评分"],
+      "sources": ["https://doi.org/10.20982/tqmp.08.1.p023", "https://doi.org/10.18260/1-2--17920", "/Applications/ideas/1103_boundary_discovery/runs/e2e_eval_20261106_wine/stages/04_learn_1/native-001/workspace/source_hallgren_2012.txt", "/Applications/ideas/1103_boundary_discovery/runs/e2e_eval_20261106_wine/stages/04_learn_1/native-001/workspace/source_tidee_2020_abstract.txt"],
+      "revision_reason": ""
+    },
+    {
+      "key": "wine_quality_estimand_boundary",
+      "title": "合成评分、评委一致性与潜在感官属性是不同目标",
+      "kind": "interpretation",
+      "mastery": "explained",
+      "understanding": "预测现有中位数回答给定评分流程输出的预测问题。若关心评委绝对评分可互换性，应关注绝对一致；若只关心样本相对排序，consistency 目标可能合适。个体评委分数需链接评委和样本身份，才能区分评分者系统偏移与酒样反应。任何一种评分者间一致性都不自动证明评分对潜在感官属性有效。",
+      "conditions": "这是对估计目标与数据设计的解释，不是确定了葡萄酒面板应采用的系数或模型。当前 UCI 数据仅提供中位数，缺少做评委层估计的字段。",
+      "example": "同伴交流中提出优先逐位评分；补学后可见，若这些分数不带评委ID，其分布仍无法归因于系统评分者偏移还是样本反应。",
+      "open_questions": [
+        "若应用目标是筛选酒样，排序一致与绝对评分一致何者有实际意义？",
+        "评分者×酒样交互和批次效应需要何种面板安排才能识别？",
+        "Unknown: 独立潜在感官属性的效度需要什么外部锚点或测量证据。"
+      ],
+      "tags": ["estimand", "validity", "sensory evaluation", "估计目标", "效度", "感官评价"],
+      "sources": ["https://doi.org/10.20982/tqmp.08.1.p023", "/Applications/ideas/1103_boundary_discovery/runs/e2e_eval_20261106_wine/stages/03_exchange_1/native-001/workspace/result.json"],
+      "revision_reason": "在 04_learn_1 中依据 Hallgren (2012) 将原有“共识”拆为绝对评分一致与相对排序一致，并增加评分者身份链接和可靠性≠效度的边界；原有中位数/潜在属性区分仍保留。"
+    }
+  ],
+  "learning_request": {
+    "needed": true,
+    "gap": "还需一个直接讨论三位以上有序评分者的 agreement/reliability 方法来源，以决定 UCI 场景中适用的多评委估计量及其完全交叉、抽样与重复观测要求。",
+    "why_now": "本轮来源具体覆盖 two-way ICC absolute agreement/consistency 及两评委 weighted kappa，但 UCI 标签来自至少三位专家且只存中位数；不能把这些知识不加条件地移植为数据分析方案。",
+    "search_terms": [
+      "ordinal multi-rater agreement reliability three or more raters crossed design",
+      "Krippendorff alpha ordinal incomplete ratings assessor design agreement reliability",
+      "generalizability theory ordinal sensory panel assessor sample interaction repeated wine ratings"
+    ]
+  }
+}
