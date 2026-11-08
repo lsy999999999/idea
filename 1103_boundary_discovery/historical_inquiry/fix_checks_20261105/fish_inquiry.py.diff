@@ -1,0 +1,253 @@
+--- before/fish_inquiry.py
+
++++ fish_inquiry.py
+
+@@ -14,6 +14,8 @@
+
+ from fish_materials import CASE, prepare, verify, digest
+ from inquiry_services import InquiryBroker, NoteGate
+ from analysis_executor import PLAN_PROTOCOL
++from note_dependencies import prepare_dependencies
++from final_evaluation import evaluate_final
+ from isolated_cli import invoke, parse_response
+ from internal_verification import EvidenceLedger, UPTAKE_TASK
+ from prepare import HERE, PROJECT, save
+@@ -22,6 +24,7 @@
+
+ sys.path.insert(0, str(PROJECT / 'src'))
+ from learning_memory import Memory
+ from learning_lab import NOTE_SCHEMA
++from idea_check import validate_checks, validate_ideas
+ 
+ 
+ RESEARCHERS = [
+@@ -166,22 +169,31 @@
+
+                 shutil.copy2(original, target)
+             self.memory.identity(rid, domain)
+         setup = self.run / 'FROZEN_SETUP.json'
++        code_sources = {name: HERE / name for name in (
++            'fish_inquiry.py', 'inquiry_services.py', 'knowledge_broker.py', 'analysis_executor.py',
++            'note_dependencies.py', 'final_evaluation.py', 'fish_materials.py', 'isolated_cli.py',
++            'question_state.py', 'internal_verification.py', 'prepare.py', 'run.py')}
++        code_sources.update({'shared/' + name: PROJECT / 'src' / name for name in (
++            'idea_check.py', 'novelty_contract.py', 'novelty_scope.py', 'learning_memory.py',
++            'learning_lab.py', 'discover.py', 'runtime.py')})
+         if not setup.exists():
+             save(setup, {'model_requested': 'gpt-6-luna', 'max_rounds': self.config['max_rounds'], 'task_config': self.config,
+                  'initial_window_rule': 'R01/R07/R13, frames [1000,1160), stride 4; fixed before generation, not selected for an anomaly',
+                  'initial_motion_analysis': False, 'forced_target_question': False,
+                  'source_cutoff': self.config['knowledge_before_exclusive'], 'source_access': 'Task-filtered online retrieval and reading on request',
+                  'memory_screening': 'Existing identities and stores retained; current notes admitted only after source/date/dependency/content screening. Read/explained/used remain separate.',
+-                 'code_sha256': {n: digest(HERE / n) for n in ('fish_inquiry.py', 'inquiry_services.py', 'knowledge_broker.py', 'analysis_executor.py', 'fish_materials.py', 'isolated_cli.py', 'question_state.py', 'internal_verification.py')},
++                 'code_sha256': {name: digest(path) for name, path in code_sources.items()},
+                  'allowed_sha256': load(self.case / 'controller_only/allowed_hashes.json')})
+             for n in load(setup)['code_sha256']:
+                 dest = self.run / 'protocol_snapshot' / n
+                 dest.parent.mkdir(parents=True, exist_ok=True)
+-                shutil.copy2(HERE / n, dest)
++                shutil.copy2(code_sources[n], dest)
+         if load(setup)['task_config'] != self.config:
+             raise ValueError('Task config changed; choose a new run ID')
++        if set(load(setup)['code_sha256']) != set(code_sources):
++            raise ValueError('Frozen dependency set changed; choose a new run ID')
+         for name, expected in load(setup)['code_sha256'].items():
+-            if digest(HERE / name) != expected:
++            if digest(code_sources[name]) != expected:
+                 raise ValueError('Frozen controller changed; choose a new run ID')
+ 
+     def packet(self, sid, rid):
+@@ -196,6 +208,11 @@
+
+         for key in ('artifacts', 'evidence', 'claims', 'limitations', 'next_actions'):
+             if not isinstance(result.get(key), list):
+                 raise ValueError('Missing runtime array ' + key)
++        if role == 'historical_final_evaluator':
++            if result.get('memory_notes'):
++                raise ValueError('Final evaluation cannot update research memory')
++            validate_checks(result, context['ideas'], require_claims=True)
++            return
+         if self.broker.policy.forbidden(result):
+             raise ValueError('Output contains excluded source identity/content')
+         if role in self.questions.researchers:
+@@ -238,21 +255,29 @@
+
+             # Unchanged supported premises need no duplicate limitation note.
+         allowed_sources = {'measurements.json', self.broker.catalog['measurement_context']['data_source']['doi']} | {s['doi'] for s in self.broker.sources.values()}
+         report_sources = {r['report_path'] for r in self.evidence.reports()}
++        inherited_notes = {}
+         if role in self.questions.researchers:
+             allowed_sources &= {'measurements.json', self.broker.catalog['measurement_context']['data_source']['doi']} | {self.broker.sources[k]['doi'] for k in supplied_ids}
+         allowed_sources |= report_sources
+         for old in self.packet(sid, role)['retrieved'] if role in self.questions.researchers else []:
+             allowed_sources.update(old['note']['sources'])
++            inherited_notes[old['note']['key']] = old['note']
++            report_sources.update(source for source in old['note']['sources']
++                                  if source not in self.broker.sources
++                                  and source not in {s['doi'] for s in self.broker.sources.values()}
++                                  and source not in {'measurements.json', self.broker.catalog['measurement_context']['data_source']['doi']})
+ 
+         for n in result.get('memory_notes', []):
+             if any(s not in allowed_sources for s in n.get('sources', [])):
+                 raise ValueError('Note cites an unavailable or forbidden source')
+             old = self.memory.index(role)['notes'].get(n['key'])
+-            if old:
+-                previous = load(old['path'])
++            previous = load(old['path']) if old else inherited_notes.get(n['key'])
++            if previous:
+                 if not n.get('revision_reason') or not (set(previous['sources']) & report_sources) <= set(n['sources']):
+                     raise ValueError('A revision needs its reason and previous correction sources')
+         if result.get('memory_notes'):
++            # Resolve inherited reports and the entire scientific closure BEFORE persistence.
++            prepare_dependencies(self, result, context)
+             with tempfile.TemporaryDirectory() as temp:
+                 p = Path(temp) / 'result.json'
+                 save(p, result)
+@@ -266,19 +291,13 @@
+
+                     raise ValueError('Request ' + key + ' must be an array')
+             if any(not isinstance(op, dict) for op in req.get('operations', [])):
+                 raise ValueError('Each computation request must be an object')
+-        if role == 'discussion_recorder' and not isinstance(result.get('ideas'), list):
+-            raise ValueError('Recorder must return ideas array')
+-        if role == 'historical_final_evaluator':
+-            checks = result.get('checks', [])
+-            if len(checks) != len(context['ideas']) or {c.get('idea_id') for c in checks} != {i['id'] for i in context['ideas']}:
+-                raise ValueError('Final check must cover every frozen idea exactly once')
+-            for c in checks:
+-                for key, allowed in [('prior_work', {'close_direction_found', 'no_close_work_found', 'unclear'}),
+-                                     ('math', {'no_obvious_error', 'obvious_error', 'unclear'})]:
+-                    if not isinstance(c.get(key), dict) or c[key].get('verdict') not in allowed or not c[key].get('reason'):
+-                        raise ValueError('Final check needs separate supported verdicts')
+-                if c.get('novelty', {}).get('coverage') not in {'covered', 'partial', 'unclear'}:
+-                    raise ValueError('Final novelty coverage required')
++        if role == 'discussion_recorder':
++            if not isinstance(result.get('ideas'), list):
++                raise ValueError('Recorder must return ideas array')
++            if result['ideas']:
++                validate_ideas(result)
++            if any('evaluation_context' in idea for idea in result['ideas']):
++                raise ValueError('Generation cannot declare evaluation exposure or dates')
+ 
+     def call(self, sid, role, task, context, notes=False):
+         researcher = role in self.questions.researchers
+@@ -312,6 +331,12 @@
+
+             return load(path)
+         root = path.parent
+         root.mkdir(parents=True, exist_ok=True)
++        admission = root / 'admission.json'
++        if admission.exists():
++            pending = load(admission)
++            if pending['input_sha256'] != fingerprint or pending['output_sha256'] != digest(path):
++                raise ValueError('Pending admitted stage changed')
++            return self.commit_stage(sid, role, load(path), path, context, initial, pending)
+         number = max([int(p.name.split('-')[-1]) for p in root.glob('attempt-*')], default=0)+1
+         last = root / f'attempt-{number-1:03d}'
+         print(json.dumps({'stage': sid, 'status': 'started', 'requested_model': 'gpt-6-luna'}), flush=True)
+@@ -330,14 +355,22 @@
+
+             raw = invoke(repair, root / f'attempt-{number:03d}', self.timeout)
+             result = ExistingPilot.admit_bookkeeping(raw, researcher, context.get('targets') if role == 'internal_evidence_verifier' else None)
+             self.validate(sid, role, result, context, notes, initial)
++        pending = {'input_sha256': fingerprint,
++                   'note_dependencies': prepare_dependencies(self, result, context)}
+         save(path, result)
++        pending['output_sha256'] = digest(path)
++        save(admission, pending)
++        return self.commit_stage(sid, role, result, path, context, initial, pending)
++
++    def commit_stage(self, sid, role, result, path, context, initial, pending):
++        """Finish a previously validated stage idempotently after an interrupted write."""
+         if result.get('memory_notes'):
+             self.memory.commit(role, self.task_id, sid, path)
+-            self.record_note_dependencies(role, result, context)
+-        if researcher:
++            self.record_note_dependencies(role, result, context, pending['note_dependencies'])
++        if role in self.questions.researchers:
+             self.questions.accept(sid, role, result, path, context.get('question_state'), initial)
+             self.evidence.observe(sid, role, result, path)
+-        self.state['stages'][sid] = {'input_sha256': fingerprint, 'output_sha256': digest(path)}
++        self.state['stages'][sid] = {'input_sha256': pending['input_sha256'], 'output_sha256': digest(path)}
+         save(self.state_path, self.state)
+         print(json.dumps({'stage': sid, 'status': 'complete'}), flush=True)
+         return result
+@@ -406,38 +439,16 @@
+
+             raise ValueError(result.get('unavailable', 'No executable plan'))
+         return result['plan']
+ 
+-    def record_note_dependencies(self, rid, result, context):
++    def record_note_dependencies(self, rid, result, context, prepared=None):
++        prepared = prepare_dependencies(self, result, context) if prepared is None else prepared
+         path = self.broker.root / 'note_reviews.json'
+         reviews = load(path) if path.exists() else {}
+         for note in result.get('memory_notes', []):
+-            dependencies = set()
+-            for source in note['sources']:
+-                if source in self.broker.sources or source == 'measurements.json':
+-                    dependencies.add(source)
+-                elif source in {s['doi'] for s in self.broker.sources.values()}:
+-                    dependencies.add(source)
+-                elif source == self.broker.catalog['measurement_context']['data_source']['doi']:
+-                    dependencies.add(source)
+-                elif source == context.get('verification_report_path'):
+-                    # Verification rests on original claims, not a new external knowledge source.
+-                    for claim in context.get('affected_claims', []):
+-                        dependencies.update(self.broker.sources[s]['doi'] for s in claim['basis']['source_ids'])
+-                    dependencies.add('measurements.json')
+-                elif source in {r['report_path'] for r in self.evidence.reports()}:
+-                    prior = [v for v in reviews.values() if source in v.get('report_sources', [])]
+-                    if not prior:
+-                        prior = [{'source_dependencies': old['source_dependencies']} for old in context.get('memory', {}).get('retrieved', []) if source in old['note']['sources']]
+-                    if not prior:
+-                        raise ValueError('Unverified earlier report dependency')
+-                    for value in prior:
+-                        dependencies.update(value['source_dependencies'])
+-                else:
+-                    raise ValueError('Unverified memory dependency')
+             item = self.memory.index(rid)['notes'][note['key']]
+-            reviews[str(Path(item['path']).resolve())] = {'sha256': item['sha256'],
+-                'content_screened': True, 'source_dependencies': sorted(dependencies),
+-                'report_sources': [v for v in note['sources'] if v in {r['report_path'] for r in self.evidence.reports()}],
+-                'basis': 'Accepted isolated actor output with task-screened evidence and explicit dependencies.'}
++            stored = load(item['path'])
++            if stored['source_task'] != self.task_id or stored['source_stage'] != context['_stage']:
++                raise ValueError('Committed note version moved before dependency registration')
++            reviews[str(Path(item['path']).resolve())] = {**prepared[note['key']], 'sha256': item['sha256']}
+         save(path, reviews)
+ 
+     def service(self, sid, rid, answer):
+@@ -541,21 +552,7 @@
+
+             save(freeze, {'files': {str(p.resolve()): digest(p) for p in paths},
+                           'external_feedback_used_for_generation': False})
+         memory_before = {str(p): digest(p) for p in self.memory.root.rglob('*.json')}
+-        # Final evaluator remains separate. It may compare only material actually admitted by
+-        # this task; report a bounded outcome, not broad originality from absent matches.
+-        checked = self.call('06_final_check', 'historical_final_evaluator', "Independent final check "
+-            "after generation freeze. Two duties only: compare core contributions to supplied "
+-            "eligible prior sources and flag obvious math/logical errors. Return checks "
+-            "[{idea_id,prior_work:{verdict:close_direction_found/no_close_work_found/unclear,reason,sources},"
+-            "math:{verdict:no_obvious_error/obvious_error/unclear,reason,errors},"
+-            "novelty:{core_claims,coverage:covered/partial/unclear,reason}}]. "
+-            "Direction overlap alone is not full coverage. Search coverage is bounded; absent "
+-            "a positive coverage witness use unclear. Missing proof or experiment is not an error. "
+-            "Keep every idea. No feedback goes back to researchers.",
+-            {'ideas': ideas['ideas'], 'eligible_sources': [self.broker.sources[k] for k in sorted(self.broker.sources)],
+-             'discussion': {'initial': initial, 'rounds': history, 'corrections': corrections, 'fresh': fresh},
+-             'actual_broker_evidence': {p.stem: load(p) for p in (self.run / 'broker').glob('*.json')},
+-             'measurement_metadata': self.broker.catalog})
++        checked = evaluate_final(self, ideas['ideas'])
+         save(self.run / 'check_report.json', checked)
+         if memory_before != {str(p): digest(p) for p in self.memory.root.rglob('*.json')}:
+             raise ValueError('Final evaluator modified memory')
+@@ -598,6 +595,7 @@
+
+                   'requested_models': sorted({e['requested_model'] for e in events}), 'raw_attempts': len(events),
+                   'logical_stages': len(self.state['stages']), 'internal_verification_batches': len(reports),
+                   'source_date_hash_checks_passed': all(not self.broker.policy.rejection(s) for s in self.broker.sources.values()), 'pretraining_exclusion_claimed': False,
++                  'tool_audit_scope': 'Generation roles only; the post-freeze checker uses a separate retrieval workspace.',
+                   'original_memory_implementation_changed': False}
+         save(self.run/'AUDIT.json', result)
+         if result['status'] != 'pass':

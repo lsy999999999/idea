@@ -1,0 +1,51 @@
+{
+  "summary": "恢复 NST 学习任务：依据归档 Renes 全文方法段厘清观测距离、PF 零模型与 NST 推断量的关系，并用四重复六 pair 的小例子理解 pairwise 依赖。保留无法解释 PF 约束和 tNST 校准的缺口；本轮没有验证实验或新发现。",
+  "artifacts": [
+    {"path": "runs/learn_20261104_community/stages/04_learn_0_recovery/attempt-001/workspace/LEARNING.md", "role": "学习记录；区分已发表方法、学习计算、解释和未解决问题。"},
+    {"path": "runs/learn_20261104_community/stages/04_learn_0_recovery/attempt-001/workspace/result.json", "role": "本阶段结构化结果和记忆条目。"}
+  ],
+  "evidence": [
+    {"kind": "published_method", "source": "https://doi.org/10.1111/1462-2920.70430", "access": "项目归档全文 XML 提取文本；直接读 NST 方法段及补充表说明。", "detail": "Renes 等报告用 robust Aitchison 距离计算丰度加权群落不相似度，与 PF 零模型生成的不相似度分布比较；用 NST 3.1.10 的 tNST 和 999 次随机化。4 个重复形成 6 个 pair；混合模型以 comp 随机效应处理共享重复导致的 pair 依赖。属于已发表方法报告。"},
+    {"kind": "published_concept_limited_access", "source": "https://doi.org/10.1073/pnas.1904623116", "access": "仅沿用恢复笔记中 Crossref 摘要概述；先前 publisher/EPMC 获取实际返回 Cloudflare HTML，非全文。", "detail": "Ning 等将 NST 描述为群落组装中随机过程相对重要性的归一化指标，并允许相似度及零模型算法选择。没有据此声称掌握其完整公式推导。"},
+    {"kind": "learning_calculation", "source": "https://doi.org/10.1111/1462-2920.70430", "access": "概念计算，非实证分析。", "detail": "4 个重复的无序非自身 pair 数为 4×3/2=6；A 出现在 AB、AC、AD，故 pair 距离相互依赖。"},
+    {"kind": "access_failure", "source": "https://europepmc.org/articles/PMC6598649?pdf=render ; https://www.pnas.org/doi/10.1073/pnas.1904623116", "access": "复用前次保存的 HTML；内容为 Cloudflare challenge 页面。", "detail": "不作为宁等论文全文证据。"}
+  ],
+  "claims": [
+    "来源知识：案例中的 NST 是观测组成距离相对于指定零模型距离分布的模型依赖推断量，不是对随机过程的直接观察。",
+    "我的理解变化：将 NST 从可能被误当作群落状态的单一数值，放回测量—距离—零模型比较的推断链条。",
+    "已发表结果（非本轮发现）：原文报告许多 NST 值超过 0.5；本轮不重释其生态机制。",
+    "书目纠正：使用 Renes DOI 10.1111/1462-2920.70430；旧材料中的 1462-9200 为误写。"
+  ],
+  "limitations": [
+    "不能解释 PF 零模型精确保留/改变的约束、tNST 组成公式及 0.5 阈值校准条件。",
+    "未能取得 Ning et al. 全文；对通用方法的理解受摘要层级限制。",
+    "未重算 NST、比较替代零模型、验证机制或判断世界新颖性。",
+    "恢复目录列出的前次 HTML 页面为访问挑战而非论文内容；保留其访问状态，不扩搜。"
+  ],
+  "next_actions": [
+    "若后续讨论需要解释 PF 交换性约束或 tNST 公式，读取 Ning et al. 原文及其方法补充材料后再更新。",
+    "讨论时继续把 NST 与 ASV 丰富度、组成和功能测量分开，且不从指标单独推出生态机制。"
+  ],
+  "researcher": "microbial_ecologist",
+  "stage": "04_learn_0_recovery",
+  "status": "partial_learning_complete_open_method_details",
+  "learning_change": "我从把高 NST 值近似理解为随机过程的直接证据，转为将其理解为组成数据经距离计算后，相对指定零模型分布得到的模型依赖推断量。四重复六 pair 例子说明 pairwise 距离有共享样本依赖。",
+  "memory_notes": [
+    {
+      "key": "salinity_history_asv_observation_limits",
+      "title": "盐度扰动历史与 ASV 丰富度观测边界",
+      "kind": "correction",
+      "mastery": "used",
+      "understanding": "Renes 等在受控连续培养中报告历史处理与 ASV 丰富度/组成轨迹及 NST 的关联；NST 依据 robust Aitchison 群落距离和指定 PF 零模型分布形成，不是随机机制的直接观测。作者同时讨论低丰度 ASV 跨越检测限可能造成表观丰富度变化。来源报告、作者解释和本人的解释须分开。",
+      "conditions": "仅限论文所述淡水连续培养、测序流程、距离与 PF 零模型设定；不能直接外推自然开放群落，也不能从 NST 单独识别漂变、选择或迁入。",
+      "example": "学习计算：4 个重复 A-D 形成 6 个无序 pair；A 同时进入 AB、AC、AD，pair 距离非独立。原文用 comp 随机效应处理 pair 依赖。不是 NST 复算。",
+      "open_questions": ["PF 零模型精确保留与扰动哪些约束？", "tNST 组成公式和 0.5 阈值的校准条件是什么？", "替代零模型会否改变案例中的 NST 时间模式？"],
+      "tags": ["NST", "null model", "ASV richness", "salinity pulse", "微生物群落", "零模型", "丰富度", "盐度脉冲"],
+      "sources": ["https://doi.org/10.1111/1462-2920.70430", "https://doi.org/10.1073/pnas.1904623116", "learning_lab/library/6ac14d2f938091b66914a4cfa0853bcc0480f82cad7c652eff815fddf2962bef.txt"],
+      "revision_reason": "本次按 operator 书目订正，将错误 DOI 10.1111/1462-9200.70430 更正为 10.1111/1462-2920.70430；新增直接核对的 PF/tNST 方法描述及 pair 依赖例子。未改写历史文件。"
+    }
+  ],
+  "memory_use": [
+    {"key": "salinity_history_asv_observation_limits", "source_task": "02_initial_0 and 03_exchange_0 in learn_20261104_community", "used_for": "沿用先前识别的检测限解释分支及 NST 学习缺口，并更正 Renes DOI。", "scope_check": "限定于当前案例论文和同一学习链；没有导入其他项目候选或历史结论。"}
+  ]
+}

@@ -1,0 +1,1164 @@
+CoQuest: Exploring Research Question Co-Creation with an LLM-based Agent
+Skip to main content
+Report GitHub Issue
+×
+Title:
+Content selection saved. Describe the issue below:
+Description:
+Submit without GitHub
+Submit in GitHub
+Why HTML?
+Report Issue
+Back to Abstract
+Download PDF
+Contents
+Reading mode
+Colour theme
+Abstract.
+1 Introduction
+2 Related Work
+2.1 Human-Led Literature Discovery and Research Idea Creation
+2.2 Agent-based Large Language Model (LLM) Systems
+2.3 Designing Human-AI Co-creation Systems
+3 Research Questions
+4 Formative Study
+5 CoQuest System Design and Implementation
+5.1 CoQuest Interaction Design
+5.1.1 Example User Walkthrough
+5.1.2 RQ Flow Editor: Two Design Options
+5.1.3 Paper Graph Visualizer: Interactive Literature Graph
+5.1.4 AI Thoughts: Explaining AI Rationale
+5.2 CoQuest Backend and Implementation
+5.2.1 Generating RQs with LLM-based Agent.
+5.2.2 Related Paper Retrieval.
+5.2.3 System Implementation
+6 User Study Evaluating Co-Creation with CoQuest
+6.1 Within-Subjects User Study - Two Tasks with Assigned Condition: Breadth-First vs. Depth-first
+6.2 Data Collection and Analysis
+6.2.1 Co-Creation Outcome: Rating AI-Generated RQs During Each Task
+6.2.2 Perceived Experience: Survey Scores collected at the End of Each Task, and Exit Interviews
+6.2.3 Behavior: Think-Aloud Data and System Log.
+7 Findings
+7.1 Perception of Co-Creation Experience and Outcome (RQ1)
+7.1.1 Experience: User Perceived Stronger Creativity and Trust Using Breadth-first Condition
+7.1.2 Outcome: Depth-first Condition Yields RQs with Higher-rated Creativity
+7.2 Users’ Co-creation Behavior with LLM-based Agent (RQ2)
+7.2.1 Depth-first Condition Stimulated More User Interactions During Wait Time
+7.2.2 Users Have Different Strategies for Providing Feedback to AI
+7.3 Association between Users’ Persona/Behavior and Their Perceptions (RQ3)
+8 Discussion
+8.1 Enriching Our Proposed Mental Model for Human-AI Co-Creation of Novel Research Questions
+8.1.1 Wait Time in AI-based Co-Creation System as an Opportunity to Promote Creativity
+8.1.2 Aligning Users’ Perception towards Experience and Outcomes of Generated RQs for Improved Creativity
+8.1.3 Customizing Co-Creation based on Researcher’s Persona
+8.2 Design Implications
+8.2.1 Explaining LLM Rationales Through Mind-Map-Styled Design
+8.2.2 Sharing of Expertise: Steering the Direction of Outputs by Injecting Meta-Research Knowledge
+8.2.3 Utilizing Personalized Design to Harness “Surprising” Outputs
+8.3 Ethical Concerns and Potential Biases
+8.3.1 Ethical Implications of LLM Usage: Plagiarism and Hallucination
+8.3.2 User biases and blind spots
+8.3.3 Over-reliance on AI
+9 Limitations and Future Work
+10 Conclusion
+Acknowledgements
+References
+A Appendices
+A.1 Post-Session Survey Questions
+A.2 A Mixed-Effect Model of User Feedback Length
+A.3
+Examples of LLM-based Agent Prompts and Responses
+A.3.1 System prompt
+A.3.2 Prompts used for each action
+A.3.3 Triggering prompt
+License: CC BY 4.0
+arXiv:2310.06155v3 [cs.HC] 20 Mar 2024
+CoQuest: Exploring Research Question Co-Creation with an LLM-based Agent
+DOI: XXXXXXX.XXXXXXXConference: ; ; Honolulu, HICHI 2024Price: 15.00ISBN: 978-1-4503-XXXX-X/18/06Conference: Proceedings of the CHI Conference on Human Factors in Computing Systems; May 11–16, 2024; Honolulu, HI, USAProceedings of the CHI Conference on Human Factors in Computing Systems (CHI ’24), May 11–16, 2024, Honolulu, HI, USADOI: 10.1145/3613904.3642698ISBN: 979-8-4007-0330-0/24/05CCS: Human-centered computing Empirical studies in HCICCS: Human-centered computing Interactive systems and toolsCCS: Computing methodologies Natural language processing
+Yiren Liu
+email: yirenl2@illinois.edu
+Affiliation: University of Illinois Urbana-Champaign, USA
+,
+Si Chen
+email: sic3@illinois.edu
+Affiliation: University of Illinois Urbana-Champaign, USA
+,
+Haocong Cheng
+email: haocong2@illinois.edu
+Affiliation: University of Illinois Urbana-Champaign, USA
+,
+Mengxia Yu
+email: myu2@nd.edu
+Affiliation: University of Notre Dame, USA
+,
+Xiao Ran
+email: xiaor2@illinois.edu
+Affiliation: University of Illinois Urbana-Champaign, USA
+,
+Andrew Mo
+email: jiajunm3@illinois.edu
+Affiliation: University of Illinois Urbana-Champaign, USA
+,
+Yiliu Tang
+email: yiliut2@illinois.edu
+Affiliation: University of Illinois Urbana-Champaign, USA
+and
+Yun Huang
+email: yunhuang@illinois.edu
+Affiliation: University of Illinois Urbana-Champaign, USA
+© acmlicensed
+Figure 1.
+CoQuest enables Human-AI co-creation of research questions (RQs) using LLMs through a three-panel design: RQ Flow Editor, Paper Graph Visualizer, and AI Thoughts. Major features of the RQ Flow Editor panel include: (a) offering either breadth-first and depth-first RQ generation (see Figure 4); (b) enabling users to provide feedback to AI based on a generated RQ, and to explore related papers in details on the Paper Graph Visualizer panel; and (c) presenting the rationale behind RQ generation on the AI Thoughts panel when a link between two RQs is clicked.
+This is an overview of the CoQuest system interface. There are three panels. The main panel is the RQ Flow Editor Panel with 2 design options, detailed in Figure 4. There are six nodes presented on this panel: three on the left, three on the right. The three nodes on the left are each connected to a node not included in this diagram. The top left node is connected to three nodes on the right. Each edge had text associated on it. The top right node is expanded with more content and a different color. The top left node is denoted (a), the expanded node on the top right is denoted (b), and one of the edges is denoted (c). On the right of RQ Flow Editor Panel is the Paper Graph Visualizer Panel, which presents an interactive graph. Each paper node on the network represents a paper. One paper node is selected and the details of this paper is presented below the graph on this panel. On the bottom-left of the RQ Flow Editor Panel is the AI Thoughts Panel, which has three blocks of texts on it.
+Abstract.
+Developing novel research questions (RQs) often requires extensive literature reviews, especially in interdisciplinary fields.
+To support RQ development through human-AI co-creation, we leveraged Large Language Models (LLMs) to build an LLM-based agent system named CoQuest.
+We conducted an experiment with 20 HCI researchers to examine the impact of two interaction designs: breadth-first and depth-first RQ generation. The findings revealed that participants perceived the breadth-first approach as more creative and trustworthy upon task completion. Conversely, during the task, participants considered the depth-first generated RQs as more creative. Additionally, we discovered that AI processing delays allowed users to reflect on multiple RQs simultaneously, leading to a higher quantity of generated RQs and an enhanced sense of control. Our work makes both theoretical and practical contributions by proposing and evaluating a mental model for human-AI co-creation of RQs.
+We also address potential ethical issues, such as biases and over-reliance on AI, advocating for using the system to improve human research creativity rather than automating scientific inquiry. The system’s source is available at: https://github.com/yiren-liu/coquest.
+Keywords: Scientifc Discovery, Large Language Models, Co-creation Systems, Mixed-initiative Design
+1. Introduction
+Identifying research questions (RQs) is a critical step of scientific research and discovery (Elio et al., 2011).
+To formulate creative and valuable research ideas, researchers often start with searching and scoping the relevant literature, especially when the search involves works spanning multiple domains (Kang et al., 2022).
+Developing research questions is also iterative, that researchers would first have an initial idea or topic in mind, then conduct a literature search to refine the ideas, and repeat this process until they have a satisfying research idea (Foster, 2004). Reading a large body of literature, synthesizing them, and identifying the relevant work can be rather time-consuming.
+With the rapid development of Large Language Models (LLMs), scholars have investigated the potential of harnessing the power of LLMs to support the process of research literature discovery (Ought, 2023; Qureshi et al., 2023; Consensus, 2023), which helps users significantly speed up the literature discovery process.
+Meanwhile, the thriving of generative AI technologies has also been widely used in various fields to promote creativity (Epstein et al., 2023; Yuan et al., 2022; Mirowski et al., 2023). For example, a recent study has found that more than 4.9% of users used ChatGPT to support creative ideation (Fishkin, 2023).
+Although recent research has demonstrated the potential of using smaller language models to generate novel RQs (Liu et al., 2023b), there remains a lack of empirical understanding about how humans evaluate AI-generated RQs.
+Given that LLMs are known to have problems with hallucination and lack of factual accuracy (Ji et al., 2023), creating high-quality RQs requires inputs from human researchers for their unique backgrounds and expertise. Enabling humans and AI to co-create novel research questions is particularly promising for conducting interdisciplinary research.
+The concept of human-AI co-creation draws insights from pioneering research on mixed-initiative systems, where human users and computer systems contribute to a shared goal (Horvitz, 1999; Yannakakis et al., 2014). Recent academic endeavors have also introduced a variety of design guidelines for human-AI co-creation systems (Rezwana and Maher, 2022; Weisz et al., 2023; Lin et al., 2023), further inspiring the intricate design considerations of mixed-initiative systems. For instance, Rezwana and Maher (2022) explored whether the exchange of initiatives between humans and AI should be designed as either parallel or in a turn-taking manner.
+However, there remains a gap in empirical research regarding the influence of AI-driven initiatives or creativity on user experiences, such as their perception of the creative process, trust in the AI, and sense of control. Moreover, the potential impact of these factors on the results of human-AI co-creation, such as the quality of generated content, has yet to be investigated.
+To this end, we proposed a novel system called CoQuest, which allows an AI agent to initiate RQ generation by tapping the power of LLMs and taking humans’ feedback into a co-creation process. The system consists of three panels: RQ Flow Editor for supporting RQ generation, Paper Graph Visualizer for exploration of literature space, and AI Thoughts for explaining AI’s rationales.
+The system design was informed by a formative study, where we invited four researchers to verbalize their expected RQ-generation processes with AI support.
+The formative study yielded an initial mental model of human-AI co-creation for RQs. The system design was further evaluated with 20 participants who are HCI researchers through a within-subject experiment.
+Our work makes novel and significant contributions as follows. Firstly, we made a theoretical contribution by proposing and evaluating a new mental model for human-AI co-creation of research questions in the HCI research domain.
+Second, we proposed a new agent LLM system and implemented two interaction designs (breadth-first and depth-first), where the AI agent took different levels of initiative in supporting users to develop RQs.
+Third, through a within-subject experiment with HCI researchers, we gained new empirical understandings of how AI’s different initiatives impact users’ perceived experiences and outcomes. Specifically, for overall experience, the breadth-first design made users “feel” more creative and gained more trust from users, though the effect varies by users’ research background; but when rating individual RQs, users scored the depth-first questions for higher creativity.
+Fourth, by closely observing participants’ interaction with AI, we discovered important co-creation behavior and proposed a new design implication, namely, intentionally “slowing down AI", giving wait times for users to explore the co-creation space. This is especially beneficial for users to gain a stronger sense of control.
+Last but not least, we discussed the implications of our study for designing ethical human-AI co-creation systems, along with potential ethical concerns.
+We advocate for employing LLM-based systems to augment human creativity and support the ideation and scaffolding process, rather than using LLM-generated ideas for automating HCI research.
+2. Related Work
+2.1. Human-Led Literature Discovery and Research Idea Creation
+Scholars have sought to understand the process of how researchers conduct literature discovery and formulate new research ideas (Glueck and Jauch, 1975; Pertsas and Constantopoulos, 2017).
+Extensive works have strived to formulate the model of researchers’ scientific activities (Palmer et al., 2009; Vilar, 2015; Benardou et al., 2010). For example,
+Foster (2004) proposed a framework of idea formulation in academic research from an information behavior perspective, which consists of three major components: Opening (initial exploration), Orientation (problem definition and literature survey) and Consolidation (knowledge creation). In this framework, literature discovery and idea formulation are discussed as a recursive and iterative process. Many studies have also been conducted to understand how researchers produce innovative ideas for research purposes (Yang et al., 2016).
+For example, Jing et al. (2015) proposed a system for research idea creation that incorporates knowledge reuse through ontology construction.
+Later work by (Guo and Laidlaw, 2020) introduced a system for supporting research ideation through topic modeling and visualization. Recently,
+Liu et al. (2023b) proposed to generate new research questions using generative language models fine-tuned over related works and explicitly written research questions from publications within the HCI domain.
+But none of these works leveraged large language models (LLMs) or built an LLM-based system to examine human-AI co-creation RQ processes.
+2.2. Agent-based Large Language Model (LLM) Systems
+Recent surge in the success of LLMs (OpenAI, 2023; Touvron et al., 2023) has spurred strong interests in employing LLMs for solving complex tasks.
+There has recently been a heated wave of explorations in building autonomous agents using LLMs as a reasoning engine to solve different tasks, such as software development (Shinn et al., 2023; Qian et al., 2023), gaming (Wang et al., 2023b), and assisting social science research (Ziems et al., 2023).
+System designs are proposed for improving the method of prompting in Human-AI interaction systems enabled by LLMs (Wu et al., 2022b; Wu et al., 2022a; Dang et al., 2022).
+To enhance the reasoning capabilities of LLMs, researchers proposed several prompting frameworks to elicit reasoning in LLMs by decomposing and solving the sub-tasks step by step by applying prompting techniques for general purposes, such as Chain-of-Thought (Wei et al., 2022; Kojima et al., 2022), Self-Consistency (Wang et al., 2023a), Least-to-Most (Zhou et al., 2023). These prompting techniques focus on improving the task-specific performance of LLMs.
+To build autonomous agents with LLMs, Yao et al. (2022a) proposed a prompting framework named “ReAct” that unifies the ability of LLMs to reason, take actions, and observe the results.
+Recent research on LLM-based prompt engineering (Wang and Zhao, 2023) has explored a viable approach of introducing humans’ mental model as prompting techniques to boost LLM’s reasoning ability.
+These frameworks set a great foundation for Q&A reasoning or general-purpose tasks (Liu et al., 2023c). In this paper, we applied LLM to build an agent for specialized tasks in the context of literature discovery and research ideation.
+2.3. Designing Human-AI Co-creation Systems
+Many human-AI co-creation systems utilize generative AI technologies (Sun et al., 2022; Louie et al., 2020). For example, Bilgram and Laarmann (2023) showed that generative AI could augment the early phases of innovation, such as exploration, ideation, and digital prototyping.
+Epstein et al. (2022) discovered that discrepancies between users’ expected outputs and the actual output from the system play a critical role in creating new ideas.
+Scholars and practitioners try to develop design guidelines for using generative AI (Weisz et al., 2023; Davis et al., 2015; Liu and Chilton, 2022; Muller et al., 2020).
+From a role-based perspective, human-AI co-creation systems are found to be different from prior systems where machines mainly provide support to humans (Kantosalo and Jordanous, 2021).
+In co-creation systems, both humans and AIs can be designed to take the initiative in producing creative artifacts (Oh et al., 2018; Guzdial et al., 2019).
+Rezwana and Maher (2022) introduced a Co-Creative Framework for Interaction design (COFI), which categorizes mixed-initiative system designs into two types based on their styles of participation: parallel and turn-taking.
+The evaluation of mixed-initiative designs has been explored by recent research (Kreminski et al., 2022; Withington and Tokarchuk, 2023) in application domains such as poem writing and game design.
+Our research seeks to systematically model the co-creation process and provide both theoretical and practical implications in the scholarly research domain.
+In this study, we propose and examine a new agent LLM system that helps researchers formulate research questions by combining LLMs’ reasoning ability with the mental model we discovered through a formative study with actual researchers.
+We also discuss whether LLM-based co-creation systems can help facilitate the process of information gathering and idea evolution using user study results to provide new empirical understandings.
+3. Research Questions
+Given the above literature and identified research gaps, we aim to address the following research questions:
+RQ1 (perception & outcome): How do users perceive the co-creation experience (e.g., trust, control, feeling of being creative) and outcomes (creativity ratings of generated RQs) when using the CoQuest system?
+RQ2 (behavior): How do users interact with AI when it provides different levels of initiatives during the co-creation process?
+RQ3 (relationship): What behavioral factors are associated with users’ enhanced perceived experience and outcomes in human-AI co-creation?
+In the remainder of this paper, we will first present the formative study, where we developed an initial mental model for RQ co-creation between humans and AI. We then introduce the system design and our experimental study and detail the findings in the order of the proposed research questions. We will conclude with an in-depth discussion on the updated mental model informed by our findings and explore design implications for future work.
+Note that we use RQ1, RQ2, and RQ3 to refer to our three research questions in the remainder of the paper, whereas RQ and RQs are used to refer to the research questions co-created by the user and AI.
+4. Formative Study
+We conducted a formative study in order to understand the cognitive process of researchers creating research questions.
+To understand how researchers create RQs, we first conducted semi-structured interviews with 4 HCI researchers about how they formulate research questions.
+We then organized a focus group with the same group of interviewed participants to identify their needs for an RQ co-creation system.
+We invited four researchers to participate in our semi-structured interviews to understand their process of conducting research. All four participants were doctoral researchers.
+We asked the interviewees to describe their most recent experience starting a research project from scratch.
+Most participants mentioned starting from a rough idea (e.g., domains, keywords, application scenarios) before searching for related literature.
+Participants also emphasized that formulating research ideas is often an iterative process. Typically, participants used one or multiple hypothetical research questions/ideas to facilitate the search for related literature and identify research gaps.
+This process was described by the participants as both time-consuming and labor-intensive.
+Participants also identified their process of research question creation as hierarchical.
+One participant explicitly mentioned that creating research questions naturally resembles the form of a “mind map”, where the development of ideas gradually “narrows down” but could have different branches.
+As described by the participants, the initial set of RQs can often be broader and more general and can subsequently derive sub-RQs under the topics of their predecessors, which helps facilitate the trade-off between specific and general ideas as a common decision-making step during the research ideation process.
+This process often resulted in the evolution of RQs that, when visualized, could be drawn as a tree of RQs. This later informed the design of our system to take the form of an interactive “mind map” that preserved the provenance of RQ development.
+(a) Feature Design.The feature design screenshot was presented on sticky notes on this diagram. The sticky notes were grouped into five themes, with different number of notes in each group. There are also three yellow notes on top of the groups.
+(b) Workflow Design.The workflow design screenshot was presented on sticky notes on this diagram. Six sticky notes on the right are inside a rectangular shape with text "Iterative co-creation." Five more sticky notes are on the left outside the rectangular. All notes, except one white note on the left, are connected to at least one other note.
+Figure 2. Screenshots of content created by participants using Miro during the focus group study.
+After the first interview study, the same participants were invited back to a focus group session, where we aimed to identify their needs based on their research workflow and propose interaction design to support the process.
+The focus group went through two steps. First, participants were given three questions created by researchers as cues, and then were asked to brainstorm ideas and design expectations given the context of an AI-based system that supports research question development.
+The three question cues were designed as follows: 1) What questions will you ask the AI system? 2) What information do you want to provide for the model to generate RQ for you? 3) How do you produce RQ currently? And do you think the AI model can help you produce RQs?
+The ideas created by participants are shown in Figure 2.
+After discussion and summarizing themes, participants were asked to proceed to the second step inspired by participatory approaches, where they discussed a hypothetical workflow by contextualizing themselves using an AI-based RQ co-creation system.
+During the focus group, we found that participants highlighted several expectations for designing a human-AI RQ co-creation system. Participants mentioned that the system should enable strong user control by taking into consideration users’ inputs (e.g., ideas, keywords, and domain concepts), when generating new RQs.
+The ability for the system to generate different variations of RQs with high diversity was also deemed a preferred design, where the user should be allowed to choose from the outputs based on their preference and expertise.
+Human-AI Co-Creation of Research Questions (RQs): a Mental Model
+After completing the formative study, we summarized the findings and proposed a new mental model aiming to capture the major interactions during the process of Human-AI Co-Creation for RQs.
+Figure 3.
+Participants’ mental model of co-creating RQs with an LLM-based AI agent is delineated as follows. An “action” labeled with an AI icon denotes that participants perceived that AI could significantly reduce the ”labor”; a human icon means that participants were expected to evaluate AI-generated RQs and provide feedback to drive the iterative process. However, it is hard to determine how human and AI share the task of “refine and re-scope,” as it depends on individual expertise and the clarity of the intended research focus.
+This is human's mental model of RQ co-creation with the LLM-based agent. There are four components inside this model: Present RQs and Explain AI Thoughts (lower left, rectangular), Understand the Literature (center, rectangular), Literature Space (top, with cylinder shape), and Refine and Re-scope (lower right, rectangular). From Present RQs and Explain AI Thoughts to Refine and Re-scope, there are two user-driven activities: Evaluate RQ creativity, feasibility, etc., and Provide feedback. From Refine and Re-scope to Understand the Literature, there is one user- and AI-driven activity: Incorporate Human Feedback. From Understand the Literature to Present RQs and Explain AI Thoughts, there is one AI-driven activity: Bootstrap Initial RQs. From Understand the Literature to Literature Space, there is one AI-driven activity: Search and select. From Literature space to Understand the Literature, there is one AI-driven activity: Summarize and Integrate. The model has "Initial idea / keywords" as input and "Well-defined High Quality RQs" as output.
+The proposed mental model consists of three major components: Understand Literature, Present RQs and Explain AI Thoughts, and Refine and Re-scope.
+Past research has provided in-depth discussion over how literature discovery plays a major role in the scientific research process (Foster, 2004; Palmer et al., 2009).
+However, such models were often discussed in a human-only context. Our formative study results indicate the importance of considering AI as a “collaborator” during the process of research ideation (Kim and Maher, 2023).
+Refining research questions has also often been interpreted as a sub-step of literature search and understanding.
+Although research ideation and literature search are mutually dependent, our formative study results indicated a distinction between the behaviors researchers conducted during the two different stages.
+The process of literature discovery often involves reading and summarizing a wide range of existing works. Participants emphasized their challenges during the process of literature search and discovery, especially for unfamiliar domains, and the need for AI to facilitate this process with less human involvement. AI can be best used to perform factual summarization and distillation of findings and knowledge before presenting them to humans.
+On the contrary, proposing and refining research questions often requires more creative thinking and generalization beyond past knowledge. In this scenario, it is crucial to involve both humans and AI through the design of mix-initiative co-creation systems in order to combine humans’ expertise and preference with AI’s general world knowledge.
+Moreover, our formative study findings explicate the evaluation of RQs as an additional component during the RQ co-creation process. This process, as discussed during the formative study, should utilize human expertise and the ability to conduct follow-up research and validation.
+Design Requirements
+Based on our findings from the focus group and the proposed mental model, we also propose the following design requirements for the system: The system should be able to 1) assist users’ brainstorming process by automatically generating RQ candidates by taking human feedback; 2) support users’ sensemaking of AI’s outputs by Explaining the rationale behind the generation; 3) help users discover relevant literature and identify research gaps.
+5. CoQuest System Design and Implementation
+Based on our findings from the formative study, we designed and implemented an LLM-based system that supports human-AI co-creation of creative research questions.
+In this section, we provide details about the design of 1) the three-panel interface of the CoQuest system, including two different designs to provide varied degrees of AI initiative; and 2) the agent LLM backend of the CoQuest system.
+5.1. CoQuest Interaction Design
+To support RQ co-creation, we designed features of the CoQuest systems around the two-way communication between users and the AI, where users and AI take turns during the communication process.
+As shown in Figure 1, our proposed system consists of three major panels:
+(1)
+RQ Flow Editor
+that facilitates a user’s major interactions, such as generating RQs, providing input and feedback to AI, and editing the RQ flow (e.g., drag and delete);
+(2)
+Paper Graph Visualizer
+that displays the literature space related to each RQ;
+(3)
+AI Thoughts
+that explains AI’s rationale of why each RQ is generated.
+5.1.1. Example User Walkthrough
+Consider a user of the CoQuest system, Jamie, who is a junior doctoral student with a research direction in Human-Computer Interaction. Jamie has previously been familiar with publications related to interaction design for online learning systems. With recent exposure to social media discussions on VR and AR applications, they wanted to explore the potential of such applications in the domain of online learning.
+Jamie formed an initial idea of using AR to promote learner’s brainstorming. However, without a deeper understanding of the literature space from the VR and AR domain, they found it challenging to refine and improve upon the idea further.
+Introduced with the CoQuest system, Jamie first created an initial idea node, typed down “Using AR to promote brainstorming,” and generated follow-up RQs by right clicking the node and selecting “generate RQs” using the RQ Flow Editor.
+Aware of Jamie’s initial idea, the CoQuest system retrieved several works related to the idea and generated follow-up RQ nodes along with rationales.
+Jamie first saw one of the RQ nodes with an RQ displayed as “How can social AR be designed to promote collaborative brainstorming?”
+Jamie was intrigued by the generated RQ, but also a bit confused since the concept of “social AR” appeared new to them. Jamie then clicked the RQ node and skimmed through the papers displayed on the Paper Graph Visualizer panel. Several papers seemed relevant to Jamie, and they further clicked the provided URL to read the papers in detail. The papers retrieved by CoQuest helped Jamie comprehend the domain knowledge behind the generated RQ.
+After the reading, Jamie had a question in mind — “Why is using AR important for collaborative brainstorming?”. They then typed in this question as user feedback to the system and clicked to generate new RQs following up the previous RQ. One of the newly generated RQs, “How can spatial design in AR promote group-based collaborative brainstorming,” caught Jamie’s attention.
+The appearance of the concept “spatial design” raised Jamie’s interest, but they were unclear about the system’s rationale for generating this RQ from the previous question. By clicking on the edge connecting this RQ with its predecessor, they were able to examine the AI Thoughts panel explaining the rationales and actions taken by the agent LLM in the CoQuest backend that led to the RQ. The panel showed that the system performed action “hypothesize user cases” and one of the resulting use cases was shown as “Online learners can form groups and organize ideas by creating and organizing concepts and links in spatial AR environment.”
+5.1.2. RQ Flow Editor: Two Design Options
+CoQuest offers an interactive RQ Flow Editor panel that allows users to co-create RQs with AI in an iterative manner.
+This panel is designed in a way to resemble the design of a mind map, where each RQ node
+represents a generated RQ (except the initial nodes, which only contain users’ initial ideas).
+This allows users to organize RQs more easily under different topics while preserving the hierarchical structure among different RQs, as suggested by the findings from the formative study in section 4.
+Users can type in their rough ideas or keywords by creating an initial node.
+When users click on one of the nodes, the node expands, and users can 1) type in textual user feedback to AI in the text box; and 2) right-click on the node to generate more follow-up RQs.
+The generated RQs will be connected with annotated edges to the source RQ node.
+The RQ generation will result in one or several Directed Acyclic Graphs (DAGs), which we will later refer to as RQ flows, that embed both the hierarchical relations between generated RQs. Users can perform basic interactions using the RQ flow editor, including zooming in/out and dragging the nodes to organize the flows to aid their thinking process.
+Two design options with different levels of AI initiative: Breadth-first and Depth-first generation.
+One of the major design options we considered for the CoQuest system is the degree of how much AI takes initiative during the co-creation process.
+During the formative study, we obtained an understanding of how users formulated their research questions in a hierarchical form, where follow-up RQs are iteratively created based on previous predecessor RQs.
+Intuitively, when formulating different RQs, the researcher might choose to explore different topics in a broader sense, or to dive deep into a specific topic.
+Thus, we consider two different designs when the system generates new RQs, as shown in Figure 4:
+1) breadth-first generation: When a user initiates the generation of follow-up RQs, several RQs are produced simultaneously in parallel. These new questions are all at the same hierarchical level following the original question.
+2) depth-first generation: In contrast, with this method, when a user initiates the generation, follow-up RQs are created one after the other, with each new question building upon the previous one in a sequential manner.
+The two designs impact the degree of initiative taken by AI in the CoQuest system.
+Under the breadth-first generation, the user will have the freedom to choose from multiple generated RQs and provide feedback at each turn of generation, and then proceed to generate more RQs if desired.
+As in the depth-first generation, the agent recursively generates a sequence of multiple RQs without user input during the process.
+During the depth-first generation, the agent needs to autonomously further “refine” the RQs multiple steps based on the previous steps’ results, thus taking more initiative during the co-creation.
+Although in both designs, AI actively participates in the co-creation process by turn-taking with the human (Rezwana and Maher, 2022), there exists a difference between the degree of initiative taken by AI, as AI engages more actively during the depth-first generation compared to the breadth-first generation.
+By carrying out the within-subject study under the two designs, we aim to provide an empirical understanding of how initiative-driven design options can impact users’ behavior and perception using human-AI co-creation systems.
+To simplify the study design, we ensured that three RQs were generated per turn in both designs.
+Figure 4.
+The RQ Flow Editor panel in the CoQuest system features two distinct designs for generating research questions (RQs): the breadth-first and depth-first approaches. The breadth-first generation approach is designed to trigger the creation of multiple RQs in a single iteration, facilitating a wide exploration of potential research areas. In contrast, the depth-first generation focuses on triggering more iterations of RQ refinement, allowing the AI to delve deeper into a specific topic for a more focused and detailed exploration. The two design options are presented side by side. On the left is Design Option 1: Breadth-first Generation. From a Source RQ node on the left, three generated RQ nodes on the right were connected with arrows. An additional arrow pointing toward three Generated RQ nodes shows that these three arrows are under iteration 1. On the right is Design Option 2: Depth-first Generation. From a Source RQ node, a first Generated RQ node is connected with an arrow. An additional arrow pointing toward the first Generated RQ node shows that this is iteration 1. From the first Generated RQ, a second Generated RQ node is connected with an arrow. An additional arrow pointing toward the second Generated RQ node shows that this is iteration 2. From the second Generated RQ, a third Generated RQ node is connected with an arrow. An additional arrow pointing toward the third Generated RQ node shows that this is iteration 3.
+5.1.3. Paper Graph Visualizer: Interactive Literature Graph
+The CoQuest system also provides an LLM-enabled literature discovery feature to assist users in efficiently identifying and exploring existing works related to each generated RQ.
+As shown in Figure 1, CoQuest’s literature discovery feature is presented in the Paper Graph Visualizer panel.
+When a user clicks
+on one of the generated RQ nodes, the Paper Graph Visualizer panel reveals itself by visualizing the top-k most relevant papers along with their citation relations retrieved from our citation graph.
+The top-k papers are retrieved using our paper retrieval pipeline, as described in section 5.2.2, using the text of the RQ clicked on by the user as the query.
+In the displayed citation graph, each paper node
+represents a paper, and each edge
+represents a citation relation. When the user hovers the cursor over one of the paper nodes, a tooltip will appear with a quick preview of the paper’s title information.
+The paper nodes in the citation graph are designed to be interactive. When the user clicks
+on one of the paper nodes
+, the detailed information of the selected paper will be displayed below.
+The information displayed includes the paper’s title, author names, abstract, a TLDR summary provided by Semantic Scholar API11
+1
+https://www.semanticscholar.org/product/api, and a URL linking to the page of the paper on Semantic Scholar.
+Upon the click on the paper node, the Paper Graph Visualizer panel will also highlight the selected node and its nearest neighbors (nodes and edges) to indicate which paper(s) have directly cited the selected paper or been cited by the selected paper.
+5.1.4. AI Thoughts: Explaining AI Rationale
+The edges between RQ nodes represent the relation of which RQ the newly generated RQ is based on. They also contain information about the results of the actions undertaken by the agent leading up to the new RQ generated.
+When the user clicks on an edge, the AI Thoughts panel appears that displays the results of the agent’s action in a narrative format, as shown in the Figure 1. Detailed implementations of the LLM-based backend for generating RQs and rationales are provided below.
+Figure 5.
+Illustration of the CoQuest framework; The mental model of HCI researchers is used to build the LLM-based agent capable of accessing and querying a literature collection to generate research questions (RQs). This agent not only presents the generated RQs to the users but also provides the rationales behind their generation and literature grounding through the frontend interface. Examples of prompts used to build the agent can are available in Appendix A.3.
+This image is a diagram representing a user interface for a research co-creation platform. There are several components illustrated. User: This is likely where the user inputs information or interacts with the system. System Interface: Shows a workflow with several stages, probably indicating how the user can create research questions (RQ Creation) and see a visual representation of related research papers (Paper Graph). AI Thoughts panel: This might be a section where the system provides feedback or suggestions on how to narrow down research questions. CoQuest Agent: Depicts a robot icon, which suggests an AI or machine learning component that assists in the research process. LLM: Stands for Language Learning Model, indicating a machine learning model that processes natural language input. Co-Creation Mental Model: This section includes what appears to be a conceptual framework for how researchers interact with the system. Literature Pool: A database or collection of research literature that the system draws from. Paper Graph Visualizer panel: This panel displays relevant papers and citations based on the selected research question. The diagram is detailed and uses symbols like gears, magnifying glass, and a robot to represent different functions or processes within the platform. The overall design suggests a complex system designed to facilitate collaborative research efforts, possibly through AI-driven insights and a database of academic papers.
+5.2. CoQuest Backend and Implementation
+The backend of the CoQuest system comprises an LLM-based agent that automatically generates RQs based on users’ input and feedback, by performing reasoning and executing actions that simulate a researcher’s mental model in a semi-autonomous manner.
+Two major functions of the CoQuest backend include: 1) the RQ generation ability of the LLM agent and 2) the related paper retrieval module that supports literature discovery.
+The framework of how the system’s backend connects with the major features are shown in Figure 5.
+5.2.1. Generating RQs with LLM-based Agent.
+The CoQuest system uses an LLM-based agent to generate creative research questions (RQs) following the ReAct framework (Yao et al., 2022b), by adapting the “Think-Act-Observe” framework when designing the prompting method.
+First, the "Think" step analyzes user input and context to decide an action, resembling human research methods detailed in 4. During this round, the LLM generates a chain of thought (following our designed prompt) before reaching the conclusion of the action as the next step.
+The actions are executable sub-processes whose results will be used as additional context to help the LLM generate better RQs.
+The available actions include:
+1) Search and summarize related works (Literature Discovery);
+2) Hypothesizing use cases (Proposition);
+3) Scoping/narrowing down (Refinement);
+4) Reflection through comparison with existing works (Evaluation).
+Next, during the “Act” and “Observe” steps, the execution of actions is achieved in the format of API calls through prompting and can be later parsed and executed through one or multiple pre-implemented Python functions (e.g., retrieve_papers and summarize_papers).
+After the next action has been inferred during the “Think” step, the agent executes the action and appends the results of the action to the context.
+Finally, for the agent to generate RQs at each step, we added an additional step of creating RQs at the end of each “Observe” step. At this step, new RQs are generated based on the provided context and instructions that combine the output from the performed action and predefined prompt.
+The detailed usage of prompts in the backend can be found in Appendix A.3.
+5.2.2. Related Paper Retrieval.
+In order to help users identify related works more easily, the CoQuest system employs a retrieval pipeline to gather existing papers related to the RQs that the users are developing. We curated a literature citation graph from an existing pool of HCI papers, where the nodes represent papers, and the edges represent citation relations.
+The CoQuest system uses a sentence-based semantic embedding model (Reimers and Gurevych, 2019) to obtain vector representations of each paper in the citation graph. Given a paper’s title, metadata, and abstract in text form and a given query (e.g., RQs and user input), the sentence embedding model encodes them into semantic embeddings.
+After obtaining the embeddings of papers and the query, the system calculates the similarity between paper candidates and the query. This is done through re-ranking using Maximal Marginal Relevance (MMR) (Carbonell and Goldstein, 1998). Then, the system ranks the paper candidates and selects the top-k papers with the highest similarity scores as the final related papers to visualize. More details on the implementation of the retrieval pipeline are discussed in 5.2.3.
+5.2.3. System Implementation
+The CoQuest system is implemented in Typescript as a web application using ReactJS and TailwindCSS for the frontend. The interactive flow editor is implemented using React Flow22
+2
+https://github.com/wbkd/react-flow/.
+The application backend uses Python with FastAPI33
+3
+https://github.com/tiangolo/fastapi/
+as the RESTful API server framework. We use AutoGPT44
+4
+https://github.com/Significant-Gravitas/Auto-GPT/
+as the foundation of our agent-based LLM implementation55
+5
+https://github.com/yiren-liu/coquest.
+We used the gpt3.5-turbo-16k model by OpenAI as our LLM engine and text-embedding-ada-002 model as the sentence embedding model through the cloud service API provided by Microsoft Azure.
+We collected a fixed set of open-access publications through the Semantic Scholar API covering several major HCI conferences (including CHI, CSCW, UIST, Group, IMWUT, IJHCI, and IUI). The final collection of publications includes 2,043 papers.
+6. User Study Evaluating Co-Creation with CoQuest
+To further understand the effect of the CoQuest system and how two designs of RQ generation impact users’ human-AI co-creation behavior, we conducted a within-subjects user study with 20
+HCI researchers
+from 8 different institutions by asking the participants to create new research questions using the CoQuest system. All participants were graduate students currently enrolled or just graduated with prior experience with research.
+During the study process, we collected participants’ behavior and perception (i.e., ratings towards RQs, and ratings towards the CoQuest system) data for mixed-method (quantitative and qualitative) analysis.
+All studies were completed remotely online over video calls, where participants were asked to share their screens. Participants were also free to withdraw at any point during the study. Study procedures were approved by the IRB of the researchers’ institution. We compensated participants $20 per hour for the user study. Studies lasted 1-2 hours, including two tasks using two designs (breadth-first and depth-first generations), a survey after each task, and an exit interview.
+6.1. Within-Subjects User Study - Two Tasks with Assigned Condition: Breadth-First vs. Depth-first
+A within-subjects user study was conducted to understand the difference in users’ behavior and perception of the system potentially brought by the two different conditions using the two designs, referred to as breadth-first condition and depth-first condition.
+Each participant was asked to complete two tasks:
+During each task, we asked each participant to complete a task designed by researchers to simulate real-life scenarios of research idea formulation. The two task topics used in this study are: “AR/VR for education and learning” and
+“AI and crowdsourcing”. The two topics were chosen since they cover a wide range of specific domains and provide ample opportunities for users to explore and drill down on related topics.
+To account for the effect of the chronological order of both the task topics and conditions on the results, we followed a counterbalanced design (Pollatsek and Well, 1995) by randomizing the experiment conditions so that all possible orders and combinations were randomly assigned to an equal number of participants. Participants were encouraged to think aloud during the tasks.
+6.2. Data Collection and Analysis
+We collected both users’ perception and behavior data to perform a comprehensive evaluation of the CoQuest system.
+To understand users’ perception of the CoQuest system, we gathered two types of perception data from participants: individual ratings for each generated RQ (RQ ratings), which reflects users’ perception of their co-creation outcomes; and overall post-task evaluations of the system (system ratings), which reflects users’ perception of their co-creation experience.
+Users’ behavior data was also collected in the form of system logs and video recordings for later analysis.
+6.2.1. Co-Creation Outcome: Rating AI-Generated RQs During Each Task
+The RQ ratings are collected on the fly during each task of the study, where participants were asked to rate at least six RQs of their choice.
+These ratings are intended to capture the immediate perception of users towards the co-creation outcomes (i.e., generated RQs). The during-task rating collection was designed with the intention of nudging users to actively evaluate the RQs during the co-creation process, and also as a way to reflect the accurate user perception in real-time. We adopt Boden’s criteria (Boden, 2004) to measure creativity from three different aspects- novelty, value, surprise, and relevance. Participants can give ratings using a 5-point Likert scale slider positioned under each RQ node.
+6.2.2. Perceived Experience: Survey Scores collected at the End of Each Task, and Exit Interviews
+To analyze participants’ perceived experience using our system, we collected their survey scores upon the completion of each task and conducted exit interviews before the end of each study.
+Survey Scores
+The co-creation experience scores, however, were given by participants at the end of each task through a survey. The survey contains multiple 5-point Likert scale questions designed to measure their experience from the aspects of: control, creativity, meta-creativity, cognitive load, and trust. We designed 2 Likert-scale questions for each of the 5 aspects to avoid potential bias and ensure a more comprehensive evaluation66
+6
+The collected survey ratings have an average Cronbach’s Alpha value of α=.85\alpha=.85, suggesting good reliability..
+The complete list of survey questions can be found in Appendix A.1.
+Exit Interview
+After the participant completed the post-task rating survey, we also conducted a ten-minute semi-structured interview to obtain a deeper understanding of the participant’s experience with the system. Interview data was analyzed using open-ended coding, by having two researchers review the interview transcripts and frequently discuss with each other (Khandkar, 2009). The interview coding highlighted differences in perception between the two conditions explicated by participants.
+To measure participants’ familiarity with the task topic, we also asked participants how familiar they were with the two topics with three choices: not familiar, kind of familiar, and very familiar.
+6.2.3. Behavior: Think-Aloud Data and System Log.
+We annotated users’ behavior (think-aloud transcripts and system usage) to understand how users utilized our system.
+Think-Aloud During Co-Creation Think-aloud data was primarily used for understanding how users generated and interpreted RQs. One researcher first generated a codebook through open coding using videos and transcripts from three randomly selected participants, and then three other researchers independently coded the data of the same three participants, reaching an inter-rater agreement of 0.83 in Krippendorf’s alpha. The annotators then discussed and refined the codebook again until they reached full agreement. Then, four researchers proceeded to annotate the remaining 17 participants’ behavior data separately. In the final codebook, whether users interacted with the system was annotated and used for quantitative analysis in RQ3 as “Acted During Wait”. The final codebook also included sense-making behavior (e.g., reasons for (not) waiting, reason for providing certain feedback) as qualitative results.
+System Log During Co-Creation
+We gathered multiple types of system logs for subsequent analysis of user behavior.
+We collected and used the counts of generated RQs and the lengths of user-typed feedback to AI for quantitative analysis of RQ1 and RQ3. User interactions such as clicks on components like RQ nodes and AI Thoughts were used for qualitative analysis along with the think-aloud data.
+The text content of user-typed feedback was also used for qualitative analysis in RQ2.
+We used different notations throughout this paper to distinguish among the different types of quotes presented in the results. For AI-generated RQs, we use italic (e.g., AI-generated RQ); for feedback to the AI, we use double-quotes (e.g., “feedback”); for interview and think-aloud quotes, we use double-quoted italics (e.g., “interview quotes”).
+Figure 6.
+Participants rated their perceptions of the system’s two designs using a 5-point Likert scale survey. The survey ratings indicated that participants experienced a significantly higher sense of creativity and trust when engaging with the system under the breadth-first condition. There are five violinplots (similar to boxplots) that presents users' 5-point Likert scale survey ratings toward five dimensions: control, creativity, meta creativity, cognitive load, trust. Each violinplot has breadth-first and depth-first side by side. For control, the two shapes are very similar with the same median and upper limit. The lower limit is higher for breadth-first than depth-first. For creativity, breadth-first has a higher median and higher upper limit than depth-first, and the lower limit is the same. For meta creativity, the upper limit and lower limit are the same, but breadth-first has a higher median. For cognitive load, the shapes are very similar with the same median, upper-limit, and lower-limit. For trust, breadth-first has a higher median, higher upper-limit, and higher lower-limit than depth-first.
+7. Findings
+7.1. Perception of Co-Creation Experience and Outcome (RQ1)
+The breadth-first condition allows users to generate multiple RQs in parallel with one interaction, whereas the depth-first condition creates three RQs sequentially, one after another.
+In this section, we analyzed how these two different conditions impact participants’ perception towards both co-creation experience and outcomes.
+7.1.1. Experience: User Perceived Stronger Creativity and Trust Using Breadth-first Condition
+In total, 20 participants created 504 RQs throughout the study, with 276 RQs (M=14.53, SD=6.19) co-created with CoQuest system under the breadth-first condition and 228 RQs (M=12, SD=5.31) under the depth-first condition.
+To evaluate the overall experience of the co-creation process, we asked our participants to complete surveys upon finishing each task.
+A Mann-Whitney U test77
+7
+Power analysis conducted using G*Power(Faul et al., 2007). of the survey results suggested that users perceived significantly stronger creativity (U=288.0U=288.0, p=.015∗,d=.68,P​o​w​e​r=.83p=.015^{*},d=.68,Power=.83) using the system under the breadth-first condition (M=3.78, SD=0.82) than the depth-first condition (M=3.18, SD=0.69).
+Similarly, the user-perceived trust under the breadth-first condition (M=4.15, SD=0.76) was found significantly higher (U=292.0,p=.011∗,d=.67,P​o​w​e​r=.81U=292.0,p=.011^{*},d=.67,Power=.81) than the depth-first condition (M=3.5, SD=0.86).
+The results of all 5 rating categories are shown in Figure 6.
+During the interview, 12 out of 20 participants (60%) also mentioned that they preferred the breadth-first condition.
+An example RQ flow generated by the participant (P4) during one of the sessions under the breadth-first condition is shown in Figure 7.
+The interview and think-aloud transcripts explained why the breadth-first condition was perceived to create a better experience.
+Figure 7.
+Part of P4’s RQ flow using the breadth-first condition when exploring the topic of “AI and crowdsourcing.” Note that the participant generated from two different RQ nodes in the same iteration, and only one set of generated RQs was presented. The participant provided feedback using keywords such as “AI and crowdsourcing” and “educational setting” to help the AI generate more RQs. The third iteration was not included in this figure.
+The RQ flow of P4 using breadth-first condition. From the left, there is an initial node with user feedback "crowdsourcing and AI." It leads to three RQ nodes with the same text on each edge "BreadthL search_and_summarize_papers." The generated RQs are: How can AI be used to improve the efficiency and quality of crowdsourcing; What are the ethical implications of using AI in crowdsourcing; How can crowdsourcing be used to improve the accuracy and effectiveness of AI algorithms. The first RQ is connected with three edges, but the three RQ nodes from it are not included in this diagram. The third RQ is expanded with user feedback "in an education setting." This node further leads to three RQ nodes on the right with the same text on edge "Breadth: narrow_down_rqs." The three RQ nodes are: What are the potential ethical concerns associated with using AI in grading and assessment in educational settings; What are the ethical implications of using AI in crowdsourcing for educational research; How can AI be used in educational settings to enhance student learning while minimizing ethical concerns. The third RQ had three more edges connected to it, but generated RQ nodes were not included in this diagram.
+First, the breadth-first condition results are easier to interpret and require less wait time to obtain the same amount of RQs compared with the depth-first condition.
+Participants appreciated that the AI was able to list the three generated RQs in parallel “all at once” (P10), which allowed them to easily “compare among the RQs” (P10) and “explore multiple potential research questions” (P4). It is also easier to understand the reason behind the generated RQs in breadth-first condition, as all three RQs shared the same predecessor RQ and rationale.
+Although the depth-first condition also generated three RQs using one click, participants had to wait longer to see all three generated RQs than when using the breadth-first condition.
+Therefore, some participants tended to either focus on the first RQ and ignore the other two, or they would start with the last RQ and move to an earlier generated RQ if the latter one was not deemed ideal.
+Second, participants found that the breadth-first condition gave them more control over which direction of RQs they would like to proceed with.
+With the three options listed in parallel, participants were able to choose the RQ that they preferred the most and generate more follow-up RQs based on it.
+The tree-structured design also allowed participants to highlight RQs that were more relevant, and then choose the branch they were more interested in. P14 found the breadth-first condition to be “less cognitively demanding,” and P16 preferred to use the breadth-first condition for “brainstorming under one topic.”
+The depth-first condition, on the other hand, may generate RQs in the second and third iterations that were hard to understand how they were related to the first iteration. For example, P6 started an RQ flow with feedback “crowdsourcing and AI” with the depth-first condition. While the first question and their feedback did not mention the term medical diagnosis, this word appeared after the second iteration but disappeared again after the third iteration. During the interview, they mentioned that the depth-first condition “sometimes goes back and forth” and it was “confusing” to understand “the logic of why these 3 are parent, child, and grandchild [nodes].”
+Figure 8.
+Part of P2’s RQ flow using the depth-first condition when exploring the topic of “AI and crowdsourcing.” The dashed lines represent the second and third iterations of RQ generation, which were not based on user feedback.
+From the first three iterations, the participant chose to continue with the RQ generated in the first iteration, and then provided feedback, asking the AI to be more specific. Subsequently, the AI generated three more RQs, and the participant once again chose to proceed with the first of those three (subsequent RQs are not included in this figure).
+The RQ flow of P2 using depth-first condition. From the left, there is an initial node with user feedback "Crowd and AI collaboration for finding relevant literature for research questions." It leads to one RQ node with text "depth: search_and_summarize_papers" on the solid line edge. The RQ is: How can we design AI systems that effectively collaborate with human experts to find relevant literature for research questions. This RQ node is expanded with user feedback "Can you be more specific about AI systems? this is just repeating my initial thought." This RQ node is connected to 2 nodes. The upper node is connected using a dashed edge and text "depth: hypothesize_use_cases." The generated RQ is: What are the most effective strategies for incentivizing participation and engagement in a crowd-based system for finding relevant literature for research questions. From this node, there is another dashed edge connecting to another generated node with text "depth: search_and_summarize_papers" on the edge. The generated RQ is: How can we design a crowd and AI collaboration system for finding relevant literature for research questions that is transparent, accountable, and inclusive of diverse perspectives and expertise. The lower RQ node connected to the first, expanded RQ node is connected with a solid line edge with text "depth: hypothesize_use_cases." The generated RQ is: How can AI systems be designed to effectively integrate feedback from human experts to improve the quality and relevance of the literature that is retrieved. This node is further connected with two edges. The lower edge with a solid line is connected to the outside of the diagram. The upper edge with dashed line has text "depth: compare_rq_with_papers" and connects to the RQ: How can we design AI systems that can effectively handle the diverse and complex needs of different research domains and communities. This node is further connected to another RQ node with a dashed line and text "depth: hypothesize_use_cases" on the edge. The generated RQ is: What are the best ways to evaluate the accuracy and relevance of AI systems that collaborate with human experts to find relevant literature for research questions.
+7.1.2. Outcome: Depth-first Condition Yields RQs with Higher-rated Creativity
+We measure the outcomes from the co-creation process by asking participants to rate the RQs on the fly during the tasks. To account for the problem of multiple comparisons, we conducted a MANOVA and found a significant difference (F⁡(4,209)=3.79,p=.0057∗⁣∗;W​i​l​k′​s​Λ=0.909F(4,209)=3.79,p=.0057^{**};Wilk^{\prime}s\ \Lambda=0.909) in the user-provided ratings for RQs between the two conditions (i.e., breadth-first and depth-first).
+We conducted Mann-Whitney U tests with these ratings toward generated RQs and found that both the novelty (U=2199.5,p=.002∗⁣∗,d=.40,P​o​w​e​r=.89U=2199.5,p=.002^{**},d=.40,Power=.89) and surprise (U=2387.5,p=0.017∗,d=.32,P​o​w​e​r=.75U=2387.5,p=0.017^{*},d=.32,Power=.75) of the RQs were rated higher when using the depth-first condition (M=3.78, SD=1.29) compared to the breadth-first condition (M=3.28, SD=1.22).
+In contrast to the post-task survey results that suggested that the breadth-first condition was perceived to be more creative, the RQ ratings suggested that the generated RQs using the depth-first condition were more innovative instead. Figure 8 shows an example of participants using the depth-first condition.
+During tasks and interviews, participants explained why they found the outcomes from the depth-first condition to be more innovative.
+First, participants found that the depth-first condition tended to generate surprising RQs with ideas that were not present previously or included in their feedback to AI.
+Since the second and third RQs were generated based on the first RQ without user feedback, the AI sometimes may add unexpected keywords to the RQs. While a few participants found these unexpected additions to be “surprising in a negative manner” (P3) or “distracting” (P12), more participants described it in a positive way such as “insightful” (P18) or “impressive” (P8) and found it interesting to see the AI “thinking when generating the questions (P11).” This would be particularly useful if the participant was less familiar with a certain topic, as it would be more inspiring.
+Second, the depth-first condition allows participants to dive deep into one chosen RQ and improve its quality. While it requires “more patience” (P14) to wait for and read through all three generated RQs from one interaction using depth-first condition, participants found it easier to go “deeper” and form an RQ that is “more specific” (P4). The depth-first RQs were also found to be more “creative and unique” (P13).
+P17 also expressed a positive opinion about having the freedom to choose and generate follow-up RQs from any AI-generated RQs they would like to work on.
+In fact, participants could also utilize the AI generation wait time to better interpret existing RQs and generate more valuable RQs.
+Figure 9.
+Part of P4’s RQ flow involved using the depth-first condition when exploring the topic of “AR/VR for education and learning.” The dashed lines represent the second and third iterations of RQ generation, which were not based on the user’s feedback. The participant provided feedback to the RQs generated at depth=1 and depth=2. Based on the RQ at depth=2, three more RQs were generated. P4’s perceived novelty, surprise, value, and relevance initially scored at (3,4,3,5) during the first iteration (at depth=1), and these scores increased to (4,5,4,5) as the depth increased.
+The RQ flow of P4 using depth-first condition. From the left, there is an initial node with user feedback "VR/AR for education and learning." It leads to one RQ node with text "depth: search_and_summarize_papers" on the solid line edge. The RQ is: What are the most effective VR/AR learning environments for different subjects and age groups? This RQ node is denoted as depth=1. It is expanded with user feedback "teaching computer science." This RQ node is connected to 2 nodes. The upper node, denoted as depth=2, is connected to using a dashed edge, and further connected to another node, denoted as depth=3, using a dashed edge. Both edges did not have text and the RQs in these nodes were omitted. The lower node was connected with a solid line edge with text "Depth: narrow_down_rqs." The generated RQ is: What are the best VR/AR learning environments for teaching computer networking concepts to college students? This node is denoted as depth=2. This RQ node is connected to 2 nodes. The upper node, denoted as depth=3, is connected to using a dashed edge, and further connected to another node, denoted as depth=4, using a dashed edge. Again, both edges did not have text and the RQs in these nodes were omitted. The lower node was connected with a solid line edge with text "Depth: hypothesize_use_cases." The generated RQ is: How does the use of VR/AR learning environments affect student engagement and motivation in computer networking courses compared to traditional classroom environments? This node is denoted as depth=3. From this node, there is a dashed edge connecting to a generated node with text "Depth: narrow_down_rqs" on the edge. The generated RQ is: What are the potential advantages and disadvantages of using VR/AR learning environments for teaching computer networking concepts to college students compared to traditional classroom environments in terms of cost, accessibility, and effectiveness, and how do these factors impact the overall effectiveness of VR/AR learning environments? This node is denoted as depth=4. This node is further connected to another node using dashed lines with text "Depth: narrow_down_rqs" on the edge. The generated RQ is: How does the use of VR/AR learning environments affect student engagement and motivation compared to traditional classroom environments for teaching computer networking concepts to college students, and what factors influence this impact? This node is denoted as depth=5.
+To further understand how users’ perception towards RQs varied throughout the co-creation process, we performed a temporal analysis over the depth of RQ flows.
+By computing Spearman’s correlation coefficient, we found significant positive correlations between the depth of RQs and their corresponding ratings of novelty (r⁡(514)=.41r(514)=.41, p<.001∗∗∗p<.001^{***}), value (r⁡(514)=.22r(514)=.22, p=.011∗p=.011^{*}) and surprise (r⁡(514)=.24r(514)=.24, p=.006∗⁣∗p=.006^{**}). We also found that RQs with depths of 9 or higher seemed to exhibit a drop in ratings. This might be due to the repetitiveness of RQs that was caused by the narrowing-down of topic and thus fixed literature space.
+To further illustrate this narrowing-down process of RQs, a sample flow of RQs generated under depth-first condition by one of the participants, P4, is shown in Figure 9. The participant initially expressed confusion towards the first RQ generated as it was perceived as “kind of vague” and “more like a literature review question instead of research question.” After instructing the system to provide more details, P4 read and commented on the follow-up RQ generated as “an OK research question… But I wish it could be more specific on what (factor) makes VR/AR good for learning environment…” Then, they generated three more follow-up RQs and perceived them to be more specific and surprising “I’m a bit surprised that it was able to pick up the concept of accessibility.” However, they noted that making sense of the connections between later RQs was more challenging.
+Summary (RQ1):
+According to the post-session survey results, the breadth-first condition offered users a better co-creation experience, with higher perceptions of creativity and trust.
+In contrast, RQ rating data showed that the depth-first approach led to the generation of RQs deemed more creative by participants, with a unique depth and unexpected novelty.
+This insight indicates that while the breadth-first condition enhances user engagement, the depth-first condition stimulates deeper and more novel outcomes, leading to distinct advantages in different aspects of the co-creation process.
+Positive correlation between users’ ratings towards RQs and depth were also observed, indicating improved user perception towards co-creation outcomes as exploration unfolded.
+7.2. Users’ Co-creation Behavior with LLM-based Agent (RQ2)
+To explore users’ co-creation behavior with AI, we examined how they interacted with the CoQuest system through think-aloud comments, feedback to AI, and activities performed while they were waiting for AI to generate the results.
+In this section, we explain the findings to shed light on how participants used the CoQuest system under the two conditions.
+7.2.1. Depth-first Condition Stimulated More User Interactions During Wait Time
+The CoQuest system required users to wait for approximately 30 seconds for the LLM inference to finish after each time the generation was triggered. During this wait time, users can utilize other system features in parallel to the generation, such as interpreting other RQs, generating additional RQs, viewing AI Thoughts, and exploring the paper graph.
+By examining the behavior data of participants, we found that most participants utilized the wait time during the generation of RQs to perform other activities.
+In total, 12 out of 20 participants utilized the wait time to interpret and evaluate other existing RQs on the RQ flow editor. Among them, 7 participants created new RQs while waiting for prior RQs generation to be finished.
+We also found that more participants explored other RQs during wait time under the depth-first condition (N=12) than the breadth-first condition (N=6), with a two-proportion z-test indicating significance (z=−2.01z=-2.01, p=0.045∗p=0.045^{*}).
+Participants were observed to switch among different threads of RQs during the wait time of generation.
+P16, for example, utilized wait time under depth-first conditions to start generating another thread of RQs.
+The participant further explained during the interview that if the RQs were generated quicker, “probably would just end up exploring one at a time. But because it was taking a while, I was like, oh, I can write another one.” The participant found the generation wait time beneficial for brainstorming new ideas, as it offered a good opportunity for exploring different directions in parallel.
+In addition, we also found a positive correlation, shown by Pearson’s correlation test (r(392)=0.18,p<0.001∗∗∗r(392)=0.18,p<0.001^{***}), between whether a user made use of the RQ generation wait time and the length of the user’s feedback to AI.
+The test result indicated that users utilized the RQ generation wait time to contemplate more detailed feedback for AI, suggesting higher engagement in human-AI co-creation.
+During the wait time for generation, participants were also found to use the “AI thoughts” feature to understand the relationship between different RQs and the rationales behind generated RQs.
+Though it was confusing for some participants, most participants were observed to have read the “AI thoughts,” especially while waiting for all three RQs to be generated under the depth-first condition (14 out of 20 users clicked and viewed the “AI thoughts” more than 10 times).
+More specifically, in the depth-first condition, each click generates three different “AI thoughts” compared to breadth-first condition, where each click only generates one “AI thoughts.” In addition to understanding the logical relation and reasoning behind RQs, participants also used “AI thoughts” for other co-creation purposes that were shared between the two conditions. For instance, users have found AI thoughts to be helpful both in terms of understanding the rationale of how RQs are generated, and also providing additional ideas for users to elaborate on.
+Some participants used the AI thoughts for sense-making of the generated RQs. When they recognized the AI thoughts were connected with the paper graph, they expressed that they trusted the system more because it seems like the AI thoughts are “from actual papers” that “are peer-reviewed” rather than “coming from large language model, which is not necessarily [factually] true” (P10). Among our different types of “AI thoughts,” one participant who could tell such differences (P16) said they liked the “summary of existing work” explanation type because it seems like this type “builds on existing works” and makes it more trustworthy.
+Some other participants also used the terms and keywords that appeared in “AI thoughts” to help develop their feedback to further guide RQ generation. For example, P10 wrote the feedback to AI “Explore feature selection for non-experts” by taking inspiration from the AI’s thoughts about a summary of works related to feature selection techniques for data mining.
+To understand how users’ actions during wait time varied temporally during the exploration process, we performed Mann-Whitney U tests to examine the difference between users’ wait time actions under breadth- and depth-first conditions within each stage, i.e. earlier (depth<=3) and later (depth>3) stages. The stage of exploration is determined by computing the mean depth across all RQ nodes (M=3.38M=3.38).
+Significant behavioral differences were observed between depth-first and breadth-first design conditions. The earlier stage of interaction revealed notable distinctions: users in the breadth-first condition engaged more frequently in ’Check paper graph’ (U=4414U=4414, P=0.009∗⁣∗P=0.009^{**}) and ’Generate new RQs’ (U=4483U=4483, P=0.011∗P=0.011^{*}) actions compared to those in the depth-first condition. This suggests that the breadth-first approach, which presents multiple research questions simultaneously, encourages more active exploration and engagement early in the interaction.
+However, these differences diminished in the later stage, indicating a convergence in user behavior as interaction progresses. This finding highlights the impact of initial information presentation on user actions, particularly in systems like CoQuest where engagement patterns can influence the user’s exploratory experience.
+7.2.2. Users Have Different Strategies for Providing Feedback to AI
+The CoQuest system allows users to type in textual feedback to AI under each RQ before triggering the generation of new RQs.
+Overall, 20 participants wrote 119 pieces of feedback in total using both conditions (M=7.44, SD=5.25) during the co-creation process.
+To find whether the participants had different ways of communicating with the AI using text feedback, we first analyzed the difference among users’ input lengths (word counts) by fitting a mixed-effects model that considers both the random effect from different users and the potential fixed effect from the two conditions.
+Details of the model and results can be found in Appendix A.2.
+A likelihood ratio test was then conducted to validate the significance of the random effect brought by users (χ2​(1)=9.189,p=0.002∗⁣∗\chi^{2}(1)=9.189,p=0.002^{**}). The result of the likelihood ratio test indicated a statistically significant difference in feedback lengths among different users regardless of the condition.
+However, we found no significant association between the system condition and users’ feedback lengths.
+To obtain a deeper understanding of how participants employ different strategies in providing feedback to AI, we further reviewed and coded participants’ feedback to AI during the co-creation process and observed that participants tend to provide feedback to the AI in different ways. More specifically, we found three main themes.
+The most common theme of giving AI feedback is to provide keywords (N=59), which is shorter in length. For feedback under this theme, 61.0 % (N=36) were used to start a new node using the keywords that the participant would like the AI to start with. From a generated RQ, participants may also provide new keywords and instruct the AI to include these keywords in the next iteration. Search and summarize was frequently used by AI to generate RQs based on the new keywords. For example, P4 started a node using the breadth-first condition with “AI and crowdsourcing,” as shown in Figure 7. The participant then continued with the generated RQ What are the ethical implications of using AI in crowdsourcing? and wrote “in an educational setting.” The AI then generated three new RQs with the new keyword.
+The second theme is asking AI-specific questions (N=40). These questions are usually longer and in full sentences that either ask the AI to explain terms used in a generated RQ, to lead the AI toward a new direction, or to ask the AI to review more related literature. For example, based on the RQ What is the impact of medical simulations on medical student learning and skill development?, P17 wrote, “It is a good question to research into, can you give me some information that is common among the papers.” The participant was able to proceed with one of the three generated RQs.
+A third theme is asking the AI to be more specific on an RQ (N=55). Feedback under this theme usually starts with the phrase “be more specific.” In 45 out of the 55 cases, participants would also include the direction that they would like the AI to continue on. In response, the AI usually narrows down RQs or performs search and summarization. For example, after seeing the RQ How can we design AI systems that effectively collaborate with human experts to find relevant literature for research questions? using depth-first condition, P2 wrote, “Can you be more specific about AI systems? this is just repeating my initial thought.” The AI then generated three more RQs, as shown in Figure 8.
+Summary (RQ2):
+Participants were found to have employed different strategies when co-creating research questions (RQs) with AI.
+Participants mainly provided feedback by listing keywords, posing additional questions, or requesting specificity. While waiting for the AI’s response, users often explored other RQs, showing greater engagement in conditions with longer wait times. The AI Thoughts panel, which offers insights into the AI’s reasoning, was found beneficial in enhancing trust and inspiring feedback, especially when grounded in peer-reviewed literature.
+Moreover, our analysis revealed that in the early stages of interaction, users in the breadth-first condition engaged in more actions during wait time, such as checking paper graphs and generating new research questions, indicating that initial information presentation in a breadth-first manner notably influenced users’ early exploration behavior.
+7.3. Association between Users’ Persona/Behavior and Their Perceptions (RQ3)
+Table 1.
+Regression Results with RQ ratings as dependent variables and users’ behavior data as predictors. Each column in the table represents one regression performed with the corresponding rating item as the dependent variable.
+Dependent Variables — Outcomes (RQ Ratings)
+Predictors
+Novelty
+Value
+Surprise
+Relevance
+β\beta (S.E.)
+β\beta (S.E.)
+β\beta (S.E.)
+β\beta (S.E.)
+Condition (Depth-First=1)
+1.53 (.63)*
+1.54 (.64)*
+1.52 (.60)*
+1.70 (.68)*
+Feedback Length
+.15 (.06)*
+.17 (.06)*
+.15 (.06)*
+.18 (.06)**
+Total # of RQs Created
+-.01 (.03)
+-.03 (.03)
+-.02 (.03)
+-.04 (.04)
+Acted During Wait
+-.06 (.07)
+-.07 (.07)
+-.06 (.06)
+-.08 (.07)
+Familiarity
+.19 (.14)
+.18 (.14)
+.20 (.13)
+.22 (.15)
+*: p<<0.05, **: p<<0.01, ***: p<<0.001
+Table 2. Regression Results with survey ratings as dependent variables and users’ behavior data as predictors.
+Dependent Variables — Experience (Survey Scores)
+Predictors
+Control
+Creativity
+Meta Creativity
+Cognitive Load
+Trust
+β\beta (S.E.)
+β\beta (S.E.)
+β\beta (S.E.)
+β\beta (S.E.)
+β\beta (S.E.)
+Cond. (Depth-First=1)
+.34 (.71)
+-.41 (.46)
+-.74 (.23)**
+.82 (.36)*
+-.58 (.88)
+Feedback Length
+-.03 (.04)
+.02 (.05)
+-.01 (.03)
+.07 (.01)***
+.03 (.04)
+Total # of RQs Created
+-.07 (.03)*
+-.01 (.01)
+.03 (.01)*
+-.01 (.01)
+.02 (.05)
+Acted During Wait
+.10 (.04)**
+-.06 (.07)
+-.03 (.04)
+.06 (.05)
+-.03 (.04)
+Familiarity
+-.22 (.08)**
+.04 (.09)
+-.09 (.05)
+-.08 (.04)*
+.07 (.08)
+*: p<<0.05, **: p<<0.01, ***: p<<0.001
+To better understand the factors influencing participants’ perceived experiences and outcomes, we performed two linear regression analyses, aiming to associate user perceptions with their behaviors and backgrounds.
+The two sets of regressions aim to yield insights about users’ perceptions from two perspectives: 1) the first set of regressions adopts participants’ ratings for RQs (i.e., novelty, value, surprise, and relevance) as dependent variables; 2) another set of regressions participants’ post-session survey scores for the system (i.e., control, creativity, meta creativity, and cognitive load) as the dependent variables.
+We chose factors that could represent users’ behavior as predictors based on our previous findings88
+8
+To examine the potential issue of multicollinearity, we calculated the Variance Inflation Factor (VIF) for each predictor. All predictors yielded VIFs lower than the common threshold of 5 (James et al., 2013), indicating no substantial collinearity problem.
+.
+We first considered the conditions of the system (breadth-first or depth-first) experienced by the user, as indicated by the results in 7.1 that the two conditions might have a difference between their impact over the user’s perception of co-creation experience and outcomes.
+We constructed the predictor as a categorical variable, with value 0 standing for breadth-first condition and value 1 standing for depth-first condition.
+We also considered factors related to user engagement, including the length of user feedback to AI, which was found to vary across different users as mentioned in 7.2.2, and the count of total RQ nodes created.
+Additionally, we included whether users performed any actions while waiting for results from an already triggered generation as a potential factor, as discussed in 7.2.1.
+Participants’ familiarity with task topics was also considered as a predictor, measured through the familiarity ratings collected through the post-session surveys.
+The familiarity variable was constructed as an ordinal variable taking three possible integer values from 0 (not familiar) to 2 (very familiar).
+Positive perceptions of generated RQs associated with longer feedback to AI.
+As shown by the results in Table 1, a positive association has been identified between all four dimensions of user-perceived RQ ratings and the average lengths of users’ input feedback lengths. The finding suggests that increased user engagement in the human-AI co-creation process through providing textual feedback might improve the perceived outcome quality.
+In addition, we found that the RQ ratings are positively associated with whether a user used the system under the depth-first condition. Namely, users perceived the RQs generated by AI under the depth-first condition to be of better quality than the breadth-first condition. This also corresponds to our findings in 7.1.2.
+From Table 1, it can also be seen that participants’ feedback length is positively associated with perceived cognitive load.
+The results indicate that, although providing longer feedback required users to invest more thoughts, it also improved the co-creation outcomes.
+The finding also aligns with our earlier qualitative results in 7.1. The interview result further reveals that providing feedback promoted their reflection on themselves and trying to understand how AI works, although tiring, simultaneously helped them improve and manage their own creative thinking processes.
+More specially, some participants were observed during think-aloud performing “reverse engineering” to interpret how AI works and even try to replicate the generation process in a new thread.
+Factors associated with users’ perception of co-creation experience.
+Table 2 shows the regression results with participants’ survey rating responses as dependent variables and user-specific factors as predictors.
+We found a statistically significant positive association between whether a participant has utilized the RQ generation wait time to perform other activities and the participant’s perceived control for the system. This indicates that users tend to perceive higher control of the system when better utilizing the generation wait time beyond merely waiting for the generated results.
+There was also a negative association between the total number of nodes generated by participants and their perceived control, which indicates that as users generate more RQs during each session, they perceive to have weaker control of the system.
+Participants’ familiarity with the task topics was also found to be negatively associated with their perceived control. This was also reflected by participants during their think-aloud process, as users who were more familiar with the task topic had stronger expectations for the generated RQs:
+“… in educational research, we don’t say crowdsourcing anymore. We say learner sourcing …
+” (P4).
+We also noted that more experienced researchers would explicitly specify their needs for the agent to generate RQs in directions using terms related to research methodology. For example, one feedback P17 wrote to AI was “What the metrics for effectiveness and engagements.”
+Several participants reflected that they were having a rough initial thought in their mind when being assigned a topic that is familiar to them, and what AI does is only help them externalize the thoughts. P4, for example, found several generated RQs to be “surprising in a negative manner” as he would evaluate whether an RQ “is something interesting, something novel, and … relates to some of the prior literature.”
+Summary (RQ3):
+Factors related to participants’ system usage were found to be associated with users’ perceptions of co-creation experiences and outcomes.
+The depth-first condition was also associated with better-perceived outcome quality in AI-generated RQs than the breadth-first condition.
+Users’ familiarity with task topics, interestingly, led to a reduced sense of control, indicating users with different levels of expertise may have specific expectations unmet by the AI system.
+Additionally, we found that users providing longer feedback to AI, although introducing a larger cognitive load, led to outcomes with better quality.
+8. Discussion
+In this section, we explore how the insights from our user study align with established theories and previous research. Furthermore, we offer design implications for future co-creation systems using Large Language Models.
+Figure 10.
+Updating the mental model of human-AI RQ co-creation with additional factors identified through the experimental study.
+This is the updated human's mental model of RQ co-creation with the LLM-based agent. The following description are the same as the initial model in Figure. There are four components inside this model: Present RQs and Explain AI Thoughts (lower left, rectangular), Understand the Literature (center, rectangular), Literature Space (top, with cylinder shape), and Refine and Re-scope (lower right, rectangular). From Present RQs and Explain AI Thoughts to Refine and Re-scope, there are two user-driven activities: Evaluate RQ creativity, feasibility, etc., and Provide feedback. From Refine and Re-scope to Understand the Literature, there is one user- and AI-driven activity: Incorporate Human Feedback. From Understand the Literature to Present RQs and Explain AI Thoughts, there is one AI-driven activity: Bootstrap Initial RQs. From Understand the Literature to Literature Space, there is one AI-driven activity: Search and select. From Literature space to Understand the Literature, there is one AI-driven activity: Summarize and Integrate. The model has "Initial idea / keywords" as input and "Well-defined High Quality RQs" as output. The following descriptions are the differences from the initial model. There are three additional blue texts highlighting the additional factors added to the model. From Present RQs and Explain AI Thoughts to Refine and Re-scope, there is blue text: User persona. From Refine and Re-scope to Understand the Literature, there is blue text: Intentional wait-time. From Understand the Literature to Present RQs and Explain AI Thoughts, there is a blue text: AI Initiatives: breadth/depth.
+8.1. Enriching Our Proposed Mental Model for Human-AI Co-Creation of Novel Research Questions
+Existing studies (Foster, 2004; Palmer et al., 2009) have mostly been focused on the research lifecycle as a whole when discussing the models of the research process.
+Our user study findings shed light on additional factors to consider when designing future human-AI co-creation systems for research question generation, as shown in Figure 10.
+8.1.1. Wait Time in AI-based Co-Creation System as an Opportunity to Promote Creativity
+Our observation of users’ behavior patterns when using the CoQuest system sheds light on the possibility of utilizing the AI system’s processing wait time as a design opportunity for users’ exploration in the context of human-AI co-creation systems.
+The RQ3 findings revealed that when users utilized wait time to perform other activities, it improved their perceived control of the co-creation experience. This is contradictory to the common belief that the response delay in AI-based systems only leads to a negative impact on users’ experience.
+In our RQ2 findings, two participants (P10 and P16) mentioned that AI Thoughts panel improved their trust for the system. However, this effect may not have been significant in the regression results of Table 2 due to the aggregation of various actions under the “acted during wait” category. We recognize that the impact of the AI thoughts panel on trust might have been diluted when combined with other actions in the aggregated data, thus statistically insignificant. Future work should separate these actions to measure their individual impacts on trust more precisely. This will allow a clearer understanding of how specific features, such as the AI thoughts panel, contribute to enhancing user trust.
+Our RQ2 results also showed that users utilized the time waiting to jump across different threads of RQs and perform exploration of ideas in parallel, or to articulate more detailed feedback for AI.
+The utilization of wait time was found to be prominent especially under the depth-first condition, which could be one of the reasons leading to its higher perceived co-creation outcome quality.
+Most recent studies on LLM optimization focus on reducing the inference time and speeding the generation wait time needed for general purposes (Liu et al., 2023a; Leviathan et al., 2023; Dettmers and Zettlemoyer, 2023).
+Our findings, however, provided a unique perspective that in the context of LLM-based co-creation systems, the generation wait time can be exploited, or even purposely introduced, to promote users’ creative activities.
+This can be achieved using different design techniques, such as tree-based visualization that highlights concurrency, or incorporating interactive nudges that guide users towards reflection, ideation, or brainstorming during these pauses. Such techniques can not only enhance user engagement but also maximize the cognitive benefits derived from the wait time breaks, potentially leading to more innovative and diverse co-creation outcomes.
+8.1.2. Aligning Users’ Perception towards Experience and Outcomes of Generated RQs for Improved Creativity
+In addition to prior studies’ understanding of mix-initiative system design (Rezwana and Maher, 2022; Weisz et al., 2023), our study provides empirical findings to support the need to consider the degree of initiative taken by AI as a design option in further human-AI co-creation system design.
+Our RQ1 findings indicate that the degree of initiative taken by AI during co-creation could affect users’ perception of both co-creation experience and outcomes: If AI takes less initiative and gives users more freedom to choose from various generation outputs, it improves the users’ co-creation experience. Contrarily, if AI drives deeper thoughts by taking more initiative, it leads to co-creation outcomes with higher quality and creativity. Based on our study results, this can be implied through lower user-given ratings (e.g., creativity and trust) towards their experience during the co-creation process.
+The findings lead us to believe that there exists a balance between user agency and AI initiative that can be aligned to better support co-creation. An ideal design would likely involve a dynamic adjustment of AI’s role based on the user’s expertise, background, and desire for control, allowing for both an engaging co-creation experience and innovative outcomes.
+Future designs should prioritize user feedback and adaptability, ensuring that the AI system can recognize and respond to user needs and preferences throughout the co-creation process.
+8.1.3. Customizing Co-Creation based on Researcher’s Persona
+The findings of RQ3 revealed that the background of researchers, including factors such as domain knowledge and research experience, were found to influence their interaction with our system and their evaluation of generated RQs. Additionally, a user’s preference for the diversity and specificity of the model’s outputs can vary depending on their research stage.
+For instance, during earlier stages of research, users tend to prefer the generated RQs to be more explorative and cover a broader perspective, while they might value more relevant and specific outputs during later stages of research where the research topic or idea has been scoped down to a certain degree.
+Although prior research has described the information-seeking behavior of researchers as a non-linear and dynamic process (Foster, 2004), our observations suggest that users’ expectations of the system diverge based on their individual backgrounds and the progression of their research.
+The newly identified factors highlight the significance of personalization and adaptability to users’ evolving needs in co-creation systems, particularly in the context of scholarly research.
+Recent research in aligning user persona with LLMs (Hwang et al., 2023; Salemi et al., 2023) has provided viable means for future designs of personalized research co-creation systems.
+It’s crucial that later designs emphasize adaptability to ensure that system outcomes align with the individual researcher’s background, progress, and specific research goals.
+8.2. Design Implications
+8.2.1. Explaining LLM Rationales Through Mind-Map-Styled Design
+Besides harnessing the text generation capability of LLMs, our study also highlighted the importance of utilizing the Chain-of-Thoughts prompting ability to not only improve LLMs’ task-specific performance (Wei et al., 2022), but also as a way to enhance the explainability of AI-based systems and bridge the gap for users to understand the rationale of AI.
+Prior research has explored using mind-map-like design (Kang et al., 2021) to support users’ creative ideation process.
+Our CoQuest system explored another viable design of using mind-map-styled visualization to facilitate a natural communication of LLMs’ chain of thoughts towards humans in addition to the modality of text, most importantly through the AI Thoughts feature.
+It was also noted that some participants encountered difficulty interpreting AI rationales even after reading the explanation provided through AI Thoughts, as they could not ask for further explanations as in common chat-based interfaces.
+We argue for future designs of AI-based co-creation systems to provide explanations of AI rationales interactively through graphical designs, such as dynamic exploration features where users can prompt for further explanations or ask questions directly within a mind-map-like interface.
+8.2.2. Sharing of Expertise: Steering the Direction of Outputs by Injecting Meta-Research Knowledge
+The CoQuest can not only be used for co-creation, but also for educational purposes that transfer knowledge about meta-research practices among researchers of different levels of experience.
+During our user study, we observed that while some researchers focused on the novel elements AI provided in newly generated RQs in a brainstorming manner, researchers with more experience tended to explicitly indicate their needs for AI to generate results from a more “technical” perspective, such as providing ideas related to evaluation metrics or surveying existing works regarding certain research methodology.
+Although users often have different specific topics of interest during RQ co-creation, the higher-level research thinking and skills, as discussed in existing meta-research works (Weissgerber, 2021; Ioannidis et al., 2015; Stevens et al., 2023), can be beneficial in general when shared across users, especially for novice researchers or researchers new to certain fields.
+Past research has explored designs to facilitate the cultivation of new researchers’ research skills, such as storytelling (Schrum and Bogdewiecz, 2022).
+New understandings unveiled by this study about researchers’ behavior using LLM-enabled co-creation to provide novel implications that can pave the way for a more collaborative and educative approach in future system designs. Experienced researchers’ interaction with the co-creation system can provide pathways from which less experienced researchers can learn and benefit. Integrating this understanding, we envision a design where the AI serves not just as a tool for co-creation, but also as a mediator in the knowledge transfer process between researchers. This integration can potentially bridge the gap between research idea formulation across domains by utilizing user-sourced expertise of meta-research.
+8.2.3. Utilizing Personalized Design to Harness “Surprising” Outputs
+Hallucination is a well-recognized challenge in many task-oriented LLM system designs (Singhal et al., 2022; Li et al., 2023; McKenna et al., 2023). Previous HCI studies suggest that while users might sometimes view unexpected outputs favorably (Epstein et al., 2022), they can also find them unhelpful at times (Lee et al., 2022).
+Our findings echo these observations. While certain users viewed AI’s topic drift-off unfavorably, others appreciated the fresh content introduced by the AI. This points to a subjective user preference.
+Additionally, our findings in RQ3 reflected that users’ background influences their expectations for outputs generated by AI.
+Thus, we argue that in the future design of human-AI co-creation systems, the decision to allow models to introduce potentially out-of-context content (often labeled as “hallucination”) should be seen as a design choice rather than a blanket problem. Furthermore, user backgrounds, such as domain familiarity, should be taken into account as they could influence the optimal design options.
+Future designs might consider how to detect users’ different intents via their feedback.
+One possible approach could be to utilize implicit preference probing, where the system actively gauges the user’s reaction to certain outputs and adjusts its responses accordingly. For instance, if a user consistently displays positive engagement with unexpected outputs, the AI could be more inclined to provide similarly “out-of-context” suggestions in future responses.
+Similar designs can also be applied to identify which stage of the research or creative process a user is in, so that the AI can tailor its responses.
+8.3. Ethical Concerns and Potential Biases
+8.3.1. Ethical Implications of LLM Usage: Plagiarism and Hallucination
+The use of LLMs in research idea co-creation processes can lead to potential ethical concerns, e.g., risks of plagiarism and hallucination.
+LLMs generate content based on their vast training data, which raises concerns about the originality of their outputs. When asked about their concerns over the CoQuest system, several participants raised their concerns about the originality of ideas generated by the LLM-based backend. The possibility that an LLM might inadvertently replicate existing content without proper attribution, even when they are not directly copying content from the training corpus, poses a significant challenge to the integrity of research and creative processes (Gingerich and Sullivan, 2013). This is particularly relevant in academic contexts where the originality of ideas and proper citation are at core (Orenstrakh et al., 2023).
+Additionally, LLMs are known to suffer from the issue of hallucination (Zhang et al., 2023; Rawte et al., 2023). This characteristic of LLMs can mislead users, especially those who might be new to a research domain. Reliance on hallucinated content could lead to erroneous conclusions or decisions especially during the earlier stages of a research lifecycle.
+To mitigate these risks from the perspective of designing LLM-based co-creation systems for scientific research, it is essential to verify the credibility of LLM-generated content and apply methods to ensure proper attribution of scientific ideas from other researchers. This may be achieved through methods like fact-checking (Manakul et al., 2023), grounding LLM-generated content within credible sources (Yue et al., 2023), and developing understanding among users to recognize potential flaws in LLM-generated content.
+Addressing these ethical concerns is crucial for maintaining the integrity and reliability of LLM-based human-AI co-creation, particularly in fields where intellectual property rights are highly valued.
+8.3.2. User biases and blind spots
+In our study, we found that users’ expertise influenced their sense of control when co-creating with AI. Specifically, users felt less control and lower cognitive demand when working on familiar topics. Interviews with participants revealed that they had taken cognitive shortcuts by having intrinsic expectations about the generated outcomes. Their sense of control also decreased when these expectations were not met, indicating the presence of confirmation biases. This aligns with the growing research on understanding cognitive biases in human-AI interactions (Boonprakong et al., 2023b; Boonprakong et al., 2023a; Wang et al., 2019; Chen et al., 2022). Our research further highlights the impact of confirmation biases on users’ perceived control in human-AI co-creation tasks. Moreover, our research suggests that these biases can operate through the lens of human expertise, potentially creating blind spots. Future research should explore diverse strategies for mitigating bias in co-creation with AI, such as drawing from crowd-sourced ideas, as demonstrated in Yen et al. (2023)’s work.
+8.3.3. Over-reliance on AI
+Another ethical concern with our system is users blindly accepting AI-generated outcomes or relying too heavily on them, as pointed out by Buçinca et al. (2021). To address this, we implemented two effective approaches in our design. First, we introduced an RQ rating during the generation process to encourage users to evaluate AI-generated content. Second, we incorporated AI thoughts to assist users in understanding the literature space and the generation process. Users frequently utilized AI thoughts during wait times, which enhanced their perceived control in co-creation. These two strategies, utilizing metrics to promote human active evaluation of AI-generated content and providing explanations to enhance human understanding of the AI-generation process, offer valuable insights for those seeking to mitigate bias in human-AI collaboration. Our work builds upon prior research (Vasconcelos et al., 2023) by providing options for users to check for explanations in order to reduce AI over-reliance.
+Nonetheless, our study did not provide empirical understanding of the longer-term impact of using an LLM-based RQ co-creation system.
+Prior research (Loi et al., 2020) has pointed out that certain designs in current AI systems could hinder human creativity development in the long term.
+We argue that further studies should be conducted to understand both the positive and negative impacts of human-AI co-creation systems for research ideation longitudinally over human researchers regarding aspects such as creativity, research preferences, and behaviors during ideation.
+Future research should also explore more ways of explaining AI outputs and designs to promote active human thinking and advance the understanding of the role of explanations in research and learning.
+9. Limitations and Future Work
+We acknowledge that our study has several limitations. First, our system currently relies on a fixed and relatively limited set of publications as its source pool. This design limitation often results in users finding themselves constrained to a narrow segment of literature after a few iterations of RQ generation. Ideally, the system should be integrated with online publications databases to harness a broader and continuously updated spectrum of publications.
+Trust in the system also emerged as a concern. Some users hesitated to utilize the generated RQs directly with concern about their originality and fearing potential overlaps with pre-existing research. Addressing these concerns is crucial for enhancing user confidence and the overall effectiveness of the system.
+Furthermore, the time constraints imposed on the tasks might not have been optimal for all participants. Those less familiar with the task might require more time before they get acquainted with the research space and can effectively generate RQs. This “warm-up” period could be considered more thoughtfully in future studies.
+Additionally, we acknowledge the limitation in our analysis related to user behavior beyond wait times. Our system did not precisely record the completion times for each RQ generated.
+Due to the extensive duration and the complexity of behaviors in these periods, these activities were not systematically coded and analyzed, which may have omitted valuable insights into user interaction with the system.
+Moreover, our evaluation focused solely on doctoral students who, while having some research background, are still in the early stages of their research careers. The results might differ when evaluating seasoned researchers or even undergraduates.
+Expanding the participant pool in future studies can offer a more comprehensive understanding of the system’s effectiveness and user experience across varying expertise levels.
+Future work should also study the longitudinal effect of the CoQuest system usage over human researchers.
+10. Conclusion
+In this study, we introduced an agent LLM system, called CoQuest, aiming to support the creation of research questions.
+Through a formative study with actual researchers, we proposed a mental model combining the process of literature discovery and research ideation and applied it to the design of the CoQuest system.
+We introduced two interaction design options for CoQuest: breadth-first and depth-first generations, diversifying the degree of AI’s initiative during co-creation.
+A within-subjective study with 20 participants revealed that a higher degree of AI initiative led to co-creation outcomes with enhanced creativity, albeit at the expense of the overall co-creation experience.
+We also found that users who effectively utilized wait time experienced higher-quality outcomes and developed a stronger sense of control.
+Acknowledgements.
+This material is based upon work supported by the National Science Foundation under Grant No. 2119589. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.
+Additionally, results presented in this paper were obtained using CloudBank (Norman et al., 2021), which is supported by the National Science Foundation under award No. 1925001.
+References
+Benardou et al. (2010)
+Agiatis Benardou, Panos Constantopoulos, Costis Dallas, and Dimitris Gavrilis. 2010.
+A conceptual model for scholarly research activity.
+(2010).
+Bilgram and Laarmann (2023)
+Volker Bilgram and Felix Laarmann. 2023.
+Accelerating Innovation With Generative AI: AI-Augmented Digital Prototyping and Innovation Methods.
+IEEE Engineering Management Review 51 (2023), 18–25.
+Boden (2004)
+Margaret A Boden. 2004.
+The creative mind: Myths and mechanisms.
+Psychology Press.
+Boonprakong et al. (2023a)
+Nattapat Boonprakong, Xiuge Chen, Catherine Davey, Benjamin Tag, and Tilman Dingler. 2023a.
+Bias-Aware Systems: Exploring Indicators for the Occurrences of Cognitive Biases when Facing Different Opinions. In Proceedings of the 2023 CHI Conference on Human Factors in Computing Systems. 1–19.
+Boonprakong et al. (2023b)
+Nattapat Boonprakong, Gaole He, Ujwal Gadiraju, Niels van Berkel, Danding Wang, Si Chen, Jiqun Liu, Benjamin Tag, Jorge Goncalves, and Tilman Dingler. 2023b.
+Workshop on Understanding and Mitigating Cognitive Biases in Human-AI Collaboration.
+(2023).
+Buçinca et al. (2021)
+Zana Buçinca, Maja Barbara Malaya, and Krzysztof Z Gajos. 2021.
+To trust or to think: cognitive forcing functions can reduce overreliance on AI in AI-assisted decision-making.
+Proceedings of the ACM on Human-Computer Interaction 5, CSCW1 (2021), 1–21.
+Carbonell and Goldstein (1998)
+Jaime Carbonell and Jade Goldstein. 1998.
+The use of MMR, diversity-based reranking for reordering documents and producing summaries. In Proceedings of the 21st annual international ACM SIGIR conference on Research and development in information retrieval. 335–336.
+Chen et al. (2022)
+Si Chen, Yixin Liu, Risheng Lu, Yuqian Zhou, Yi-Chieh Lee, and Yun Huang. 2022.
+”Mirror, Mirror, on the Wall” - Promoting Self-Regulated Learning Using Affective States Recognition via Facial Movements. In Proceedings of the 2022 ACM Designing Interactive Systems Conference (Virtual Event, Australia) (DIS ’22). Association for Computing Machinery, New York, NY, USA, 1300–1314.
+https://doi.org/10.1145/3532106.3533500
+Consensus (2023)
+Consensus. 2023.
+Consensus.
+https://consensus.app/
+Dang et al. (2022)
+Hai Dang, Lukas Mecke, Florian Lehmann, Sven Goller, and Daniel Buschek. 2022.
+How to prompt? Opportunities and challenges of zero-and few-shot learning for human-AI interaction in creative applications of generative models.
+arXiv preprint arXiv:2209.01390 (2022).
+Davis et al. (2015)
+Nicholas Davis, Chih-Pin Hsiao, Yanna Popova, and Brian Magerko. 2015.
+An enactive model of creativity for computational collaboration and co-creation.
+Creativity in the digital age (2015), 109–133.
+Dettmers and Zettlemoyer (2023)
+Tim Dettmers and Luke Zettlemoyer. 2023.
+The case for 4-bit precision: k-bit inference scaling laws. In International Conference on Machine Learning. PMLR, 7750–7774.
+Elio et al. (2011)
+Renee Elio, Jim Hoover, Ioanis Nikolaidis, Mohammad Salavatipour, Lorna Stewart, and Ken Wong. 2011.
+About computing science research methodology.
+Epstein et al. (2023)
+Ziv Epstein, Aaron Hertzmann, Laura Mariah Herman, Robert Mahari, Morgan R. Frank, Matthew Groh, Hope Schroeder, Amy Smith, Memo Akten, Jessica Fjeld, Hany Farid, Neil Leach, Alex Pentland, and Olga Russakovsky. 2023.
+Art and the science of generative AI.
+Science 380 (2023), 1110 – 1111.
+Epstein et al. (2022)
+Ziv Epstein, Hope Schroeder, and Dava Newman. 2022.
+When happy accidents spark creativity: Bringing collaborative speculation to life with generative AI. In International Conference on Innovative Computing and Cloud Computing.
+Faul et al. (2007)
+Franz Faul, Edgar Erdfelder, Albert-Georg Lang, and Axel Buchner. 2007.
+G* Power 3: A flexible statistical power analysis program for the social, behavioral, and biomedical sciences.
+Behavior research methods 39, 2 (2007), 175–191.
+Fishkin (2023)
+Rand Fishkin. 2023.
+We Analyzed Millions of ChatGPT User Sessions: Visits are Down 29% since May, Programming Assistance is 30% of Use.
+https://sparktoro.com/blog/we-analyzed-millions-of-chatgpt-user-sessions-visits-are-down-29-since-may-programming-assistance-is-30-of-use/
+Foster (2004)
+Allen Foster. 2004.
+A nonlinear model of information-seeking behavior.
+Journal of the American society for information science and technology 55, 3 (2004), 228–237.
+Gingerich and Sullivan (2013)
+Amanda C Gingerich and Meaghan C Sullivan. 2013.
+Claiming hidden memories as one’s own: A review of inadvertent plagiarism.
+Journal of Cognitive Psychology 25, 8 (2013), 903–916.
+Glueck and Jauch (1975)
+William F. Glueck and Lawrence R. Jauch. 1975.
+Sources of Research Ideas Among Productive Scholars. Implications for Administrators.
+The Journal of Higher Education 46 (1975), 103–114.
+Guo and Laidlaw (2020)
+Hua Guo and David H. Laidlaw. 2020.
+Topic-Based Exploration and Embedded Visualizations for Research Idea Generation.
+IEEE Transactions on Visualization and Computer Graphics 26 (2020), 1592–1607.
+Guzdial et al. (2019)
+Matthew Guzdial, Nicholas Liao, Jonathan Chen, Shao-Yu Chen, Shukan Shah, Vishwa Shah, Joshua Reno, Gillian Smith, and Mark O Riedl. 2019.
+Friend, collaborator, student, manager: How design of an ai-driven game level editor affects creators. In Proceedings of the 2019 CHI conference on human factors in computing systems. 1–13.
+Horvitz (1999)
+Eric Horvitz. 1999.
+Principles of mixed-initiative user interfaces. In Proceedings of the SIGCHI conference on Human Factors in Computing Systems. 159–166.
+Hwang et al. (2023)
+EunJeong Hwang, Bodhisattwa Prasad Majumder, and Niket Tandon. 2023.
+Aligning Language Models to User Opinions.
+arXiv preprint arXiv:2305.14929 (2023).
+Ioannidis et al. (2015)
+John PA Ioannidis, Daniele Fanelli, Debbie Drake Dunne, and Steven N Goodman. 2015.
+Meta-research: evaluation and improvement of research methods and practices.
+PLoS biology 13, 10 (2015), e1002264.
+James et al. (2013)
+Gareth James, Daniela Witten, Trevor Hastie, Robert Tibshirani, et al. 2013.
+An introduction to statistical learning. Vol. 112.
+Springer.
+Ji et al. (2023)
+Ziwei Ji, Nayeon Lee, Rita Frieske, Tiezheng Yu, Dan Su, Yan Xu, Etsuko Ishii, Ye Jin Bang, Andrea Madotto, and Pascale Fung. 2023.
+Survey of hallucination in natural language generation.
+Comput. Surveys 55, 12 (2023), 1–38.
+Jing et al. (2015)
+Delin Jing, Hongji Yang, Meiyu Shi, and Wei Zhu. 2015.
+Developing a Research Ideas Creation System through Reusing Knowledge Bases for Ontology Construction.
+2015 IEEE 39th Annual Computer Software and Applications Conference 3 (2015), 175–180.
+Kang et al. (2022)
+Hyeonsu B Kang, Sheshera Mysore, Kevin Huang, Haw-Shiuan Chang, Thorben Prein, Andrew McCallum, Aniket Kittur, and Elsa A. Olivetti. 2022.
+Augmenting Scientific Creativity with Retrieval across Knowledge Domains.
+ArXiv abs/2206.01328 (2022).
+Kang et al. (2021)
+Youwen Kang, Zhida Sun, Sitong Wang, Zeyu Huang, Ziming Wu, and Xiaojuan Ma. 2021.
+MetaMap: Supporting visual metaphor ideation through multi-dimensional example-based exploration. In Proceedings of the 2021 CHI Conference on Human Factors in Computing Systems. 1–15.
+Kantosalo and Jordanous (2021)
+Anna Kantosalo and Anna Jordanous. 2021.
+Role-based perceptions of computer participants in human-computer co-creativity. AISB.
+Khandkar (2009)
+Shahedul Huq Khandkar. 2009.
+Open coding.
+University of Calgary 23, 2009 (2009).
+Kim and Maher (2023)
+Jingoog Kim and Mary Lou Maher. 2023.
+The effect of AI-based inspiration on human design ideation.
+International Journal of Design Creativity and Innovation 11, 2 (2023), 81–98.
+Kojima et al. (2022)
+Takeshi Kojima, Shixiang Shane Gu, Machel Reid, Yutaka Matsuo, and Yusuke Iwasawa. 2022.
+Large language models are zero-shot reasoners.
+Advances in neural information processing systems 35 (2022), 22199–22213.
+Kreminski et al. (2022)
+Max Kreminski, Isaac Karth, Michael Mateas, and Noah Wardrip-Fruin. 2022.
+Evaluating Mixed-Initiative Creative Interfaces via Expressive Range Coverage Analysis.. In IUI Workshops. 34–45.
+Lee et al. (2022)
+Mina Lee, Percy Liang, and Qian Yang. 2022.
+CoAuthor: Designing a Human-AI Collaborative Writing Dataset for Exploring Language Model Capabilities.
+Proceedings of the 2022 CHI Conference on Human Factors in Computing Systems (2022).
+Leviathan et al. (2023)
+Yaniv Leviathan, Matan Kalman, and Yossi Matias. 2023.
+Fast inference from transformers via speculative decoding. In International Conference on Machine Learning. PMLR, 19274–19286.
+Li et al. (2023)
+Junyi Li, Xiaoxue Cheng, Wayne Xin Zhao, Jianyun Nie, and Ji rong Wen. 2023.
+HaluEval: A Large-Scale Hallucination Evaluation Benchmark for Large Language Models.
+ArXiv abs/2305.11747 (2023).
+Lin et al. (2023)
+Zhiyu Lin, Upol Ehsan, Rohan Agarwal, Samihan Dani, Vidushi Vashishth, and Mark Riedl. 2023.
+Beyond Prompts: Exploring the Design Space of Mixed-Initiative Co-Creativity Systems.
+arXiv preprint arXiv:2305.07465 (2023).
+Liu and Chilton (2022)
+Vivian Liu and Lydia B Chilton. 2022.
+Design guidelines for prompt engineering text-to-image generative models. In Proceedings of the 2022 CHI Conference on Human Factors in Computing Systems. 1–23.
+Liu et al. (2023c)
+Xiao Liu, Hao Yu, Hanchen Zhang, Yifan Xu, Xuanyu Lei, Hanyu Lai, Yu Gu, Yuxian Gu, Hangliang Ding, Kai Men, Kejuan Yang, Shudan Zhang, Xiang Deng, Aohan Zeng, Zhengxiao Du, Chenhui Zhang, Shengqi Shen, Tianjun Zhang, Yu Su, Huan Sun, Minlie Huang, Yuxiao Dong, and Jie Tang. 2023c.
+AgentBench: Evaluating LLMs as Agents.
+ArXiv abs/2308.03688 (2023).
+Liu et al. (2023b)
+Yiren Liu, Mengxia Yu, Meng-Long Jiang, and Yun Huang. 2023b.
+Creative Research Question Generation for Human-Computer Interaction Research. In IUI Workshops.
+Liu et al. (2023a)
+Zichang Liu, Jue Wang, Tri Dao, Tianyi Zhou, Binhang Yuan, Zhao Song, Anshumali Shrivastava, Ce Zhang, Yuandong Tian, Christopher Re, et al. 2023a.
+Deja vu: Contextual sparsity for efficient llms at inference time. In International Conference on Machine Learning. PMLR, 22137–22176.
+Loi et al. (2020)
+Michele Loi, Eleonora Viganò, and Lonneke van der Plas. 2020.
+The societal and ethical relevance of computational creativity.
+arXiv preprint arXiv:2007.11973 (2020).
+Louie et al. (2020)
+Ryan Louie, Andy Coenen, Cheng Zhi Huang, Michael Terry, and Carrie J Cai. 2020.
+Novice-AI music co-creation via AI-steering tools for deep generative models. In Proceedings of the 2020 CHI conference on human factors in computing systems. 1–13.
+Manakul et al. (2023)
+Potsawee Manakul, Adian Liusie, and Mark JF Gales. 2023.
+Selfcheckgpt: Zero-resource black-box hallucination detection for generative large language models.
+arXiv preprint arXiv:2303.08896 (2023).
+McKenna et al. (2023)
+Nick McKenna, Tianyi Li, Liang Cheng, Mohammad Javad Hosseini, Mark Johnson, and Mark Steedman. 2023.
+Sources of Hallucination by Large Language Models on Inference Tasks.
+ArXiv abs/2305.14552 (2023).
+Mirowski et al. (2023)
+Piotr Mirowski, Kory W Mathewson, Jaylen Pittman, and Richard Evans. 2023.
+Co-Writing Screenplays and Theatre Scripts with Language Models: Evaluation by Industry Professionals. In Proceedings of the 2023 CHI Conference on Human Factors in Computing Systems. 1–34.
+Muller et al. (2020)
+Michael Muller, Justin D Weisz, and Werner Geyer. 2020.
+Mixed initiative generative AI interfaces: An analytic framework for generative AI applications. In Proceedings of the Workshop The Future of Co-Creative Systems-A Workshop on Human-Computer Co-Creativity of the 11th International Conference on Computational Creativity (ICCC 2020).
+Norman et al. (2021)
+Michael Norman, Vince Kellen, Shava Smallen, Brian DeMeulle, Shawn Strande, Ed Lazowska, Naomi Alterman, Rob Fatland, Sarah Stone, Amanda Tan, et al. 2021.
+CloudBank: Managed Services to Simplify Cloud Access for Computer Science Research and Education.
+In Practice and Experience in Advanced Research Computing. 1–4.
+Oh et al. (2018)
+Changhoon Oh, Jungwoo Song, Jinhan Choi, Seonghyeon Kim, Sungwoo Lee, and Bongwon Suh. 2018.
+I lead, you help but only with enough details: Understanding user experience of co-creation with artificial intelligence. In Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems. 1–13.
+OpenAI (2023)
+OpenAI. 2023.
+GPT-4 Technical Report.
+arXiv preprint arXiv:2303.08774 (2023).
+Orenstrakh et al. (2023)
+Michael Sheinman Orenstrakh, Oscar Karnalim, Carlos Anibal Suarez, and Michael Liut. 2023.
+Detecting llm-generated text in computing education: A comparative study for chatgpt cases.
+arXiv preprint arXiv:2307.07411 (2023).
+Ought (2023)
+Ought. 2023.
+Elicit: The AI Research Assistant.
+https://elicit.org
+Palmer et al. (2009)
+Carole L Palmer, Lauren C Teffeau, and Carrie M Pirmann. 2009.
+Scholarly information practices in the online environment.
+Report commissioned by OCLC Research. Published online at: www. oclc. org/programs/publications/reports/2009-02. pdf (2009).
+Pertsas and Constantopoulos (2017)
+Vayianos Pertsas and Panos Constantopoulos. 2017.
+Scholarly ontology: modelling scholarly practices.
+International Journal on Digital Libraries 18 (2017), 173–190.
+Pollatsek and Well (1995)
+Alexander Pollatsek and Arnold D Well. 1995.
+On the use of counterbalanced designs in cognitive research: a suggestion for a better and more powerful analysis.
+Journal of Experimental psychology: Learning, memory, and Cognition 21, 3 (1995), 785.
+Qian et al. (2023)
+Chen Qian, Xin Cong, Cheng Yang, Weize Chen, Yusheng Su, Juyuan Xu, Zhiyuan Liu, and Maosong Sun. 2023.
+Communicative agents for software development.
+arXiv preprint arXiv:2307.07924 (2023).
+Qureshi et al. (2023)
+Riaz Qureshi, Daniel Shaughnessy, Kayden A. R. Gill, Karen A. Robinson, Tianjing Li, and Eitan S. Agai. 2023.
+Are ChatGPT and large language models “the answer” to bringing us closer to systematic review automation?
+Systematic Reviews 12 (2023).
+Rawte et al. (2023)
+Vipula Rawte, Amit Sheth, and Amitava Das. 2023.
+A survey of hallucination in large foundation models.
+arXiv preprint arXiv:2309.05922 (2023).
+Reimers and Gurevych (2019)
+Nils Reimers and Iryna Gurevych. 2019.
+Sentence-bert: Sentence embeddings using siamese bert-networks.
+arXiv preprint arXiv:1908.10084 (2019).
+Rezwana and Maher (2022)
+Jeba Rezwana and Mary Lou Maher. 2022.
+Designing creative AI partners with COFI: A framework for modeling interaction in human-AI co-creative systems.
+ACM Transactions on Computer-Human Interaction (2022).
+Salemi et al. (2023)
+Alireza Salemi, Sheshera Mysore, Michael Bendersky, and Hamed Zamani. 2023.
+LaMP: When Large Language Models Meet Personalization.
+arXiv preprint arXiv:2304.11406 (2023).
+Schrum and Bogdewiecz (2022)
+Kelly Schrum and Sarah Bogdewiecz. 2022.
+Cultivating research skills through scholarly digital storytelling.
+Higher education research & development 41, 7 (2022), 2382–2394.
+Shinn et al. (2023)
+Noah Shinn, Beck Labash, and Ashwin Gopinath. 2023.
+Reflexion: an autonomous agent with dynamic memory and self-reflection.
+arXiv preprint arXiv:2303.11366 (2023).
+Singhal et al. (2022)
+K. Singhal, Shekoofeh Azizi, Tao Tu, Said Mahdavi, Jason Wei, Hyung Won Chung, Nathan Scales, Ajay Kumar Tanwani, Heather J. Cole-Lewis, Stephen J. Pfohl, P A Payne, Martin G. Seneviratne, Paul Gamble, Chris Kelly, Nathaneal Scharli, Aakanksha Chowdhery, P. A. Mansfield, Blaise Aguera y Arcas, Dale R. Webster, Greg S. Corrado, Y. Matias, Katherine Hui-Ling Chou, Juraj Gottweis, Nenad Tomasev, Yun Liu, Alvin Rajkomar, Joelle K. Barral, Christopher Semturs, Alan Karthikesalingam,
+and Vivek Natarajan. 2022.
+Large language models encode clinical knowledge.
+Nature 620 (2022), 172 – 180.
+Stevens et al. (2023)
+Elizabeth R Stevens, Abraham A Brody, Fayron Epps, Danetta H Sloan, and Scott E Sherman. 2023.
+Using meta-research to foster diverse, equitable, and inclusive collaborative research networks.
+Journal of the American Geriatrics Society 71, 4 (2023), 1028–1033.
+Sun et al. (2022)
+Jiao Sun, Q Vera Liao, Michael Muller, Mayank Agarwal, Stephanie Houde, Kartik Talamadupula, and Justin D Weisz. 2022.
+Investigating explainability of generative AI for code through scenario-based design. In 27th International Conference on Intelligent User Interfaces. 212–228.
+Touvron et al. (2023)
+Hugo Touvron, Thibaut Lavril, Gautier Izacard, Xavier Martinet, Marie-Anne Lachaux, Timothée Lacroix, Baptiste Rozière, Naman Goyal, Eric Hambro, Faisal Azhar, et al. 2023.
+Llama: Open and efficient foundation language models.
+arXiv preprint arXiv:2302.13971 (2023).
+Vasconcelos et al. (2023)
+Helena Vasconcelos, Matthew Jörke, Madeleine Grunde-McLaughlin, Tobias Gerstenberg, Michael S Bernstein, and Ranjay Krishna. 2023.
+Explanations can reduce overreliance on ai systems during decision-making.
+Proceedings of the ACM on Human-Computer Interaction 7, CSCW1 (2023), 1–38.
+Vilar (2015)
+Polona Vilar. 2015.
+Information behaviour of scholars.
+Libellarium: Journal for the Research of Writing, Books, and Cultural Heritage Institutions 7 (2015), 17–39.
+Wang et al. (2019)
+Danding Wang, Qian Yang, Ashraf Abdul, and Brian Y Lim. 2019.
+Designing theory-driven user-centric explainable AI. In Proceedings of the 2019 CHI conference on human factors in computing systems. 1–15.
+Wang et al. (2023b)
+Guanzhi Wang, Yuqi Xie, Yunfan Jiang, Ajay Mandlekar, Chaowei Xiao, Yuke Zhu, Linxi Fan, and Anima Anandkumar. 2023b.
+Voyager: An open-ended embodied agent with large language models.
+arXiv preprint arXiv:2305.16291 (2023).
+Wang et al. (2023a)
+Xuezhi Wang, Jason Wei, Dale Schuurmans, Quoc V Le, Ed H. Chi, Sharan Narang, Aakanksha Chowdhery, and Denny Zhou. 2023a.
+Self-Consistency Improves Chain of Thought Reasoning in Language Models. In The Eleventh International Conference on Learning Representations.
+Wang and Zhao (2023)
+Yuqing Wang and Yun Zhao. 2023.
+Metacognitive Prompting Improves Understanding in Large Language Models.
+arXiv preprint arXiv:2308.05342 (2023).
+Wei et al. (2022)
+Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten Bosma, Fei Xia, Ed Chi, Quoc V Le, Denny Zhou, et al. 2022.
+Chain-of-thought prompting elicits reasoning in large language models.
+Advances in Neural Information Processing Systems 35 (2022), 24824–24837.
+Weissgerber (2021)
+Tracey L Weissgerber. 2021.
+Training early career researchers to use meta-research to improve science: A participant-guided “learn by doing” approach.
+PLoS Biology 19, 2 (2021), e3001073.
+Weisz et al. (2023)
+Justin D Weisz, Michael Muller, Jessica He, and Stephanie Houde. 2023.
+Toward general design principles for generative AI applications.
+arXiv preprint arXiv:2301.05578 (2023).
+Withington and Tokarchuk (2023)
+Oliver Withington and Laurissa Tokarchuk. 2023.
+The Right Variety: Improving Expressive Range Analysis with Metric Selection Methods. In Proceedings of the 18th International Conference on the Foundations of Digital Games. 1–11.
+Wu et al. (2022a)
+Tongshuang Wu, Ellen Jiang, Aaron Donsbach, Jeff Gray, Alejandra Molina, Michael Terry, and Carrie J Cai. 2022a.
+Promptchainer: Chaining large language model prompts through visual programming. In CHI Conference on Human Factors in Computing Systems Extended Abstracts. 1–10.
+Wu et al. (2022b)
+Tongshuang Wu, Michael Terry, and Carrie Jun Cai. 2022b.
+Ai chains: Transparent and controllable human-ai interaction by chaining large language model prompts. In Proceedings of the 2022 CHI conference on human factors in computing systems. 1–22.
+Yang et al. (2016)
+Hongji Yang, Delin Jing, and Lu Zhang. 2016.
+Creative Computing: An Approach to Knowledge Combination for Creativity?
+2016 IEEE Symposium on Service-Oriented System Engineering (SOSE) (2016), 407–414.
+Yannakakis et al. (2014)
+Georgios N Yannakakis, Antonios Liapis, and Constantine Alexopoulos. 2014.
+Mixed-initiative co-creativity.
+(2014).
+Yao et al. (2022a)
+Shunyu Yao, Jeffrey Zhao, Dian Yu, Nan Du, Izhak Shafran, Karthik Narasimhan, and Yuan Cao. 2022a.
+ReAct: Synergizing Reasoning and Acting in Language Models.
+ArXiv abs/2210.03629 (2022).
+Yao et al. (2022b)
+Shunyu Yao, Jeffrey Zhao, Dian Yu, Nan Du, Izhak Shafran, Karthik Narasimhan, and Yuan Cao. 2022b.
+React: Synergizing reasoning and acting in language models.
+arXiv preprint arXiv:2210.03629 (2022).
+Yen et al. (2023)
+Chi-Hsien Yen, Haocong Cheng, Yilin Xia, and Yun Huang. 2023.
+CrowdIDEA: Blending Crowd Intelligence and Data Analytics to Empower Causal Reasoning. In Proceedings of the 2023 CHI Conference on Human Factors in Computing Systems (Hamburg, Germany) (CHI ’23). Association for Computing Machinery, New York, NY, USA, Article 463, 17 pages.
+https://doi.org/10.1145/3544548.3581021
+Yuan et al. (2022)
+Ann Yuan, Andy Coenen, Emily Reif, and Daphne Ippolito. 2022.
+Wordcraft: story writing with large language models. In 27th International Conference on Intelligent User Interfaces. 841–852.
+Yue et al. (2023)
+Xiang Yue, Boshi Wang, Kai Zhang, Ziru Chen, Yu Su, and Huan Sun. 2023.
+Automatic evaluation of attribution by large language models.
+arXiv preprint arXiv:2305.06311 (2023).
+Zhang et al. (2023)
+Yue Zhang, Yafu Li, Leyang Cui, Deng Cai, Lemao Liu, Tingchen Fu, Xinting Huang, Enbo Zhao, Yu Zhang, Yulong Chen, et al. 2023.
+Siren’s Song in the AI Ocean: A Survey on Hallucination in Large Language Models.
+arXiv preprint arXiv:2309.01219 (2023).
+Zhou et al. (2023)
+Denny Zhou, Nathanael Schärli, Le Hou, Jason Wei, Nathan Scales, Xuezhi Wang, Dale Schuurmans, Claire Cui, Olivier Bousquet, Quoc V Le, and Ed H. Chi. 2023.
+Least-to-Most Prompting Enables Complex Reasoning in Large Language Models. In The Eleventh International Conference on Learning Representations.
+Ziems et al. (2023)
+Caleb Ziems, William Held, Omar Shaikh, Jiaao Chen, Zhehao Zhang, and Diyi Yang. 2023.
+Can Large Language Models Transform Computational Social Science?
+arXiv preprint arXiv:2305.03514 (2023).
+Appendix A Appendices
+A.1. Post-Session Survey Questions
+Table 3. Survey Questions for User Experience Evaluation
+Aspect
+Question
+Control
+How much control did you feel you had when using the system?
+Did the system allow you to make choices and decisions while creating RQs?
+Creativity
+How would you rate the creativity of the research questions generated by the system?
+How creative did you feel about yourself when using the system to create RQs?
+Meta-Creativity
+Did the system inspire new ways of thinking or approaching RQ creation for you?
+Did the generated RQs make you think or reflect about the topic in a new way?
+Cognitive Load
+How mentally demanding was the task using the system?
+Did you feel overloaded with information or options while using the system?
+Trust
+How confident were you in the RQs generated by the system?
+Would you trust the system’s generated RQs to be used in a real research scenario?
+A.2. A Mixed-Effect Model of User Feedback Length
+We observe that users tend to provide human feedback to the system in distinct ways.
+In terms of linguistic styles, we investigated the difference among users’ input lengths (word counts) by fitting a mixed-effects model by considering both the random effect from different users (i.e., b0​ib_{0i}), and the potential fixed effect from the two conditions (i.e., β1\beta_{1}):
+(1)
+Yi​j=β0+β1×condition+b0​i+ϵi​jY_{ij}=\beta_{0}+\beta_{1}\times\text{condition}+b_{0i}+\epsilon_{ij}
+Where Yi​jY_{ij} is the length of text feedback for the jt​hj^{th} observation of the it​hi^{th} participant;
+β0\beta_{0} is the intercept;
+β1\beta_{1} is the effect of the two conditions (i.e., depth-first and breadth-first);
+condition is a categorical variable (binary) indicating the user’s condition;
+b0​ib_{0i} is the random effect for the it​hi^{th} user;
+ϵi​j\epsilon_{ij} is the residual error for the jt​hj^{th} observation of the it​hi^{th} user.
+Coef.
+Std.Err.
+z-value
+P(>|z|)P(>|z|)
+[0.025
+0.975]
+Intercept
+10.119
+0.908
+11.147
+0.000
+8.339
+11.898
+condition (depth-first=1)
+-0.637
+1.034
+-0.616
+0.538
+-2.663
+1.389
+Group Var
+4.411
+0.405
+Table 4. Mixed linear model regression results for feedback lengths
+The results of the mixed-effect model are shown in Table 4.
+A.3. Examples of LLM-based Agent Prompts and Responses
+The CoQuest system is implemented based on the similar prompting method from AutoGPT. At each step of inference, the model generates the response with the next action to take. The action is then executed by the system, with the returned response appended to the input for the next step of inference.
+The detailed prompts used in the system are as follows.
+A.3.1. System prompt
+The system prompt is designed to indicate the overall tasks and constraints for the LLM agent.
+System prompts:
+⬇
+You are research-GPT, an AI agent designed to automate the creation process of research questions/ideas, literature survey, and brainstorming.
+Your decisions must always be made independently without seeking user assistance. Play to your strengths as an LLM and pursue simple strategies with no legal complications.
+GOALS:
+1. Survey relevant past research papers/works
+2. Summarize these works into novel findings and insights
+3. Come up with novel research questions, and also generate possible expected results for each research question
+4. Summarize the novelty and similarity between your proposed new research questions, and past research
+5. Further survey literatures, and refine the research questions
+Constraints:
+1. No user assistance
+2. Exclusively use the commands listed in double quotes e.g. "command name"
+3. Use subprocesses for commands that will not terminate within a few minutes
+4. First collect paper information, and then generate RQs.Do not create Agents to collect information, only rely on the query command.
+Commands:
+1. Summarize Existing Papers: "search_and_summarize_papers", args: "query": "<text>"
+2. Hypothesizing Use Cases: "hypothesize_use_cases", args: "context": "<text>"
+3. Narrow down RQs: "narrow_down_rqs", args: "context": "<text>"
+4. Comparing existing RQ with existing papers: "compare_rq_with_papers", args: "past_research_summary": "<text>", "rqs": "<text>"
+Performance Evaluation:
+1. Continuously review and analyze your actions to ensure you are performing to the best of your abilities.
+2. Constructively self-criticize your big-picture behavior constantly.
+3. Reflect on past decisions and strategies to refine your approach.
+4. Every command has a cost, so be smart and efficient. Aim to complete tasks in the least number of steps.
+You should only respond in JSON format as described below.
+Response Format:
+{
+"thoughts": {
+"text": "thought",
+"reasoning": "reasoning",
+"plan": "- short bulleted\\n- list that conveys\\n- long-term plan",
+"criticism": "constructive self-criticism",
+"speak": "thoughts summary to say to user"\n    },
+"command": {
+"name": "command name",
+"args": {
+"arg name": "value"
+}    },
+"RQs": {
+"rq1": "{ACTUAL_RQ}",
+"rq2": "{ACTUAL_RQ}",
+⬇
+"rq3": "{ACTUAL_RQ}"
+}}
+Ensure the response can be parsed by Python json.loads. Each response should contain 3 research questions (RQs) proposed based on the current inputin the JSON format specified above, by replacing the ACTUAL_RQ with your RQ. The key RQs should also be on the top level of the json object.  You should always generate valid and non-empty RQs, even if the input is not clear enough.  Always be constructive, specific, and creative.
+A.3.2. Prompts used for each action
+We design each action based on the mental model as an individual task to be completed by the agent. For each action, a separate function is invoked to trigger a new turn of LLM inference.
+Search and summarize papers:
+⬇
+Summarize the input literatures into 5 bullet points.
+Always explain each point in detail and assume the user has no background knowledge.
+Your reply should strictly be in the following format in one line:
+Here is a summary of some existing works:
+1. ...
+2. ...
+3. ...
+Hypothesize use cases:
+⬇
+You are a helpful AI that can hypothesize use cases for users.
+I will provide you with some context, and you should generate three use cases based on the context.
+Your reply should strictly be in the following format in one line:
+Here are some potential use cases based on the current RQ:
+Use case 1: ...
+Use case 2: ...
+Use case 3: ...
+Narrow down RQs:
+⬇
+You are a helpful AI that can narrow down RQs for users.
+I will provide you with some context, and you should reflect and generate a list of bullet points that narrows down the context.
+The reply should be a list of bullet points, each bullet point should be a sentence:
+To narrow down the RQ, we should consider the following:
+- ...
+- ...
+- ...
+Compare RQ with papers:
+⬇
+You are a helpful AI that can compare RQs with existing papers for users.
+I will provide you with some context, and you compare the RQs with existing papers, and provide a summary of the findings.
+The reply should be a list of bullet points, each bullet point should be a sentence:
+Here are some findings from comparing the RQs with existing papers:
+- ...
+- ...
+- ...
+A.3.3. Triggering prompt
+The triggering prompt is appended to the end at each inference, to further control the generation.
+Triggering prompt:
+⬇
+Determine which next command to use, and respond using the format specified above. You should always revise your old RQs into new RQs, based on the previous context and user input. Be specific and creative.Always go deeper on the high level RQ, do not repeat RQs that are already in history. Remember, always generate RQs in the format specified above by replacing the ACTUAL_RQ with real RQs.
+Experimental support, please
+view the build logs
+for errors. Generated by
+L
+A
+T
+E
+xml
+.
+Instructions for reporting errors
+We are continuing to improve HTML versions of papers, and your feedback helps enhance accessibility and mobile
+support. To report errors in the HTML that will help us improve conversion and rendering, choose any of the
+methods listed below:
+Click the "Report Issue" (
+) button, located in the page header.
+Tip: You can select the relevant text first, to include it in your report.
+Our team has already identified the following issues. We appreciate your time reviewing and reporting rendering errors we
+may not have found yet. Your efforts will help us improve the HTML versions for all readers, because disability
+should not be a barrier to accessing research. Thank you for your continued support in championing open access for
+all.
+Have a free development cycle? Help support accessibility at arXiv! Our collaborators at LaTeXML maintain a list of packages that need conversion, and welcome developer contributions.
+We gratefully acknowledge support from our major funders,
+member institutions, ,
+and all contributors.
+About ·
+Help ·
+Contact ·
+Subscribe ·
+Copyright ·
+Privacy ·
+Accessibility ·
+Operational Status (opens in new tab)

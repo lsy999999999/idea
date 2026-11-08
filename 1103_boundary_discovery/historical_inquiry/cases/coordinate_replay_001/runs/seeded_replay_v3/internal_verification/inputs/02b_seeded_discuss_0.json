@@ -1,0 +1,83 @@
+{
+  "claims": [
+    {
+      "id": "coordinate",
+      "text": "谱50与谱88的峰频分别3150 Hz和1600 Hz，几乎相差一倍，因此它们反驳了fc/U坐标下的峰位对齐，应放弃该尺度。",
+      "kind": "inference",
+      "use": "research_decision",
+      "consequence": "以此为依据放弃fc/U尺度，改变研究路线",
+      "basis": {
+        "source_ids": [
+          "F1"
+        ],
+        "spectrum_ids": [
+          50,
+          88
+        ]
+      },
+      "depends_on": [],
+      "ref": "01_initial_0:coordinate",
+      "stage": "01_initial_0",
+      "author": "aeroacoustician"
+    },
+    {
+      "id": "tentative",
+      "text": "也许存在一种无量纲尺度能使谱形更可比较。",
+      "kind": "hypothesis",
+      "use": "exploratory",
+      "consequence": "",
+      "basis": {
+        "source_ids": [
+          "F1"
+        ],
+        "spectrum_ids": []
+      },
+      "depends_on": [],
+      "ref": "01_initial_1:tentative",
+      "stage": "01_initial_1",
+      "author": "nonequilibrium_physicist"
+    },
+    {
+      "id": "reliance",
+      "text": "我沿用对方关于峰频差异的判断，暂时转向寻找另一种尺度。",
+      "kind": "inference",
+      "use": "exploratory",
+      "consequence": "",
+      "basis": {
+        "source_ids": [],
+        "spectrum_ids": [
+          50,
+          88
+        ]
+      },
+      "depends_on": [
+        "01_initial_0:coordinate"
+      ],
+      "ref": "01_initial_1:reliance",
+      "stage": "01_initial_1",
+      "author": "nonequilibrium_physicist"
+    }
+  ],
+  "checks": [
+    {
+      "boundary": "02b_seeded",
+      "report_path": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/coordinate_replay_001/runs/seeded_replay_v3/stages/02b_seeded_verify/result.json",
+      "report_sha256": "970da220a5b30d800d9ddcca9a4bfff4826e2cdf6299d8a85d4b144e78bff07f",
+      "findings": [
+        {
+          "claim_ref": "01_initial_0:coordinate",
+          "status": "needs_correction",
+          "reason": "表中谱50与谱88的采样峰频确为3150 Hz和1600 Hz，但直接比较频率忽略了弦长坐标。按给定算术，峰值 f·弦长/U 分别为4.0409和4.1051，较为接近；因此这两个峰不支持“反驳峰位对齐”或据此放弃该尺度。两条谱的峰值 f·位移厚度/U 分别为0.06299和0.05912。以上仅比较采样峰坐标，不能据此推断完整谱线坍缩。F1所给摘录仅支持量纲分析的一般前提，未提供这些谱的实证结论。",
+          "evidence_refs": [
+            "spectrum:50",
+            "arithmetic:50",
+            "spectrum:88",
+            "arithmetic:88",
+            "source:F1"
+          ],
+          "corrected_claim": "谱50与谱88的采样峰频分别为3150 Hz和1600 Hz；按给定条件计算，f·弦长/U 分别约为4.041和4.105，峰位在该坐标下接近。这一对采样峰不构成放弃该尺度的依据，也不能证明完整谱线对齐。"
+        }
+      ]
+    }
+  ]
+}

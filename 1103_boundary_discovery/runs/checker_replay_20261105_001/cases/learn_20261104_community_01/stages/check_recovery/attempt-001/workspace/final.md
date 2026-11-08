@@ -1,0 +1,3 @@
+已完成有界检索恢复，并通过 `validate_checks(result, ideas, require_claims=True)`。方向层面判为 `already_done`：已有研究直接比较重复扰动下群落组成与功能恢复；完整分层组合仅为 `PARTIAL_OVERLAP`，差异定位问题仍为 `UNKNOWN`。数学粗筛未发现明显错误。
+
+结果与中文报告保存在 [result.json](/Applications/ideas/1103_boundary_discovery/runs/checker_replay_20261105_001/cases/learn_20261104_community_01/stages/check_recovery/attempt-001/workspace/result.json) 和 [CHECK.md](/Applications/ideas/1103_boundary_discovery/runs/checker_replay_20261105_001/cases/learn_20261104_community_01/stages/check_recovery/attempt-001/workspace/CHECK.md)；原始检索响应及引用文本在工作区 `snapshots/`。本轮限于两条 Crossref 查询和三项来源，不能据此作无近似先例或新颖性结论。

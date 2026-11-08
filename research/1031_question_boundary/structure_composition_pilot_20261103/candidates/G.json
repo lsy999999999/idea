@@ -1,0 +1,833 @@
+{
+  "arm": "G",
+  "operation": "joint",
+  "raw": {
+    "evidence_refs": [
+      "dev_0",
+      "dev_6",
+      "dev_12",
+      "dev_18",
+      "observed_A_0",
+      "observed_A_8",
+      "observed_A_16",
+      "fresh_1_0",
+      "fresh_1_4"
+    ],
+    "experiments": [
+      {
+        "h": 0.5,
+        "history": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "purpose": "Compare with fresh_1_0 at matched waiting time and history but a different current drive; tests the proposed linear current-drive baseline.",
+        "u": 0.8
+      },
+      {
+        "h": 2.0,
+        "history": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "purpose": "Compare against the same history at shorter waiting time; tests whether prior-drive influence decays with waiting time.",
+        "u": 0.3
+      },
+      {
+        "h": 0.5,
+        "history": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "purpose": "Compare with the early and recent impulse conditions; tests the fitted temporal weighting of intermediate history intervals.",
+        "u": 0.3
+      },
+      {
+        "h": 2.0,
+        "history": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "purpose": "Test whether waiting-time attenuation also applies to recent prior drive, at a condition distinct from supplied rows.",
+        "u": 0.8
+      }
+    ],
+    "exposed_inputs": [
+      "u",
+      "h",
+      "history",
+      "times"
+    ],
+    "expression": "a+b*u+d*exp(-k*h)*age_memory",
+    "measurement_requests": [],
+    "parameters": [
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.0,
+        "lower": -2.0,
+        "name": "a",
+        "upper": 2.0
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.9,
+        "lower": 0.0,
+        "name": "b",
+        "upper": 2.0
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.52,
+        "lower": 0.0,
+        "name": "d",
+        "upper": 2.0
+      },
+      {
+        "dimension": [
+          1,
+          0
+        ],
+        "initial": 2.9,
+        "lower": 0.2,
+        "name": "tau",
+        "upper": 10.0
+      },
+      {
+        "dimension": [
+          -1,
+          0
+        ],
+        "initial": 0.5,
+        "lower": 0.01,
+        "name": "k",
+        "upper": 3.0
+      }
+    ],
+    "quantities": [
+      {
+        "expression": "sum(history*exp(times/tau))",
+        "interpretation": "Prior-drive summary that weights more recent intervals more strongly; fitted tau sets the time scale.",
+        "name": "age_memory"
+      }
+    ],
+    "rationale": "At matched u and h, dev responses differ strongly between constant positive and negative histories. The size of that contrast is smaller at h=1.2 than at h=0.3, consistent with waiting-time attenuation of prior-drive influence. Impulse and alternating-history observations also distinguish older from more recent intervals. This joint model represents those contrasts with an age-weighted history summary and waiting-time decay while retaining a simple current-drive baseline. The supplied evidence motivates this form but does not establish a unique mechanism or guarantee the dev threshold; all parameters must be refit on fit data and evaluated on dev.",
+    "scientific_change": "Replace the current-state-only response with a joint model in which current drive contributes linearly and prior drive contributes through an age-weighted summary attenuated by waiting time."
+  },
+  "scaffold": {
+    "parameters": [
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.0,
+        "lower": -2.0,
+        "name": "a",
+        "upper": 2.0
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.9,
+        "lower": 0.0,
+        "name": "b",
+        "upper": 2.0
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.52,
+        "lower": 0.0,
+        "name": "d",
+        "upper": 2.0
+      },
+      {
+        "dimension": [
+          1,
+          0
+        ],
+        "initial": 2.9,
+        "lower": 0.2,
+        "name": "tau",
+        "upper": 10.0
+      },
+      {
+        "dimension": [
+          -1,
+          0
+        ],
+        "initial": 0.5,
+        "lower": 0.01,
+        "name": "k",
+        "upper": 3.0
+      }
+    ],
+    "quantities": [
+      {
+        "expression": "sum(history*exp(times/tau))",
+        "interpretation": "Prior-drive summary that weights more recent intervals more strongly; fitted tau sets the time scale.",
+        "name": "age_memory"
+      }
+    ],
+    "exposed_inputs": [
+      "u",
+      "h",
+      "history",
+      "times"
+    ]
+  },
+  "expression": "a+b*u+d*exp(-k*h)*age_memory",
+  "result": {
+    "status": "executed",
+    "parameters": {
+      "a": 0.00672446010807051,
+      "b": 0.9160971734470507,
+      "d": 0.7763103306772436,
+      "tau": 2.208867717388049,
+      "k": 0.444693851469431
+    },
+    "values": [
+      0.00672446010807051,
+      0.9160971734470507,
+      0.7763103306772436,
+      2.208867717388049,
+      0.444693851469431
+    ],
+    "fit_rmse": 0.0221712405758655,
+    "dev_rmse": 0.06638417520504637,
+    "optimizer_converged": true,
+    "residual_calls": 198,
+    "attempts": [
+      {
+        "calls": 42,
+        "converged": true,
+        "message": "`ftol` termination condition is satisfied."
+      },
+      {
+        "calls": 48,
+        "converged": true,
+        "message": "`ftol` termination condition is satisfied."
+      },
+      {
+        "calls": 48,
+        "converged": true,
+        "message": "`ftol` termination condition is satisfied."
+      },
+      {
+        "calls": 60,
+        "converged": true,
+        "message": "`ftol` termination condition is satisfied."
+      }
+    ],
+    "dev_predictions": [
+      {
+        "row_id": "dev_0",
+        "observed": 1.3051720130977043,
+        "predicted": 1.3656347201180212,
+        "residual": 0.060462707020316975
+      },
+      {
+        "row_id": "dev_1",
+        "observed": 1.3299464539887613,
+        "predicted": 1.3656347201180212,
+        "residual": 0.035688266129259905
+      },
+      {
+        "row_id": "dev_2",
+        "observed": 1.315556400303728,
+        "predicted": 1.3656347201180212,
+        "residual": 0.05007831981429334
+      },
+      {
+        "row_id": "dev_3",
+        "observed": 1.3018382948668406,
+        "predicted": 1.3656347201180212,
+        "residual": 0.06379642525118068
+      },
+      {
+        "row_id": "dev_4",
+        "observed": 1.3063033231839458,
+        "predicted": 1.3656347201180212,
+        "residual": 0.05933139693407541
+      },
+      {
+        "row_id": "dev_5",
+        "observed": 1.316971899597782,
+        "predicted": 1.3656347201180212,
+        "residual": 0.04866282052023929
+      },
+      {
+        "row_id": "dev_6",
+        "observed": -0.7317168592978868,
+        "predicted": -0.6193080611442396,
+        "residual": 0.11240879815364713
+      },
+      {
+        "row_id": "dev_7",
+        "observed": -0.7315951080306806,
+        "predicted": -0.6193080611442396,
+        "residual": 0.11228704688644098
+      },
+      {
+        "row_id": "dev_8",
+        "observed": -0.7133590087789013,
+        "predicted": -0.6193080611442396,
+        "residual": 0.09405094763466171
+      },
+      {
+        "row_id": "dev_9",
+        "observed": -0.7197943079426534,
+        "predicted": -0.6193080611442396,
+        "residual": 0.10048624679841378
+      },
+      {
+        "row_id": "dev_10",
+        "observed": -0.706246120141251,
+        "predicted": -0.6193080611442396,
+        "residual": 0.08693805899701135
+      },
+      {
+        "row_id": "dev_11",
+        "observed": -0.7249680276130827,
+        "predicted": -0.6193080611442396,
+        "residual": 0.10565996646884301
+      },
+      {
+        "row_id": "dev_12",
+        "observed": 0.9872606040127475,
+        "predicted": 1.0382874830136277,
+        "residual": 0.05102687900088021
+      },
+      {
+        "row_id": "dev_13",
+        "observed": 0.9703903087452999,
+        "predicted": 1.0382874830136277,
+        "residual": 0.06789717426832786
+      },
+      {
+        "row_id": "dev_14",
+        "observed": 0.9653176407338192,
+        "predicted": 1.0382874830136277,
+        "residual": 0.07296984227980852
+      },
+      {
+        "row_id": "dev_15",
+        "observed": 0.9818137403148506,
+        "predicted": 1.0382874830136277,
+        "residual": 0.05647374269877714
+      },
+      {
+        "row_id": "dev_16",
+        "observed": 0.9710228761101786,
+        "predicted": 1.0382874830136277,
+        "residual": 0.06726460690344915
+      },
+      {
+        "row_id": "dev_17",
+        "observed": 0.9821325647467699,
+        "predicted": 1.0382874830136277,
+        "residual": 0.05615491826685781
+      },
+      {
+        "row_id": "dev_18",
+        "observed": -0.3765090262237718,
+        "predicted": -0.29196082403984625,
+        "residual": 0.08454820218392556
+      },
+      {
+        "row_id": "dev_19",
+        "observed": -0.37078533476920067,
+        "predicted": -0.29196082403984625,
+        "residual": 0.07882451072935442
+      },
+      {
+        "row_id": "dev_20",
+        "observed": -0.37152767435121076,
+        "predicted": -0.29196082403984625,
+        "residual": 0.07956685031136451
+      },
+      {
+        "row_id": "dev_21",
+        "observed": -0.36885371633763314,
+        "predicted": -0.29196082403984625,
+        "residual": 0.0768928922977869
+      },
+      {
+        "row_id": "dev_22",
+        "observed": -0.38218811611320275,
+        "predicted": -0.29196082403984625,
+        "residual": 0.0902272920733565
+      },
+      {
+        "row_id": "dev_23",
+        "observed": -0.3609762624194256,
+        "predicted": -0.29196082403984625,
+        "residual": 0.06901543837957935
+      },
+      {
+        "row_id": "observed_A_0",
+        "observed": 0.6307931713001469,
+        "predicted": 0.703816007974961,
+        "residual": 0.07302283667481413
+      },
+      {
+        "row_id": "observed_A_1",
+        "observed": 0.6464020470805342,
+        "predicted": 0.703816007974961,
+        "residual": 0.05741396089442685
+      },
+      {
+        "row_id": "observed_A_2",
+        "observed": 0.6484555894530206,
+        "predicted": 0.703816007974961,
+        "residual": 0.0553604185219404
+      },
+      {
+        "row_id": "observed_A_3",
+        "observed": 0.6505355658220674,
+        "predicted": 0.703816007974961,
+        "residual": 0.053280442152893626
+      },
+      {
+        "row_id": "observed_A_4",
+        "observed": 0.5927914700228543,
+        "predicted": 0.649907276047745,
+        "residual": 0.05711580602489075
+      },
+      {
+        "row_id": "observed_A_5",
+        "observed": 0.5830899698883254,
+        "predicted": 0.649907276047745,
+        "residual": 0.06681730615941961
+      },
+      {
+        "row_id": "observed_A_6",
+        "observed": 0.5882816402980804,
+        "predicted": 0.649907276047745,
+        "residual": 0.06162563574966462
+      },
+      {
+        "row_id": "observed_A_7",
+        "observed": 0.5846661965452915,
+        "predicted": 0.649907276047745,
+        "residual": 0.0652410795024535
+      },
+      {
+        "row_id": "observed_A_8",
+        "observed": 0.932769447730129,
+        "predicted": 0.9974243079351134,
+        "residual": 0.06465486020498434
+      },
+      {
+        "row_id": "observed_A_9",
+        "observed": 0.9273772122254385,
+        "predicted": 0.9974243079351134,
+        "residual": 0.07004709570967493
+      },
+      {
+        "row_id": "observed_A_10",
+        "observed": 0.9519302331607015,
+        "predicted": 0.9974243079351134,
+        "residual": 0.04549407477441192
+      },
+      {
+        "row_id": "observed_A_11",
+        "observed": 0.952336917559102,
+        "predicted": 0.9974243079351134,
+        "residual": 0.045087390376011394
+      },
+      {
+        "row_id": "observed_A_12",
+        "observed": 0.7220010562640917,
+        "predicted": 0.7877711831939626,
+        "residual": 0.06577012692987083
+      },
+      {
+        "row_id": "observed_A_13",
+        "observed": 0.7204434990009025,
+        "predicted": 0.7877711831939626,
+        "residual": 0.06732768419306001
+      },
+      {
+        "row_id": "observed_A_14",
+        "observed": 0.7318157317488707,
+        "predicted": 0.7877711831939626,
+        "residual": 0.05595545144509184
+      },
+      {
+        "row_id": "observed_A_15",
+        "observed": 0.7320894879185589,
+        "predicted": 0.7877711831939626,
+        "residual": 0.055681695275403675
+      },
+      {
+        "row_id": "observed_A_16",
+        "observed": 0.32454212155208745,
+        "predicted": 0.40008939897683615,
+        "residual": 0.0755472774247487
+      },
+      {
+        "row_id": "observed_A_17",
+        "observed": 0.33636213952435945,
+        "predicted": 0.40008939897683615,
+        "residual": 0.0637272594524767
+      },
+      {
+        "row_id": "observed_A_18",
+        "observed": 0.3267810216192671,
+        "predicted": 0.40008939897683615,
+        "residual": 0.07330837735756907
+      },
+      {
+        "row_id": "observed_A_19",
+        "observed": 0.340311943577755,
+        "predicted": 0.40008939897683615,
+        "residual": 0.059777455399081136
+      },
+      {
+        "row_id": "observed_A_20",
+        "observed": 0.43586080685044065,
+        "predicted": 0.507292312416145,
+        "residual": 0.07143150556570438
+      },
+      {
+        "row_id": "observed_A_21",
+        "observed": 0.4558132642638018,
+        "predicted": 0.507292312416145,
+        "residual": 0.05147904815234322
+      },
+      {
+        "row_id": "observed_A_22",
+        "observed": 0.4450194423386643,
+        "predicted": 0.507292312416145,
+        "residual": 0.062272870077480724
+      },
+      {
+        "row_id": "observed_A_23",
+        "observed": 0.4535919182106059,
+        "predicted": 0.507292312416145,
+        "residual": 0.053700394205539126
+      },
+      {
+        "row_id": "observed_A_24",
+        "observed": 0.7370916983141308,
+        "predicted": 0.8042858467204708,
+        "residual": 0.06719414840633997
+      },
+      {
+        "row_id": "observed_A_25",
+        "observed": 0.7445164340914321,
+        "predicted": 0.8042858467204708,
+        "residual": 0.059769412629038676
+      },
+      {
+        "row_id": "observed_A_26",
+        "observed": 0.7390414239330393,
+        "predicted": 0.8042858467204708,
+        "residual": 0.06524442278743148
+      },
+      {
+        "row_id": "observed_A_27",
+        "observed": 0.7587147033940054,
+        "predicted": 0.8042858467204708,
+        "residual": 0.04557114332646539
+      },
+      {
+        "row_id": "observed_A_28",
+        "observed": 0.6335948058188414,
+        "predicted": 0.6970829332811619,
+        "residual": 0.06348812746232046
+      },
+      {
+        "row_id": "observed_A_29",
+        "observed": 0.6439356011478652,
+        "predicted": 0.6970829332811619,
+        "residual": 0.0531473321332967
+      },
+      {
+        "row_id": "observed_A_30",
+        "observed": 0.644963168846186,
+        "predicted": 0.6970829332811619,
+        "residual": 0.0521197644349759
+      },
+      {
+        "row_id": "observed_A_31",
+        "observed": 0.6307091208417741,
+        "predicted": 0.6970829332811619,
+        "residual": 0.06637381243938778
+      },
+      {
+        "row_id": "observed_B_0",
+        "observed": 0.9989438687509821,
+        "predicted": 1.0561944500113036,
+        "residual": 0.057250581260321565
+      },
+      {
+        "row_id": "observed_B_1",
+        "observed": 1.0093896289352093,
+        "predicted": 1.0561944500113036,
+        "residual": 0.046804821076094294
+      },
+      {
+        "row_id": "observed_B_2",
+        "observed": 0.9934467110608171,
+        "predicted": 1.0561944500113036,
+        "residual": 0.06274773895048658
+      },
+      {
+        "row_id": "observed_B_3",
+        "observed": 0.9868358901261626,
+        "predicted": 1.0561944500113036,
+        "residual": 0.06935855988514106
+      },
+      {
+        "row_id": "observed_B_4",
+        "observed": 0.7561866826194857,
+        "predicted": 0.8153667294072731,
+        "residual": 0.05918004678778732
+      },
+      {
+        "row_id": "observed_B_5",
+        "observed": 0.7586961806960817,
+        "predicted": 0.8153667294072731,
+        "residual": 0.05667054871119137
+      },
+      {
+        "row_id": "observed_B_6",
+        "observed": 0.7458182097118563,
+        "predicted": 0.8153667294072731,
+        "residual": 0.06954851969541676
+      },
+      {
+        "row_id": "observed_B_7",
+        "observed": 0.7564605377011872,
+        "predicted": 0.8153667294072731,
+        "residual": 0.05890619170608591
+      },
+      {
+        "row_id": "fresh_1_0",
+        "observed": 0.31991131701881936,
+        "predicted": 0.3831819972684933,
+        "residual": 0.06327068024967392
+      },
+      {
+        "row_id": "fresh_1_1",
+        "observed": 0.3229077347136631,
+        "predicted": 0.3831819972684933,
+        "residual": 0.060274262554830205
+      },
+      {
+        "row_id": "fresh_1_2",
+        "observed": 0.33118275836584615,
+        "predicted": 0.3831819972684933,
+        "residual": 0.05199923890264713
+      },
+      {
+        "row_id": "fresh_1_3",
+        "observed": 0.3185065774664961,
+        "predicted": 0.3831819972684933,
+        "residual": 0.0646754198019972
+      },
+      {
+        "row_id": "fresh_1_4",
+        "observed": 0.6208279711704124,
+        "predicted": 0.6767902972286456,
+        "residual": 0.05596232605823315
+      },
+      {
+        "row_id": "fresh_1_5",
+        "observed": 0.6218083055020318,
+        "predicted": 0.6767902972286456,
+        "residual": 0.05498199172661378
+      },
+      {
+        "row_id": "fresh_1_6",
+        "observed": 0.6322656995309451,
+        "predicted": 0.6767902972286456,
+        "residual": 0.04452459769770045
+      },
+      {
+        "row_id": "fresh_1_7",
+        "observed": 0.6232624640586267,
+        "predicted": 0.6767902972286456,
+        "residual": 0.05352783317001886
+      },
+      {
+        "row_id": "fresh_1_8",
+        "observed": 0.27252449477528273,
+        "predicted": 0.3466994897271309,
+        "residual": 0.07417499495184815
+      },
+      {
+        "row_id": "fresh_1_9",
+        "observed": 0.2689342004439257,
+        "predicted": 0.3466994897271309,
+        "residual": 0.0777652892832052
+      },
+      {
+        "row_id": "fresh_1_10",
+        "observed": 0.2847414981527855,
+        "predicted": 0.3466994897271309,
+        "residual": 0.061957991574345395
+      },
+      {
+        "row_id": "fresh_1_11",
+        "observed": 0.2969607907606968,
+        "predicted": 0.3466994897271309,
+        "residual": 0.04973869896643407
+      },
+      {
+        "row_id": "fresh_1_12",
+        "observed": 0.4695451241000241,
+        "predicted": 0.5349084270565565,
+        "residual": 0.06536330295653242
+      },
+      {
+        "row_id": "fresh_1_13",
+        "observed": 0.4605876283337802,
+        "predicted": 0.5349084270565565,
+        "residual": 0.0743207987227763
+      },
+      {
+        "row_id": "fresh_1_14",
+        "observed": 0.4820012449774068,
+        "predicted": 0.5349084270565565,
+        "residual": 0.052907182079149684
+      },
+      {
+        "row_id": "fresh_1_15",
+        "observed": 0.4649940177389958,
+        "predicted": 0.5349084270565565,
+        "residual": 0.06991440931756071
+      }
+    ],
+    "dev_pass": false,
+    "manifest": {
+      "equations": {
+        "age_memory": "sum(history * exp(times / tau))"
+      },
+      "response": "a + b * u + d * exp(-k * h) * age_memory",
+      "parameter_bindings": {
+        "a": 0,
+        "b": 1,
+        "d": 2,
+        "tau": 3,
+        "k": 4
+      },
+      "types": {
+        "u": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "0"
+          ]
+        },
+        "h": {
+          "shape": "scalar",
+          "dimension": [
+            "1",
+            "0"
+          ]
+        },
+        "history": {
+          "shape": "vector4",
+          "dimension": [
+            "0",
+            "0"
+          ]
+        },
+        "times": {
+          "shape": "vector4",
+          "dimension": [
+            "1",
+            "0"
+          ]
+        },
+        "dt": {
+          "shape": "scalar",
+          "dimension": [
+            "1",
+            "0"
+          ]
+        },
+        "a": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "1"
+          ]
+        },
+        "b": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "1"
+          ]
+        },
+        "d": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "1"
+          ]
+        },
+        "tau": {
+          "shape": "scalar",
+          "dimension": [
+            "1",
+            "0"
+          ]
+        },
+        "k": {
+          "shape": "scalar",
+          "dimension": [
+            "-1",
+            "0"
+          ]
+        },
+        "age_memory": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "0"
+          ]
+        }
+      },
+      "final_allowed_symbols": [
+        "a",
+        "age_memory",
+        "b",
+        "d",
+        "h",
+        "history",
+        "k",
+        "tau",
+        "times",
+        "u"
+      ],
+      "source": "Derived from the one named specification"
+    }
+  },
+  "class_audits": [],
+  "post_generation_certified_violation": false
+}

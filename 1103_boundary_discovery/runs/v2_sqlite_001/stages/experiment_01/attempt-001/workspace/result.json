@@ -1,0 +1,75 @@
+{
+  "summary": "E03 完成 12 个随机顺序配对、24 次真实 SQLite WAL fresh-DB 运行；12/12 配对控制有效，均有 log_frames=26、checkpointed_frames=2、WAL=107152 bytes，所有 Δ=长龄减短龄 checkpointed_frames 均为 0。实际数字满足冻结 outcome rule no_age_penalty。",
+  "artifacts": [
+    {
+      "path": "runs/v2_sqlite_001/stages/experiment_01/attempt-001/workspace/run_e03.py",
+      "type": "executable_code",
+      "description": "执行冻结配对实验并按冻结阈值生成计算结果。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/experiment_01/attempt-001/workspace/raw_trials.json",
+      "type": "observations",
+      "description": "随机顺序及 24 次真实 SQLite 试验的配置、snapshot 年龄、写入、PASSIVE 返回值、WAL 字节数和耗时。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/experiment_01/attempt-001/workspace/classification.json",
+      "type": "classification_calculation",
+      "description": "逐对控制检查、帧数差、方向计数、中位配对差和预定 outcome rule 分类。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/experiment_01/attempt-001/workspace/report_zh.md",
+      "type": "interpretation",
+      "description": "中文报告，列出观察、预定分类、方案差异和适用限制。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/experiment_01/attempt-001/workspace/result.json",
+      "type": "runtime_record",
+      "description": "本阶段 runtime 字段与 V2 observation 合同记录。"
+    }
+  ],
+  "evidence": [
+    {
+      "type": "experiment_observation",
+      "source": "runs/v2_sqlite_001/stages/experiment_01/attempt-001/workspace/raw_trials.json",
+      "observation": "24/24 次真实 SQLite 运行完成；SQLite 3.51.3。短龄和长龄每次均为 log_frames=26、checkpointed_frames=2、checkpoint 前 WAL=107152 bytes。"
+    },
+    {
+      "type": "paired_measurement",
+      "source": "runs/v2_sqlite_001/stages/experiment_01/attempt-001/workspace/classification.json",
+      "observation": "12/12 配对的设置、snapshot 构造、写入数、log_frames 和 WAL bytes 匹配；Δ 长龄减短龄为 [0,0,0,0,0,0,0,0,0,0,0,0] 帧，中位数 0；方向计数为 0 个负值、12 个非负值。"
+    },
+    {
+      "type": "timing_observation",
+      "source": "runs/v2_sqlite_001/stages/experiment_01/attempt-001/workspace/raw_trials.json",
+      "observation": "snapshot 至写入前等待实测范围为短龄 1.121–1.329 ms、长龄 100.733–105.035 ms；PASSIVE 耗时中位数分别为 0.145 ms 和 0.452 ms。"
+    }
+  ],
+  "claims": [
+    "冻结分类计算满足 no_age_penalty：有效配对至少 10 且 12/12 个有效配对 Δ>=0；按原冻结映射该结果对 B1 为 supports、对 C3 为 contradicts。",
+    "在此 SQLite 3.51.3、小型固定突发及相同初始 snapshot/head 条件下，墙钟年龄增加没有降低一次 PASSIVE 的 checkpointed_frames。"
+  ],
+  "limitations": [
+    "冻结计划没有给出 burst 的大小、表结构、SQL 或同步级别；执行前按 E02 的轻量写入形态固定为 24 次提交、每次 10 行、共 240 行、TEXT 列，并将同步级别固定为 NORMAL。该工程解析对所有条件一致，未依结果更改。",
+    "仅测试一个新鲜数据库轨迹、一个 SQLite build、一个 reader 和一个 burst 大小；不得推广为跨配置机制结论或文献新颖性主张。",
+    "两条件都只推进 2/26 帧；本实验未扫描 snapshot 位置，故不能比较不同 end mark 的限制。调用耗时是次要指标，可能受本地计时噪声影响。"
+  ],
+  "next_actions": [
+    "如后续研究继续，应另行冻结不同 snapshot 位置或写入轨迹，并预先定义新的可区分预测；本记录不提出假说状态更新。"
+  ],
+  "observation": {
+    "experiment_id": "E03",
+    "execution_status": "completed",
+    "observed_outcome_id": "no_age_penalty",
+    "summary": "12/12 配对均满足数据库设置、snapshot 构造、写入数、log_frames 与 WAL bytes 匹配；每对长短龄 checkpointed_frames 均为 2，Δ=0 帧。按冻结规则，至少 10/12 配对 Δ>=0，故分类为 no_age_penalty；对本地 SQLite 3.51.3 和所用 240 行 burst 有限适用。",
+    "artifacts": [
+      "runs/v2_sqlite_001/stages/experiment_01/attempt-001/workspace/run_e03.py",
+      "runs/v2_sqlite_001/stages/experiment_01/attempt-001/workspace/raw_trials.json",
+      "runs/v2_sqlite_001/stages/experiment_01/attempt-001/workspace/classification.json",
+      "runs/v2_sqlite_001/stages/experiment_01/attempt-001/workspace/report_zh.md"
+    ],
+    "limitations": [
+      "burst 的具体写入规模与 SQL 在冻结计划中未写明，本执行在运行前固定并记录了工程解析。",
+      "实验仅覆盖一个 SQLite build、一个 workload 和一个活动 reader，不能外推为普遍机制或新颖性结论。"
+    ]
+  }
+}

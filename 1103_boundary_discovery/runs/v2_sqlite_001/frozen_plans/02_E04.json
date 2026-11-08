@@ -1,0 +1,52 @@
+{
+  "id": "E04",
+  "question": "在 E03 同一 240 行轨迹中，reader snapshot 前缀位置是否能预测活动 reader 下单次 PASSIVE 的 checkpointed_frames？",
+  "hypothesis_ids": [
+    "D1",
+    "D2"
+  ],
+  "intervention": "使用项目 .venv Python 的 sqlite3 和独立临时数据库。固定 SQLite build、page_size=4096、journal_mode=WAL、synchronous=NORMAL、wal_autocheckpoint=0、24 次提交且每次 10 行、总 240 行、SQL/数据形状及最终写入总量。三条件分别在第 0、12、23 批提交后开启 reader 并建立 snapshot；保持 reader 活动，完成剩余批次后在 writer 上调用一次 PRAGMA wal_checkpoint(PASSIVE)。每个条件独立 fresh DB。记录事务事件、snapshot 时已提交批数、busy、log_frames、checkpointed_frames、checkpoint 前后 WAL bytes 和调用耗时。计划执行目标小于 120 秒，阶段硬上限 600 秒。",
+  "outcome_measure": "12 个固定种子 20261128–20261139；每种子内以该种子初始化的 RNG 打乱 early/mid/late 条件顺序。有效性要求三条件 SQLite/build/page size/synchronous/提交数、最终 log_frames 与 checkpoint 前 WAL bytes 匹配，reader 确在 checkpoint 时活动，且日志确认 snapshot 前缀分别为 0/12/23。主要量为每种子 late checkpointed_frames 减 early checkpointed_frames；同时检查 mid 与 early。至少 10/12 有效种子严格 late>early 且至少 10/12 mid>=early，分类 position_order。至少 10/12 有效种子的 early、mid、late checkpointed_frames 三者完全相同，分类 position_flat。两类互斥。有效种子少于 10、控制不符、分类规则均未达成、或出现其余非单调形态，一律 uncertain。调用时间只报告中位数和范围，不参与分类。种子不补抽。",
+  "predictions": [
+    {
+      "hypothesis_id": "D1",
+      "expected_outcome": "更晚 snapshot 前缀允许更大的连续 PASSIVE 进度，预期 position_order。",
+      "outcome_id": "position_order"
+    },
+    {
+      "hypothesis_id": "D2",
+      "expected_outcome": "在此 240 行设置下前缀位置不产生稳定帧数差，预期 position_flat。",
+      "outcome_id": "position_flat"
+    }
+  ],
+  "outcome_classes": [
+    {
+      "id": "position_order",
+      "description": "至少 10/12 有效种子 late checkpointed_frames 严格高于 early，且至少 10/12 的 mid 不低于 early。",
+      "effects": {
+        "D1": "supports",
+        "D2": "contradicts"
+      }
+    },
+    {
+      "id": "position_flat",
+      "description": "至少 10/12 有效种子的 early、mid、late checkpointed_frames 三者完全相同。",
+      "effects": {
+        "D1": "contradicts",
+        "D2": "supports"
+      }
+    },
+    {
+      "id": "uncertain",
+      "description": "有效配对少于 10/12、控制失败，或 position_order 与 position_flat 规则均未满足；非单调差异明确归此类。",
+      "effects": {
+        "D1": "inconclusive",
+        "D2": "inconclusive"
+      }
+    }
+  ],
+  "cost_minutes": 3,
+  "feasibility": "E03 已在项目环境用 Python sqlite3 成功执行 24 次真实 SQLite 临时数据库试验；本计划每种子 3 个条件，共 36 次小型运行，预计低于 120 秒计算时间，留有阶段预算余量。",
+  "selection_reason": "相较 E05，这个行动在 E03 的同一总写入量和 SQL 轨迹内改变其未改变的关键坐标，可直接解释固定位置下的 no_age_penalty；若位置效应不出现，也能限定该小型轨迹的可测边界。",
+  "replication": true
+}

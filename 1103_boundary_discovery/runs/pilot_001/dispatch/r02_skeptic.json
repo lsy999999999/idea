@@ -1,0 +1,27 @@
+{
+  "model": "gpt-6-luna",
+  "reasoning_effort": "high",
+  "network_access": true,
+  "run_dir": "/Applications/ideas/1103_boundary_discovery/runs/pilot_001",
+  "stages": [
+    {
+      "id": "r02_skeptic",
+      "role": "skeptic",
+      "prompt": "You are the skeptic research agent. Independently inspect scientific claims, the data and executed code. Check leakage, units, confounding, uncertainty, prior work and competing explanations. Recompute important quantities; give an actionable scientific next step.\nScientific assignment:\n独立审查并复算现有气温日较差—河流水温日较差探索结果，不重复覆盖审计，也不要把该角色的预测关联解释为新物理机制。检查 exploration.py 对 USGS RDB 列映射、质量标记、GHCN-Daily 缺测/质量标记、日期配对、低流量阈值、训练/测试切分和预处理是否正确；核对连续日期相关和 NOAA 同站代理复用对有效样本量/留站结论的影响。用合适的时间块不确定性或可解释的时间块对照重算 MAE 差及气温日较差×低流量交互；比较水温日较差、水温均值和最高值，重点解释为何留站测试可能失败/不一致。保存中文 result.json、可复现复核代码与数值表；清楚标出已看过数据上的探索性复核、任何实现错误、反对候选的结果，以及若仍值得继续时最有信息量的一项新数据或独立干预测试。\nShared run directory: /Applications/ideas/1103_boundary_discovery/runs/pilot_001\nUse /Applications/ideas/1103_boundary_discovery/.venv/bin/python for numerical work.\nExecute the assigned work now, save code/data/evidence, and report actual outcomes in result.json. Give the next informative step; do not dispatch more agents yourself. Save your new artifacts in your assigned workspace. Reference earlier evidence by absolute path.",
+      "inputs": [
+        "/Applications/ideas/1103_boundary_discovery/bootstrap/PILOT_BRIEF.md",
+        "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/dispatch/evidence_02.json",
+        "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/stages/c02_coordinator/attempt-001/workspace/result.json",
+        "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/parallel_exploration/exploration.py",
+        "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/parallel_exploration/numeric_results.json",
+        "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/parallel_exploration/paired_daily_panel.csv",
+        "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/stages/r00_boundary/attempt-001/workspace/data/usgs_daily_values_2000_to_2026.rdb",
+        "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/stages/r00_boundary/attempt-001/workspace/data/ghcn_USR0000OPHI.dly",
+        "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/stages/r00_boundary/attempt-001/workspace/data/ghcn_USR0000OCHI.dly",
+        "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/stages/r00_boundary/attempt-001/workspace/coverage_report_zh.md",
+        "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/OPERATOR_STEERING.md"
+      ],
+      "timeout_s": 900
+    }
+  ]
+}

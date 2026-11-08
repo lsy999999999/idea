@@ -1,0 +1,82 @@
+{
+  "summary": "E04 完成 12 个固定种子、36 次真实 SQLite WAL fresh-DB 运行；12/12 种子均通过冻结控制。每个种子的 checkpointed_frames 为 early=2、mid=14、late=25，满足冻结 outcome rule position_order（late>early 为 12/12，mid>=early 为 12/12）。",
+  "artifacts": [
+    {
+      "path": "runs/v2_sqlite_001/stages/experiment_02/attempt-001/workspace/run_e04.py",
+      "type": "executable_code",
+      "description": "固定种子顺序随机化、36 次 SQLite 实测和预定分类计算。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/experiment_02/attempt-001/workspace/raw_trials.json",
+      "type": "observations",
+      "description": "36 次运行的随机顺序、事务事件、reader snapshot、SQLite 设置、PASSIVE 返回值、帧数、WAL 字节数和耗时。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/experiment_02/attempt-001/workspace/classification.json",
+      "type": "classification_calculation",
+      "description": "逐种子控制有效性、early/mid/late 帧数比较、冻结规则计数与调用时间统计。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/experiment_02/attempt-001/workspace/report_zh.md",
+      "type": "interpretation",
+      "description": "中文报告，区分直接观察、冻结分类、解释范围与方案差异。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/experiment_02/attempt-001/workspace/result.json",
+      "type": "runtime_record",
+      "description": "runtime 字段及 V2 observation 合同记录。"
+    }
+  ],
+  "evidence": [
+    {
+      "type": "experiment_observation",
+      "source": "runs/v2_sqlite_001/stages/experiment_02/attempt-001/workspace/raw_trials.json",
+      "observation": "共 36/36 次运行完成；SQLite 3.51.3。early、mid、late 各 12 次，每个条件对应的 reader 可见行数分别为 0、120、230；reader 在 checkpoint 时均活动。"
+    },
+    {
+      "type": "controlled_measurement",
+      "source": "runs/v2_sqlite_001/stages/experiment_02/attempt-001/workspace/raw_trials.json",
+      "observation": "12/12 种子的三个条件均有 log_frames=26、checkpoint 前 WAL=107152 bytes、busy=0；checkpointed_frames 每次分别为 early=2、mid=14、late=25。"
+    },
+    {
+      "type": "classification_calculation",
+      "source": "runs/v2_sqlite_001/stages/experiment_02/attempt-001/workspace/classification.json",
+      "observation": "12/12 有效种子的 late−early=23 帧，且 mid>=early；position_order 两项规则计数均为 12/12，position_flat 计数为 0/12。"
+    },
+    {
+      "type": "timing_observation",
+      "source": "runs/v2_sqlite_001/stages/experiment_02/attempt-001/workspace/classification.json",
+      "observation": "PASSIVE 调用时间中位数 0.052333 ms，范围 0.039667–0.328833 ms；该指标未参与冻结分类。"
+    }
+  ],
+  "claims": [
+    "按冻结 E04 outcome rule，实际数字归类为 position_order，而不是 position_flat 或 uncertain。",
+    "按冻结 effect mapping，该结果对 D1 映射为 supports、对 D2 映射为 contradicts；此映射只陈述账本规则，不声称普遍机制成立或文献新颖。"
+  ],
+  "limitations": [
+    "只覆盖本机 SQLite 3.51.3、page_size=4096、单 reader、单 writer、单表和固定 240 行/24 批工作负载。",
+    "E04 冻结文件要求固定 SQL/schema/数据形状但未逐字给出；本次沿用 E03 已记录的 sample 表、TEXT 值及 INSERT SQL，并在报告与原始代码中保留该工程解析。",
+    "WAL 文件长度在 checkpoint 前后仍为 107152 bytes；文件长度不等于实际已 checkpoint 帧数。调用耗时只作本地描述。",
+    "requested research model 为 GPT-6 Luna；本实验者阶段使用 Python/sqlite3，没有发起模型推理，因此不报告或核验后端权重。"
+  ],
+  "next_actions": [
+    "如继续外推，应先冻结新的 workload 或数据库布局及其判定规则，再以独立新运行检验；本结果本身不构成跨配置证据。"
+  ],
+  "requested_model": "GPT-6 Luna (recorded request; no inference performed in this stage)",
+  "observation": {
+    "experiment_id": "E04",
+    "execution_status": "completed",
+    "observed_outcome_id": "position_order",
+    "summary": "36/36 次真实 SQLite 运行完成，12/12 种子通过冻结有效性控制。每个种子 early/mid/late checkpointed_frames=2/14/25，log_frames 均为 26，checkpoint 前 WAL 均为 107152 bytes，reader 均活动且 busy=0。12/12 late>early 且 12/12 mid>=early，达到冻结 position_order 规则（两项均至少 10/12）；position_flat 为 0/12。适用范围限于本地 SQLite 3.51.3 与记录的 240 行固定轨迹。",
+    "artifacts": [
+      "runs/v2_sqlite_001/stages/experiment_02/attempt-001/workspace/run_e04.py",
+      "runs/v2_sqlite_001/stages/experiment_02/attempt-001/workspace/raw_trials.json",
+      "runs/v2_sqlite_001/stages/experiment_02/attempt-001/workspace/classification.json",
+      "runs/v2_sqlite_001/stages/experiment_02/attempt-001/workspace/report_zh.md"
+    ],
+    "limitations": [
+      "E04 文件未逐字规定 SQL/schema；为保持同一轨迹，本次沿用 E03 记录的 schema 和 INSERT SQL，属已披露的工程解析。",
+      "单一 SQLite build 和 workload 的局部结果，不支持一般机制或新颖性结论。"
+    ]
+  }
+}

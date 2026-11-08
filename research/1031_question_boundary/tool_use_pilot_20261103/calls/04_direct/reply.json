@@ -1,0 +1,102 @@
+{
+  "evidence_refs": [
+    "dev_0..dev_23 show large matched-history effects at both waits; response means for constant histories +1 vs -1 are approximately 1.313 vs -0.721 at h=0.3 and 0.976 vs -0.372 at h=1.2.",
+    "observed_A_0..observed_A_15 show matched pulse responses change with temporal position and decrease with h.",
+    "fresh_1_0..fresh_1_15 show newest-only minus oldest-only mean contrasts of about 0.302 at h=0.5 and 0.189 at h=1.5.",
+    "Prior formula attempts were rejected before fitting, so no revised-fit or dev score is available."
+  ],
+  "experiments": [
+    {
+      "h": 0.5,
+      "history": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "purpose": "Compare the oldest-only pulse against the matched newest-only pulse at fixed current drive and wait.",
+      "u": 0.3
+    },
+    {
+      "h": 0.5,
+      "history": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "purpose": "Matched newest-only pulse comparator.",
+      "u": 0.3
+    },
+    {
+      "h": 1.5,
+      "history": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "purpose": "Measure how the oldest-pulse contribution changes at a longer wait.",
+      "u": 0.3
+    },
+    {
+      "h": 1.5,
+      "history": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "purpose": "Matched newest-only pulse comparator at the longer wait.",
+      "u": 0.3
+    }
+  ],
+  "expression": "q = sum(history * exp(times / tau)); m = q * exp(-h / tau); o = b0 + bu*u + bh*h + bm*m",
+  "parameters": [
+    {
+      "initial": 0.1,
+      "lower": -2,
+      "name": "b0",
+      "upper": 2
+    },
+    {
+      "initial": 0.9,
+      "lower": -3,
+      "name": "bu",
+      "upper": 3
+    },
+    {
+      "initial": -0.1,
+      "lower": -2,
+      "name": "bh",
+      "upper": 2
+    },
+    {
+      "initial": 0.5,
+      "lower": -3,
+      "name": "bm",
+      "upper": 3
+    },
+    {
+      "initial": 2,
+      "lower": 0.1,
+      "name": "tau",
+      "upper": 10
+    }
+  ],
+  "prospective_contrast": "At fixed u and h, compare histories [1,0,0,0] and [0,0,0,1]. The model predicts a larger history contribution from the newest pulse; increasing h attenuates both contributions according to the same exponential time constant.",
+  "quantities": [
+    {
+      "expression": "sum(history * exp(times / tau))",
+      "interpretation": "Prior-drive record summarized as an exponentially age-weighted sum, giving greater weight to more recent intervals.",
+      "name": "q"
+    },
+    {
+      "expression": "q * exp(-h / tau)",
+      "interpretation": "Age-weighted history contribution after decay during the current waiting interval.",
+      "name": "m"
+    }
+  ],
+  "refutation_condition": "Reject the structure if matched newest-versus-oldest pulse contrasts are absent or reverse, or their change across waiting times is inconsistent with shared exponential attenuation beyond the 0.015 response error bound. Acceptance also requires raw-response dev RMSE <= 0.06; the submitted proposal has not yet been fitted or scored.",
+  "scientific_change": "Replace the assumption that response depends only on current drive and waiting time with a testable history-dependent response. Prior drives contribute through an exponentially age-weighted record that decays during the wait; the shared time constant is a parsimonious hypothesis, not an established mechanism."
+}

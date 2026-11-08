@@ -1,0 +1,97 @@
+{
+  "NOTE_SCHEMA": {
+    "required_memory_note_fields": [
+      "key",
+      "title",
+      "kind",
+      "mastery",
+      "understanding",
+      "conditions",
+      "example",
+      "open_questions",
+      "tags",
+      "sources",
+      "revision_reason"
+    ],
+    "allowed_kind": ["source_knowledge", "interpretation", "hypothesis", "correction"],
+    "allowed_mastery": ["read", "explained", "used"],
+    "provenance_rule": "Separate published source knowledge, personal interpretation, and untested hypothesis; used requires an actual worked example.",
+    "note_file": "NOTE.md"
+  },
+  "summary": "我把本材料中的 quality 理解为由至少三位专家评分经中位数压缩得到的观测标签，而非直接观测到的无误差潜在质量。学习算例表明，相同中位数可以对应明显不同的评委分散程度。由此保留一个目标定义问题：研究者要预测已发布的合成评分、理解评委共识，还是推断潜在感官属性？后两者在当前表格中缺少直接识别所需的个体评分信息。未形成最终 idea。",
+  "artifacts": ["result.json", "NOTE.md"],
+  "evidence": [
+    {
+      "source": "https://archive.ics.uci.edu/dataset/186/wine+quality",
+      "local_source": "/Applications/ideas/1103_boundary_discovery/learning_lab/library/15d215e73b39105952380fd487e4ce1bf5a6b83a425abb285c2ec55193d3ca92.names",
+      "quote": "the output is based on sensory data (median of at least 3 evaluations made by wine experts)",
+      "note": "UCI 文档的评分构造说明；下载并归档的 winequality.names 原文。"
+    },
+    {
+      "source": "https://archive.ics.uci.edu/dataset/186/wine+quality",
+      "local_source": "/Applications/ideas/1103_boundary_discovery/learning_lab/library/15d215e73b39105952380fd487e4ce1bf5a6b83a425abb285c2ec55193d3ca92.names",
+      "quote": "Due to privacy and logistic issues, only physicochemical (inputs) and sensory (the output) variables are available (e.g. there is no data about grape types, wine brand, wine selling price, etc.).",
+      "note": "文档记载可用表格字段边界；本地实际表也不含专家个体评分字段。"
+    },
+    {
+      "source": "/Applications/ideas/1103_boundary_discovery/runs/e2e_eval_20261106_wine/stages/01_materials/native-001/workspace/data_audit.txt",
+      "note": "材料审计记录红酒 1599 行、白酒 4898 行，均为同一组 12 列（11 项理化指标和 quality），无缺失单元格。"
+    }
+  ],
+  "claims": [
+    "已发表的数据文档说明 quality 是至少三名专家评价的中位数；这是来源知识，不是本轮发现。",
+    "学习算例：三位评分组 [4,5,6] 与 [1,5,9] 的中位数都为 5，但组内极差分别为 2 和 8；仅知中位数不能反推出评委分歧。这是对汇总映射的数学演示，不是实际酒样数据或实证观察。",
+    "解释性问题：用合成中位数作目标、评委间共识作目标、或潜在感官属性作目标，是不同的估计对象；现有表格直接编码的只有合成评分。"
+  ],
+  "limitations": [
+    "UCI 文件称评分是至少三位专家评价的中位数，但未给出每瓶酒具体评委数、专家身份、个体评分或重复测量。",
+    "不能据此断言实际评委分歧大、评分尺度不等距、某些理化指标造成评分，或存在潜在单一真值。",
+    "本轮只学习评分聚合与目标定义，不拟合数据、不检索独立感官测量综述，也不作最终研究提案或新颖性判断。",
+    "请求提供的记忆索引为空、当前检索无条目；因此没有调用或修订持久研究笔记。"
+  ],
+  "next_actions": [
+    "向同伴询问：如果只能新增一种信息，逐位专家原始评分、评委身份/校准信息、还是跨来源重复酒样，哪一种最能区分中位数预测、评委一致性和潜在感官属性这几个目标？",
+    "若讨论转向评委一致性，先确认目标量与评分设计，再找实际包含个体评分或重复评价的数据；不要把当前 quality 标签视作它们的替代。"
+  ],
+  "initial_question": "在理化指标与 quality 中位数的关系中，研究目标究竟是预测这套既定评审流程产生的合成分数，估计专家之间的共识程度，还是推断一个独立于评审流程的潜在感官属性？不同目标各需要什么观测？",
+  "interpretation": "本数据把 11 项客观理化测试映射到一个感官评分中位数。该标签是具体聚合规则的产物。预测它可以是清楚的任务，但并不自动等价于解释感官机制或估计评委可靠性。中位数能表达排序中心的一种稳健摘要，却丢弃组内分布；现表因此不能辨别相同中位数下的分歧差异。这里是对测量结构的解释，不是已验证的机制或候选最终 idea。",
+  "uncertainties": "文档只说至少三位专家，没有说明每个样本评委人数是否相同、评委是否重复、评分是否经过校准，以及这些评分是否可以按等距数值处理。实际评分分歧大小、评委严厉度、潜在质量是否可定义或可辨识均未知。",
+  "question_to_peer": "若这次只能为现有酒样补采一种观测，你会优先要逐位专家原始评分、评委身份/校准资料，还是同一酒样的跨来源重复评价？请说明它最有希望区分哪个 estimand（合成分数、评委共识、潜在感官属性），以及仍无法区分什么。",
+  "memory_use": [],
+  "memory_notes": [
+    {
+      "key": "wine_quality_median_information_loss",
+      "title": "Wine quality 中位数评分的信息边界",
+      "kind": "source_knowledge",
+      "mastery": "used",
+      "understanding": "UCI 数据说明将 quality 描述为至少三位葡萄酒专家评价的中位数。中位数给出评分中心的汇总，但不保留单个评分的完整分布；仅从中位数无法恢复评委分歧。",
+      "conditions": "来源说明支持汇总规则，但当前数据表没有逐位评分；不据此推断实际分歧程度。中位数的这些信息限制适用于把个体评分压缩成一个数的情形。",
+      "example": "学习演示而非真实数据：[4,5,6] 的中位数为 5、极差为 2；[1,5,9] 的中位数也为 5、极差为 8。因此相同中位数不决定组内分散程度。",
+      "open_questions": [
+        "每个酒样实际上有多少位专家评分？",
+        "评委间分歧能否由重复评分、评委身份和校准信息估计？",
+        "Unknown: 当前材料没有提供个体评分，不能估计真实分歧。"
+      ],
+      "tags": ["measurement", "median aggregation", "information loss", "测量理论", "中位数聚合", "信息损失"],
+      "sources": ["https://archive.ics.uci.edu/dataset/186/wine+quality", "/Applications/ideas/1103_boundary_discovery/learning_lab/library/15d215e73b39105952380fd487e4ce1bf5a6b83a425abb285c2ec55193d3ca92.names"],
+      "revision_reason": ""
+    },
+    {
+      "key": "wine_quality_estimand_boundary",
+      "title": "合成评分、评委共识与潜在感官属性是不同目标",
+      "kind": "interpretation",
+      "mastery": "explained",
+      "understanding": "以现有中位数为预测目标，回答的是对这套评分流程输出的预测问题。评委一致性需要个体评价；独立潜在属性则需要额外测量定义与识别假设。三者不能仅因都叫 quality 就视为同一 estimand。",
+      "conditions": "这是根据数据字段和来源对测量目标作出的解释边界，不是关于三种目标可否最终识别的完整理论结论。当前表格只观测前述合成分数。",
+      "example": "同一中位数为 5 的两个三人评分组可有不同极差；这说明标签不能告诉我们共识程度。即便理化变量能预测该标签，也不单独说明它们预测的是哪种潜在感官属性。",
+      "open_questions": [
+        "若将潜在感官属性定义为重复抽样评委下的中心位置，需要哪些评委抽样和校准假设？",
+        "当前评分整数相邻差能否按等距处理，材料未给依据。",
+        "Unknown: 没有个体评分和外部效度测量时，不能判断预测是否能跨评审流程转移。"
+      ],
+      "tags": ["estimand", "construct validity", "sensory evaluation", "估计目标", "构念效度", "感官评价"],
+      "sources": ["/Applications/ideas/1103_boundary_discovery/runs/e2e_eval_20261106_wine/stages/01_materials/native-001/workspace/MATERIALS.md", "https://archive.ics.uci.edu/dataset/186/wine+quality"],
+      "revision_reason": ""
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "summary": "已下载并核验 UCI Wine Quality 红白两表，整理出开放科学材料及来源边界。观察、预期与依据分开记录；原始研究结论按 UCI 转述保留，不作为本次发现。未取得原论文全文或独立感官综述，已在来源和 provenance 中标注。",
+  "artifacts": [
+    "MATERIALS.md",
+    "PROVENANCE.md",
+    "data_audit.txt",
+    "audit_dataset.py",
+    "data/wine_quality.zip",
+    "data/winequality-red.csv",
+    "data/winequality-white.csv",
+    "data/winequality.names"
+  ],
+  "evidence": [
+    "本地重算得到红酒 1,599 行、白酒 4,898 行；两表均有 12 列且无空单元格。",
+    "原始文件 SHA-256 与逐表哈希保存在 data_audit.txt；audit_dataset.py 可复算行列、缺失、评分取值与哈希。",
+    "UCI 的数据说明称 quality 为至少三位专家评分的中位数；目标测量并非逐位专家评分。"
+  ],
+  "claims": [
+    "来源转述：Cortez et al. (2009) 对红白 Vinho Verde 样本使用多种数据挖掘方法，UCI 称其比较中 SVM 表现最好。",
+    "当前数据缺少专家个体评分、品种、品牌、售价和生产来源变量，因此这些数据不能单独区分评分分歧、混杂关联与因果机制。"
+  ],
+  "limitations": [
+    "原始研究 Crossref 元数据没有摘要；UCI 列出的预印本请求未成功。原研究材料仅为明确标注的 UCI 转述摘录。",
+    "没有获取独立感官科学综述的全文或摘要；UCI 数据卡被作为测量与任务定义的基础来源，不冒称独立综述。",
+    "没有进行统计建模、科学验证或最终问题选择。"
+  ],
+  "next_actions": [
+    "在共同讨论中先区分表格直接观察、原论文来源解释和待新增观测，避免把预测性能当作感官机制。",
+    "若后续讨论涉及专家一致性或跨批次泛化，应优先寻找含个体评分与生产来源标识的新资料。"
+  ],
+  "materials": [
+    {
+      "id": "M1",
+      "observation": "下载的数据包含红酒 1,599 行、白酒 4,898 行；每行 11 个理化测试变量和一个 quality 整数评分，两个文件均无空单元格。红酒观察到评分 3–8，白酒为 3–9。",
+      "conditions": "UCI 收录的葡萄牙 Vinho Verde 红、白酒样本；可用字段限于客观理化测试和聚合感官评分，且样本量及评分分布在两类之间不同。",
+      "expectation": "可检验这些理化测量与现有专家合成评分是否有关联；不预设单项指标方向或机制。",
+      "expectation_basis": "UCI 对既有研究的描述报告曾用多种方法建模并比较性能；这仅构成宽泛的已发表背景预期。评分有序、偏斜及特征可能相关亦来自 UCI 数据说明。具体样本外可预测性仍未知。",
+      "existing_explanations": "原研究把任务表述为回归/数据挖掘，并报告其比较中的 SVM 最优；UCI 提示类别不平衡和特征相关可能影响建模。它们是来源中的既有解释或分析选择，并非新发现。",
+      "unknowns": "没有个体专家评分、专家身份、重复测量、葡萄品种、品牌、价格、生产者/批次或时间信息；无法从表格判定专家间一致性、来源混杂、评分等距性或预测跨来源稳定性。",
+      "source_ids": ["D1", "P1", "F1"]
+    },
+    {
+      "id": "M2",
+      "observation": "红、白两个子表共享字段名称，但样本数和评分支持范围不同，且数据没有可见的样本配对或共同批次字段。",
+      "conditions": "比较限于这两个分别收集的数据表；未提供抽样框、采样时间及红白样本对应信息。",
+      "expectation": "若研究者想比较红白差别，结果可能同时受酒型、样本构成及评分过程影响；目前方向和大小都未知。",
+      "expectation_basis": "由现有数据结构的缺失与样本设计信息不足推出的是识别限制，不是实证差异主张。",
+      "existing_explanations": "数据文档将二者描述为不同葡萄酒变体的样本；没有提供足以把观测差异归因于某一种机制的来源信息。",
+      "unknowns": "真实酒型差别、采样构成差别、评委/评分尺度差异可能并存；当前数据不能拆开。",
+      "source_ids": ["D1", "F1"]
+    }
+  ],
+  "sources": [
+    {
+      "id": "D1",
+      "title": "Wine Quality dataset and accompanying winequality.names documentation",
+      "url": "https://archive.ics.uci.edu/dataset/186/wine+quality",
+      "access_level": "dataset archive downloaded; accompanying documentation full text retrieved",
+      "local_path": "/Applications/ideas/1103_boundary_discovery/runs/e2e_eval_20261106_wine/stages/01_materials/native-001/workspace/data/winequality.names",
+      "content_note": "实际下载的 CSV 与元数据文件；提供变量定义、行数、评分汇总方式、缺失说明和数据限制。"
+    },
+    {
+      "id": "P1",
+      "title": "Modeling wine preferences by data mining from physicochemical properties",
+      "url": "https://doi.org/10.1016/j.dss.2009.05.016",
+      "access_level": "Crossref metadata only; no abstract; original full text unavailable; UCI secondary description excerpt saved",
+      "local_path": "/Applications/ideas/1103_boundary_discovery/runs/e2e_eval_20261106_wine/stages/01_materials/native-001/workspace/sources/original_study_excerpt.txt",
+      "content_note": "保存 DOI 元数据及 UCI 对原研究数据、评分和比较结果的明确归属转述；不是论文全文或逐字摘要。"
+    },
+    {
+      "id": "F1",
+      "title": "UCI Wine Quality documentation: measurement and task description",
+      "url": "https://archive.ics.uci.edu/dataset/186/wine+quality",
+      "access_level": "full dataset documentation retrieved; used as a measurement/task foundation, not an independent review",
+      "local_path": "/Applications/ideas/1103_boundary_discovery/runs/e2e_eval_20261106_wine/stages/01_materials/native-001/workspace/sources/sensory_foundation_excerpt.txt",
+      "content_note": "限定可观察测量和评分的含义；此轮未取得独立感官科学综述全文或摘要。"
+    }
+  ]
+}

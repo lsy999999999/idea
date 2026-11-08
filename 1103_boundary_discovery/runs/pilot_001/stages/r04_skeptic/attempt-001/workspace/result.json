@@ -1,0 +1,90 @@
+{
+  "summary": "独立原始数据复算复现了新站配对数据、逐日预测及三个响应量指标，未发现改变数值的实现错误。建议保留并缩窄候选：空气日温幅在单一站点和固定时间切分上对水温日温幅有小幅预测增益；均值与最高温对照近零。结果不证明热传递机制或跨站普遍性。",
+  "artifacts": [
+    {
+      "path": "runs/pilot_001/stages/r04_skeptic/attempt-001/workspace/independent_recompute.py",
+      "description": "从 USGS RDB 与 NOAA GHCN .dly 独立解析、配对、OLS 和同步按年 28 日块重抽样的复现脚本。"
+    },
+    {
+      "path": "runs/pilot_001/stages/r04_skeptic/attempt-001/workspace/independent_results.json",
+      "description": "独立重算的样本、质量、模型矩阵、指标、自助法区间和与已保存文件的比对。"
+    },
+    {
+      "path": "runs/pilot_001/stages/r04_skeptic/attempt-001/workspace/metrics_table.csv",
+      "description": "逐响应量基线与扩展模型 MAE、增益和区间表。"
+    },
+    {
+      "path": "runs/pilot_001/stages/r04_skeptic/attempt-001/workspace/independent_paired_panel.csv",
+      "description": "直接从原始文件重建的共同完整案例配对面板。"
+    },
+    {
+      "path": "runs/pilot_001/stages/r04_skeptic/attempt-001/workspace/independent_daily_predictions.csv",
+      "description": "独立生成的测试期逐日预测。"
+    },
+    {
+      "path": "runs/pilot_001/stages/r04_skeptic/attempt-001/workspace/review_report_zh.md",
+      "description": "中文复核报告、时间线判断、解释边界和下一步建议。"
+    }
+  ],
+  "evidence": [
+    {
+      "type": "observation",
+      "source": "runs/pilot_001/stages/r04_skeptic/attempt-001/workspace/independent_results.json",
+      "detail": "原始 RDB 列按 00010/00001、00002、00003 与 00060/00003 绑定。USGS 日最高、最低、均值温度分别有 3650、3650、3649 个 A 限定非缺测值；流量有 3652 个 A 值，包括 9 个 A:e。NOAA 十分之一摄氏度单位换算和 qflag 过滤后，配对共同完整案例为 3360 日，训练 1722 日、测试 1638 日。"
+    },
+    {
+      "type": "observation",
+      "source": "runs/pilot_001/stages/r04_skeptic/attempt-001/workspace/metrics_table.csv",
+      "detail": "水温日温幅 MAE 为 0.174437°C 至 0.166627°C，差值 0.007809°C，按年同步 28 日历日块 95% 区间 [0.003584, 0.012414]。水温均值差 0.000076°C、区间 [-0.001178, 0.001294]；最高温差 0.000276°C、区间 [-0.001174, 0.001877]。"
+    },
+    {
+      "type": "observation",
+      "source": "runs/pilot_001/stages/r04_skeptic/attempt-001/workspace/independent_results.json",
+      "detail": "独立配对面板日期完全一致，比较的 11 个共同数值列最大差为 0。测试逐日预测日期一致，预测最大绝对差为 5.33e-15。2000 次区块重抽样点估计/百分位区间与保存结果逐项一致；每个测试年保留各自的原始行数。"
+    },
+    {
+      "type": "interpretation",
+      "source": "runs/pilot_001/stages/r03_experimentalist/attempt-001/workspace/preanalysis.json; runs/pilot_001/stages/r03_experimentalist/attempt-001/workspace/preanalysis_amendment_001.json; runs/pilot_001/stages/r03_experimentalist/attempt-001/workspace/preanalysis_amendment_002.json; runs/pilot_001/stages/r03_experimentalist/attempt-001/workspace/requests.json; runs/pilot_001/stages/r03_experimentalist/attempt-001/workspace/catalog_request.json; runs/pilot_001/stages/r03_experimentalist/attempt-001/workspace/requests_14092500.json",
+      "detail": "最终 14092500 温度文件的请求时间 13:55:42Z 晚于最终修订冻结 13:47:42Z，支持最终站水温结果冻结后才首次取回。早期 14139940 水温请求发生于 13:45:22Z，早于最终修订；该站结果仅覆盖 2023 年末窗口且没有全期流量目录覆盖。最终站的改选基于系列目录覆盖和最近合格气象站规则，不含温度效应，但无法从请求日志证明早期候选文件的数值行从未被操作者看见。"
+    },
+    {
+      "type": "observation",
+      "source": "runs/pilot_001/stages/r00_boundary/attempt-001/workspace/data/noaa_ghcnd_inventory.txt; runs/pilot_001/stages/r00_boundary/attempt-001/workspace/data/usgs_active_or_temp_sites.rdb",
+      "detail": "USC00356532 与 USGS 14092500 目录坐标约相距 0.147 km。它与旧分析的 OPHI/OCHI 站号及原始数据源不同，但几乎同址，因此来源网络独立、局地天气暴露非实质空间独立。NOAA 配对样本中 MFLAG 为空、SFLAG 均为 7；分析保留并报告 SFLAG，没有按其未核实含义过滤。"
+    },
+    {
+      "type": "interpretation",
+      "source": "runs/pilot_001/stages/r02_skeptic/attempt-001/workspace/recomputed_results.json; runs/pilot_001/stages/r04_skeptic/attempt-001/workspace/metrics_table.csv",
+      "detail": "此前三站探索复算的日温幅改善约 0.05853°C，新站约 0.00781°C，约小 7.5 倍。时间段和站点组合不同，不应视为同一总体效应的精确估计；差异与水文/河岸异质性、气象代理误差、日界错位、传感器分辨率或历史探头差异相容，当前资料不能区分。"
+    }
+  ],
+  "claims": [
+    {
+      "claim": "在 USGS 14092500、NOAA USC00356532、2014–2018 训练和 2019–2023 测试的指定分析中，空气日温幅在月份、空气均温和 log10 流量之外，为水温日温幅提供小幅样本外预测增益。",
+      "status": "exploratory_single_site_predictive_association",
+      "basis": "独立复算 MAE 增益 0.007809°C，2000 次同步按年 28 日块区间 [0.003584, 0.012414]°C。"
+    },
+    {
+      "claim": "该分析未观察到空气日温幅对水温日均值或日最高温的相当增益。",
+      "status": "descriptive_specificity_control",
+      "basis": "两项差值均很小且区块区间跨零；对照不构成独立发现。"
+    },
+    {
+      "claim": "现有证据不能识别热传递机制、低流量调节或一般跨站效果。",
+      "status": "bounded_interpretation",
+      "basis": "只有一个新增近乎同址气象代理站点，且没有河岸气温、辐射、遮阴、高频响应及可对照的历史传感器信息。"
+    }
+  ],
+  "limitations": [
+    "这是一个新河站和一个近乎同址 NOAA 代理，不能估计跨站总体效应；旧三站估计与本次单站的时间窗、站点结构不同。",
+    "NOAA 日最高/最低气温并非河岸气温、太阳辐射或水体能量通量；同日历日配对未校正气象和水温测站的观测日界。",
+    "配对数据包含 140 个跨日缺口；按 28 日历日窗口移动块且保留每年样本行数，区间不涵盖跨站不确定性或测量误差。",
+    "最终站点结果请求晚于最终冻结，但 14139940 候选水温在最终修订前曾被请求；保存证据不能独立证明候选值完全未被查看。",
+    "共同完整案例筛行使用全期目标与特征是否观测到的信息；模型拟合、哑变量列和回归估计只用训练期。"
+  ],
+  "next_actions": [
+    "保留但缩窄“热幅响应增益”候选，只称单站、指定代理与切分下的日温幅预测增益。",
+    "在下一站预先冻结模型、切分及质量规则后再下载河温结果；选择空间上与气象站分离的代理站点以检验真正的暴露迁移。",
+    "优先追加高频原位水温、近岸气温、短波辐射、站点遮阴和仪器校准/变更记录，比较天气代理和辐射解释，并分别测试相位/日内响应假设。"
+  ]
+}

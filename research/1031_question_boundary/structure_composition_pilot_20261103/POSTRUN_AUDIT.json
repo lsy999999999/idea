@@ -1,0 +1,77 @@
+{
+  "time": "2026-11-03T12:58:54.375203+00:00",
+  "certificate_checks": [
+    {
+      "id": "P1",
+      "exact_projection_and_dual_verified": true,
+      "minimum_rmse": 0.10536671677205332,
+      "hard_excluded": true
+    },
+    {
+      "id": "P2",
+      "exact_projection_and_dual_verified": true,
+      "minimum_rmse": 0.10528189211987196,
+      "hard_excluded": true
+    },
+    {
+      "id": "P3",
+      "exact_projection_and_dual_verified": true,
+      "minimum_rmse": 0.007724960747431271,
+      "hard_excluded": false
+    }
+  ],
+  "pair_checks": {
+    "structure_composition_pilot_20261103": {
+      "shared_scientific_input_identical": true,
+      "actual_schema_enums_match_controls": true,
+      "operation_schemas_frozen_before_plans": true,
+      "predictions_and_selection_before_observation": true,
+      "metrics_and_parameter_binding_independently_recomputed": true,
+      "fit_budget_respected": true
+    },
+    "context_correction": {
+      "shared_scientific_input_identical": true,
+      "actual_schema_enums_match_controls": true,
+      "operation_schemas_frozen_before_plans": true,
+      "predictions_and_selection_before_observation": true,
+      "metrics_and_parameter_binding_independently_recomputed": true,
+      "fit_budget_respected": true
+    }
+  },
+  "G_failure_diagnosis": {
+    "original_error": "Complete equation must be scalar raw response, dimension [0,1]",
+    "left_actual_dependencies": [
+      "h",
+      "history",
+      "u"
+    ],
+    "left_allowed": [
+      "history",
+      "h",
+      "times",
+      "dt"
+    ],
+    "forbidden_left_inputs": [
+      "u"
+    ],
+    "right_expression": "0",
+    "right_inferred_dimension": [
+      "0",
+      "0"
+    ],
+    "right_scalar_zero_is_dimensionless_in_current_compiler": true,
+    "scope": "Two independent issues. Even treating literal zero as unit-polymorphic would not repair the forbidden u dependency. No expression moved or repaired; no fit/acceptance assigned."
+  },
+  "original_F_order_contrast": 0.0,
+  "original_F_semantic_issue": "All four scalar lag weights are summed before multiplying the history vector, so the program is invariant to history order despite a lag-specific narrative.",
+  "calls": 9,
+  "usage": {
+    "input_tokens": 309644,
+    "cached_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 4561,
+    "reasoning_output_tokens": 984
+  },
+  "original_history_seals_verified": true,
+  "scope": "Organizer audit of frozen predictions, exact class certificates and construction failures. No new scientific candidate or model calls."
+}

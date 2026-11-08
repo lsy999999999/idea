@@ -1,0 +1,1061 @@
+{
+  "arm": "F",
+  "operation": "joint",
+  "raw": {
+    "evidence_refs": [
+      "dev_0",
+      "dev_6",
+      "dev_12",
+      "dev_18",
+      "observed_A_0",
+      "observed_A_8",
+      "observed_A_16",
+      "observed_A_24",
+      "fresh_1_0",
+      "fresh_1_4",
+      "fresh_1_8",
+      "fresh_1_12"
+    ],
+    "experiments": [
+      {
+        "h": 0.5,
+        "history": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "purpose": "Vary current drive while fixing the lag and history to assess whether the response changes with u in this context.",
+        "u": -0.6
+      },
+      {
+        "h": 0.5,
+        "history": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "purpose": "Matched to the first condition except for current drive; estimate the current-drive contrast.",
+        "u": 0.8
+      },
+      {
+        "h": 1.8,
+        "history": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "purpose": "Probe the joint lag-history contribution at a distinct lag and history pattern.",
+        "u": -0.4
+      },
+      {
+        "h": 1.8,
+        "history": [
+          1,
+          -1,
+          1,
+          -1
+        ],
+        "purpose": "Compare an alternating history at the same current drive and lag as the third condition.",
+        "u": -0.4
+      }
+    ],
+    "exposed_inputs": [
+      "u",
+      "h",
+      "history",
+      "times",
+      "dt"
+    ],
+    "expression": "a + b*u + c*h + d*sum(history*exp(times/tau)) + e*u*sum(history*exp(times/tau)) + f*h*sum(history*exp(times/tau))",
+    "measurement_requests": [],
+    "parameters": [
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.1,
+        "lower": -2,
+        "name": "a",
+        "upper": 2
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.9,
+        "lower": -3,
+        "name": "b",
+        "upper": 3
+      },
+      {
+        "dimension": [
+          -1,
+          1
+        ],
+        "initial": -0.1,
+        "lower": -2,
+        "name": "c",
+        "upper": 2
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.4,
+        "lower": -3,
+        "name": "d",
+        "upper": 3
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.05,
+        "lower": -3,
+        "name": "e",
+        "upper": 3
+      },
+      {
+        "dimension": [
+          -1,
+          1
+        ],
+        "initial": 0.02,
+        "lower": -3,
+        "name": "f",
+        "upper": 3
+      },
+      {
+        "dimension": [
+          1,
+          0
+        ],
+        "initial": 2,
+        "lower": 0.1,
+        "name": "tau",
+        "upper": 10
+      }
+    ],
+    "quantities": [
+      {
+        "expression": "sum(history*exp(times/tau))",
+        "interpretation": "Dimensionless exponentially age-weighted summary of the prior drive; recent intervals receive greater weight for positive tau.",
+        "name": "memory"
+      }
+    ],
+    "rationale": "P1 and P2 certify that broad additive partitions separating history from (u,h), or lag from (u,history), miss the supplied rows beyond the declared threshold. P3 remains viable, so these results do not require interactions or identify a unique mechanism. This joint model keeps current drive, lag, and an exponentially weighted history summary with interactions as a falsifiable candidate; it must be fit only on fit rows and assessed on dev rows. The listed experiments vary u or history under matched settings to probe its response predictions.",
+    "scientific_change": "Replace the state-only response with a joint candidate incorporating prior drive history and interactions with current drive and waiting time. This is a predictive hypothesis, not a uniquely identified physical mechanism."
+  },
+  "scaffold": {
+    "parameters": [
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.1,
+        "lower": -2,
+        "name": "a",
+        "upper": 2
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.9,
+        "lower": -3,
+        "name": "b",
+        "upper": 3
+      },
+      {
+        "dimension": [
+          -1,
+          1
+        ],
+        "initial": -0.1,
+        "lower": -2,
+        "name": "c",
+        "upper": 2
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.4,
+        "lower": -3,
+        "name": "d",
+        "upper": 3
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.05,
+        "lower": -3,
+        "name": "e",
+        "upper": 3
+      },
+      {
+        "dimension": [
+          -1,
+          1
+        ],
+        "initial": 0.02,
+        "lower": -3,
+        "name": "f",
+        "upper": 3
+      },
+      {
+        "dimension": [
+          1,
+          0
+        ],
+        "initial": 2,
+        "lower": 0.1,
+        "name": "tau",
+        "upper": 10
+      }
+    ],
+    "quantities": [
+      {
+        "expression": "sum(history*exp(times/tau))",
+        "interpretation": "Dimensionless exponentially age-weighted summary of the prior drive; recent intervals receive greater weight for positive tau.",
+        "name": "memory"
+      }
+    ],
+    "exposed_inputs": [
+      "u",
+      "h",
+      "history",
+      "times",
+      "dt"
+    ]
+  },
+  "expression": "a + b*u + c*h + d*sum(history*exp(times/tau)) + e*u*sum(history*exp(times/tau)) + f*h*sum(history*exp(times/tau))",
+  "result": {
+    "status": "executed",
+    "parameters": {
+      "a": 0.009637551534758045,
+      "b": 0.9172062672831484,
+      "c": -0.004067750928716323,
+      "d": 0.749352796393573,
+      "e": -0.0012155323377832567,
+      "f": -0.23197131486004785,
+      "tau": 2.177202513183979
+    },
+    "values": [
+      0.009637551534758045,
+      0.9172062672831484,
+      -0.004067750928716323,
+      0.749352796393573,
+      -0.0012155323377832567,
+      -0.23197131486004785,
+      2.177202513183979
+    ],
+    "fit_rmse": 0.024455515316331906,
+    "dev_rmse": 0.06444380870064965,
+    "optimizer_converged": true,
+    "residual_calls": 306,
+    "attempts": [
+      {
+        "calls": 56,
+        "converged": true,
+        "message": "`ftol` termination condition is satisfied."
+      },
+      {
+        "calls": 80,
+        "converged": true,
+        "message": "`ftol` termination condition is satisfied."
+      },
+      {
+        "calls": 81,
+        "converged": true,
+        "message": "`ftol` termination condition is satisfied."
+      },
+      {
+        "calls": 89,
+        "converged": true,
+        "message": "`ftol` termination condition is satisfied."
+      }
+    ],
+    "dev_predictions": [
+      {
+        "row_id": "dev_0",
+        "observed": 1.3051720130977043,
+        "predicted": 1.3549226301912227,
+        "residual": 0.04975061709351847
+      },
+      {
+        "row_id": "dev_1",
+        "observed": 1.3299464539887613,
+        "predicted": 1.3549226301912227,
+        "residual": 0.024976176202461398
+      },
+      {
+        "row_id": "dev_2",
+        "observed": 1.315556400303728,
+        "predicted": 1.3549226301912227,
+        "residual": 0.03936622988749483
+      },
+      {
+        "row_id": "dev_3",
+        "observed": 1.3018382948668406,
+        "predicted": 1.3549226301912227,
+        "residual": 0.05308433532438217
+      },
+      {
+        "row_id": "dev_4",
+        "observed": 1.3063033231839458,
+        "predicted": 1.3549226301912227,
+        "residual": 0.0486193070072769
+      },
+      {
+        "row_id": "dev_5",
+        "observed": 1.316971899597782,
+        "predicted": 1.3549226301912227,
+        "residual": 0.037950730593440785
+      },
+      {
+        "row_id": "dev_6",
+        "observed": -0.7317168592978868,
+        "predicted": -0.6043231638524176,
+        "residual": 0.1273936954454692
+      },
+      {
+        "row_id": "dev_7",
+        "observed": -0.7315951080306806,
+        "predicted": -0.6043231638524176,
+        "residual": 0.12727194417826304
+      },
+      {
+        "row_id": "dev_8",
+        "observed": -0.7133590087789013,
+        "predicted": -0.6043231638524176,
+        "residual": 0.10903584492648377
+      },
+      {
+        "row_id": "dev_9",
+        "observed": -0.7197943079426534,
+        "predicted": -0.6043231638524176,
+        "residual": 0.11547114409023584
+      },
+      {
+        "row_id": "dev_10",
+        "observed": -0.706246120141251,
+        "predicted": -0.6043231638524176,
+        "residual": 0.10192295628883341
+      },
+      {
+        "row_id": "dev_11",
+        "observed": -0.7249680276130827,
+        "predicted": -0.6043231638524176,
+        "residual": 0.12064486376066508
+      },
+      {
+        "row_id": "dev_12",
+        "observed": 0.9872606040127475,
+        "predicted": 1.050176065404019,
+        "residual": 0.06291546139127158
+      },
+      {
+        "row_id": "dev_13",
+        "observed": 0.9703903087452999,
+        "predicted": 1.050176065404019,
+        "residual": 0.07978575665871923
+      },
+      {
+        "row_id": "dev_14",
+        "observed": 0.9653176407338192,
+        "predicted": 1.050176065404019,
+        "residual": 0.08485842467019988
+      },
+      {
+        "row_id": "dev_15",
+        "observed": 0.9818137403148506,
+        "predicted": 1.050176065404019,
+        "residual": 0.06836232508916851
+      },
+      {
+        "row_id": "dev_16",
+        "observed": 0.9710228761101786,
+        "predicted": 1.050176065404019,
+        "residual": 0.07915318929384052
+      },
+      {
+        "row_id": "dev_17",
+        "observed": 0.9821325647467699,
+        "predicted": 1.050176065404019,
+        "residual": 0.06804350065724918
+      },
+      {
+        "row_id": "dev_18",
+        "observed": -0.3765090262237718,
+        "predicted": -0.3068985507369034,
+        "residual": 0.06961047548686838
+      },
+      {
+        "row_id": "dev_19",
+        "observed": -0.37078533476920067,
+        "predicted": -0.3068985507369034,
+        "residual": 0.06388678403229725
+      },
+      {
+        "row_id": "dev_20",
+        "observed": -0.37152767435121076,
+        "predicted": -0.3068985507369034,
+        "residual": 0.06462912361430734
+      },
+      {
+        "row_id": "dev_21",
+        "observed": -0.36885371633763314,
+        "predicted": -0.3068985507369034,
+        "residual": 0.06195516560072972
+      },
+      {
+        "row_id": "dev_22",
+        "observed": -0.38218811611320275,
+        "predicted": -0.3068985507369034,
+        "residual": 0.07528956537629933
+      },
+      {
+        "row_id": "dev_23",
+        "observed": -0.3609762624194256,
+        "predicted": -0.3068985507369034,
+        "residual": 0.05407771168252218
+      },
+      {
+        "row_id": "observed_A_0",
+        "observed": 0.6307931713001469,
+        "predicted": 0.7045316868485838,
+        "residual": 0.07373851554843691
+      },
+      {
+        "row_id": "observed_A_1",
+        "observed": 0.6464020470805342,
+        "predicted": 0.7045316868485838,
+        "residual": 0.058129639768049635
+      },
+      {
+        "row_id": "observed_A_2",
+        "observed": 0.6484555894530206,
+        "predicted": 0.7045316868485838,
+        "residual": 0.056076097395563185
+      },
+      {
+        "row_id": "observed_A_3",
+        "observed": 0.6505355658220674,
+        "predicted": 0.7045316868485838,
+        "residual": 0.05399612102651641
+      },
+      {
+        "row_id": "observed_A_4",
+        "observed": 0.5927914700228543,
+        "predicted": 0.6348123088500846,
+        "residual": 0.04202083882723029
+      },
+      {
+        "row_id": "observed_A_5",
+        "observed": 0.5830899698883254,
+        "predicted": 0.6348123088500846,
+        "residual": 0.05172233896175915
+      },
+      {
+        "row_id": "observed_A_6",
+        "observed": 0.5882816402980804,
+        "predicted": 0.6348123088500846,
+        "residual": 0.04653066855200416
+      },
+      {
+        "row_id": "observed_A_7",
+        "observed": 0.5846661965452915,
+        "predicted": 0.6348123088500846,
+        "residual": 0.050146112304793045
+      },
+      {
+        "row_id": "observed_A_8",
+        "observed": 0.932769447730129,
+        "predicted": 1.0034009262648578,
+        "residual": 0.07063147853472873
+      },
+      {
+        "row_id": "observed_A_9",
+        "observed": 0.9273772122254385,
+        "predicted": 1.0034009262648578,
+        "residual": 0.07602371403941932
+      },
+      {
+        "row_id": "observed_A_10",
+        "observed": 0.9519302331607015,
+        "predicted": 1.0034009262648578,
+        "residual": 0.051470693104156306
+      },
+      {
+        "row_id": "observed_A_11",
+        "observed": 0.952336917559102,
+        "predicted": 1.0034009262648578,
+        "residual": 0.05106400870575578
+      },
+      {
+        "row_id": "observed_A_12",
+        "observed": 0.7220010562640917,
+        "predicted": 0.747365185603033,
+        "residual": 0.025364129338941277
+      },
+      {
+        "row_id": "observed_A_13",
+        "observed": 0.7204434990009025,
+        "predicted": 0.747365185603033,
+        "residual": 0.026921686602130457
+      },
+      {
+        "row_id": "observed_A_14",
+        "observed": 0.7318157317488707,
+        "predicted": 0.747365185603033,
+        "residual": 0.015549453854162287
+      },
+      {
+        "row_id": "observed_A_15",
+        "observed": 0.7320894879185589,
+        "predicted": 0.747365185603033,
+        "residual": 0.015275697684474121
+      },
+      {
+        "row_id": "observed_A_16",
+        "observed": 0.32454212155208745,
+        "predicted": 0.39788818516985813,
+        "residual": 0.07334606361777068
+      },
+      {
+        "row_id": "observed_A_17",
+        "observed": 0.33636213952435945,
+        "predicted": 0.39788818516985813,
+        "residual": 0.061526045645498684
+      },
+      {
+        "row_id": "observed_A_18",
+        "observed": 0.3267810216192671,
+        "predicted": 0.39788818516985813,
+        "residual": 0.07110716355059105
+      },
+      {
+        "row_id": "observed_A_19",
+        "observed": 0.340311943577755,
+        "predicted": 0.39788818516985813,
+        "residual": 0.05757624159210312
+      },
+      {
+        "row_id": "observed_A_20",
+        "observed": 0.43586080685044065,
+        "predicted": 0.5193316781938575,
+        "residual": 0.08347087134341685
+      },
+      {
+        "row_id": "observed_A_21",
+        "observed": 0.4558132642638018,
+        "predicted": 0.5193316781938575,
+        "residual": 0.0635184139300557
+      },
+      {
+        "row_id": "observed_A_22",
+        "observed": 0.4450194423386643,
+        "predicted": 0.5193316781938575,
+        "residual": 0.0743122358551932
+      },
+      {
+        "row_id": "observed_A_23",
+        "observed": 0.4535919182106059,
+        "predicted": 0.5193316781938575,
+        "residual": 0.0657397599832516
+      },
+      {
+        "row_id": "observed_A_24",
+        "observed": 0.7370916983141308,
+        "predicted": 0.8096873144390346,
+        "residual": 0.07259561612490384
+      },
+      {
+        "row_id": "observed_A_25",
+        "observed": 0.7445164340914321,
+        "predicted": 0.8096873144390346,
+        "residual": 0.06517088034760254
+      },
+      {
+        "row_id": "observed_A_26",
+        "observed": 0.7390414239330393,
+        "predicted": 0.8096873144390346,
+        "residual": 0.07064589050599535
+      },
+      {
+        "row_id": "observed_A_27",
+        "observed": 0.7587147033940054,
+        "predicted": 0.8096873144390346,
+        "residual": 0.05097261104502926
+      },
+      {
+        "row_id": "observed_A_28",
+        "observed": 0.6335948058188414,
+        "predicted": 0.6744134682573998,
+        "residual": 0.04081866243855836
+      },
+      {
+        "row_id": "observed_A_29",
+        "observed": 0.6439356011478652,
+        "predicted": 0.6744134682573998,
+        "residual": 0.030477867109534595
+      },
+      {
+        "row_id": "observed_A_30",
+        "observed": 0.644963168846186,
+        "predicted": 0.6744134682573998,
+        "residual": 0.0294502994112138
+      },
+      {
+        "row_id": "observed_A_31",
+        "observed": 0.6307091208417741,
+        "predicted": 0.6744134682573998,
+        "residual": 0.04370434741562568
+      },
+      {
+        "row_id": "observed_B_0",
+        "observed": 0.9989438687509821,
+        "predicted": 1.05992612010924,
+        "residual": 0.060982251358257966
+      },
+      {
+        "row_id": "observed_B_1",
+        "observed": 1.0093896289352093,
+        "predicted": 1.05992612010924,
+        "residual": 0.050536491174030695
+      },
+      {
+        "row_id": "observed_B_2",
+        "observed": 0.9934467110608171,
+        "predicted": 1.05992612010924,
+        "residual": 0.06647940904842298
+      },
+      {
+        "row_id": "observed_B_3",
+        "observed": 0.9868358901261626,
+        "predicted": 1.05992612010924,
+        "residual": 0.07309022998307746
+      },
+      {
+        "row_id": "observed_B_4",
+        "observed": 0.7561866826194857,
+        "predicted": 0.7686523317430278,
+        "residual": 0.012465649123542089
+      },
+      {
+        "row_id": "observed_B_5",
+        "observed": 0.7586961806960817,
+        "predicted": 0.7686523317430278,
+        "residual": 0.009956151046946138
+      },
+      {
+        "row_id": "observed_B_6",
+        "observed": 0.7458182097118563,
+        "predicted": 0.7686523317430278,
+        "residual": 0.022834122031171522
+      },
+      {
+        "row_id": "observed_B_7",
+        "observed": 0.7564605377011872,
+        "predicted": 0.7686523317430278,
+        "residual": 0.012191794041840676
+      },
+      {
+        "row_id": "fresh_1_0",
+        "observed": 0.31991131701881936,
+        "predicted": 0.3835772480973163,
+        "residual": 0.06366593107849694
+      },
+      {
+        "row_id": "fresh_1_1",
+        "observed": 0.3229077347136631,
+        "predicted": 0.3835772480973163,
+        "residual": 0.06066951338365323
+      },
+      {
+        "row_id": "fresh_1_2",
+        "observed": 0.33118275836584615,
+        "predicted": 0.3835772480973163,
+        "residual": 0.05239448973147015
+      },
+      {
+        "row_id": "fresh_1_3",
+        "observed": 0.3185065774664961,
+        "predicted": 0.3835772480973163,
+        "residual": 0.06507067063082023
+      },
+      {
+        "row_id": "fresh_1_4",
+        "observed": 0.6208279711704124,
+        "predicted": 0.6826474904274106,
+        "residual": 0.061819519256998134
+      },
+      {
+        "row_id": "fresh_1_5",
+        "observed": 0.6218083055020318,
+        "predicted": 0.6826474904274106,
+        "residual": 0.060839184925378764
+      },
+      {
+        "row_id": "fresh_1_6",
+        "observed": 0.6322656995309451,
+        "predicted": 0.6826474904274106,
+        "residual": 0.05038179089646544
+      },
+      {
+        "row_id": "fresh_1_7",
+        "observed": 0.6232624640586267,
+        "predicted": 0.6826474904274106,
+        "residual": 0.059385026368783844
+      },
+      {
+        "row_id": "fresh_1_8",
+        "observed": 0.27252449477528273,
+        "predicted": 0.34256584927466965,
+        "residual": 0.07004135449938692
+      },
+      {
+        "row_id": "fresh_1_9",
+        "observed": 0.2689342004439257,
+        "predicted": 0.34256584927466965,
+        "residual": 0.07363164883074397
+      },
+      {
+        "row_id": "fresh_1_10",
+        "observed": 0.2847414981527855,
+        "predicted": 0.34256584927466965,
+        "residual": 0.057824351121884165
+      },
+      {
+        "row_id": "fresh_1_11",
+        "observed": 0.2969607907606968,
+        "predicted": 0.34256584927466965,
+        "residual": 0.04560505851397284
+      },
+      {
+        "row_id": "fresh_1_12",
+        "observed": 0.4695451241000241,
+        "predicted": 0.5320382312145726,
+        "residual": 0.06249310711454853
+      },
+      {
+        "row_id": "fresh_1_13",
+        "observed": 0.4605876283337802,
+        "predicted": 0.5320382312145726,
+        "residual": 0.07145060288079241
+      },
+      {
+        "row_id": "fresh_1_14",
+        "observed": 0.4820012449774068,
+        "predicted": 0.5320382312145726,
+        "residual": 0.05003698623716579
+      },
+      {
+        "row_id": "fresh_1_15",
+        "observed": 0.4649940177389958,
+        "predicted": 0.5320382312145726,
+        "residual": 0.06704421347557682
+      }
+    ],
+    "dev_pass": false,
+    "manifest": {
+      "equations": {
+        "memory": "sum(history * exp(times / tau))"
+      },
+      "response": "a + b * u + c * h + d * sum(history * exp(times / tau)) + e * u * sum(history * exp(times / tau)) + f * h * sum(history * exp(times / tau))",
+      "parameter_bindings": {
+        "a": 0,
+        "b": 1,
+        "c": 2,
+        "d": 3,
+        "e": 4,
+        "f": 5,
+        "tau": 6
+      },
+      "types": {
+        "u": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "0"
+          ]
+        },
+        "h": {
+          "shape": "scalar",
+          "dimension": [
+            "1",
+            "0"
+          ]
+        },
+        "history": {
+          "shape": "vector4",
+          "dimension": [
+            "0",
+            "0"
+          ]
+        },
+        "times": {
+          "shape": "vector4",
+          "dimension": [
+            "1",
+            "0"
+          ]
+        },
+        "dt": {
+          "shape": "scalar",
+          "dimension": [
+            "1",
+            "0"
+          ]
+        },
+        "a": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "1"
+          ]
+        },
+        "b": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "1"
+          ]
+        },
+        "c": {
+          "shape": "scalar",
+          "dimension": [
+            "-1",
+            "1"
+          ]
+        },
+        "d": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "1"
+          ]
+        },
+        "e": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "1"
+          ]
+        },
+        "f": {
+          "shape": "scalar",
+          "dimension": [
+            "-1",
+            "1"
+          ]
+        },
+        "tau": {
+          "shape": "scalar",
+          "dimension": [
+            "1",
+            "0"
+          ]
+        },
+        "memory": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "0"
+          ]
+        }
+      },
+      "final_allowed_symbols": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "dt",
+        "e",
+        "f",
+        "h",
+        "history",
+        "memory",
+        "tau",
+        "times",
+        "u"
+      ],
+      "source": "Derived from the one named specification"
+    }
+  },
+  "class_audits": [
+    {
+      "partition_id": "P1",
+      "hard_excluded": true,
+      "certified_additive": false,
+      "terms": [
+        {
+          "expression": "a",
+          "dependencies": [],
+          "side": "left"
+        },
+        {
+          "expression": "b * u",
+          "dependencies": [
+            "u"
+          ],
+          "side": "left"
+        },
+        {
+          "expression": "c * h",
+          "dependencies": [
+            "h"
+          ],
+          "side": "left"
+        },
+        {
+          "expression": "d * sum(history * exp(times / tau))",
+          "dependencies": [
+            "history",
+            "times"
+          ],
+          "side": "right"
+        },
+        {
+          "expression": "e * u * sum(history * exp(times / tau))",
+          "dependencies": [
+            "history",
+            "times",
+            "u"
+          ],
+          "side": "unknown"
+        },
+        {
+          "expression": "f * h * sum(history * exp(times / tau))",
+          "dependencies": [
+            "h",
+            "history",
+            "times"
+          ],
+          "side": "unknown"
+        }
+      ],
+      "unknown_meaning": "May be coupled or algebraically additive; no hard class rejection from unknown"
+    },
+    {
+      "partition_id": "P2",
+      "hard_excluded": true,
+      "certified_additive": false,
+      "terms": [
+        {
+          "expression": "a",
+          "dependencies": [],
+          "side": "left"
+        },
+        {
+          "expression": "b * u",
+          "dependencies": [
+            "u"
+          ],
+          "side": "left"
+        },
+        {
+          "expression": "c * h",
+          "dependencies": [
+            "h"
+          ],
+          "side": "right"
+        },
+        {
+          "expression": "d * sum(history * exp(times / tau))",
+          "dependencies": [
+            "history",
+            "times"
+          ],
+          "side": "left"
+        },
+        {
+          "expression": "e * u * sum(history * exp(times / tau))",
+          "dependencies": [
+            "history",
+            "times",
+            "u"
+          ],
+          "side": "left"
+        },
+        {
+          "expression": "f * h * sum(history * exp(times / tau))",
+          "dependencies": [
+            "h",
+            "history",
+            "times"
+          ],
+          "side": "unknown"
+        }
+      ],
+      "unknown_meaning": "May be coupled or algebraically additive; no hard class rejection from unknown"
+    },
+    {
+      "partition_id": "P3",
+      "hard_excluded": false,
+      "certified_additive": false,
+      "terms": [
+        {
+          "expression": "a",
+          "dependencies": [],
+          "side": "left"
+        },
+        {
+          "expression": "b * u",
+          "dependencies": [
+            "u"
+          ],
+          "side": "right"
+        },
+        {
+          "expression": "c * h",
+          "dependencies": [
+            "h"
+          ],
+          "side": "left"
+        },
+        {
+          "expression": "d * sum(history * exp(times / tau))",
+          "dependencies": [
+            "history",
+            "times"
+          ],
+          "side": "left"
+        },
+        {
+          "expression": "e * u * sum(history * exp(times / tau))",
+          "dependencies": [
+            "history",
+            "times",
+            "u"
+          ],
+          "side": "unknown"
+        },
+        {
+          "expression": "f * h * sum(history * exp(times / tau))",
+          "dependencies": [
+            "h",
+            "history",
+            "times"
+          ],
+          "side": "left"
+        }
+      ],
+      "unknown_meaning": "May be coupled or algebraically additive; no hard class rejection from unknown"
+    }
+  ],
+  "post_generation_certified_violation": false
+}

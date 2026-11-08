@@ -1,0 +1,3 @@
+已完成非平衡物理与生态学者的交流，区分了“某个观测指标回归”和“预测状态充分性”，并保留群落变化与检出阈值两种解释。交流引出的补学缺口是 Renes 等研究所用 NST 零模型的具体假设与解释范围。
+
+已保存 [EXCHANGE.md](/Applications/ideas/1103_boundary_discovery/runs/learn_20261104_community/stages/03_exchange_1/attempt-001/workspace/EXCHANGE.md) 和 [result.json](/Applications/ideas/1103_boundary_discovery/runs/learn_20261104_community/stages/03_exchange_1/attempt-001/workspace/result.json)。JSON 字段检查通过，两个文件均存在。

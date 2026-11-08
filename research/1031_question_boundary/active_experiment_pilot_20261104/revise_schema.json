@@ -1,0 +1,134 @@
+{
+  "type": "object",
+  "properties": {
+    "proposals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "parameters": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+                },
+                "lower": {
+                  "type": "number"
+                },
+                "initial": {
+                  "type": "number"
+                },
+                "upper": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "name",
+                "lower",
+                "initial",
+                "upper"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 2
+          },
+          "quantities": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+                },
+                "expression": {
+                  "type": "string"
+                },
+                "interpretation": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "expression",
+                "interpretation"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 4
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "maxItems": 4
+          },
+          "degree": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3
+            ]
+          },
+          "kernel_family_claim": {
+            "type": "string",
+            "enum": [
+              "exponential",
+              "oscillatory",
+              "polynomial",
+              "other",
+              "none"
+            ]
+          },
+          "scientific_change": {
+            "type": "string"
+          },
+          "evidence_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "prospective_contrast": {
+            "type": "string"
+          },
+          "refutation_condition": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "label",
+          "parameters",
+          "quantities",
+          "features",
+          "degree",
+          "kernel_family_claim",
+          "scientific_change",
+          "evidence_refs",
+          "prospective_contrast",
+          "refutation_condition"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "maxItems": 2
+    },
+    "experiment_interpretation": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "proposals",
+    "experiment_interpretation"
+  ],
+  "additionalProperties": false
+}

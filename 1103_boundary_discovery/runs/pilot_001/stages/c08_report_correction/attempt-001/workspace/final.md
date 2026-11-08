@@ -1,0 +1,3 @@
+已完成更正报告：[REPORT.md](/Applications/ideas/1103_boundary_discovery/runs/pilot_001/stages/c08_report_correction/attempt-001/workspace/REPORT.md) 汇总 r02、r04、r05、r06 与并行理论的证据，并纠正了 c07 对超时和新站验证的表述。
+
+[**result.json**](/Applications/ideas/1103_boundary_discovery/runs/pilot_001/stages/c08_report_correction/attempt-001/workspace/result.json) 已写入，包含所需字段及来源覆盖。JSON 校验通过。报告区分了 r04 已完成的 14092500 新站复算，与 r05 的 2023、r06 的 2025 下游高频水温缺测；也记录了 2025 夜间斜率主导预测未获支持，以及清晨谷值结果的不同证据状态。

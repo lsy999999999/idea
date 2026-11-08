@@ -1,0 +1,212 @@
+{
+  "request": {
+    "kind": "analysis",
+    "question": "在 R07 中加入此前 10 帧平均相对位移后，是否改善下一帧相对位移的时间顺序留出预测？",
+    "record_id": "R07",
+    "start": 10,
+    "variables": [
+      {
+        "name": "r",
+        "expression": "positions[:,1,:]-positions[:,0,:]",
+        "meaning": "B 相对 A 的二维位置向量",
+        "units": "原生图像坐标"
+      },
+      {
+        "name": "dr",
+        "expression": "diff(r,axis=0)",
+        "meaning": "相邻帧相对位移",
+        "units": "原生图像坐标/帧"
+      },
+      {
+        "name": "target",
+        "expression": "shift(dr,-1)",
+        "meaning": "下一帧相对位移",
+        "units": "原生图像坐标/帧"
+      },
+      {
+        "name": "history10",
+        "expression": "rolling(dr,10)",
+        "meaning": "截至当前索引的过去 10 个相对位移均值；执行时核实窗口端点定义",
+        "units": "原生图像坐标/帧"
+      },
+      {
+        "name": "valid",
+        "expression": "isfinite(r[:,0])&isfinite(r[:,1])&isfinite(dr[:,0])&isfinite(dr[:,1])&isfinite(target[:,0])&isfinite(target[:,1])&isfinite(history10[:,0])&isfinite(history10[:,1])",
+        "meaning": "基线与扩展模型共同使用的有限值行",
+        "units": "布尔值"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "target",
+        "expression": "target"
+      }
+    ],
+    "groups": [
+      {
+        "name": "共同有效行",
+        "where": "valid",
+        "values": [
+          "r",
+          "dr",
+          "history10",
+          "target"
+        ]
+      }
+    ],
+    "model": {
+      "target": "target",
+      "features": [
+        "r",
+        "dr",
+        "history10"
+      ],
+      "train_fraction": 0.7
+    }
+  },
+  "executed_plan": {
+    "kind": "analysis",
+    "question": "在 R07 中加入此前 10 帧平均相对位移后，是否改善下一帧相对位移的时间顺序留出预测？",
+    "record_id": "R07",
+    "start": 10,
+    "variables": [
+      {
+        "name": "r",
+        "expression": "positions[:,1,:]-positions[:,0,:]",
+        "meaning": "B 相对 A 的二维位置向量",
+        "units": "原生图像坐标"
+      },
+      {
+        "name": "dr",
+        "expression": "diff(r,axis=0)",
+        "meaning": "相邻帧相对位移",
+        "units": "原生图像坐标/帧"
+      },
+      {
+        "name": "target",
+        "expression": "shift(dr,-1)",
+        "meaning": "下一帧相对位移",
+        "units": "原生图像坐标/帧"
+      },
+      {
+        "name": "history10",
+        "expression": "rolling(dr,10)",
+        "meaning": "截至当前索引的过去 10 个相对位移均值；执行时核实窗口端点定义",
+        "units": "原生图像坐标/帧"
+      },
+      {
+        "name": "valid",
+        "expression": "isfinite(r[:,0])&isfinite(r[:,1])&isfinite(dr[:,0])&isfinite(dr[:,1])&isfinite(target[:,0])&isfinite(target[:,1])&isfinite(history10[:,0])&isfinite(history10[:,1])",
+        "meaning": "基线与扩展模型共同使用的有限值行",
+        "units": "布尔值"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "target",
+        "expression": "target"
+      }
+    ],
+    "groups": [
+      {
+        "name": "共同有效行",
+        "where": "valid",
+        "values": [
+          "r",
+          "dr",
+          "history10",
+          "target"
+        ]
+      }
+    ],
+    "model": {
+      "target": "target",
+      "features": [
+        "r",
+        "dr",
+        "history10"
+      ],
+      "train_fraction": 0.7
+    }
+  },
+  "result": {
+    "status": "pending_controller",
+    "capability_task": {
+      "request": {
+        "kind": "analysis",
+        "question": "在 R07 中加入此前 10 帧平均相对位移后，是否改善下一帧相对位移的时间顺序留出预测？",
+        "record_id": "R07",
+        "start": 10,
+        "variables": [
+          {
+            "name": "r",
+            "expression": "positions[:,1,:]-positions[:,0,:]",
+            "meaning": "B 相对 A 的二维位置向量",
+            "units": "原生图像坐标"
+          },
+          {
+            "name": "dr",
+            "expression": "diff(r,axis=0)",
+            "meaning": "相邻帧相对位移",
+            "units": "原生图像坐标/帧"
+          },
+          {
+            "name": "target",
+            "expression": "shift(dr,-1)",
+            "meaning": "下一帧相对位移",
+            "units": "原生图像坐标/帧"
+          },
+          {
+            "name": "history10",
+            "expression": "rolling(dr,10)",
+            "meaning": "截至当前索引的过去 10 个相对位移均值；执行时核实窗口端点定义",
+            "units": "原生图像坐标/帧"
+          },
+          {
+            "name": "valid",
+            "expression": "isfinite(r[:,0])&isfinite(r[:,1])&isfinite(dr[:,0])&isfinite(dr[:,1])&isfinite(target[:,0])&isfinite(target[:,1])&isfinite(history10[:,0])&isfinite(history10[:,1])",
+            "meaning": "基线与扩展模型共同使用的有限值行",
+            "units": "布尔值"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "target",
+            "expression": "target"
+          }
+        ],
+        "groups": [
+          {
+            "name": "共同有效行",
+            "where": "valid",
+            "values": [
+              "r",
+              "dr",
+              "history10",
+              "target"
+            ]
+          }
+        ],
+        "model": {
+          "target": "target",
+          "features": [
+            "r",
+            "dr",
+            "history10"
+          ],
+          "train_fraction": 0.7
+        }
+      },
+      "reason": "shape mismatch: objects cannot be broadcast to a single shape.  Mismatch is between arg 0 with shape (44989,) and arg 1 with shape (44988,).",
+      "status": "pending_controller",
+      "scientific_disposition": "Interface gap; the research question remains open.",
+      "execution_error": "ValueError: 当前接口无法读取工作区或检查分析执行器，因此不能确认 `rolling` 的窗口端点定义，也无法验证错误是否由输出/分组对齐造成。研究问题仍开放；请控制器检查 R07 的帧数与各表达式形状，并核实 `rolling(dr,10)` 的端点定义后再执行原计划。"
+    }
+  },
+  "executor_sha256": "32e81e66d65aabdb4d8e82b4a275939fe3eeb0a693bf8f26ee5acc52a7472e08",
+  "artifacts": [
+    "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/services/analysis/r1_return_2_learn_0_op0/request.json",
+    "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/services/analysis/r1_return_2_learn_0_op0/controller_task.json",
+    "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/services/analysis/r1_return_2_learn_0_op0/executor.py"
+  ]
+}

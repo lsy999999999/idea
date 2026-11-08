@@ -1,0 +1,77 @@
+{
+  "summary": "补学后的交流把共同问题收紧为：盐度扰动研究中的不同轨迹究竟支持哪一层描述，以及模型推断量 NST 应如何放入观测关系图。两位同伴补充了案例的 PF 约束、999 次随机化、输入距离和共享重复配对依赖；这些细节具体化了已有的模型依赖认识，但没有解决机制或模型敏感性。",
+  "artifacts": [
+    {"path": "result.json", "role": "本阶段结构化交流结果与可复用记忆。"},
+    {"path": "RETURN.md", "role": "简短的补学后交流说明，保留问题变化与未决分支。"}
+  ],
+  "evidence": [
+    {"kind": "peer_learning_output", "source": "stages/04_learn_0_recovery/attempt-001/workspace/result.json; stages/04_learn_0_recovery/attempt-001/workspace/LEARNING.md", "access": "阅读两份同伴本轮学习结果及学习记录。", "detail": "microbial_ecologist 的补学核对 Renes 方法：abundance-weighted robust Aitchison 距离、tNST、PF 零模型与 999 次随机化；四重复有六个共享样本的 pair，论文以 comp 处理 pair 非独立。该同伴明确保留 PF 精确算法、tNST 组成与 0.5 校准条件等缺口。"},
+    {"kind": "peer_learning_output", "source": "stages/04_learn_1/native-001/workspace/result.json; stages/04_learn_1/native-001/workspace/LEARNING.md", "access": "阅读物理学者本轮学习结果及学习记录。", "detail": "nonequilibrium_physicist 从 NST 手册补充 PF 两个字母分别约束物种出现频率和样本丰富度；玩具距离说明观测距离不变时，参照零分布改变会改变相对解释。其旧笔记已正确说明 NST 模型依赖，因此这是真实细化而不是纠错。"},
+    {"kind": "prior_understanding_and_exchange", "source": "stages/02_initial_0/attempt-001/workspace/result.json; stages/03_exchange_0/attempt-001/workspace/result.json; stages/03_exchange_1/attempt-001/workspace/result.json", "access": "对照自己原始问题及双方交流记录。", "detail": "原问题关注何时能称群落恢复、哪些观测量可支持下一次扰动响应，以及差异是否源自响应对象、检出过程或预测状态遗漏。此前已把 NST 视为模型依赖量；现阶段不将此说成纠正旧误解。"},
+    {"kind": "published_method", "source": "https://doi.org/10.1111/1462-2920.70430; https://cran.r-project.org/package=NST", "access": "使用同伴本轮直接读取的案例归档全文方法/补充表说明及 NST 手册说明；未重算原始数据。", "detail": "案例所报方法参数属于已发表方法，不是本轮发现。PF 标签的一般约束含义来自手册；案例数值与 pair 处理来自论文。"}
+  ],
+  "claims": [
+    "已发表方法的本轮具体化：NST 位于组成数据和指定距离之后，是相对指定零模型参照形成的推断节点；案例使用 PF 和 999 次随机化，不能把 NST 当作独立测得的生态状态或随机机制本身。",
+    "我的解释：共同对象现在是扰动历史、测序观测过程、ASV 丰富度/组成/重复间离散度等轨迹，以及依赖输入和零模型的 NST 推断节点之间的分层关系。各轨迹可能支持其对应响应量的回归或偏离描述，但不能自动推出完整动力学状态、功能恢复或对下一次扰动的预测充分性。",
+    "共同问题由宽泛的‘哪些状态/轨迹重要’改为逐层问：何种观测与参照/时间窗支持哪一层的恢复描述；若轨迹冲突，差异能否定位到响应对象、采样/检出过程、模型参照，或预测目标所需的未观测状态？",
+    "分歧与未决项仍在：真实组装/组成改变与低丰度 ASV 越过检出限可以并存；替代合理零模型、tNST 公式和阈值校准的影响未解决；现有资料不含直接功能测量，也未检验观测向量对未来响应是否充分。"
+  ],
+  "limitations": [
+    "没有分析原始丰度矩阵、重算 NST 或比较替代零模型；没有验证生态机制。",
+    "我没有独立补读额外来源；本轮将同伴所读的 NST 手册及论文方法作为交流输入，未宣称自己掌握 tNST 完整公式或 PF 实际抽样实现。",
+    "pair 数手算说明重复使用造成的依赖结构，不是独立样本数推断或案例复算。",
+    "不能由已发表的丰富度/组成轨迹推断未测功能、特定微观机制，或对下一次脉冲的预测能力。"
+  ],
+  "next_actions": [
+    "后续讨论或设计问题时，为每条响应轨迹写明测量对象、参照状态、时间窗和它支持的结论层级，并把 NST 的距离与零模型设置单独标出。",
+    "保留检测阈值与真实群落变化可并存的分支；若将来要判断贡献，需要针对测序观测过程的数据或分析。",
+    "若问题依赖 NST 的精确数值意义，再核对 tNST 公式、PF 软件实现及替代模型敏感性；当前不作方向判断。"
+  ],
+  "researcher": "microbial_ecologist",
+  "stage": "05_return_0",
+  "status": "post_learning_exchange_complete_open_branches_preserved",
+  "question_before": "在重复盐度扰动资料中，哪些当前可观测量足以描述群落对下一次扰动的响应，哪些“记忆”可能只是测量状态不完整的表现？若丰富度、组成和功能轨迹不一致，如何共同描述状态？",
+  "question_after": "对这组重复盐度扰动资料，分别是哪一种观测量、参照和时间窗支持‘该响应量回到/偏离参照’的描述？若轨迹不一致，差异能否定位到响应对象、采样/检出过程、NST 所依赖的距离与 PF 零模型参照，或预测下一次扰动所遗漏的状态？现有资料哪些层次仍不可区分？",
+  "changed_because": "两位同伴的实际补学把抽象的模型依赖具体化：案例 NST 以丰度加权 robust Aitchison 距离为输入，使用 PF 与 999 次随机化；PF 的标签对应出现频率和样本丰富度约束。四个重复形成六个共享样本 pair，pair 不是六个独立群落状态观测。故共同问题现在能把测量轨迹、统计推断节点和预测状态充分性分开追问。我的初始理解已经将 NST 标为模型依赖，因此这是细化而非纠正；新知识仍不能判定机制或替代零模型会否改变结果。",
+  "shared_object": "关系图：盐度扰动历史/恢复间隔 -> 测序得到的 ASV 丰富度与组成观测（受检出过程影响）；组成数据 -> 丰度加权 robust Aitchison 距离 -> PF 零模型下 999 次随机化的 tNST 推断节点；重复间离散度为另一轨迹；这些响应对象各有参照和时间窗。功能在案例中未直接测量。该图表示方法层次，不声称变量间因果已识别。",
+  "branches": [
+    {"question": "历史效应是否对应真实群落组成/组装变化？", "status": "open", "reason": "来源报告历史关联，但本轮无机制验证；不能从 NST 单独识别漂变、选择或迁入。"},
+    {"question": "低丰度 ASV 跨越检出限能否解释部分表观丰富度轨迹？", "status": "open; may coexist with biological change", "reason": "论文作者提出该可能性，现有讨论材料不能估计其贡献。"},
+    {"question": "不同合理零模型或分组设置会如何改变 NST 时间模式？", "status": "unfinished method branch", "reason": "已知 NST 依赖距离、约束、分组和零模型；本轮未复算或比较。PF 具体实现及 tNST 阈值解释仍不清楚。"},
+    {"question": "哪些观测变量对下一次扰动的指定响应具有预测充分性？", "status": "open conceptual/empirical branch", "reason": "同伴交流澄清状态充分性相对预测目标，但当前材料未测试丰富度、组成或组合向量的预测性能。"},
+    {"question": "丰富度或组成的投影回归是否等同于功能恢复或完整群落状态回归？", "status": "not supported by current measurements", "reason": "案例未直接测功能；不同投影不能互相替代。"}
+  ],
+  "memory_notes": [
+    {
+      "key": "salinity_history_asv_observation_limits",
+      "title": "盐度扰动历史与 ASV 丰富度观测边界",
+      "kind": "correction",
+      "mastery": "explained",
+      "understanding": "Renes 等在受控连续培养中报告盐度历史与 ASV 丰富度/组成轨迹及 NST 的关联。案例以丰度加权 robust Aitchison 距离、tNST、PF 零模型和 999 次随机化形成 NST 推断；作者还讨论低丰度 ASV 越过检测限造成表观丰富度变化的可能性。来源结果、作者解释与本人的未决解释应分开；NST 是模型依赖推断，不是随机机制直接观测。",
+      "conditions": "限于该淡水连续培养、测序流程、距离、分组和 PF 零模型设定；不能直接外推开放自然群落，也不能从 NST 单独区分漂变、选择或迁入。",
+      "example": "四个重复 A-D 有 4×3/2=6 个无序 pair；A 出现在 AB、AC、AD，故这些 pair 共享样本。论文以 comp 在模型中处理 pair 依赖。这是结构例子，不是 NST 复算。",
+      "open_questions": ["PF 实际随机化精确保留/改变哪些矩阵约束？", "tNST 的组成公式与 0.5 阈值校准条件是什么？", "替代合理零模型或分组会否改变案例 NST 时间模式？", "检出阈值对案例丰富度差异的贡献有多大？"],
+      "tags": ["NST", "null model", "ASV richness", "salinity pulse", "微生物群落", "零模型", "丰富度", "盐度脉冲"],
+      "sources": ["https://doi.org/10.1111/1462-2920.70430", "https://cran.r-project.org/package=NST", "learning_lab/library/6ac14d2f938091b66914a4cfa0853bcc0480f82cad7c652eff815fddf2962bef.txt"],
+      "revision_reason": "继续修订已订正 DOI 的既有 key。吸收两位同伴本轮直接核读的案例 NST 方法和手册：补充 PF 的频率/丰富度约束含义、999 次随机化及共享重复 pair 结构；未改变‘模型依赖而非直接观测’这一原判断，也不再把它叙述成纠错。"
+    },
+    {
+      "key": "microbial_disturbance_stability_metrics",
+      "title": "微生物群落扰动稳定性需绑定响应量与时间窗",
+      "kind": "interpretation",
+      "mastery": "explained",
+      "understanding": "抵抗力与恢复力及动力学状态充分性是不同层次。关于某个经验投影‘回到参照’的描述须指定响应量、参照与时间窗；是否有状态变量足以预测下一次扰动响应，则须相对于那个预测目标判断。丰富度/组成回归不能推出功能恢复或预测充分性。",
+      "conditions": "这是概念框架，不提供普适阈值；案例未直接测功能，也未检验任一观测向量的预测性能。",
+      "example": "同一案例中，ASV 丰富度回到基线至多支持该丰富度投影在指定观察窗的回归；即使组成轨迹不同，也不能据此说功能已恢复。",
+      "open_questions": ["怎样为同一重复扰动系统定义可比较但不混淆的丰富度、组成与功能响应？", "何种数据能检验这些观测对下一次扰动响应的预测充分性？"],
+      "tags": ["microbial ecology", "disturbance", "resilience", "state sufficiency", "微生物生态", "扰动", "恢复力", "状态充分性"],
+      "sources": ["https://www.frontiersin.org/journals/microbiology/articles/10.3389/fmicb.2012.00417/full", "https://doi.org/10.1111/1462-2920.70430"],
+      "revision_reason": "沿用初始稳定性概念 key；经同伴交流与 NST 补学后，明确区分按响应量/参照/时间窗描述的经验恢复、对下一次扰动的状态充分性，以及独立的 NST 模型推断层。未声称案例已验证预测充分性。"
+    }
+  ],
+  "memory_use": [
+    {"key": "salinity_history_asv_observation_limits", "source_task": "learn_20261104_community / 02_initial_0 / 03_exchange_0", "used_for": "保持检测阈值作为未决解释分支，并对照原有 NST 模型依赖认识，避免虚构纠错叙事。", "scope_check": "只用于同一案例链的已有观点；新增 PF、随机化和 pair 方法细节明确归于 04_learn 同伴本轮学习及其读取的来源。"},
+    {"key": "microbial_disturbance_stability_metrics", "source_task": "learn_20261104_community / 02_initial_0", "used_for": "把共同问题限定为响应量、参照、时间窗及不同恢复层次。", "scope_check": "保留为概念测量框架，不由其推断普适阈值或案例功能恢复。"},
+    {"key": "state_memory_observability", "source_task": "learn_20261104_community / 02_initial_1", "used_for": "保留预测状态充分性相对目标定义、但不能从已有资料证明的分支。", "scope_check": "使用范围限于共同讨论中的概念区分；不把 NST 当作隐藏状态或机制。"}
+  ]
+}

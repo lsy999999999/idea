@@ -1,0 +1,95 @@
+{
+  "summary": "依据预先限定为三个种子站与实时 Oregon 活跃 stream 水温站交集的规则，完成 USGS 2000-2026 日值覆盖、2020 年瞬时采样检查、近邻 NOAA GHCN 气温文件检查及逐日三源日期交集。日尺度联合资料可进入事件候选期整理，但尚不足以批准原定的多年份高频恢复轨迹、留站与时间外预测检验；本阶段未拟合或预测。",
+  "artifacts": [
+    {
+      "path": "runs/pilot_001/stages/r00_boundary/attempt-001/workspace/coverage_report_zh.md",
+      "description": "中文逐站适用性与测量风险报告。"
+    },
+    {
+      "path": "runs/pilot_001/stages/r00_boundary/attempt-001/workspace/coverage_summary.csv",
+      "description": "逐站汇总覆盖表。"
+    },
+    {
+      "path": "runs/pilot_001/stages/r00_boundary/attempt-001/workspace/coverage_by_site_year.csv",
+      "description": "逐年水温、流量及三源配对覆盖表。"
+    },
+    {
+      "path": "runs/pilot_001/stages/r00_boundary/attempt-001/workspace/coverage_audit.json",
+      "description": "完整请求日志、URL、检索时间、响应哈希、站点/年度统计及气温逐日交集。"
+    },
+    {
+      "path": "runs/pilot_001/stages/r00_boundary/attempt-001/workspace/audit_coverage.py",
+      "description": "抓取及统计脚本。"
+    },
+    {
+      "path": "runs/pilot_001/stages/r00_boundary/attempt-001/workspace/write_reports.py",
+      "description": "从审计 JSON 生成报告及 CSV 的脚本。"
+    },
+    {
+      "path": "runs/pilot_001/stages/r00_boundary/attempt-001/workspace/data/",
+      "description": "本次保存的 USGS RDB 与 NOAA 清单、近邻站原始 GHCN-Daily 文件。"
+    }
+  ],
+  "evidence": [
+    {
+      "type": "observation",
+      "source": "coverage_audit.json:selection",
+      "detail": "活跃 Oregon 水温 stream 清单返回 349 个唯一站号；三个样本站均入选。",
+      "interpretation": "站点子集是种子样本与指定实时清单的交集，不是随机或总体代表样本。"
+    },
+    {
+      "type": "observation",
+      "source": "coverage_summary.csv; coverage_by_site_year.csv",
+      "detail": "水温日均值起始日分别为 2010-10-14、2005-04-28、2007-10-17；流量日均值从 2000-01-01 到 2026-11-02 每日均有记录。",
+      "interpretation": "日尺度下存在可用多年重叠，但较早时段不能用于水温分析，个别年份仍有日缺测。"
+    },
+    {
+      "type": "observation",
+      "source": "coverage_audit.json:paired_daily_air_water_flow",
+      "detail": "将 USGS 水温日均值、流量日均值与最近 NOAA 站 TMAX/TMIN 按日期逐日交集；配对总日数及逐年数量已保存。最近代理站距离为 1.8-6.85 km。",
+      "interpretation": "满足日期同步的初步条件，但 NOAA 站的空间代表性和目录/文件年份冲突限制协变量可靠性。"
+    },
+    {
+      "type": "observation",
+      "source": "data/usgs_iv_water_and_air_2020.rdb",
+      "detail": "2020 瞬时水温返回 35136、35117、35111 点，间隔主体为 900 秒；三站各有 4 个重复本地墙钟时间，最多相邻间隔 4500 秒。请求 parameterCd=00010,00020 仅返回 00010 水温系列。",
+      "interpretation": "确认单年高频水温可访问，未确认更长时期高频记录或站点级瞬时气温；回拨时间需用带时区解析。"
+    },
+    {
+      "type": "observation",
+      "source": "coverage_audit.json:ghcn_daily_air_temperature_coverage and data/noaa_ghcnd_inventory.txt",
+      "detail": "NOAA 清单将 USR0000OPHI 和 USR0000OCHI 的 TMAX/TMIN 列到 2023 年，实际下载的 .dly 文件记录含 2024-2025 年。",
+      "interpretation": "文件数据与目录元数据冲突，2023 年后的气温记录暂不作为无争议验证数据。"
+    },
+    {
+      "type": "observation",
+      "source": "data/usgs_daily_values_2000_to_2026.rdb",
+      "detail": "日值表含 A/P/e 资格码，三个站均存在估算流量限定符；单个水温 IV_TS_ID 分别为 116483、116505、116513。",
+      "interpretation": "限定符须纳入过滤/敏感性方案；一个当前序列 ID 不能证实历史传感器或汇总方法未变化。"
+    }
+  ],
+  "claims": [
+    {
+      "claim": "2014-2024 在这三个站的日尺度上大体具备水温、流量及 NOAA 近邻气温代理的可配对观察，可作为列举事件候选窗口的开发数据。",
+      "status": "bounded_observation",
+      "not_claimed": "没有证明事件级高频水温多年份完整，也没有验证预测增益。"
+    },
+    {
+      "claim": "目前证据不足以支撑原计划的留整站和时间外恢复轨迹预测实验。",
+      "status": "interpretation",
+      "basis": "除 2020 年外尚未审计瞬时水温多年覆盖；三站样本小；历史传感器变化未核实；气温代理有元数据冲突。"
+    }
+  ],
+  "limitations": [
+    "USGS 高频温度仅对 2020 全年做了直接覆盖核查；其它年份的日统计不代表 15 分钟连续性。",
+    "USGS 当前 expanded site metadata 没有提供本审计所需的历史探头更换/位置变化日志；IV_TS_ID 稳定不等于传感器稳定。",
+    "气温来自邻近 NOAA 站，非河岸原位测量；最近站 `.dly` 与 NOAA 清单的年份范围存在差异。",
+    "USGS 记录有 provisional、estimated 数据标记；日汇总掩盖日内峰值与恢复曲线。",
+    "三站源于样本审计，不是代表 Oregon 活跃站的概率样本；站点留出只有极少数折。"
+  ],
+  "next_actions": [
+    "不拟合预测模型。先对 2014-2025 暖季做逐年 USGS IV 高频温度数据可用性、缺测/最长断档、DST 对齐和 IV_TS_ID/methodID 变化审计。",
+    "获取并核实 USGS 探头/站点历史记录；冻结 NOAA 配对站与年份规则，解释 GHCN inventory 与 .dly 文件的 2024-2025 差异。",
+    "若两个以上站在共同多年窗口满足高频温度、可配对流量、可靠气温和可追踪仪器记录，再预先注册时间外/留站事件测试；否则缩为单站单期描述性分析或放弃候选。"
+  ]
+}

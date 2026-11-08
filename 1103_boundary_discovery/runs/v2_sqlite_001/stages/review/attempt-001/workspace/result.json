@@ -1,0 +1,98 @@
+{
+  "summary": "独立复核 E02、E03、E04 的冻结计划、实际结果及 raw measurements。三个实验的保存分类均符合冻结规则；E02 为 uncertain_or_tradeoff，E03 为 no_age_penalty，E04 为 position_order。E03 不检验 snapshot 位置，E04 复现 SQLite 已公开的 end-mark 机制，E02 的生命周期策略优势未成立。未发现支持世界新颖性的证据。",
+  "artifacts": [
+    {
+      "path": "runs/v2_sqlite_001/stages/review/attempt-001/workspace/recompute_review.py",
+      "type": "recomputation_code",
+      "description": "从三项实验保存的 raw_trials.json 独立重算配对区间、控制有效性及冻结分类。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/review/attempt-001/workspace/recomputation.json",
+      "type": "recomputed_observations",
+      "description": "直接由原始试验记录重算的数值与分类。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/review/attempt-001/workspace/source_checks.json",
+      "type": "source_check",
+      "description": "SQLite 官方机制来源和 E02 所引相邻论文的定向查阅记录。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/review/attempt-001/workspace/report_zh.md",
+      "type": "interpretation",
+      "description": "中文独立复核报告，区分观察、预定分类和科学解释。"
+    }
+  ],
+  "evidence": [
+    {
+      "type": "independent_recomputation",
+      "source": "runs/v2_sqlite_001/stages/review/attempt-001/workspace/recomputation.json",
+      "observation": "E02 heldout_H1 两个 lifecycle checkpoint 时间差 95% bootstrap 区间均包含 0；E03 的 12 个有效配对 Δ 均为 0；E04 的 12 个有效种子均为 early/mid/late=2/14/25。"
+    },
+    {
+      "type": "runtime_status",
+      "source": "runs/v2_sqlite_001/stages/experiment_00/attempt-001/completion.json; runs/v2_sqlite_001/stages/experiment_01/attempt-001/completion.json; runs/v2_sqlite_001/stages/experiment_02/attempt-001/completion.json",
+      "observation": "三个实验 stage completion 均 status=success、returncode=0、timed_out=false；各自 result observation 标记 completed。请求研究模型记作 GPT-6 Luna；实验测量使用 Python/sqlite3，无模型推理。"
+    },
+    {
+      "type": "literature_observation",
+      "source": "runs/v2_sqlite_001/stages/review/attempt-001/workspace/source_checks.json",
+      "observation": "SQLite 官方 WAL 页定义 reader end mark 固定于事务期间；checkpoint API 页说明 PASSIVE 可在 reader/writer 并发时留下未完成 checkpoint。这些是 E03/E04 机制背景的既有公开描述。"
+    }
+  ],
+  "claims": [
+    "E02: classification_valid=true。观察到的配对区间、较低 lifecycle terminal API checkpointed count 和仅一个 held-out shape 符合冻结 uncertain_or_tradeoff/数据不足条件；不支持 C1 的净收益结论。",
+    "E03: classification_valid=true。12/12 有效配对 Δ>=0，符合 no_age_penalty 的预写规则。此处只支持固定 snapshot 下未观察到年龄惩罚，不是 B1 snapshot-position 关系的直接证据。",
+    "E04: classification_valid=true。12/12 有效种子均满足 late>early 且 mid>=early，符合 position_order 规则。该局部结果与 SQLite 已知 end-mark 行为一致，不构成新颖性证据。",
+    "最近邻工作核对尚不完整：Walack 论文 DOI 元数据表明存在 WAL 自适应 checkpoint 工作，但本次未取得摘要/全文，不能断言与 lifecycle 信号的具体重合程度。"
+  ],
+  "limitations": [
+    "E02 明确 outcome class 要求两个 held-out shape，冻结干预却只列一个；明确性能结论无法由该设计决定。其终端 API frame tuple 不是跨 WAL reset 的累计工作指标。",
+    "E03 的 burst 在冻结计划未逐项指定，实验采用 E02 轻量轨迹作为统一工程解析；且固定 snapshot 位置，所以不能验证 B1 的主要位置预测。",
+    "E04 的 12 个种子改变的是运行顺序，所有测量均相同；它们不是独立抽取的 workload 变化。实验只有一个 SQLite 版本、一种 workload、一个 reader。",
+    "新颖性检查只核对 SQLite 官方页面和 E02 引用的 DOI 元数据；尚非全面文献检索。"
+  ],
+  "next_actions": [
+    "若继续评估 E02 策略主张，先修订冻结规则与 held-out 数量，并预注册至少两个不同的 held-out workload；同时定义可跨 WAL reset 比较的累计完成工作量。",
+    "若继续检验 snapshot-position 关系，使用独立 workload 形状检验前缀效应，并把 SQLite 官方已知机制与策略实用收益分开报告。",
+    "对自适应 WAL checkpoint 的新颖性主张，取得并比较 DOI 对应全文及其观测信号、触发规则、成本指标。"
+  ],
+  "requested_model": "GPT-6 Luna (as recorded by the run; no model inference performed by this reviewer)",
+  "stage_id": "review",
+  "execution_status": "completed",
+  "review_findings": [
+    {
+      "experiment_id": "E02",
+      "classification_valid": true,
+      "reason": "独立重算 12 个 heldout_H1 配对：lifecycle−fixed checkpoint cost CI [-0.029562,0.079587] ms，lifecycle−WAL-growth CI [-0.030080,0.066861] ms，均含零；终端 checkpointed 数分别 4、6、24。冻结的两个明确类均要求两个 held-out shape，但只运行一个，故 uncertain_or_tradeoff 符合预写的数据不足规则。runtime 成功并不解除设计矛盾。",
+      "evidence_paths": [
+        "runs/v2_sqlite_001/frozen_plans/00_E02.json",
+        "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/raw_trials.json",
+        "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/classification.json",
+        "runs/v2_sqlite_001/stages/review/attempt-001/workspace/recomputation.json"
+      ]
+    },
+    {
+      "experiment_id": "E03",
+      "classification_valid": true,
+      "reason": "从 raw_trials 独立重算 12/12 配对有效，Δ=长龄−短龄 checkpointed_frames 为 0，按冻结规则属于 no_age_penalty。限制：该实验只改变 snapshot 后的墙钟等待，未改变 reader snapshot 前缀；分类映射到 B1 的支持不能视为对 B1 end-mark 位置预测的验证。",
+      "evidence_paths": [
+        "runs/v2_sqlite_001/frozen_plans/01_E03.json",
+        "runs/v2_sqlite_001/stages/experiment_01/attempt-001/workspace/raw_trials.json",
+        "runs/v2_sqlite_001/stages/experiment_01/attempt-001/workspace/classification.json",
+        "runs/v2_sqlite_001/stages/review/attempt-001/workspace/recomputation.json"
+      ]
+    },
+    {
+      "experiment_id": "E04",
+      "classification_valid": true,
+      "reason": "从 raw_trials 独立重算 12/12 种子通过控制，early/mid/late 均为 2/14/25，position_order 两项规则均为 12/12，分类与冻结阈值一致。限制：所有种子使用相同 workload，仅随机化条件运行顺序；所得 end-mark 关系已由 SQLite WAL 文档描述，属于已知机制复现。",
+      "evidence_paths": [
+        "runs/v2_sqlite_001/frozen_plans/02_E04.json",
+        "runs/v2_sqlite_001/stages/experiment_02/attempt-001/workspace/raw_trials.json",
+        "runs/v2_sqlite_001/stages/experiment_02/attempt-001/workspace/classification.json",
+        "runs/v2_sqlite_001/stages/review/attempt-001/workspace/source_checks.json",
+        "runs/v2_sqlite_001/stages/review/attempt-001/workspace/recomputation.json"
+      ]
+    }
+  ]
+}

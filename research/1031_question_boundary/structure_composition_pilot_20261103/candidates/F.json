@@ -1,0 +1,928 @@
+{
+  "arm": "F",
+  "operation": "joint",
+  "raw": {
+    "evidence_refs": [
+      "dev_0",
+      "dev_6",
+      "observed_A_0",
+      "observed_A_8",
+      "fresh_1_0",
+      "fresh_1_4",
+      "fresh_1_8",
+      "fresh_1_12"
+    ],
+    "experiments": [
+      {
+        "h": 0.5,
+        "history": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "purpose": "Compare lag-position effects across current-drive values at the same waiting time; this probes whether a fitted history response transfers beyond the supplied u values.",
+        "u": -0.6
+      },
+      {
+        "h": 2.0,
+        "history": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "purpose": "Repeat the lag-position comparison at a longer waiting time to test history-by-waiting-time interaction.",
+        "u": 0.7
+      },
+      {
+        "h": 0.5,
+        "history": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "purpose": "Contrast an old versus recent pulse against the first condition at matched u and h, testing the time-position dependence directly.",
+        "u": 0.7
+      },
+      {
+        "h": 2.0,
+        "history": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "purpose": "Pair with the third condition at a longer wait to assess whether the old-versus-recent pulse contrast changes with h.",
+        "u": -0.6
+      }
+    ],
+    "exposed_inputs": [
+      "u",
+      "h",
+      "history",
+      "times",
+      "dt"
+    ],
+    "expression": "a+b*u+c*h+sum(history*(k0*exp(times[0]/tau)+k1*exp(times[1]/tau)+k2*exp(times[2]/tau)+k3*exp(times[3]/tau)))",
+    "measurement_requests": [],
+    "parameters": [
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.0,
+        "lower": -3.0,
+        "name": "a",
+        "upper": 3.0
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.8,
+        "lower": -3.0,
+        "name": "b",
+        "upper": 3.0
+      },
+      {
+        "dimension": [
+          -1,
+          1
+        ],
+        "initial": -0.1,
+        "lower": -2.0,
+        "name": "c",
+        "upper": 2.0
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.25,
+        "lower": -2.0,
+        "name": "k0",
+        "upper": 2.0
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.3,
+        "lower": -2.0,
+        "name": "k1",
+        "upper": 2.0
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.35,
+        "lower": -2.0,
+        "name": "k2",
+        "upper": 2.0
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.45,
+        "lower": -2.0,
+        "name": "k3",
+        "upper": 2.0
+      },
+      {
+        "dimension": [
+          1,
+          0
+        ],
+        "initial": 2.0,
+        "lower": 0.1,
+        "name": "tau",
+        "upper": 10.0
+      }
+    ],
+    "quantities": [
+      {
+        "expression": "sum(history*(k0*exp(times[0]/tau)+k1*exp(times[1]/tau)+k2*exp(times[2]/tau)+k3*exp(times[3]/tau)))",
+        "interpretation": "Dimensionless-scale contribution to response from prior drive history, with separate fitted weights for each lag interval and exponential waiting-time decay.",
+        "name": "history_effect"
+      }
+    ],
+    "rationale": "The old state-only response misses history-dependent contrasts, and the supplied C5/C6 models with a single discounted summary retain substantial dev error. This replacement allows each of the four history positions to have its own fitted weight while preserving explicit current-drive and waiting-time effects. Because coefficients are refit on fit rows and the history values there vary broadly, the model tests whether lag position matters without presuming a specific unique mechanism. The dev and matched-history observations show strong response changes with history and waiting time; the fresh observations add matched-u, matched-h lag contrasts. No dev RMSE is supplied for this proposed model, so passing the 0.06 criterion is not established until evaluation.",
+    "scientific_change": "Replace a single exponential history summary with a flexible four-lag weighted history response whose weights share an exponential time-decay scale, allowing distinct contributions from prior intervals while retaining additive current drive and waiting-time terms."
+  },
+  "scaffold": {
+    "parameters": [
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.0,
+        "lower": -3.0,
+        "name": "a",
+        "upper": 3.0
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.8,
+        "lower": -3.0,
+        "name": "b",
+        "upper": 3.0
+      },
+      {
+        "dimension": [
+          -1,
+          1
+        ],
+        "initial": -0.1,
+        "lower": -2.0,
+        "name": "c",
+        "upper": 2.0
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.25,
+        "lower": -2.0,
+        "name": "k0",
+        "upper": 2.0
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.3,
+        "lower": -2.0,
+        "name": "k1",
+        "upper": 2.0
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.35,
+        "lower": -2.0,
+        "name": "k2",
+        "upper": 2.0
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.45,
+        "lower": -2.0,
+        "name": "k3",
+        "upper": 2.0
+      },
+      {
+        "dimension": [
+          1,
+          0
+        ],
+        "initial": 2.0,
+        "lower": 0.1,
+        "name": "tau",
+        "upper": 10.0
+      }
+    ],
+    "quantities": [
+      {
+        "expression": "sum(history*(k0*exp(times[0]/tau)+k1*exp(times[1]/tau)+k2*exp(times[2]/tau)+k3*exp(times[3]/tau)))",
+        "interpretation": "Dimensionless-scale contribution to response from prior drive history, with separate fitted weights for each lag interval and exponential waiting-time decay.",
+        "name": "history_effect"
+      }
+    ],
+    "exposed_inputs": [
+      "u",
+      "h",
+      "history",
+      "times",
+      "dt"
+    ]
+  },
+  "expression": "a+b*u+c*h+sum(history*(k0*exp(times[0]/tau)+k1*exp(times[1]/tau)+k2*exp(times[2]/tau)+k3*exp(times[3]/tau)))",
+  "result": {
+    "status": "executed",
+    "parameters": {
+      "a": -0.023410582519013085,
+      "b": 0.9045635119644254,
+      "c": 0.005407656277603966,
+      "k0": 0.15996845381467517,
+      "k1": 0.15957234846924942,
+      "k2": 0.16005766761719825,
+      "k3": 0.15933028518559342,
+      "tau": 2.211526954840907
+    },
+    "values": [
+      -0.023410582519013085,
+      0.9045635119644254,
+      0.005407656277603966,
+      0.15996845381467517,
+      0.15957234846924942,
+      0.16005766761719825,
+      0.15933028518559342,
+      2.211526954840907
+    ],
+    "fit_rmse": 0.10180674337758053,
+    "dev_rmse": 0.17585557135961077,
+    "optimizer_converged": true,
+    "residual_calls": 285,
+    "attempts": [
+      {
+        "calls": 55,
+        "converged": true,
+        "message": "`ftol` termination condition is satisfied."
+      },
+      {
+        "calls": 97,
+        "converged": true,
+        "message": "`xtol` termination condition is satisfied."
+      },
+      {
+        "calls": 79,
+        "converged": true,
+        "message": "`gtol` termination condition is satisfied."
+      },
+      {
+        "calls": 54,
+        "converged": true,
+        "message": "`ftol` termination condition is satisfied."
+      }
+    ],
+    "dev_predictions": [
+      {
+        "row_id": "dev_0",
+        "observed": 1.3051720130977043,
+        "predicted": 1.2739426688449824,
+        "residual": -0.031229344252721836
+      },
+      {
+        "row_id": "dev_1",
+        "observed": 1.3299464539887613,
+        "predicted": 1.2739426688449824,
+        "residual": -0.056003785143778906
+      },
+      {
+        "row_id": "dev_2",
+        "observed": 1.315556400303728,
+        "predicted": 1.2739426688449824,
+        "residual": -0.04161373145874547
+      },
+      {
+        "row_id": "dev_3",
+        "observed": 1.3018382948668406,
+        "predicted": 1.2739426688449824,
+        "residual": -0.027895626021858133
+      },
+      {
+        "row_id": "dev_4",
+        "observed": 1.3063033231839458,
+        "predicted": 1.2739426688449824,
+        "residual": -0.0323606543389634
+      },
+      {
+        "row_id": "dev_5",
+        "observed": 1.316971899597782,
+        "predicted": 1.2739426688449824,
+        "residual": -0.04302923075279952
+      },
+      {
+        "row_id": "dev_6",
+        "observed": -0.7317168592978868,
+        "predicted": -0.5938684305449057,
+        "residual": 0.1378484287529811
+      },
+      {
+        "row_id": "dev_7",
+        "observed": -0.7315951080306806,
+        "predicted": -0.5938684305449057,
+        "residual": 0.13772667748577494
+      },
+      {
+        "row_id": "dev_8",
+        "observed": -0.7133590087789013,
+        "predicted": -0.5938684305449057,
+        "residual": 0.11949057823399567
+      },
+      {
+        "row_id": "dev_9",
+        "observed": -0.7197943079426534,
+        "predicted": -0.5938684305449057,
+        "residual": 0.12592587739774774
+      },
+      {
+        "row_id": "dev_10",
+        "observed": -0.706246120141251,
+        "predicted": -0.5938684305449057,
+        "residual": 0.11237768959634531
+      },
+      {
+        "row_id": "dev_11",
+        "observed": -0.7249680276130827,
+        "predicted": -0.5938684305449057,
+        "residual": 0.13109959706817698
+      },
+      {
+        "row_id": "dev_12",
+        "observed": 0.9872606040127475,
+        "predicted": 1.2788095594948259,
+        "residual": 0.2915489554820784
+      },
+      {
+        "row_id": "dev_13",
+        "observed": 0.9703903087452999,
+        "predicted": 1.2788095594948259,
+        "residual": 0.30841925074952603
+      },
+      {
+        "row_id": "dev_14",
+        "observed": 0.9653176407338192,
+        "predicted": 1.2788095594948259,
+        "residual": 0.3134919187610067
+      },
+      {
+        "row_id": "dev_15",
+        "observed": 0.9818137403148506,
+        "predicted": 1.2788095594948259,
+        "residual": 0.2969958191799753
+      },
+      {
+        "row_id": "dev_16",
+        "observed": 0.9710228761101786,
+        "predicted": 1.2788095594948259,
+        "residual": 0.3077866833846473
+      },
+      {
+        "row_id": "dev_17",
+        "observed": 0.9821325647467699,
+        "predicted": 1.2788095594948259,
+        "residual": 0.296676994748056
+      },
+      {
+        "row_id": "dev_18",
+        "observed": -0.3765090262237718,
+        "predicted": -0.5890015398950621,
+        "residual": -0.2124925136712903
+      },
+      {
+        "row_id": "dev_19",
+        "observed": -0.37078533476920067,
+        "predicted": -0.5890015398950621,
+        "residual": -0.21821620512586143
+      },
+      {
+        "row_id": "dev_20",
+        "observed": -0.37152767435121076,
+        "predicted": -0.5890015398950621,
+        "residual": -0.21747386554385134
+      },
+      {
+        "row_id": "dev_21",
+        "observed": -0.36885371633763314,
+        "predicted": -0.5890015398950621,
+        "residual": -0.22014782355742896
+      },
+      {
+        "row_id": "dev_22",
+        "observed": -0.38218811611320275,
+        "predicted": -0.5890015398950621,
+        "residual": -0.20681342378185935
+      },
+      {
+        "row_id": "dev_23",
+        "observed": -0.3609762624194256,
+        "predicted": -0.5890015398950621,
+        "residual": -0.2280252774756365
+      },
+      {
+        "row_id": "observed_A_0",
+        "observed": 0.6307931713001469,
+        "predicted": 0.8007359158204015,
+        "residual": 0.1699427445202546
+      },
+      {
+        "row_id": "observed_A_1",
+        "observed": 0.6464020470805342,
+        "predicted": 0.8007359158204015,
+        "residual": 0.15433386873986732
+      },
+      {
+        "row_id": "observed_A_2",
+        "observed": 0.6484555894530206,
+        "predicted": 0.8007359158204015,
+        "residual": 0.15228032636738087
+      },
+      {
+        "row_id": "observed_A_3",
+        "observed": 0.6505355658220674,
+        "predicted": 0.8007359158204015,
+        "residual": 0.1502003499983341
+      },
+      {
+        "row_id": "observed_A_4",
+        "observed": 0.5927914700228543,
+        "predicted": 0.8099289314923283,
+        "residual": 0.217137461469474
+      },
+      {
+        "row_id": "observed_A_5",
+        "observed": 0.5830899698883254,
+        "predicted": 0.8099289314923283,
+        "residual": 0.22683896160400285
+      },
+      {
+        "row_id": "observed_A_6",
+        "observed": 0.5882816402980804,
+        "predicted": 0.8099289314923283,
+        "residual": 0.22164729119424786
+      },
+      {
+        "row_id": "observed_A_7",
+        "observed": 0.5846661965452915,
+        "predicted": 0.8099289314923283,
+        "residual": 0.22526273494703675
+      },
+      {
+        "row_id": "observed_A_8",
+        "observed": 0.932769447730129,
+        "predicted": 0.8007359158204015,
+        "residual": -0.13203353190972755
+      },
+      {
+        "row_id": "observed_A_9",
+        "observed": 0.9273772122254385,
+        "predicted": 0.8007359158204015,
+        "residual": -0.12664129640503696
+      },
+      {
+        "row_id": "observed_A_10",
+        "observed": 0.9519302331607015,
+        "predicted": 0.8007359158204015,
+        "residual": -0.15119431734029998
+      },
+      {
+        "row_id": "observed_A_11",
+        "observed": 0.952336917559102,
+        "predicted": 0.8007359158204015,
+        "residual": -0.1516010017387005
+      },
+      {
+        "row_id": "observed_A_12",
+        "observed": 0.7220010562640917,
+        "predicted": 0.8099289314923283,
+        "residual": 0.08792787522823653
+      },
+      {
+        "row_id": "observed_A_13",
+        "observed": 0.7204434990009025,
+        "predicted": 0.8099289314923283,
+        "residual": 0.08948543249142571
+      },
+      {
+        "row_id": "observed_A_14",
+        "observed": 0.7318157317488707,
+        "predicted": 0.8099289314923283,
+        "residual": 0.07811319974345754
+      },
+      {
+        "row_id": "observed_A_15",
+        "observed": 0.7320894879185589,
+        "predicted": 0.8099289314923283,
+        "residual": 0.07783944357376937
+      },
+      {
+        "row_id": "observed_A_16",
+        "observed": 0.32454212155208745,
+        "predicted": 0.5672595283966655,
+        "residual": 0.24271740684457804
+      },
+      {
+        "row_id": "observed_A_17",
+        "observed": 0.33636213952435945,
+        "predicted": 0.5672595283966655,
+        "residual": 0.23089738887230604
+      },
+      {
+        "row_id": "observed_A_18",
+        "observed": 0.3267810216192671,
+        "predicted": 0.5672595283966655,
+        "residual": 0.2404785067773984
+      },
+      {
+        "row_id": "observed_A_19",
+        "observed": 0.340311943577755,
+        "predicted": 0.5672595283966655,
+        "residual": 0.22694758481891047
+      },
+      {
+        "row_id": "observed_A_20",
+        "observed": 0.43586080685044065,
+        "predicted": 0.5764525440685923,
+        "residual": 0.1405917372181516
+      },
+      {
+        "row_id": "observed_A_21",
+        "observed": 0.4558132642638018,
+        "predicted": 0.5764525440685923,
+        "residual": 0.12063927980479044
+      },
+      {
+        "row_id": "observed_A_22",
+        "observed": 0.4450194423386643,
+        "predicted": 0.5764525440685923,
+        "residual": 0.13143310172992795
+      },
+      {
+        "row_id": "observed_A_23",
+        "observed": 0.4535919182106059,
+        "predicted": 0.5764525440685923,
+        "residual": 0.12286062585798635
+      },
+      {
+        "row_id": "observed_A_24",
+        "observed": 0.7370916983141308,
+        "predicted": 0.5672595283966655,
+        "residual": -0.1698321699174653
+      },
+      {
+        "row_id": "observed_A_25",
+        "observed": 0.7445164340914321,
+        "predicted": 0.5672595283966655,
+        "residual": -0.1772569056947666
+      },
+      {
+        "row_id": "observed_A_26",
+        "observed": 0.7390414239330393,
+        "predicted": 0.5672595283966655,
+        "residual": -0.1717818955363738
+      },
+      {
+        "row_id": "observed_A_27",
+        "observed": 0.7587147033940054,
+        "predicted": 0.5672595283966655,
+        "residual": -0.19145517499733988
+      },
+      {
+        "row_id": "observed_A_28",
+        "observed": 0.6335948058188414,
+        "predicted": 0.5764525440685923,
+        "residual": -0.05714226175024917
+      },
+      {
+        "row_id": "observed_A_29",
+        "observed": 0.6439356011478652,
+        "predicted": 0.5764525440685923,
+        "residual": -0.06748305707927293
+      },
+      {
+        "row_id": "observed_A_30",
+        "observed": 0.644963168846186,
+        "predicted": 0.5764525440685923,
+        "residual": -0.06851062477759373
+      },
+      {
+        "row_id": "observed_A_31",
+        "observed": 0.6307091208417741,
+        "predicted": 0.5764525440685923,
+        "residual": -0.05425657677318185
+      },
+      {
+        "row_id": "observed_B_0",
+        "observed": 0.9989438687509821,
+        "predicted": 1.0342123032441375,
+        "residual": 0.03526843449315542
+      },
+      {
+        "row_id": "observed_B_1",
+        "observed": 1.0093896289352093,
+        "predicted": 1.0342123032441375,
+        "residual": 0.02482267430892815
+      },
+      {
+        "row_id": "observed_B_2",
+        "observed": 0.9934467110608171,
+        "predicted": 1.0342123032441375,
+        "residual": 0.04076559218332043
+      },
+      {
+        "row_id": "observed_B_3",
+        "observed": 0.9868358901261626,
+        "predicted": 1.0342123032441375,
+        "residual": 0.047376413117974914
+      },
+      {
+        "row_id": "observed_B_4",
+        "observed": 0.7561866826194857,
+        "predicted": 1.0434053189160641,
+        "residual": 0.2872186362965784
+      },
+      {
+        "row_id": "observed_B_5",
+        "observed": 0.7586961806960817,
+        "predicted": 1.0434053189160641,
+        "residual": 0.28470913821998245
+      },
+      {
+        "row_id": "observed_B_6",
+        "observed": 0.7458182097118563,
+        "predicted": 1.0434053189160641,
+        "residual": 0.29758710920420783
+      },
+      {
+        "row_id": "observed_B_7",
+        "observed": 0.7564605377011872,
+        "predicted": 1.0434053189160641,
+        "residual": 0.286944781214877
+      },
+      {
+        "row_id": "fresh_1_0",
+        "observed": 0.31991131701881936,
+        "predicted": 0.4841386866328525,
+        "residual": 0.16422736961403311
+      },
+      {
+        "row_id": "fresh_1_1",
+        "observed": 0.3229077347136631,
+        "predicted": 0.4841386866328525,
+        "residual": 0.1612309519191894
+      },
+      {
+        "row_id": "fresh_1_2",
+        "observed": 0.33118275836584615,
+        "predicted": 0.4841386866328525,
+        "residual": 0.15295592826700632
+      },
+      {
+        "row_id": "fresh_1_3",
+        "observed": 0.3185065774664961,
+        "predicted": 0.4841386866328525,
+        "residual": 0.1656321091663564
+      },
+      {
+        "row_id": "fresh_1_4",
+        "observed": 0.6208279711704124,
+        "predicted": 0.4841386866328525,
+        "residual": -0.13668928453755996
+      },
+      {
+        "row_id": "fresh_1_5",
+        "observed": 0.6218083055020318,
+        "predicted": 0.4841386866328525,
+        "residual": -0.13766961886917933
+      },
+      {
+        "row_id": "fresh_1_6",
+        "observed": 0.6322656995309451,
+        "predicted": 0.4841386866328525,
+        "residual": -0.14812701289809266
+      },
+      {
+        "row_id": "fresh_1_7",
+        "observed": 0.6232624640586267,
+        "predicted": 0.4841386866328525,
+        "residual": -0.13912377742577425
+      },
+      {
+        "row_id": "fresh_1_8",
+        "observed": 0.27252449477528273,
+        "predicted": 0.48954634291045646,
+        "residual": 0.21702184813517372
+      },
+      {
+        "row_id": "fresh_1_9",
+        "observed": 0.2689342004439257,
+        "predicted": 0.48954634291045646,
+        "residual": 0.22061214246653077
+      },
+      {
+        "row_id": "fresh_1_10",
+        "observed": 0.2847414981527855,
+        "predicted": 0.48954634291045646,
+        "residual": 0.20480484475767097
+      },
+      {
+        "row_id": "fresh_1_11",
+        "observed": 0.2969607907606968,
+        "predicted": 0.48954634291045646,
+        "residual": 0.19258555214975964
+      },
+      {
+        "row_id": "fresh_1_12",
+        "observed": 0.4695451241000241,
+        "predicted": 0.48954634291045646,
+        "residual": 0.020001218810432375
+      },
+      {
+        "row_id": "fresh_1_13",
+        "observed": 0.4605876283337802,
+        "predicted": 0.48954634291045646,
+        "residual": 0.02895871457667626
+      },
+      {
+        "row_id": "fresh_1_14",
+        "observed": 0.4820012449774068,
+        "predicted": 0.48954634291045646,
+        "residual": 0.007545097933049638
+      },
+      {
+        "row_id": "fresh_1_15",
+        "observed": 0.4649940177389958,
+        "predicted": 0.48954634291045646,
+        "residual": 0.024552325171460665
+      }
+    ],
+    "dev_pass": false,
+    "manifest": {
+      "equations": {
+        "history_effect": "sum(history * (k0 * exp(times[0] / tau) + k1 * exp(times[1] / tau) + k2 * exp(times[2] / tau) + k3 * exp(times[3] / tau)))"
+      },
+      "response": "a + b * u + c * h + sum(history * (k0 * exp(times[0] / tau) + k1 * exp(times[1] / tau) + k2 * exp(times[2] / tau) + k3 * exp(times[3] / tau)))",
+      "parameter_bindings": {
+        "a": 0,
+        "b": 1,
+        "c": 2,
+        "k0": 3,
+        "k1": 4,
+        "k2": 5,
+        "k3": 6,
+        "tau": 7
+      },
+      "types": {
+        "u": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "0"
+          ]
+        },
+        "h": {
+          "shape": "scalar",
+          "dimension": [
+            "1",
+            "0"
+          ]
+        },
+        "history": {
+          "shape": "vector4",
+          "dimension": [
+            "0",
+            "0"
+          ]
+        },
+        "times": {
+          "shape": "vector4",
+          "dimension": [
+            "1",
+            "0"
+          ]
+        },
+        "dt": {
+          "shape": "scalar",
+          "dimension": [
+            "1",
+            "0"
+          ]
+        },
+        "a": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "1"
+          ]
+        },
+        "b": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "1"
+          ]
+        },
+        "c": {
+          "shape": "scalar",
+          "dimension": [
+            "-1",
+            "1"
+          ]
+        },
+        "k0": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "1"
+          ]
+        },
+        "k1": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "1"
+          ]
+        },
+        "k2": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "1"
+          ]
+        },
+        "k3": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "1"
+          ]
+        },
+        "tau": {
+          "shape": "scalar",
+          "dimension": [
+            "1",
+            "0"
+          ]
+        },
+        "history_effect": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "1"
+          ]
+        }
+      },
+      "final_allowed_symbols": [
+        "a",
+        "b",
+        "c",
+        "dt",
+        "h",
+        "history",
+        "history_effect",
+        "k0",
+        "k1",
+        "k2",
+        "k3",
+        "tau",
+        "times",
+        "u"
+      ],
+      "source": "Derived from the one named specification"
+    }
+  },
+  "class_audits": [],
+  "post_generation_certified_violation": false
+}

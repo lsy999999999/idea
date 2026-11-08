@@ -1,0 +1,60 @@
+[
+  {
+    "rank": 1,
+    "question": "For stream reaches with comparable seasonal timing, air-temperature forcing, and discharge, does water-temperature recovery after one hot episode improve a forecast of the next episode's peak and threshold duration at held-out reaches, beyond recent maxima and cumulative heat exposure?",
+    "explanatory_gap": "River heatwaves, stream temperature models, and thermal hysteresis are established. The scout's testable gap is whether measured event-to-event recovery carries portable, out-of-station predictive information beyond common forcing covariates; the data do not identify the cause.",
+    "potential_cross_domain_bridge": "Pulse-and-relaxation methods in materials and control systems; methodological analogy only, not a claim of shared mechanism.",
+    "data_sources": [
+      {
+        "url": "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=10396000%2C11501000%2C11502500&parameterCd=00010&startDT=2020-07-01&endDT=2020-07-03",
+        "verification": "HTTP 200 JSON; retrieved 288 water-temperature observations at 15-minute intervals from 2020-07-01 00:00 to 2020-07-03 23:45 (-07:00) for each of USGS sites 10396000, 11501000, and 11502500. No duplicate timestamps or missing 15-minute intervals; count matches the requested range, with no truncation evidence.",
+        "checked_on": "2026-11-03",
+        "limits": "A sample-window access check, not a coverage audit. Station completeness, sensor changes, meteorological covariates, and full-period availability need to be checked before analysis."
+      },
+      {
+        "url": "https://waterservices.usgs.gov/nwis/site/?format=rdb&stateCd=OR&parameterCd=00010&siteType=ST&siteStatus=active",
+        "verification": "HTTP 200 tab-delimited station metadata; returned 350 active Oregon stream station records under the query.",
+        "checked_on": "2026-11-03"
+      }
+    ],
+    "runnable_test": "On a laptop, define events using training data only; forecast the next event's peak and duration from (1) seasonal/air-temperature/discharge baseline, (2) plus recent maxima and cumulative heat, and (3) plus recovery-curve features. Use forward time holdout and leave-whole-stations-out validation; report calibration and uncertainty. Audit missingness and sensor/site changes.",
+    "closest_work": [
+      "Increasing heatwave frequency in streams and rivers of the United States (2022), https://doi.org/10.1002/lol2.10284",
+      "Riverine heatwaves are an emergent climate change risk (2025), https://doi.org/10.1038/s44221-025-00541-5",
+      "Exploring the exceptional performance of a deep learning stream temperature model and the value of streamflow data (2020), https://doi.org/10.1088/1748-9326/abd501",
+      "Nocturnal river water temperatures: Spatial and temporal variations (2014), https://doi.org/10.1016/j.scitotenv.2014.02.123",
+      "Hysteresis and Longitudinal Variation in Air–Water Temperature Relationships in the Han River Basin (2026), https://doi.org/10.3390/w18091013"
+    ],
+    "originality_risk": "High. Thermal memory, lag, hysteresis, groundwater buffering, and heatwave prediction are mature topics. A predictive gain is not a new mechanism; the narrow estimand may already have been tested in the closest 2025/2026 work. Full-text review is required before novelty claims.",
+    "recommendation_order": "First for practical feasibility only; proceed to scientific framing only if the exact station-held-out estimand is absent from closest work."
+  },
+  {
+    "rank": 2,
+    "question": "Within a single GOES platform and solar-cycle interval, does pre-event X-ray background and its recovery shape add stable lead-time information about the next catalogued flare beyond recent peak flux and event cadence, under chronological evaluation?",
+    "explanatory_gap": "Flare forecasting and precursor analysis are mature. A possible narrow test is the incremental value of event-history/background relaxation under strict temporal holdout and a calibrated rare-event baseline; it does not posit a new solar state or trigger.",
+    "potential_cross_domain_bridge": "Compare pulse/recovery descriptors against those in the stream candidate, but only claim a cross-domain regularity if it independently predicts in both datasets.",
+    "data_sources": [
+      {
+        "url": "https://www.ncei.noaa.gov/data/goes-space-environment-monitor/access/science/xrs/goes15/xrsf-l2-avg1m_science/sci_xrsf-l2-avg1m_g15_y2012_v2-2-1.nc",
+        "verification": "HTTP 206 range response for 512 bytes; bytes began with the HDF5/NetCDF signature. Directory lists yearly files for 2010-2020.",
+        "checked_on": "2026-11-03",
+        "limits": "Only partial content was read; file is a large NetCDF, older GOES-15 era, and requires quality-flag and instrument-era handling."
+      },
+      {
+        "url": "https://www.ncei.noaa.gov/data/goes-space-environment-monitor/access/science/xrs/goes15/xrsf-l2-flsum_science/",
+        "verification": "HTTP 200 directory listing with yearly 2010-2020 flare-summary NetCDF files.",
+        "checked_on": "2026-11-03",
+        "limits": "Directory and filenames verified; event-summary file bytes not independently sampled. Not active-region-resolved."
+      }
+    ],
+    "runnable_test": "Download one year plus its flare-summary file, inspect variables and quality flags, then predict fixed-horizon flare onset/class from event-free intervals. Split chronologically with a final-year holdout; compare with persistence/cadence; measure rare-event calibration and lead-time utility.",
+    "closest_work": [
+      "A DEFT Way to Forecast Solar Flares (2021), https://doi.org/10.3847/1538-4357/ac2840",
+      "Improving Solar Flare Nowcasting with the Hot Onset Precursor Event Technique (2025), https://doi.org/10.3847/1538-4357/ae0705",
+      "How to Train Your Flare Prediction Model: Revisiting Robust Sampling of Rare Events (2021), https://doi.org/10.3847/1538-4365/abec88",
+      "Solar Situation Awareness and Flare Forecasting Dataset for Operational Applications (2026), https://doi.org/10.1038/s41597-026-08005-5"
+    ],
+    "originality_risk": "Very high. Precursor-based and X-ray flare forecasting are active, with a 2025 precursor method and 2026 dataset/forecasting work. GOES-15 alone cannot establish instrument-independent validity.",
+    "recommendation_order": "Second; use only if a full-text search finds an unstudied event-history estimand, otherwise drop."
+  }
+]

@@ -1,0 +1,101 @@
+{
+  "summary": {
+    "status": "partial_one_site_no_2025_temperature_series",
+    "text": "已完成固定2014-2022训练、2025年5-9月单次留出检验。OPHI与OCHI各支持一个站的完整比较，第三站11502500在2025文件中没有水温参数列。夜间不对称预测未获支持：两站S_day关系更强、留出MAE改善也高于S_night；清晨谷值强于午后峰值的方向得到支持。",
+    "requested_model": "gpt-6-luna",
+    "model_inference_used": false,
+    "completed_at_utc": "2026-11-03"
+  },
+  "references": [
+    "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/parallel_theory/IDEA_PROPOSAL.md",
+    "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/parallel_theory/quick_check.json",
+    "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/stages/r05_experimentalist/attempt-001/workspace/analysis_results.json",
+    "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/stages/r05_experimentalist/attempt-001/workspace/preanalysis.json",
+    "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/parallel_exploration/paired_daily_panel.csv",
+    "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/stages/r00_boundary/attempt-001/workspace/data/usgs_daily_values_2000_to_2026.rdb",
+    "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/stages/r00_boundary/attempt-001/workspace/data/ghcn_USR0000OPHI.dly",
+    "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/stages/r00_boundary/attempt-001/workspace/data/ghcn_USR0000OCHI.dly",
+    "/Applications/ideas/1103_boundary_discovery/runs/pilot_001/stages/r00_boundary/attempt-001/workspace/data/noaa_ghcnd_inventory.txt"
+  ],
+  "artifacts": [
+    {
+      "path": "runs/pilot_001/stages/r06_experimentalist/attempt-001/workspace/preanalysis.json",
+      "description": "冻结的年份、筛选、指标、模型、时间块不确定性与方向预测"
+    },
+    {
+      "path": "runs/pilot_001/stages/r06_experimentalist/attempt-001/workspace/analyze.py",
+      "description": "复现原面板协变量规则、提取高频目标、拟合模型并输出诊断和结果的脚本"
+    },
+    {
+      "path": "runs/pilot_001/stages/r06_experimentalist/attempt-001/workspace/actual_results.json",
+      "description": "完整结构化实际结果、逐站模型指标、样本、旗标及NOAA来源审计"
+    },
+    {
+      "path": "runs/pilot_001/stages/r06_experimentalist/attempt-001/workspace/water_daily_diagnostics.csv",
+      "description": "按A旗标、15分钟格点和87点阈值筛选的逐日高频目标及点数"
+    },
+    {
+      "path": "runs/pilot_001/stages/r06_experimentalist/attempt-001/workspace/daily_diagnostics.csv",
+      "description": "逐日目标与冻结训练/重建留出协变量配对结果"
+    },
+    {
+      "path": "runs/pilot_001/stages/r06_experimentalist/attempt-001/workspace/heldout_predictions.csv",
+      "description": "2025两站各目标逐日观察、两种预测及配对绝对误差改善"
+    },
+    {
+      "path": "runs/pilot_001/stages/r06_experimentalist/attempt-001/workspace/report_zh.md",
+      "description": "中文结果报告，含结果表、解释边界、来源冲突及后续检验"
+    }
+  ],
+  "evidence": [
+    {
+      "type": "observation",
+      "detail": "固定训练面板有3964个暖季行；按原USGS/NOAA筛选规则重建的3966个训练期候选中，3964行与冻结面板逐行匹配，air_mean、air_range、flow的最大绝对差均为0。另2个候选日期不在冻结面板；模型训练直接取冻结面板行。"
+    },
+    {
+      "type": "observation",
+      "detail": "2025完整配对日：10396000为153日、11501000为153日、11502500为0日。前两站S_night各152日；第三站2025原始RDB只有agency/site/datetime列，缺少00010温度列。"
+    },
+    {
+      "type": "observation",
+      "detail": "两可分析站2025 S_night的MAE改善分别为0.0040°C/h（95%块区间[-0.0028,0.0112]）和0.0016°C/h（[-0.0046,0.0080]）；S_day改善分别为0.0332°C/h（[0.0115,0.0569]）和0.0185°C/h（[0.0029,0.0339]）。"
+    },
+    {
+      "type": "observation",
+      "detail": "清晨谷值MAE改善为0.2197°C（95%区间[0.0588,0.3811]）和0.1473°C（[0.0578,0.2489]）；午后峰值为0.0133°C（[-0.0502,0.0733]）和-0.0198°C（[-0.0487,0.0131]）。全部目标的逐站指标见actual_results.json。"
+    },
+    {
+      "type": "observation",
+      "detail": "训练期标准化air_range系数：OPHI的S_night/S_day分别-0.194/+0.500、清晨谷值/午后峰值-0.272/+0.072；OCHI分别-0.232/+0.563、-0.194/+0.058。"
+    },
+    {
+      "type": "observation",
+      "detail": "OPHI与OCHI NOAA DLY文件记录均延伸至2026，而inventory中的TMAX/TMIN/TAVG终年为2023；属于明确的文件与inventory年份冲突。USGS流量在既有配对样本中含A及A:e前缀旗标；11501000有6个A:e配对记录。"
+    }
+  ],
+  "claims": [
+    {
+      "type": "interpretation",
+      "claim": "预先冻结的‘air_range对S_night的关联强于S_day’方向性预测在两站均被反驳；系数大小和2025预测误差改善都更偏向S_day。"
+    },
+    {
+      "type": "interpretation",
+      "claim": "‘清晨谷值关联强于午后峰值’的相对方向在两站均出现，且谷值MAE改善区间均高于零；这只支持目标间差异，不构成完整的夜间机制解释。"
+    },
+    {
+      "type": "interpretation",
+      "claim": "A24在两站2025均有正的MAE改善，但所有预测收益都只是观察性外推性能，不能称为热交换、潜流交换或机制证据。"
+    }
+  ],
+  "limitations": [
+    "11502500没有2025高频水温，无法为该站报告留出误差；其日流量记录为P码也不满足既有A前缀筛选。",
+    "OPHI、OCHI的DLY文件与inventory存在年份冲突；2025 NOAA值来自存档DLY文件，无法由inventory确认覆盖。",
+    "11501000和11502500共用OCHI，不能作为两个独立气象源重复；实际可用气象来源只有OPHI与OCHI两组。",
+    "2025时间块区间按每站目标的有效日期序列作28日圆形移动块抽样；S_night少9月末一天，因为留出原始文件止于9月且夜窗延伸至次日06时。",
+    "日最大/最小温度是气象代理，缺少逐时热通量、水文传播时间与热量闭合；回归关联不识别因果机制。"
+  ],
+  "next_actions": [
+    "优先取得11502500可审计的2025年5-9月高频水温数据和质量码；不改变本次预定年份、筛选或指标，补齐第三站的留出复核。",
+    "若第三站2025原始序列不可得，停止把共享OCHI双站当作独立复现，并将现阶段结论限定为两气象来源、两可分析河站的部分支持/反证。"
+  ]
+}

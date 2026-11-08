@@ -1,0 +1,361 @@
+{
+  "summary": "可把这些材料用于描述二维坐标随帧的变化，但不能据此确定感觉输入、运动意图、行为类别或因果机制。建议先量化两条轨迹的相对位置和逐帧运动，再讨论它们是否符合某种交互模型。",
+  "artifacts": [],
+  "evidence": [
+    {
+      "source_id": "R07_window",
+      "basis": "R07 的原始窗口采样，帧 1000–1156，每 4 帧一行；坐标为原生图像单位。",
+      "observation": "A 从约 (373, 208) 移至约 (997, 928)；B 从约 (98, 105) 移至约 (102, 61)，随后在窗口末端约为 (102, 61)。窗口内两者的相对位置明显变化。"
+    },
+    {
+      "source_id": "R13_window",
+      "basis": "R13 的原始窗口采样，帧 1000–1156，每 4 帧一行。",
+      "observation": "A 的 x 坐标大多约为 1000，y 从约 126 增至约 566；B 从约 (1000, 145) 移至约 (640, 66)，中间经历较大坐标变化。"
+    },
+    {
+      "source_id": "R01_window",
+      "basis": "R01 的原始窗口采样，帧 1000–1156，每 4 帧一行。",
+      "observation": "窗口中 tracker_score 多次为 -2；这些帧仍有坐标值，但该分值的语义未说明，不能据此将其解释为概率或可靠性等级。"
+    },
+    {
+      "source_id": "measurement_metadata",
+      "basis": "所给测量元数据。",
+      "observation": "数据包含 13 条记录，每条 44999 帧、两个局部追踪标签；无物理尺度、帧率、姿态、实际感觉输入、独立场景几何、干预标签或跨记录身份保证。"
+    },
+    {
+      "source_id": "F3",
+      "basis": "所给 2007 年论文摘要，仅摘要可用。",
+      "observation": "该摘要报告斑马鱼常规转向运动学在特定发育范围内的变化；它没有提供当前记录的年龄、体长或行为标签。"
+    },
+    {
+      "source_id": "F4",
+      "basis": "所给 2005 年论文摘要，仅摘要可用。",
+      "observation": "该摘要报告幼鱼猎物追踪中的视觉引导运动；其任务与阶段不能从当前坐标材料确认相同。"
+    },
+    {
+      "source_id": "F1",
+      "basis": "所给 1976 年论文索引摘要。",
+      "observation": "该摘要报告特定装置条件下，遮眼黑线鳕仍可加入鱼群，并讨论侧线的作用；它不是当前斑马鱼记录的实验说明。"
+    },
+    {
+      "source_id": "F2",
+      "basis": "所给 2002 年模型论文摘要。",
+      "observation": "该摘要提出群体空间组织与局部交互规则的模型；摘要不能证明当前两条轨迹由该模型生成。"
+    }
+  ],
+  "claims": [
+    {
+      "id": "C1",
+      "text": "这三个采样窗口显示了可量化的轨迹变化，但单凭窗口坐标不能判断鱼是否在追随、避让、转向或受某种感觉输入引导。",
+      "kind": "inference",
+      "use": "exploratory",
+      "consequence": "先将分析目标限定为坐标运动学和相对几何变化；行为命名与感觉机制解释暂缓。",
+      "basis": {
+        "source_ids": [
+          "measurement_metadata"
+        ],
+        "record_ids": [
+          "R01",
+          "R07",
+          "R13"
+        ]
+      },
+      "depends_on": []
+    },
+    {
+      "id": "C2",
+      "text": "R01 窗口中重复出现的 -2 分值提示分值语义可能影响基于追踪质量筛选的结果，但现有信息不足以决定筛选阈值。",
+      "kind": "inference",
+      "use": "exploratory",
+      "consequence": "暂不按 tracker_score 排除数据，也不把它当概率；若后续分析需要质量分层，应先查询其定义或做阈值敏感性分析。",
+      "basis": {
+        "source_ids": [
+          "R01_window",
+          "measurement_metadata"
+        ],
+        "record_ids": [
+          "R01"
+        ]
+      },
+      "depends_on": [
+        "C1"
+      ]
+    }
+  ],
+  "limitations": [
+    "这些窗口是稀疏抽样的坐标展示，不足以确认窗口内精确转向时刻或瞬时运动学。",
+    "缺少帧率和空间标定，任何速度仅能以原生坐标单位/帧表示。",
+    "A/B 是记录内局部标签，材料未保证追踪无交换；不应据此推断稳定个体差异。",
+    "F1–F4 均为所给摘要或索引摘要，阅读和解释范围限于摘要文字；它们不能补齐当前记录的协议事实。"
+  ],
+  "next_actions": [
+    "申请 R07 全记录的相对距离、逐帧位移与方向变化描述，作为坐标层面的初步运动学检查。",
+    "申请查询鱼类双体互动运动学和追踪误差处理的基础方法，并核对是否存在适用于本数据字段的操作定义。",
+    "后续若要解释感觉运动机制，优先寻找实验任务、独立行为标签、场景几何和 tracker_score 语义。"
+  ],
+  "possible_pretraining_familiarity": "可能熟悉鱼类运动与感知的一般概念；本次结论仅依据实际提供的摘要和测量材料，未将未核验的背景知识当作证据。",
+  "observation": "当前可观察量是每帧两个局部标签的二维图像坐标及记录的 tracker_score。R07 与 R13 的示例窗口中，两条坐标轨迹的相对几何关系随时间明显变化；R01 窗口中分值出现 -2。上述均是轨迹层描述，不是行为标签。",
+  "expectation": "若两条轨迹在某段时间表现出稳定的相对距离或相似运动方向，可将其描述为相对位置维持或运动方向相似；若距离持续变化，则描述为分离或接近趋势。不能仅凭这些模式预期存在追随、感觉引导或特定行为阶段。",
+  "expectation_basis": "F2 摘要提供局部交互规则可产生群体空间组织变化的模型背景；F1 摘要说明特定鱼类群游在特定装置中可涉及侧线。F3、F4 涉及不同阶段或任务中的斑马鱼运动。它们只能帮助提出候选解释，不能直接预测当前未确认任务中的轨迹。",
+  "conditions": "描述性分析限定于记录内 A/B 局部标签、原生坐标单位与帧索引。跨记录比较应暂不将 A/B 视为同一个体。tracker_score 不作为概率或质量阈值使用。任何速度结果使用坐标单位/帧，并保留缺失值与分值原样。",
+  "initial_question": "在记录内，两个追踪标签的相对距离和运动方向如何随帧变化？这些变化是否足以提出可检验的相互运动描述，而不将其命名为感觉引导行为？",
+  "question_to_peers": "对缺少身体姿态、校准和追踪质量语义的双鱼二维轨迹，哪些相对运动学摘要最适合用于提出候选交互模型，同时避免把共同运动误判为追随或感觉因果？",
+  "worked_example": "R07 窗口从帧 1000 到 1156，A 约由 (373,208) 移至 (997,928)，B 约由 (98,105) 移至 (102,61)。可据此提出计算每帧两点距离及各自位移方向的描述性问题；不能据窗口端点称 A 在追随 B，也不能确定局部转向时刻。",
+  "memory_notes": [
+    {
+      "key": "trajectory_position_is_not_sensorimotor_state",
+      "title": "位置轨迹不等于感觉运动状态",
+      "kind": "correction",
+      "mastery": "used",
+      "understanding": "坐标序列支持位置、相对位置和运动学描述，不直接测量感觉输入、姿态、受力、意图、干预或行为类别。R07 示例可用于提出相对距离分析，但不能据此判为追随。",
+      "conditions": "限于当前提供的二维坐标、元数据与窗口采样；身份稳定性、行为标签、实验任务和分值语义未知。",
+      "example": "R07 的 A/B 坐标随帧发生明显变化；该观察支持计算相对距离，不支持感觉引导追随的结论。",
+      "open_questions": [
+        "没有独立行为标签时，哪些轨迹描述对追踪误差最稳健？",
+        "当前记录内是否存在标签交换？",
+        "tracker_score 的负值和小数分别表示什么？"
+      ],
+      "tags": [
+        "trajectory",
+        "sensorimotor",
+        "坐标轨迹",
+        "感觉运动",
+        "行为解释"
+      ],
+      "sources": [
+        "measurements.json",
+        "https://doi.org/10.1006/jtbi.2002.3065",
+        "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_001/stages/r1_evidence_verify/result.json",
+        "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_001/stages/r2_evidence_verify/result.json"
+      ],
+      "revision_reason": "沿用已提供的可复用说明，并用本轮 R07 窗口补充一个具体的相对运动学示例。"
+    }
+  ],
+  "memory_use": [
+    {
+      "key": "trajectory_position_is_not_sensorimotor_state",
+      "source_task": "fish_001",
+      "used_for": "将坐标观察与感觉运动解释分开，并限定 R07 窗口示例的结论。",
+      "scope_check": "本轮仅使用该笔记的解释边界，并以本轮提供的 R07 采样作为例子；没有外推为已确认行为。"
+    }
+  ],
+  "learning_request": {
+    "needed": true,
+    "gap": "缺少将双鱼二维坐标轨迹转化为谨慎的相对运动学描述、处理追踪误差并区分相关运动与追随行为的基础方法。",
+    "why_now": "这会决定 R07 初步比较应采用哪些可解释变量，并帮助避免把轨迹共变误读为感觉或因果机制。",
+    "queries": [
+      "鱼类双体或群体游动轨迹中，如何定义相对距离、相对方位、速度匹配和方向相关性？",
+      "仅有二维质心坐标时，哪些观测量可以描述追随，哪些额外证据才支持追随或感觉引导？",
+      "动物追踪数据中，未知评分语义与可能身份交换时，如何做稳健性分析？",
+      "鱼类群体运动的局部交互模型如何与观察性轨迹分析区分？"
+    ],
+    "urls": [],
+    "source_ids": [],
+    "record_ids": [],
+    "operations": []
+  },
+  "analysis_plan": {
+    "kind": "analysis",
+    "question": "描述 R07 全记录内 A/B 的相对距离与逐帧位移大小；不作行为分类。",
+    "record_id": "R07",
+    "start": 1,
+    "stop": 44999,
+    "variables": [
+      {
+        "name": "relative_position",
+        "expression": "positions[:,0,:] - positions[:,1,:]",
+        "meaning": "A 相对 B 的二维位置向量",
+        "units": "原生图像坐标单位"
+      },
+      {
+        "name": "distance",
+        "expression": "norm(relative_position,axis=-1)",
+        "meaning": "A 与 B 的欧氏距离",
+        "units": "原生图像坐标单位"
+      },
+      {
+        "name": "A_step",
+        "expression": "norm(diff(positions[:,0,:],axis=0),axis=-1)",
+        "meaning": "A 相邻帧位移大小",
+        "units": "原生图像坐标单位/帧"
+      },
+      {
+        "name": "B_step",
+        "expression": "norm(diff(positions[:,1,:],axis=0),axis=-1)",
+        "meaning": "B 相邻帧位移大小",
+        "units": "原生图像坐标单位/帧"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "distance",
+        "expression": "distance"
+      },
+      {
+        "name": "A_step",
+        "expression": "A_step"
+      },
+      {
+        "name": "B_step",
+        "expression": "B_step"
+      }
+    ],
+    "groups": [
+      {
+        "name": "all_frames",
+        "where": "isfinite(distance)",
+        "values": [
+          "distance",
+          "A_step",
+          "B_step"
+        ]
+      }
+    ]
+  },
+  "exploration": {
+    "missing_external_facts": [
+      "当前记录的具体实验任务、场景几何、鱼的年龄与准备条件。",
+      "相机帧率和空间标定。",
+      "tracker_score 的定义及记录内身份交换情况。"
+    ],
+    "unselected_definitions": [
+      "是否把方向一致性定义为相邻帧位移向量夹角的余弦，需在控制短位移和追踪噪声后决定。",
+      "是否按记录阶段或分值分层比较，须先确认阶段信息及分值语义。"
+    ],
+    "interface_gaps": [
+      "当前通道未提供知识检索或分析执行工具；已在 learning_request 和 analysis_plan 中提交可执行请求。"
+    ],
+    "next_action": "获取基础方法资料并运行 R07 的距离与逐帧位移摘要，再决定是否扩展到其他记录。",
+    "stalled_reason": "机制解释受缺失任务和感觉输入限制；坐标描述分析仍可继续。",
+    "understanding_changed": true
+  },
+  "evidence_claims": [
+    {
+      "id": "C1",
+      "text": "这三个采样窗口显示了可量化的轨迹变化，但单凭窗口坐标不能判断鱼是否在追随、避让、转向或受某种感觉输入引导。",
+      "kind": "inference",
+      "use": "exploratory",
+      "consequence": "先将分析目标限定为坐标运动学和相对几何变化；行为命名与感觉机制解释暂缓。",
+      "basis": {
+        "source_ids": [],
+        "record_ids": [
+          "R01",
+          "R07",
+          "R13"
+        ],
+        "measurement_sources": [
+          "measurement_metadata"
+        ]
+      },
+      "depends_on": []
+    },
+    {
+      "id": "C2",
+      "text": "R01 窗口中重复出现的 -2 分值提示分值语义可能影响基于追踪质量筛选的结果，但现有信息不足以决定筛选阈值。",
+      "kind": "inference",
+      "use": "exploratory",
+      "consequence": "暂不按 tracker_score 排除数据，也不把它当概率；若后续分析需要质量分层，应先查询其定义或做阈值敏感性分析。",
+      "basis": {
+        "source_ids": [],
+        "record_ids": [
+          "R01"
+        ],
+        "measurement_sources": [
+          "R01_window",
+          "measurement_metadata"
+        ]
+      },
+      "depends_on": [
+        "01_initial_1:C1"
+      ]
+    }
+  ],
+  "doubts": [],
+  "controller_admission": {
+    "changes": [
+      "Structured claims copied verbatim to evidence_claims; raw answer retained",
+      "Absent optional doubts initialized empty; no objection invented"
+    ],
+    "scientific_content_changed": false
+  },
+  "controller_reference_admission": {
+    "changes": [
+      {
+        "claim_id": "C2",
+        "field": "depends_on",
+        "before": [
+          "C1"
+        ],
+        "after": [
+          "01_initial_1:C1"
+        ]
+      }
+    ],
+    "scientific_content_changed": false
+  },
+  "controller_source_alias_recovery": {
+    "raw_response": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/01_initial_1/attempt-001/final.txt",
+    "raw_sha256": "857d8b025bd5185e07114e2ecfba05e3be9d74e6d52f38af3c1e30b1aea4afc5",
+    "changes": [
+      {
+        "claim_id": "C1",
+        "before": {
+          "source_ids": [
+            "measurement_metadata"
+          ],
+          "record_ids": [
+            "R01",
+            "R07",
+            "R13"
+          ]
+        },
+        "after": {
+          "source_ids": [],
+          "record_ids": [
+            "R01",
+            "R07",
+            "R13"
+          ],
+          "measurement_sources": [
+            "measurement_metadata"
+          ]
+        }
+      },
+      {
+        "claim_id": "C2",
+        "before": {
+          "source_ids": [
+            "R01_window",
+            "measurement_metadata"
+          ],
+          "record_ids": [
+            "R01"
+          ]
+        },
+        "after": {
+          "source_ids": [],
+          "record_ids": [
+            "R01"
+          ],
+          "measurement_sources": [
+            "R01_window",
+            "measurement_metadata"
+          ]
+        }
+      }
+    ],
+    "basis": "Exact metadata field and measured-window IDs present in this original input.",
+    "memory_source_additions": [
+      {
+        "note_key": "trajectory_position_is_not_sensorimotor_state",
+        "added": [
+          "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_001/stages/r1_evidence_verify/result.json",
+          "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_001/stages/r2_evidence_verify/result.json"
+        ],
+        "basis": "Restore the supplied same-key correction provenance; retain all proposed sources."
+      }
+    ],
+    "scientific_content_changed": false,
+    "new_model_call": false
+  }
+}

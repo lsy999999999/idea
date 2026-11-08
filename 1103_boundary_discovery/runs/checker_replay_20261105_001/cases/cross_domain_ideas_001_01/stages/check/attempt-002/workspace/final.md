@@ -1,0 +1,3 @@
+已完成 I-01 的已有工作与数学粗筛。检查结论：生态—演化反馈下的状态转移已有非常接近的研究方向；稀有联合路径、主导路径切换及其与韧性差异的关系仍未由本次摘要证据确认。数学检查未发现明显错误。
+
+完整结果在 [result.json](/Applications/ideas/1103_boundary_discovery/runs/checker_replay_20261105_001/cases/cross_domain_ideas_001_01/stages/check/attempt-002/workspace/result.json)，简报在 [CHECK.md](/Applications/ideas/1103_boundary_discovery/runs/checker_replay_20261105_001/cases/cross_domain_ideas_001_01/stages/check/attempt-002/workspace/CHECK.md)。`validate_checks(..., require_claims=True)` 已通过。检索范围有限，报告保留了未决主张与访问限制。

@@ -1,0 +1,3 @@
+已完成 NST 学习记录并写入 [result.json](/Applications/ideas/1103_boundary_discovery/runs/learn_20261104_community/stages/04_learn_0_recovery/attempt-001/workspace/result.json) 和 [LEARNING.md](/Applications/ideas/1103_boundary_discovery/runs/learn_20261104_community/stages/04_learn_0_recovery/attempt-001/workspace/LEARNING.md)。
+
+记录区分了论文报告与本轮学习：NST 比较观测群落距离和指定 PF 零模型下的距离分布；四个重复形成六个共享样本的 pair，说明这些距离并非独立。JSON 格式校验通过。PF 的具体约束、tNST 公式和 0.5 阈值的校准仍未厘清；本轮未做实验或机制验证。

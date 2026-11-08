@@ -1,0 +1,62 @@
+{
+  "kind": "analysis",
+  "question": "修正形状和索引对齐后，在 R07 中加入此前10帧平均相对位移是否改善下一帧相对位移的时间顺序留出预测？",
+  "record_id": "R07",
+  "start": 10,
+  "variables": [
+    {
+      "name": "r",
+      "expression": "positions[:,1,:]-positions[:,0,:]",
+      "meaning": "B相对A的二维位置向量",
+      "units": "原生图像坐标"
+    },
+    {
+      "name": "dr",
+      "expression": "diff(r,axis=0)",
+      "meaning": "相邻帧相对位移；索引 t 表示 r[t+1]-r[t]，长度比 r 少1"
+    },
+    {
+      "name": "target",
+      "expression": "shift(dr,-1)",
+      "meaning": "下一帧相对位移；索引 t 对应 dr[t+1]，末行填充 NaN"
+    },
+    {
+      "name": "history10",
+      "expression": "rolling(dr,10)",
+      "meaning": "以当前索引为窗口末端、包含当前及此前9个 dr 值的10帧尾随平均；前9行填充 NaN"
+    },
+    {
+      "name": "valid",
+      "expression": "isfinite(r[10:-1,0])&isfinite(r[10:-1,1])&isfinite(dr[10:-1,0])&isfinite(dr[10:-1,1])&isfinite(target[10:-1,0])&isfinite(target[10:-1,1])&isfinite(history10[10:-1,0])&isfinite(history10[10:-1,1])",
+      "meaning": "将长度对齐至 target 的有效行掩码；排除开头窗口不足行和末尾无下一步目标行。由于 r 比其他变量多一行，从索引10开始切片时仅取到倒数第二个 r 行。",
+      "units": "布尔值"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "target",
+      "expression": "target[10:-1]"
+    }
+  ],
+  "groups": [
+    {
+      "name": "共同有效行",
+      "where": "valid",
+      "values": [
+        "r[10:-1]",
+        "dr[10:-1]",
+        "history10[10:-1]",
+        "target[10:-1]"
+      ]
+    }
+  ],
+  "model": {
+    "target": "target",
+    "features": [
+      "r",
+      "dr",
+      "history10"
+    ],
+    "train_fraction": 0.7
+  }
+}

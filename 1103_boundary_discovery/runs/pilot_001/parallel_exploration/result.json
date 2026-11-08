@@ -1,0 +1,82 @@
+{
+  "summary": "在三条选定河流的11,535个日配对上，发现空气日温幅对河水日温幅存在探索性增量预测信息，且关联主要落在水温日最低值而非日最高值。其逐站留年增益一致，但整站迁移不一致；未发现支持低流量增强耦合的证据。因此最值得研究的是可观测的逐站热幅响应增益及其可预测的水文/河道条件，而非宣称新机制。",
+  "artifacts": [
+    {
+      "path": "runs/pilot_001/parallel_exploration/exploration.py",
+      "description": "从已有USGS RDB与NOAA GHCN-Daily文件构造配对面板、拟合对比并导出结果的可重复脚本。"
+    },
+    {
+      "path": "runs/pilot_001/parallel_exploration/numeric_results.json",
+      "description": "开发期/留年/留站、最低/最高/均值/温幅结果，模型系数和严格限定符敏感性。"
+    },
+    {
+      "path": "runs/pilot_001/parallel_exploration/paired_daily_panel.csv",
+      "description": "实际进入分析的11,535行逐站逐日配对面板与衍生特征。"
+    },
+    {
+      "path": "runs/pilot_001/parallel_exploration/heldout_predictions.csv",
+      "description": "时间留出期四类河温目标的逐日观测值与三个候选模型预测值；留出期此前已在覆盖审计中被查看，结果按探索性处理。"
+    },
+    {
+      "path": "runs/pilot_001/parallel_exploration/EXPLORATORY_REPORT.md",
+      "description": "中文探索报告，含数据规则、数值、失败解释、限制及下一步可证伪检验。"
+    }
+  ],
+  "evidence": [
+    {
+      "type": "observation",
+      "source": "numeric_results.json:temporal_holdout.water_daily_range",
+      "detail": "2014-2019训练、2020-2024留年测试，5,380个测试日；基础RMSE为1.097°C，加空气TMAX-TMIN后为1.023°C，再加低流量交互为1.015°C。",
+      "interpretation": "空气日温幅在时间留出中给河水日温幅提供增量预测信息；这是探索性而非盲测证据。"
+    },
+    {
+      "type": "observation",
+      "source": "numeric_results.json:training_partial_coefficients",
+      "detail": "2014-2019控制站点、月份、空气日均温和流量后，空气日温幅对水温日温幅斜率为+0.108°C/°C；对日最高温为+0.014°C/°C，对日最低温为-0.094°C/°C。",
+      "interpretation": "温幅的关联主要来自最低水温变化，不支持以空气日温幅解释日最高水温升高的简单故事。"
+    },
+    {
+      "type": "observation",
+      "source": "numeric_results.json:within_site_temporal_holdout and site_holdout",
+      "detail": "空气日温幅使三个站各自的跨年温幅RMSE下降；但在整站测试中，10396000由2.049升至2.090°C，另两站小幅下降。",
+      "interpretation": "站点内预测信号不能被当作跨站可迁移规律；响应异质性是下一研究问题。"
+    },
+    {
+      "type": "observation",
+      "source": "numeric_results.json:sensitivity_strict_approved_only",
+      "detail": "排除估算流量后，时间留出温幅RMSE由1.096降至1.012°C；新增主要关联仍在。",
+      "interpretation": "初步增益不依赖386个A:e估算流量日。"
+    }
+  ],
+  "claims": [
+    {
+      "claim": "在这些三站配对日数据中，空气日温幅对河水日温幅提供了超出月、站、空气均温和流量的探索性预测增量。",
+      "status": "exploratory_observation",
+      "not_claimed": "未证明新的普遍关系、因果影响或热缓冲物理机制。"
+    },
+    {
+      "claim": "增量主要对应水温日最低值变化，且逐站时间外关系比整站迁移关系稳定。",
+      "status": "exploratory_interpretation",
+      "not_claimed": "不将站点异质性解释为已识别的地下水、遮阴或河道机制。"
+    },
+    {
+      "claim": "低流量放大空气日温幅耦合的预期未获支持。",
+      "status": "negative_result",
+      "basis": "训练期交互项斜率差为负；整体加入交互只小幅改善，且暖季与全年结果不同。"
+    }
+  ],
+  "limitations": [
+    "三个站由前一覆盖审计种子规则确定，非随机或代表性样本。",
+    "所谓2020-2024留出期已在先前覆盖审计中被查看过数据文件/覆盖，因此不是盲验证；本轮分析按用户要求标为探索性。",
+    "空气温度来自距河站1.8-6.85 km的GHCN代理，不能代表水面局部微气候；NOAA观测日界与USGS日统计边界可能不一致。",
+    "历史探头/汇总方法变化尚无完整台站变更记录；估算水流虽有严格过滤敏感性，其他测量限定符仍需更细审计。",
+    "同站线性趋势与日汇总无法区分地下水、遮阴、河道热储或上游平流，也无法识别日内峰谷的先后。",
+    "最邻近文献已包括河温模型、河流热浪和空气-水温滞后/迟滞，尚未完成全文系统综述，不能声称世界首次。"
+  ],
+  "next_actions": [
+    "估计并检验逐站/季节空气温幅到水温温幅的斜率（热幅响应增益）是否跨年份稳定。",
+    "预先确定更多站点，测试可观测基流/流量季节性、河道面积/汇水特征、遮阴或地下水指标能否预测站间增益，并在未参与拟合的站点预测。",
+    "若独立站点迁移失败，或近邻文献已有同等的响应分解与分站验证，则放弃而非包装这一方向。",
+    "对候选热事件应用前，先解决GHCN观测日界与USGS日统计边界及探头变化记录。"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "summary": "已补学 NST 的观测输入、零模型比较及其解释边界。NST 不是动力学状态或随机机制的直接观察，而是依赖群落组成距离、分组与零模型约束的统计推断量。手册说明 PF 的 P/F 分别约束物种出现频率和样本丰富度；案例报告使用加权 Aitchison 距离、PF、999 次随机化，并以重复对标识处理共享样本带来的非独立性。玩具例显示同一观测距离在不同零分布下可有不同相对位置，因而输出依赖零模型。此为学习，不是对案例的独立复算或机制验证。",
+  "artifacts": [
+    {"path": "result.json", "role": "阶段结构化结果，含学习变化、证据、推论、限制及可复用记忆。"},
+    {"path": "LEARNING.md", "role": "NST 零模型、观测投影与动力学状态边界的简短学习记录。"},
+    {"path": "../../attempt-001/workspace/evidence/NST_package_manual.pdf", "role": "此前中断任务下载的 NST 软件手册 PDF。"},
+    {"path": "../../attempt-001/workspace/evidence/NST_package_manual.txt", "role": "上述手册文本提取，供本轮概念核读。"}
+  ],
+  "evidence": [
+    {"kind": "source_knowledge", "source": "../../attempt-001/workspace/evidence/NST_package_manual.txt; https://cran.r-project.org/package=NST", "access": "NST 手册本地 PDF 文本；手册文档，不是本案例原始数据。", "detail": "tNST 输入群落矩阵、组别、指定分类距离和零模型。手册说明零模型名称首字母表示物种出现频率约束方式，第二字母表示各样本丰富度约束方式；因此 PF 指定 P 频率约束和 F 样本丰富度约束。手册同时提醒不同 group 设置会改变 NST 值。"},
+    {"kind": "published_method_and_result", "source": "https://doi.org/10.1111/1462-2920.70430; /Applications/ideas/1103_boundary_discovery/learning_lab/library/6ac14d2f938091b66914a4cfa0853bcc0480f82cad7c652eff815fddf2962bef.txt", "access": "本地归档开放全文提取文本，查阅方法、结果及补充表说明；未复算原始数据。", "detail": "Renes 等报告使用 abundance-weighted robust Aitchison 距离、tNST、NST R 包 3.1.10、PF 空模型和 999 次随机化。每个处理×时间有 4 个重复，形成 6 个无序重复对；补充表以 comp 区分共享重复的配对，并在距离/NST 混合模型中处理配对非独立性。作者报告 NST 几乎所有处理/时间点大于 0.5，并明确解释依赖输入结构和模型假设。DOI 使用正确值 10.1111/1462-2920.70430。"},
+    {"kind": "learning_example", "source": "本轮手算玩具例；规则仅用于说明零分布依赖。", "access": "假设数据，无外部经验主张。", "detail": "若观测距离 d=0.30，零模型 A 的随机距离示意分布集中在 0.20 附近，则 d 相对偏大；零模型 B 的分布集中在 0.40 附近，则 d 相对偏小。原始 d 未变，改变的是参考零分布，故相对随机/确定性的归一化推断会依模型而变。数字是任意示意值，不是 NST 公式计算或论文结果。"},
+    {"kind": "prior_note_comparison", "source": "/Applications/ideas/1103_boundary_discovery/learning_lab/researchers/nonequilibrium_physicist/notes/state_memory_observability/v001.json", "access": "已读本轮显式提供的个人记忆检索条目。", "detail": "旧笔记已明确 NST 是模型依赖推断，不是随机机制的直接观察；因此本轮真实变化是把这一抽象边界细化到案例的距离输入、PF 约束、999 次随机化及配对依赖，而非从相反误解中纠正。"}
+  ],
+  "claims": [
+    "来源知识：PF 的两个字符表示不同约束维度：出现频率与样本丰富度；具体随机化实现仍依软件版本与设置。",
+    "来源报告：案例的 NST 是基于群落间加权 Aitchison 距离和指定 null model 的统计量；论文报告其大多高于 0.5，但该值不是直接观测的随机过程强度。",
+    "我的推论：NST 应放在扰动历史、ASV/组成观测、距离变换和观测过程关系图中的模型推断节点；它既不是 ASV 状态本身，也不能与完整动力学状态或功能恢复互换。",
+    "未检验假说：不同合理的零模型或分组定义可能改变案例 NST 的数值/比较；本轮没有运行替代模型，不能断言变化大小或方向。",
+    "学习变化：旧笔记已将 NST 标为模型依赖；新增的是对输入层级与 PF 约束含义的具体说明，以及共享重复对的统计依赖例子，不把先前理解虚构成错误。"
+  ],
+  "limitations": [
+    "手册给出 PF 标签的一般约束解释；我未掌握 tNST 内部抽样细节、其归一化组件和 0.5 阈值解释的完整推导。",
+    "没有安装/运行 NST 分析，也没有原始丰度矩阵；不能独立重现论文 NST 或比较替代零模型。",
+    "4 个重复产生 6 个重复对，配对共享观测这一结构可由组合计数说明；这不是 6 个独立群落状态样本。",
+    "玩具距离例只说明参照分布变化会改变相对解释，不是 NST 精确公式或实证计算。",
+    "未进行实验、机制识别、证明或新颖性判断；published results 均标作来源报告。"
+  ],
+  "next_actions": [
+    "讨论中将 NST 标为依赖距离、分组、零模型约束及随机化设定的推断节点，并与直接测量的丰富度/组成分开。",
+    "若问题转为解释 NST 数值，查阅 Ning et al. (2019) 方法全文或对应软件版本原始实现，核对归一化公式与 PF 的精确算法。",
+    "在没有原始数据和预设模型比较前，不断言替代零模型会让案例结论反转或保持。"
+  ],
+  "researcher": "nonequilibrium_physicist",
+  "stage": "04_learn_1",
+  "status": "targeted_learning_complete_with_method_details_open",
+  "learning_change": "先前笔记已经正确指出 NST 是模型依赖推断而非随机机制的直接观察。此次学习将其具体化为：群落矩阵经指定 abundance-weighted 距离变为群落间差异，再与带有频率/丰富度约束的零模型参照比较；案例用 PF、999 次随机化并处理共享重复对。由此我现在能解释为什么它既非直接状态变量，也不能脱离 null-model 设置讲成随机性的经验读数。旧笔记不存在需要纠正的错误；更新是细化证据与推断链。",
+  "learning_request": {"needed": true, "gap": "仍需完整掌握 tNST 归一化计算、随机化细节及其阈值解释。", "why_now": "当前已能说明输入和约束类别，但不能据此独立解释 NST 数值的精确算法意义。", "search_terms": ["Ning 2019 NST formula normalized stochasticity ratio", "NST package PF null model algorithm tNST"]},
+  "memory_notes": [
+    {"key": "state_memory_observability", "title": "动力学状态、历史依赖与观测充分性", "kind": "interpretation", "mastery": "used", "understanding": "状态变量相对于给定动力学和预测目标定义；NST 则是群落距离相对指定零模型的推断量。NST 可作为观测关系图中的派生统计节点，但不能因为其描述组装过程就视为动力学隐状态、完整群落状态或随机机制的直接观测。", "conditions": "案例应用受组成矩阵、距离方法、组别定义、零模型约束和随机化设置限制；这一概念区分不说明哪种模型最合适。", "example": "玩具例：观测距离 d=0.30，在中心约 0.20 的零分布下相对偏大，在中心约 0.40 的零分布下相对偏小；d 不变，参照变化。假设数值仅示意，不是论文数据或精确 NST 计算。", "open_questions": ["tNST 的完整归一化公式和 PF 具体随机化过程是什么？", "替代合理零模型会如何改变该案例的结果？未知。"], "tags": ["dynamical state", "observability", "NST", "null model", "动力学状态", "可观测性", "零模型"], "sources": ["https://doi.org/10.1111/1462-2920.70430", "../../attempt-001/workspace/evidence/NST_package_manual.txt", "https://cran.r-project.org/package=NST"], "revision_reason": "沿用已检索的 v1 key；补充 NST 输入层级与 PF 约束如何连接到状态/观测区分，旧版已正确标明模型依赖，非纠错。"},
+    {"key": "microbial_nst_pairwise_dependence", "title": "NST 群落距离输入及重复对依赖", "kind": "source_knowledge", "mastery": "used", "understanding": "Renes 等报告以 abundance-weighted robust Aitchison 距离、tNST、PF 零模型和 999 次随机化估计 NST。每个处理×时点的四个重复形成六个无序配对，但配对共享重复，非独立；论文以 comp 识别配对并纳入混合模型。", "conditions": "这是对 Renes et al. (2026) 所述方法和模型表注的记录；不代表独立复算或所有 NST 研究的通用设定。", "example": "A、B、C、D 的六对为 AB、AC、AD、BC、BD、CD；A 同时出现在 AB、AC、AD，因此三对不是三个独立状态观测。", "open_questions": ["PF 软件实现究竟如何在给定输入上随机化矩阵？", "该研究 0.5 参照的完整归一化解释及不确定性如何计算？未知。"], "tags": ["NST", "Aitchison distance", "pairwise dependence", "microbial assembly", "NST", "Aitchison距离", "配对依赖", "微生物组装"], "sources": ["https://doi.org/10.1111/1462-2920.70430", "/Applications/ideas/1103_boundary_discovery/runs/learn_20261104_community/stages/01_materials_recovery/attempt-001/workspace/sources/renes_2026_fulltext.txt"], "revision_reason": "本轮新增的来源知识，由案例方法和补充表说明支持。"}
+  ],
+  "memory_use": [
+    {"key": "state_memory_observability", "source_task": "learn_20261104_community / 02_initial_1", "used_for": "对照原有状态充分性定义，并准确叙述本次是细化 NST 适用边界，不是纠正旧误解。", "scope_check": "原条目未覆盖 NST 算法输入/PF 约束；新增方法细节仅依据本轮列出的 NST 手册和案例全文。"}
+  ]
+}

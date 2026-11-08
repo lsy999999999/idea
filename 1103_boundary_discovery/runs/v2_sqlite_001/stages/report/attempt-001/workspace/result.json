@@ -1,0 +1,101 @@
+{
+  "summary": "本轮在本地 SQLite 3.51.3 固定轨迹中观测到 snapshot 前缀位置与 PASSIVE checkpointed_frames 的次序关系（early/mid/late=2/14/25），固定 snapshot 下 reader 年龄差未改变帧数；lifecycle 策略收益仍不确定。位置关系符合 SQLite 已知 end-mark 机制，本轮没有形成受支持的新关系或新颖性主张。",
+  "artifacts": [
+    {
+      "path": "runs/v2_sqlite_001/stages/report/attempt-001/workspace/REPORT.md",
+      "type": "interpretation",
+      "description": "覆盖全部账本假说与实验的中文报告，区分观察、分类、解释、限制和后续问题。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/raw_trials.json",
+      "type": "observations",
+      "description": "E02 逐次策略回放和 PASSIVE 调用原始测量。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/experiment_01/attempt-001/workspace/raw_trials.json",
+      "type": "observations",
+      "description": "E03 年龄配对试验的原始 SQLite 测量。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/experiment_02/attempt-001/workspace/raw_trials.json",
+      "type": "observations",
+      "description": "E04 snapshot 前缀位置试验的原始 SQLite 测量。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/review/attempt-001/workspace/result.json",
+      "type": "independent_review",
+      "description": "冻结分类复核、独立重算、已知机制和新颖性范围说明。"
+    }
+  ],
+  "evidence": [
+    {
+      "type": "direct_observation",
+      "source": "runs/v2_sqlite_001/stages/experiment_02/attempt-001/workspace/raw_trials.json",
+      "details": "E04 36/36 次运行完成，12/12 种子控制有效；early/mid/late checkpointed_frames 均为 2/14/25，log_frames=26，checkpoint 前 WAL=107152 bytes，reader 活动且 busy=0。"
+    },
+    {
+      "type": "direct_observation",
+      "source": "runs/v2_sqlite_001/stages/experiment_01/attempt-001/workspace/raw_trials.json",
+      "details": "E03 12/12 配对有效，长龄与短龄 checkpointed_frames 均为 2，所有配对差为 0。"
+    },
+    {
+      "type": "direct_observation",
+      "source": "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/classification.json",
+      "details": "E02 唯一 heldout_H1 上 lifecycle 减两基线的 checkpoint 时间配对区间均含零，冻结分类为 uncertain_or_tradeoff。"
+    },
+    {
+      "type": "review_interpretation",
+      "source": "runs/v2_sqlite_001/stages/review/attempt-001/workspace/result.json",
+      "details": "review_status=null；三个实验分类经独立重算均有效。E03 不直接验证 B1 的 snapshot-position 预测，E04 为已知 end-mark 机制的局部重现，E02 的明确类别因只运行一个 held-out shape 而不可判定。"
+    },
+    {
+      "type": "retrieved_literature",
+      "source": "https://www.sqlite.org/wal.html",
+      "details": "SQLite WAL 文档描述 reader end mark 在事务中的固定性及其对 checkpoint 的限制。"
+    },
+    {
+      "type": "retrieved_literature",
+      "source": "https://www.sqlite.org/c3ref/wal_checkpoint_v2.html",
+      "details": "SQLite checkpoint API 文档描述 PASSIVE 行为及并发时可能留下未完成 checkpoint。"
+    },
+    {
+      "type": "retrieved_literature",
+      "source": "https://doi.org/10.1109/icpads60453.2023.00179",
+      "details": "复核记录相邻的自适应 WAL checkpoint 论文 DOI 元数据；未取得摘要或全文，重叠范围未决。"
+    }
+  ],
+  "claims": [
+    "E04 的冻结分类 position_order 有效；其数字支持所测轨迹中的 snapshot 前缀位置效应，不能外推为一般机制或新颖性。",
+    "账本将 B1 标记为 supported，但 reviewer 指出 E03 只改变 snapshot 后年龄，故该映射不是 B1 位置预测的直接验证；E04 仅提供相邻的局部证据。",
+    "E03 的 no_age_penalty 分类有效，反驳所测轨迹中强 reader-age 惩罚预测；不否定 snapshot-position 效应。",
+    "E02 的 uncertain_or_tradeoff 分类有效；未证明 lifecycle 信号降低净 checkpoint 成本，也未确认固定周期或 WAL-growth 在一般情形充分。",
+    "本轮未支持新的科学关系或机制；E04 重现 SQLite 已知 end-mark 解释，世界新颖性未建立。",
+    "本轮未进行 V1 或 single-agent 控制比较，不能声称 V2 或多角色组织更优。"
+  ],
+  "limitations": [
+    "实验只覆盖单一 SQLite 3.51.3 build、单 reader/writer 和小型固定轨迹；E04 种子仅随机化条件执行顺序，不代表不同 workload 抽样。",
+    "E02 只运行一个 held-out shape，而冻结的明确分类需要两个；串行回放延迟及末次 API frame tuple 不能替代并发服务分布或跨 WAL reset 累计完成量。",
+    "E03 未改变 snapshot 前缀；将其结果映射为 B1 支持存在构念范围限制，报告已明确限定。",
+    "E04 的冻结计划未逐字指定 SQL/schema，执行按 E03 记录作工程解析并已披露。",
+    "新颖性检查限于官方 SQLite 文档和相邻 DOI 元数据；Walack 全文未取得，未做全面文献审查。"
+  ],
+  "next_actions": [
+    "若继续策略研究，先修订 E02 的 held-out shape 数量矛盾，并预注册至少两个不同的 release/burst shape、可跨 WAL reset 的累计完成量、成本和延迟判据；随后检验 lifecycle 策略是否在相同完成量与服务结果下减少总 PASSIVE 成本。",
+    "若继续基础关系外推，使用新 workload 或 page layout 独立复验 snapshot-position 效应，不与策略收益证据混合。",
+    "在提出新颖性主张前取得并比较 Walack 全文及其观测信号、触发规则和成本指标。"
+  ],
+  "source_coverage": [
+    {"kind": "hypothesis", "id": "A1"},
+    {"kind": "hypothesis", "id": "A2"},
+    {"kind": "hypothesis", "id": "B1"},
+    {"kind": "hypothesis", "id": "B2"},
+    {"kind": "hypothesis", "id": "C1"},
+    {"kind": "hypothesis", "id": "C2"},
+    {"kind": "hypothesis", "id": "C3"},
+    {"kind": "hypothesis", "id": "D1"},
+    {"kind": "hypothesis", "id": "D2"},
+    {"kind": "experiment", "id": "E02"},
+    {"kind": "experiment", "id": "E03"},
+    {"kind": "experiment", "id": "E04"}
+  ]
+}

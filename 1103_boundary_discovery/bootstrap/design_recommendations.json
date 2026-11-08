@@ -1,0 +1,49 @@
+{
+  "created": "2026-11-03",
+  "purpose": "Initial, low-cost research directions for a multi-role discovery loop. These are feasibility recommendations, not novelty claims or results.",
+  "literature_search_status": "No web or scholarly-search tool was available in this session. References below are established entry points from prior knowledge and must be checked against their primary versions before being used for positioning. No claim of being the latest or comprehensive literature review is made.",
+  "recommended_first_topic": {
+    "id": "topic_1",
+    "title": "Information acquisition for verifying generated scientific data workflows",
+    "research_question": "When a data workflow may contain a silent transformation error, can an agent choose a compact verification action based on the workflow's intermediate state and provenance, instead of relying on end-result checks alone?",
+    "candidate_new_state_y": "A compact provenance-risk state for each intermediate artifact: transformation lineage, type/unit changes, and whether an independent invariant remains checkable.",
+    "minimal_hypothesis": "A verification policy that conditions its next check on provenance-risk state will detect more seeded silent errors per unit execution cost than fixed end-only checks, especially when multiple transformations preserve plausible-looking output distributions.",
+    "small_experiment": {
+      "environment": "A few short, generated Python data pipelines with known schemas and deterministic inputs; inject one seeded silent fault at a transformation (unit conversion, join key, row filter, or aggregation). Generate expected invariants directly from the data-generating process.",
+      "action_space": "Run a selected intermediate invariant, compare provenance/type metadata, or inspect a downstream aggregate; charge each action a fixed or measured execution cost.",
+      "comparison": ["end-only validation", "fixed intermediate checks", "risk-state conditioned check selection"],
+      "outcomes": ["fault detection rate", "false alarm rate", "number/cost of checks", "detection stage"],
+      "discriminating_test": "Hold out a fault type and pipeline ordering. The hypothesis is weakened if state-conditioned checks only help on the injected fault templates or if equivalent fixed checks match detection at equal cost.",
+      "implementation": "Small Python generator and runner; no external data download or model training required. A GPT-6 Luna call can propose checks or explain a failure, while a deterministic executor decides whether checks actually pass."
+    },
+    "why_feasible": "The failure mechanism and ground truth are controlled, the testbed can fit in a small script, and every claimed detection is independently executable. The scientific contribution, if any, is a software-agent result about generated workflows, not evidence that real published analyses are defective or that the policy generalizes to researchers.",
+    "risks": ["A hand-built task generator may make the target pattern too obvious.", "The proposed state may collapse to ordinary provenance tracking; compare directly with metadata-only and fixed-check policies.", "Prompt or model changes alone do not support an explanatory claim.", "A synthetic result does not establish effects on real research practice."],
+    "literature_entry_points": [
+      {"title": "The FAIR Guiding Principles for scientific data management and stewardship", "authors": "Wilkinson et al.", "year": 2016, "url": "https://doi.org/10.1038/sdata.2016.18", "use": "Context for findability, provenance, and reuse; not direct evidence for the proposed policy."},
+      {"title": "Data provenance: a survey", "authors": "Simmhan, Plale, and Gannon", "year": 2005, "url": "https://doi.org/10.1145/1084805.1084812", "use": "Background on provenance representation; older survey, check newer workflow literature."}
+    ],
+    "novelty_status": "Unassessed. Search current work on workflow provenance, data validation, active testing, and LLM-based data agents before claiming novelty."
+  },
+  "alternative_topic": {
+    "id": "topic_2",
+    "title": "Queue-state representation for bursty mixed LLM serving workloads",
+    "research_question": "Under a controlled serving simulator, does a policy using queue age plus estimated remaining decode burden improve the latency/fairness tradeoff over policies using request length or arrival order alone when workload burstiness changes?",
+    "candidate_new_state_y": "Per-tenant accumulated service debt coupled with each request's estimated remaining decode burden, tested as a state beyond queue length and prompt length.",
+    "minimal_hypothesis": "In bursty mixed workloads with estimation error, the interaction between tenant service debt and remaining decode burden predicts which scheduling action preserves both tail latency and service fairness better than queue length alone.",
+    "small_experiment": {
+      "environment": "A discrete-event Python simulator with synthetic prefill/decode service demands, controlled tenant arrivals, and known request completion times; sweep burstiness and estimation error using fixed seeds.",
+      "comparison": ["FIFO", "shortest estimated job first", "queue-length policy", "proposed state policy"],
+      "outcomes": ["p50/p95 completion latency", "per-tenant slowdown disparity", "throughput", "sensitivity to demand-estimation error"],
+      "discriminating_test": "Predeclare a held-out burst pattern and estimation-error range. The hypothesis is weakened if the policy's gain vanishes under held-out conditions, requires oracle future lengths, or improves latency only by worsening tenant disparity.",
+      "implementation": "Standalone simulator, no external trace dependency. If later using real serving traces or hardware, add that as a distinct validation stage rather than conflating it with simulator evidence."
+    },
+    "why_feasible": "The simulator and workloads are easy to reproduce locally and expose clear competing policies. LLM serving is an active, crowded literature area, so the direction is useful as a systems experiment but has high novelty risk and needs a targeted paper search before substantial investment.",
+    "risks": ["A synthetic simulator may omit accelerator and batching effects.", "The proposed variables overlap with established scheduling and fairness work.", "A metric tradeoff can be tuned post hoc; register metrics and sweeps before execution.", "Simulator wins do not establish production serving improvements."],
+    "literature_entry_points": [
+      {"title": "Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve", "authors": "Agrawal et al.", "year": 2024, "url": "https://arxiv.org/abs/2403.02310", "use": "Recent LLM serving/scheduling context; verify final publication metadata."},
+      {"title": "DistServe: Disaggregating Prefill and Decoding for Goodput-optimized Large Language Model Serving", "authors": "Zhong et al.", "year": 2024, "url": "https://arxiv.org/abs/2401.09670", "use": "Context for prefill/decode serving and latency objectives; not a direct comparison to this proposed simulator."}
+    ],
+    "novelty_status": "Unassessed and likely high-risk because of active prior work."
+  },
+  "selection_advice": "Start with topic_1 for a first bounded run: it directly tests whether a proposed state changes evidence acquisition, has exact synthetic ground truth, and supports a cheap falsification. Keep topic_2 as a comparison direction if the project prioritizes AI systems performance. For either, first verify reference metadata and search recent papers for the exact state/action relationship; do not delay a small pilot for a comprehensive benchmark or baseline suite."
+}

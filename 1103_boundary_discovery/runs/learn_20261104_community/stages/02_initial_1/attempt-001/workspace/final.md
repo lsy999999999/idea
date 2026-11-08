@@ -1,0 +1,3 @@
+已完成独立初读，保存中文说明 [NOTE.md](/Applications/ideas/1103_boundary_discovery/runs/learn_20261104_community/stages/02_initial_1/attempt-001/workspace/NOTE.md) 和结构化结果 [result.json](/Applications/ideas/1103_boundary_discovery/runs/learn_20261104_community/stages/02_initial_1/attempt-001/workspace/result.json)。
+
+笔记区分了已发表观察、状态与观测的物理解释，以及一个非生物数据的示意计算；保留了对群落状态如何定义、检测阈值是否影响解释的疑问。`result.json` 已通过 JSON 解析、必需字段和产物路径检查。尚未解释 NST 的计算细节，也未判断具体生理机制。

@@ -1,0 +1,102 @@
+{
+  "evidence_refs": [
+    "metadata: old model dev RMSE 0.8752, exceeding the 0.06 criterion",
+    "dev_0..dev_23: at matched u and h, response differs strongly between constant +1 and -1 histories",
+    "observed_A_0..observed_A_15 and fresh_1_0..fresh_1_15: oldest-only and newest-only histories produce distinct responses",
+    "fresh_1_0..fresh_1_15: history contrasts appear at h=0.5 and h=1.5"
+  ],
+  "experiments": [
+    {
+      "h": 0.5,
+      "history": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "purpose": "Matched temporal-position contrast against the newest-only pulse at this u and wait.",
+      "u": 0.3
+    },
+    {
+      "h": 0.5,
+      "history": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "purpose": "Newest-only comparator to test whether equal-magnitude prior drives have position-dependent effects.",
+      "u": 0.3
+    },
+    {
+      "h": 1.5,
+      "history": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "purpose": "Test whether the oldest-pulse response changes with waiting time.",
+      "u": 0.3
+    },
+    {
+      "h": 1.5,
+      "history": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "purpose": "Matched newest-only comparator at the longer wait.",
+      "u": 0.3
+    }
+  ],
+  "expression": "q = sum(history * exp(times / tau)); m = q * exp(-h / tau); o = b0 + bu*u + bh*h + bm*m",
+  "parameters": [
+    {
+      "initial": 0.1,
+      "lower": -2,
+      "name": "b0",
+      "upper": 2
+    },
+    {
+      "initial": 0.9,
+      "lower": -3,
+      "name": "bu",
+      "upper": 3
+    },
+    {
+      "initial": -0.1,
+      "lower": -2,
+      "name": "bh",
+      "upper": 2
+    },
+    {
+      "initial": 0.5,
+      "lower": -3,
+      "name": "bm",
+      "upper": 3
+    },
+    {
+      "initial": 2,
+      "lower": 0.1,
+      "name": "tau",
+      "upper": 10
+    }
+  ],
+  "prospective_contrast": "At fixed u and h, compare [1,0,0,0] with [0,0,0,1]. The model predicts a larger absolute history contribution from the newest pulse; increasing h attenuates both contributions by the same exponential factor.",
+  "quantities": [
+    {
+      "expression": "sum(history * exp(times / tau))",
+      "interpretation": "Prior-drive record weighted exponentially by its age; more recent intervals receive greater weight.",
+      "name": "q"
+    },
+    {
+      "expression": "q * exp(-h / tau)",
+      "interpretation": "Weighted prior-drive contribution attenuated over the current waiting time.",
+      "name": "m"
+    }
+  ],
+  "refutation_condition": "Refute the structure if matched pulse-position effects are absent or reversed, or their change with h contradicts shared exponential attenuation beyond the stated measurement error; it must also meet the dev RMSE threshold of 0.06.",
+  "scientific_change": "Replace dependence on only current drive and waiting time with a history-dependent response. Prior drives contribute through an exponentially weighted record that decays during the wait; the shared time constant is a parsimonious testable assumption, not an established mechanism."
+}

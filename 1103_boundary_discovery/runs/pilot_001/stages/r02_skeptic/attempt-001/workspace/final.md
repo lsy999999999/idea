@@ -1,0 +1,5 @@
+已完成独立复核，并写入有效 JSON：[result.json](/Applications/ideas/1103_boundary_discovery/runs/pilot_001/stages/r02_skeptic/attempt-001/workspace/result.json)。中文报告、复算脚本、数值表和配对面板也已保存：[skeptic_report_zh.md](/Applications/ideas/1103_boundary_discovery/runs/pilot_001/stages/r02_skeptic/attempt-001/workspace/skeptic_report_zh.md)、[recompute_skeptic.py](/Applications/ideas/1103_boundary_discovery/runs/pilot_001/stages/r02_skeptic/attempt-001/workspace/recompute_skeptic.py)、[metrics_table.csv](/Applications/ideas/1103_boundary_discovery/runs/pilot_001/stages/r02_skeptic/attempt-001/workspace/metrics_table.csv)。
+
+复算精确重现了 11,535 行样本及原时间留出点估计。水温日较差的 MAE 改善为 0.0585°C，28 日同步时间块区间为 0.0344–0.0851°C；水温日均值改善较小，水温日最高值单独加入气温日较差没有改善。低流量交互斜率区间跨零，不能据此支持低流量增强效应。留站结果不一致：不同气象代理的 10396000 上误差变差；另两站共享 OCHI 气象序列，因而留站结果不是独立气象暴露下的迁移证据。
+
+未发现 USGS 列映射、GHCN qflag 位置、日期配对或训练期低流量阈值方面的明显实现错误。结果仍是已看过数据上的探索性关联；2024 年 NOAA 库存与 `.dly` 文件冲突也限制了测试解释。最有信息量的后续检验是在一个气象代理独立的新河站，同步记录水温、流量、岸边气温和短波辐射，并预先冻结分析方案。

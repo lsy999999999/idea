@@ -1,0 +1,1167 @@
+The Virtual Lab of AI agents designs new SARS-CoV-2 nanobodies | Nature
+function hasConnection() {
+                return navigator.connection || navigator.mozConnection || navigator.webkitConnection || navigator.msConnection;
+            }
+
+            function createLink(src) {
+                var preloadLink = document.createElement("link");
+                preloadLink.rel = "preload";
+                preloadLink.href = src;
+                preloadLink.as = "font";
+                preloadLink.type = "font/woff2";
+                preloadLink.crossOrigin = "";
+                document.head.insertBefore(preloadLink, document.head.firstChild);
+            }
+
+            var connectionDetail = {
+                saveDataEnabled: false,
+                slowConnection: false
+            };
+
+            var connection = hasConnection();
+            if (connection) {
+                connectionDetail.saveDataEnabled = connection.saveData;
+                if (/\slow-2g|2g/.test(connection.effectiveType)) {
+                    connectionDetail.slowConnection = true;
+                }
+            }
+
+            if (!(connectionDetail.saveDataEnabled || connectionDetail.slowConnection)) {
+                createLink("/oscar-static/fonts/HardingText-Regular-Web-cecd90984f.woff2");
+            } else {
+                document.documentElement.classList.add('save-data');
+            }
+window.dataLayer = [{"content":{"category":{"legacy":{"webtrendsPrimaryArticleType":"research","webtrendsSubjectTerms":"computer-science;computational-models","webtrendsContentCategory":null,"webtrendsContentCollection":null,"webtrendsContentGroup":"Nature","webtrendsContentGroupType":null,"webtrendsContentSubGroup":"Article","status":null},"contentType":"article"},"article":{"doi":"10.1038/s41586-025-09442-9"},"attributes":{"cms":null,"deliveryPlatform":"oscar","copyright":{"open":false,"legacy":{"webtrendsLicenceType":null}},"articleInPress":"false"},"contentInfo":{"authors":["Kyle Swanson","Wesley Wu","Nash L. Bulaong","John E. Pak","James Zou"],"publishedAt":1753747200,"publishedAtString":"2025-07-29","title":"The Virtual Lab of AI agents designs new SARS-CoV-2 nanobodies","legacy":null,"publishedAtTime":null,"documentType":"aplusplus","subjects":"Computer science,Computational models"},"journal":{"pcode":"nature","title":"nature","volume":"646","issue":"8085","id":41586,"publishingModel":"Hybrid Access"},"authorization":{"status":false},"features":[],"collection":null},"page":{"category":{"pageType":"article"},"attributes":{"template":"mosaic","featureFlags":[{"name":"ab_subjects_position","active":false},{"name":"shared_article_layout","active":false},{"name":"chat_with_paper_nature","active":false}],"testGroup":null},"search":null},"privacy":{},"version":"1.0.0","product":null,"session":null,"user":null,"backHalfContent":true,"country":"US","hasBody":true,"uneditedManuscript":false,"twitterId":["o3xnx","o43y9","o3ef7"],"baiduId":"d38bce82bcb44717ccc29a90c4b781ea","newApp":true,"japan":false}];
+    window.dataLayer.push({
+        ga4MeasurementId: 'G-ERRNTNZ807',
+        ga360TrackingId: 'UA-71668177-1',
+        twitterId: ['3xnx', 'o43y9', 'o3ef7'],
+        baiduId: 'd38bce82bcb44717ccc29a90c4b781ea',
+        ga4ServerUrl: 'https://sgtm.nature.com',
+        imprint: 'nature'
+    });
+(function(w, d) {
+        w.config = w.config || {};
+        w.config.mustardcut = false;
+
+        
+        if (w.matchMedia && w.matchMedia('only print, only all and (prefers-color-scheme: no-preference), only all and (prefers-color-scheme: light), only all and (prefers-color-scheme: dark)').matches) {
+            w.config.mustardcut = true;
+            d.classList.add('js');
+            d.classList.remove('grade-c');
+            d.classList.remove('no-js');
+        }
+    })(window, document.documentElement);
+@media only print, only all and (prefers-color-scheme: no-preference), only all and (prefers-color-scheme: light), only all and (prefers-color-scheme: dark) {  html{line-height:1.15;text-size-adjust:100%;height:100%;overflow-y:scroll;font-size:100%;box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;line-height:1.6;min-height:100%;font-size:1.125rem;color:#222;background:#fff}details,main{display:block}h1{margin:.67em 0;-webkit-font-smoothing:antialiased;font-size:clamp(1.75rem,4vw,2.25rem)}a{background-color:transparent;color:#424d61;text-decoration:underline .0625rem;text-decoration-skip-ink:auto;text-underline-offset:.25rem}b{font-weight:bolder}sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline;top:-.5em}img{border:0;max-width:100%;height:auto;vertical-align:middle}button,input,select{font-family:inherit;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}[type=submit],button{appearance:button}[type=checkbox]{box-sizing:border-box;padding:0}summary{display:list-item}[hidden]{display:none}button{cursor:pointer}h2{font-size:clamp(1.5rem,4vw,1.75rem)}h3{font-size:clamp(1.25rem,4vw,1.5rem)}h2,h3{-webkit-font-smoothing:antialiased}h3{font-size:1.25rem}*{box-sizing:inherit}p{margin-top:0;margin-bottom:2rem;overflow-wrap:break-word;word-break:break-word}p:last-of-type{margin-bottom:0}.eds-c-status-message{display:flex;gap:.5rem;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;font-size:1rem;position:relative;box-sizing:border-box;border-radius:8px;background-color:#fff;border:1px solid #d5d5d5;line-height:1.4;padding:16px 16px 12px}.eds-c-status-message :last-child{margin-bottom:0}.eds-c-status-message__message a{color:inherit}.eds-c-status-message__text{padding-right:12px;margin-top:2px}.eds-c-status-message__text h5{margin-top:0}.eds-c-status-message__icon{fill:currentcolor;transform:translate(0);display:inline-block;vertical-align:text-top;width:24px;height:24px;flex:0 0 auto;margin-right:8px}.eds-c-status-message__icon--top{align-self:flex-start}.eds-c-status-message__dismiss-button{position:absolute;border:0;background:0 0;right:8px;cursor:pointer}.eds-c-status-message__dismiss-icon{fill:currentcolor;transform:translate(0);display:inline-block;vertical-align:text-top;width:24px;height:24px;color:#555}.eds-c-status-message__title{font-weight:700;margin-bottom:8px}.eds-c-status-message--info .eds-c-status-message__icon{color:#17758c}.eds-c-status-message--info{border-bottom:4px solid #17758c}.eds-c-status-message--error .eds-c-status-message__icon{color:#be1818}.eds-c-status-message--error{border-bottom:4px solid #be1818}.eds-c-status-message--success .eds-c-status-message__icon{color:#007a4b}.eds-c-status-message--success{border-bottom:4px solid #007a4b}.eds-c-status-message--warning .eds-c-status-message__icon{color:#daa520}.eds-c-status-message--warning{border-bottom:4px solid #daa520}.c-ad{text-align:center}@media only screen and (min-width:480px){.c-ad{padding:8px}}.c-ad--728x90{display:none;background-color:#ccc}.c-ad--728x90 .c-ad__inner{min-height:calc(1.5em + 94px)}@media only screen and (min-width:876px){.js .c-ad--728x90{display:none}.js .u-show-following-ad+.c-ad--728x90{display:block}}.app-author-list,.c-ad__label{font-size:.875rem;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;line-height:1.5}.c-ad__label{font-weight:400;margin-bottom:4px;color:#333}.app-author-list{color:#6f6f6f;list-style:none;margin:0;padding:0}.app-author-list>li,.js .app-author-list{display:inline}.app-author-list>li:not(:first-child):not(:last-child):before{content:", "}.app-author-list>li:not(:only-child):last-child:before{content:" & "}.app-author-list--small{font-size:.875rem}.app-author-list--compact{line-height:1.4;font-size:.875rem}.app-author-list--truncated>li:not(:only-child):last-child:before{content:" ... "}.js .app-author-list__hide{display:none;visibility:hidden}.js .app-author-list__hide:first-child+*{margin-block-start:0}.c-article-header{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;margin-bottom:40px}.c-article-identifiers{list-style:none;font-size:1rem;line-height:1.3;display:flex;flex-wrap:wrap;color:#6f6f6f;padding:0;margin:0 0 8px}.c-article-identifiers__item{border-right:1px solid #6f6f6f;margin-right:8px;padding-right:8px;list-style:none}.c-article-identifiers__item:last-child{margin-right:0;padding-right:0;border-right:0}.c-article-title{font-size:min(max(1.75rem,4vw),2.25rem);margin:0 0 8px}.c-article-author-list{width:100%;margin:0 8px 0 0;padding:0;display:inline;list-style:none;font-size:1rem}.c-article-author-list__item{display:inline;padding-right:0}.c-article-author-list svg{margin-left:4px}.c-article-author-list__show-more{display:none;margin-right:4px}.c-article-author-list__button,.js .c-article-author-list__item--hide,.js .c-article-author-list__show-more{display:none}.js .c-article-author-list--long .c-article-author-list__show-more,.js .c-article-author-list--long+.c-article-author-list__button{display:inline}@media only screen and (max-width:767px){.js .c-article-author-list__item--hide-small-screen{display:none}.js .c-article-author-list--short .c-article-author-list__show-more,.js .c-article-author-list--short+.c-article-author-list__button{display:inline}}#uptodate-client,.js .c-article-author-list--expanded .c-article-author-list__show-more{display:none!important}.js .c-article-author-list--expanded .c-article-author-list__item--hide-small-screen{display:inline!important}.c-article-author-list__button,.c-button-author-list{background:#ebf1f5;border:4px solid #ebf1f5;border-radius:20px;color:#666;font-size:.875rem;line-height:1.4;padding:2px 11px 2px 8px;text-decoration:none}.c-article-author-list__button svg,.c-button-author-list svg{margin:1px 4px 0 0}.c-article-author-list__button:hover,.c-button-author-list:hover{background:#069;border-color:transparent;color:#fff}.c-article-info-details{font-size:1rem;margin-bottom:8px;margin-top:16px}.c-article-info-details__cite-as{border-left:1px solid #6f6f6f;margin-left:8px;padding-left:8px}.c-article-metrics-bar{display:flex;flex-wrap:wrap;line-height:1.3;font-size:1rem}.c-article-metrics-bar__wrapper{margin:16px 0}.c-article-metrics-bar__item{align-items:baseline;border-right:1px solid #6f6f6f;margin-right:8px}.c-article-metrics-bar__item:last-child{border-right:0}.c-article-metrics-bar__count{font-weight:700;margin:0}.c-article-metrics-bar__label{color:#626262;font-weight:400;font-style:normal;margin:0 10px 0 5px}.c-article-metrics-bar__details{margin:0}.c-article-main-column{font-family:Harding,Palatino,serif;margin-right:8.6%;width:60.2%}@media only screen and (max-width:1023px){.c-article-main-column{margin-right:0;width:100%}}.c-article-section__title{border-bottom:2px solid #d5d5d5;font-size:min(max(1.5rem,3vw),1.75rem);padding-bottom:8px;margin:40px 0 8px}.c-article-body p{margin-top:0;margin-bottom:24px}.c-article-section{clear:both}.c-article-authors-search{margin-top:0;margin-bottom:24px}.c-article-authors-search__item,.c-article-authors-search__title{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif}.c-article-authors-search__title{color:#626262;font-weight:700;margin:0;padding:0;font-size:1.05rem}.c-article-authors-search__item{font-size:1rem}.c-article-authors-search__text{margin:0}.c-code-block{padding:20px;margin:0 0 24px;border:1px solid #fff;font-family:monospace}.c-code-block__heading{margin-bottom:16px;font-weight:400}.c-code-block__line{overflow-wrap:break-word;white-space:pre-wrap;display:block}.c-article-share-box__no-sharelink-info{font-size:.813rem;font-weight:700;padding-top:4px;margin-bottom:24px}.c-article-share-box__only-read-input{border:1px solid #d5d5d5;display:inline-block;box-sizing:content-box;height:24px;margin-bottom:8px;font-size:.875rem;font-weight:700;padding:8px 10px}.c-article-share-box__button--link-like{background-color:transparent;border:0;color:#069;cursor:pointer;font-size:.875rem;margin-bottom:8px;margin-left:10px}.c-article-editorial-summary__container{margin:0 0 32px}.c-article-associated-content__container{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;margin:0 0 32px}.c-article-associated-content__container .app-card-open--compact.app-card-open{border:0;padding:0 0 16px}.c-article-associated-content__container .c-meta__item{line-height:1.5}.c-article-editorial-summary__container{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;font-size:1rem}.c-article-associated-content__container .c-article-associated-content__collection-label{font-size:.875rem;line-height:1.4}.c-article-associated-content__container .c-article-associated-content__collection-title{line-height:1.5;font-size:1.125rem}.c-reading-companion{clear:both;min-height:389px}.c-reading-companion__sticky{max-width:389px}.c-reading-companion__scroll-pane{overflow:hidden auto;margin:0 -4px;min-height:200px;padding-left:4px;padding-right:4px}.c-reading-companion__tabs{font-size:1rem;list-style:none;display:flex;flex-flow:row;margin:0 0 8px;padding:0}.c-reading-companion__tabs>li{flex-grow:1}.c-reading-companion__tab{color:#424d61;border-style:solid;border-color:#d5d5d5;border-image:none;border-width:1px 1px 1px 0;background-color:#eee;padding:8px 8px 8px 15px;text-align:left;font-size:1rem;width:100%}.c-reading-companion__tabs li:first-child .c-reading-companion__tab{border-left-width:1px}.c-reading-companion__tab--active{color:#222;background-color:#fff;border-bottom:1px solid #fff;font-weight:700}.c-reading-companion__sections-list{list-style:none;padding:0}.c-reading-companion__figures-list,.c-reading-companion__references-list{list-style:none;padding:0;min-height:389px}.c-reading-companion__references-list--numeric{list-style:decimal inside}.c-reading-companion__sections-list{margin:0 0 8px;min-height:50px}.c-reading-companion__section-item{font-size:1rem;padding:0}.c-reading-companion__section-item a{display:block;padding:8px 0 8px 16px;line-height:1.5;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;outline-offset:-4px}.c-reading-companion__figure-item{padding:16px 8px 16px 0;border-top:1px solid #d5d5d5;font-size:1rem}.c-reading-companion__figure-item:first-child{border-top:none;padding-top:8px}.c-reading-companion__reference-item{padding:8px 8px 8px 16px;border-top:1px solid #d5d5d5;font-size:1rem}.c-reading-companion__reference-item:first-child{border-top:none}.c-reading-companion__reference-item a{word-break:break-word}.c-reading-companion__reference-citation{display:inline}.c-reading-companion__reference-links{list-style:none;text-align:right;margin:8px 0 0;padding:0;font-weight:700;font-size:.813rem}.c-reading-companion__reference-links>a{display:inline-block;margin-left:8px}.c-reading-companion__reference-links>a:first-child{display:inline-block}.c-reading-companion__figure-title{font-family:Harding,Palatino,serif;font-weight:700;line-height:1.2;-webkit-font-smoothing:antialiased;font-size:1.25rem;display:block;margin:0 0 8px}.c-reading-companion__figure-links{margin:8px 0 0;display:flex;justify-content:space-between}.c-reading-companion__figure-links>a{display:flex;align-items:center}.c-reading-companion__figure-full-link svg{height:.8em;margin-left:2px}.c-reading-companion__panel{display:none;border-top:none;margin-top:0;padding-top:0}.c-cod,.c-reading-companion__panel--active{display:block}.c-cod{font-size:1rem;width:100%}.c-cod__form{background:#ebf0f3}.c-cod__prompt{margin:0 0 24px;font-size:1.125rem;line-height:1.3}.c-cod__label{display:block;margin:0 0 4px}.c-cod__row{display:flex;margin:0 0 16px}.c-cod__row:last-child{margin:0}.c-cod__input{padding:13px;margin:0;border:1px solid #d5d5d5;border-radius:2px;flex:1 1 auto}.c-cod__input--submit{margin-left:8px;flex-shrink:1;background-color:#069;color:#fff;border:1px solid #069;transition:background-color .2s ease-out,color .2s ease-out}.c-cod__input--submit-single{margin:0;flex-shrink:0;flex-basis:100%}.c-cod__input--submit:focus,.c-cod__input--submit:hover{color:#069;background-color:#fff}.c-pdf-download__link .u-icon{padding-top:2px}.c-pdf-download{display:flex;margin-bottom:24px;max-height:48px}@media only screen and (min-width:768px){.c-pdf-download{max-height:none}}@media only screen and (min-width:1024px){.c-pdf-download{max-height:48px}}.c-pdf-download__link{display:flex;flex:1 1 0%}.c-pdf-download__link:hover{text-decoration:none}.c-pdf-download__text{padding-right:4px}@media only screen and (max-width:767px){.c-pdf-download__text{text-transform:capitalize}}@media only screen and (min-width:768px){.c-pdf-download__text{padding-right:8px}}.c-context-bar--sticky .c-pdf-download{margin-bottom:0;display:block;white-space:nowrap}@media only screen and (max-width:767px){.c-pdf-download .u-sticky-visually-hidden{border:0;clip:rect(0,0,0,0);clip-path:inset(50%);height:1px;overflow:hidden;padding:0;white-space:nowrap;width:1px;position:absolute!important}}.c-pdf-container{display:flex;justify-content:flex-end}@media only screen and (max-width:767px){.c-pdf-container .c-pdf-download{display:flex;flex-basis:100%}}.c-pdf-container .c-pdf-download+.c-pdf-download{margin-left:16px}.c-article-extras .c-pdf-container .c-pdf-download{width:100%}.c-article-extras .c-pdf-container .c-pdf-download+.c-pdf-download{margin-left:0}@media only screen and (min-width:768px){.c-context-bar--sticky .c-pdf-download__link{flex:1 1 183px;align-items:center}}@media only screen and (max-width:320px){.c-context-bar--sticky .c-pdf-download__link{padding:16px}}.article-page--commercial .c-article-main-column .c-pdf-button__container .c-pdf-download{display:none}@media only screen and (max-width:1023px){.article-page--commercial .c-article-main-column .c-pdf-button__container .c-pdf-download{display:block}}.c-recommendations-column-switch .c-meta{margin-top:auto}.c-context-bar{position:relative;width:100%;box-shadow:0 0 10px 0 rgba(51,51,51,.2)}.c-context-bar__container{margin:0 auto;max-width:1280px;padding:0 16px}.c-context-bar__title{display:none}.app-researcher-popup__link.hover,.app-researcher-popup__link.visited,.app-researcher-popup__link:hover,.app-researcher-popup__link:visited,.c-article-metrics__heading a,.c-article-metrics__posts .c-card__title a{color:inherit}.c-article-authors-search__list{display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:center}@media only screen and (min-width:480px){.c-article-authors-search__list{justify-content:normal}}.c-article-authors-search__text{display:flex;align-items:center;flex-flow:column wrap;justify-content:center;font-size:14px}@media only screen and (min-width:480px){.c-article-authors-search__text{font-size:16px;flex-direction:row}}.c-article-authors-search__links-text{font-weight:700;margin-right:8px;text-align:center}@media only screen and (min-width:480px){.c-article-authors-search__links-text{text-align:left}}.c-article-authors-search__list-item--left{flex:1 1 100%}@media only screen and (min-width:480px){.c-article-authors-search__list-item--left{flex-basis:auto}}.c-article-authors-search__list-item--right{flex:1 1 auto}.c-article-authors-search__list .c-article-identifiers{margin:0}.c-article-authors-search__list .c-article-identifiers__item{color:#222;border-right:2px solid #c5e0f4;font-size:14px}@media only screen and (min-width:480px){.c-article-authors-search__list .c-article-identifiers__item{font-size:16px}}.c-article-authors-search__list .c-article-identifiers__item:last-child{border-right:none}.eds-l-with-sidebar{display:flex;flex-wrap:wrap}.eds-l-with-sidebar>*{margin:0}.eds-l-with-sidebar__sidebar{flex-grow:1;min-width:var(--eds-l-with-sidebar--min-width,400px);flex-basis:var(--eds-l-with-sidebar--basis,400px)}.eds-l-with-sidebar>:not(.eds-l-with-sidebar__sidebar){flex-basis:0px;flex-grow:999;min-width:var(--eds-l-with-sidebar--min,50%)}.eds-l-with-sidebar>:first-child{padding-right:4rem}@supports (gap:1em){.eds-l-with-sidebar>:first-child{padding-right:0}.eds-l-with-sidebar{gap:var(--eds-l-with-sidebar--gap,4rem)}}.c-article-metrics__posts .c-card__title{font-size:1.05rem}.c-article-metrics__posts .c-card__title+span{color:#6f6f6f;font-size:1rem}.c-status-message{display:flex;align-items:center;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;font-size:1rem;position:relative;width:100%;box-sizing:border-box}.c-card__summary>p:last-child,.c-status-message :last-child{margin-bottom:0}.c-status-message--boxed{background-color:#fff;border-radius:2px;border:1px solid #eee;line-height:1.5;padding:16px}.c-status-message__heading{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;font-size:1rem;font-weight:700}.c-status-message__icon{fill:currentcolor;transform:translate(0);display:inline-block;vertical-align:text-top;width:1.5em;height:1.5em;flex:0 0 auto;margin-right:8px}.c-status-message__icon--top{align-self:flex-start}.c-status-message--info .c-status-message__icon{color:#17758c}.c-status-message--boxed.c-status-message--info{border-bottom:4px solid #17758c}.c-status-message--error .c-status-message__icon{color:#be1818}.c-status-message--boxed.c-status-message--error{border-bottom:4px solid #be1818}.c-status-message--success .c-status-message__icon{color:#007a4b}.c-status-message--boxed.c-status-message--success{border-bottom:4px solid #007a4b}.c-status-message--warning .c-status-message__icon{color:#daa520}.c-status-message--boxed.c-status-message--warning{border-bottom:4px solid #daa520}.c-breadcrumbs{list-style:none;margin:0;padding:0;font-size:1rem;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;color:#000}.c-breadcrumbs>li{display:inline}.c-breadcrumbs__link{color:#666}svg.c-breadcrumbs__chevron{margin:4px 4px 0;fill:#666;width:10px;height:10px}@media only screen and (max-width:767px){.c-breadcrumbs .c-breadcrumbs__item{display:none}.c-breadcrumbs .c-breadcrumbs__item:last-child,.c-breadcrumbs .c-breadcrumbs__item:nth-last-child(2){display:inline}}.c-card{display:flex;background-color:transparent;flex-direction:column;font-size:.875rem;min-width:0;padding:0;position:relative;border:0;box-shadow:none;overflow:hidden}.c-card--no-shape{border:0;box-shadow:none;background:0 0}.c-card__image{position:relative;display:flex;justify-content:center;overflow:hidden;padding-bottom:56.25%}@supports (aspect-ratio:1/1){.c-card__image{padding-bottom:0;aspect-ratio:var(--card--image-aspect-ratio,16/9)}}.c-card__image img{position:absolute;left:0;min-width:100%;min-height:100%}@supports ((-o-object-fit:cover) or (object-fit:cover)){.c-card__image img{width:100%;height:100%;object-fit:cover}}.c-card__body{padding:16px;flex:1 1 auto}.c-card--no-shape .c-card__body{padding:0}.c-card--no-shape .c-card__body:not(:first-child){padding-top:16px}.c-card__title{font-family:Harding,Palatino,serif;font-weight:700;-webkit-font-smoothing:antialiased;font-size:clamp(1.25rem,4vw,1.5rem);margin-top:0;margin-bottom:8px;letter-spacing:-.01875rem}[lang=de] .c-card__title{hyphens:auto}.c-card__summary{line-height:1.4}.c-card__summary>p{margin-bottom:5px}.c-card__summary a{text-decoration:underline}.c-card__link:not(.c-card__link--no-block-link):before{content:"";position:absolute;inset:0}.c-card--flush .c-card__body{padding:0}.c-card--major{font-size:1rem}.c-card--major .c-card__title{font-family:Harding,Palatino,serif;font-weight:700;line-height:1.2;-webkit-font-smoothing:antialiased;font-size:clamp(1.5rem,4vw,1.75rem)}.c-card--dark{background-color:#29303c;color:#e3e4e5;border-width:0}.c-card--dark .c-card__title,.c-footer{color:#fff}.c-card--dark .c-card__link,.c-card--dark .c-card__summary a,.c-meta{color:inherit}.c-meta{list-style:none;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;font-size:.875rem;line-height:1.4}.c-meta--large{font-size:1rem}.c-meta--large .c-meta__item{margin-bottom:8px}.c-meta__item{display:inline-block;margin-bottom:4px}.c-meta__item:not(:last-child){border-right:1px solid #f3f3f3;padding-right:4px;margin-right:4px}@media only screen and (max-width:767px){.c-meta__item--block-sm-max{display:block}.c-meta__item--block-sm-max:not(:last-child){border-right:none;margin-right:0;padding-right:0}}@media only screen and (min-width:1024px){.c-meta__item--block-at-lg{display:block}.c-meta__item--block-at-lg:not(:last-child){border-right:none;margin-right:0;padding-right:0}}.c-meta__type{text-transform:none;font-weight:700}.c-skip-link{background:#069;color:#fff;font-size:.875rem;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;text-align:center;padding:8px;position:absolute;inset:0 0 auto;z-index:9999;transform:translateY(-100%)}@media (prefers-reduced-motion:reduce){.c-skip-link{transition:top .3s ease-in-out}}@media print{.c-skip-link{display:none}}.c-skip-link:link{color:#fff}.c-nature-box{background-color:#fff;border-radius:2px;box-shadow:0 0 5px 0 rgba(51,51,51,.1);border:1px solid #d5d5d5;line-height:1.3;padding:16px 16px 3px;margin-bottom:24px}.c-nature-box__text{font-size:1rem;margin-top:0;margin-bottom:16px!important}.c-nature-box--access-to-pdf{display:none}@media only screen and (min-width:1024px){.c-nature-box--mobile{display:none}}.c-nature-box .c-pdf-download{margin-bottom:16px!important}.c-nature-box svg+.c-article__button-text{margin-left:8px}.c-nature-box--version{background-color:#eee}.c-nature-box:not(:has(*)),.js-context-bar-sticky-point-desktop:not(:has(*)){display:none}.app-masthead-save-research,.app-save-research-buttons{display:flex;gap:8px;align-items:flex-start;flex-direction:column;text-wrap:balance}@media only screen and (min-width:768px){.app-masthead-save-research,.app-save-research-buttons{align-items:center;flex-direction:row;text-align:start}}.app-masthead-save-research__hide-on-lg,.app-masthead__container .app-masthead-save-research__hide-on-lg{display:block;visibility:visible}@media only screen and (min-width:875px){.app-masthead-save-research__hide-on-lg,.app-masthead__container .app-masthead-save-research__hide-on-lg{display:none;visibility:hidden}.app-masthead-save-research__hide-on-lg:first-child+*,.app-masthead__container .app-masthead-save-research__hide-on-lg:first-child+*{margin-block-start:0}}.article-page--news .app-masthead-save-research__hide-on-lg{display:block;visibility:visible}@media only screen and (min-width:768px){.article-page--news .app-masthead-save-research__hide-on-lg{display:none;visibility:hidden}.article-page--news .app-masthead-save-research__hide-on-lg:first-child+*{margin-block-start:0}}.app-masthead-save-research__action-button{cursor:pointer;border:0;background-color:transparent;font-weight:inherit;padding:0;color:#424d61;text-decoration:underline .0625rem;text-decoration-skip-ink:auto;text-underline-offset:.25rem;display:inline-block;font-size:clamp(.875rem,.625rem + 1.25vw,1rem);line-height:2;text-align:left}@media only screen and (min-width:1024px){.app-masthead-save-research__action-button{text-align:center}}.app-masthead-save-research__action-button:hover{color:#29303c;text-decoration-thickness:.25rem;text-underline-offset:.25rem}.app-masthead-save-research__action-link{display:inline-block;font-size:clamp(.875rem,.625rem + 1.25vw,1rem);line-height:2}.app-masthead-save-research__icon{fill:currentcolor;transform:translate(0);display:inline-block;width:24px;height:24px;flex:0 0 auto;vertical-align:middle}*+.app-masthead-save-research__icon,.app-masthead-save-research .app-masthead-save-research__icon+*{margin-left:4px}@media only screen and (min-width:480px){*+.app-masthead-save-research__icon,.app-masthead-save-research .app-masthead-save-research__icon+*{margin-left:8px}}.app-masthead-save-research__icon--small{fill:currentcolor;transform:translate(0);display:inline-block;width:16px;height:16px}.app-journal-saved-research-status-container .eds-c-status-message{background-color:inherit;border:0;border-radius:0;padding:16px 0;gap:10px}.app-journal-saved-research-status-container .eds-c-status-message--success{border-bottom:none}.app-journal-saved-research-status-container .eds-c-status-message__dismiss-button{right:0;padding:0}.app-journal-saved-research-status-container .eds-c-status-message__icon{margin-right:0}.app-journal-saved-research-status-container .eds-c-status-message__message span{font-weight:700;border-right:2px solid #c5e0f4;margin-right:8px;padding-right:8px}.c-meta__link{color:#000}.sans-serif{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif}.article-page{background:#fff}.c-header{background-color:#fff;border-bottom:5px solid #000;font-size:1rem;margin-bottom:16px;line-height:1.4}.c-header__row{position:relative;padding:0}.c-header__row:not(:last-child){border-bottom:1px solid #eee}.c-header__split{display:flex;align-items:center;justify-content:space-between}.c-header__logo-container{flex:1 1 0px;margin:8px 24px 8px 0;line-height:0}.c-header__logo{transform:translateZ(0)}.c-header__logo img{max-height:32px}.c-header__container{margin:0 auto;max-width:1280px}@media print{.c-header__menu{display:none}}.c-header__menu{list-style:none;padding:0;display:flex;gap:8px;align-items:center;flex-wrap:wrap;flex:0 1 auto;font-weight:700;line-height:1.4;margin:0 -4px}@media only screen and (max-width:1023px){.c-header__menu--hide-lg-max{display:none;visibility:hidden}}.c-header__menu--global{font-weight:400;justify-content:flex-end}.c-header__menu--global svg{display:none;visibility:hidden}.c-header__menu--global svg:first-child+*{margin-block-start:0}@media only screen and (min-width:768px){.c-header__menu--global svg{display:block;visibility:visible}}.c-header__menu--journal{font-size:.875rem;margin:8px 0 8px -8px}@media only screen and (min-width:768px){.c-header__menu--journal{flex-wrap:nowrap;font-size:1rem}}.c-header__item{position:static;padding-top:0;padding-bottom:0}.c-header__item--pipe{border-left:2px solid #eee;padding-left:8px}.c-header__item--padding{padding-top:8px;padding-bottom:8px}@media only screen and (min-width:768px){.c-header__item--dropdown-menu{position:relative}}@media only screen and (min-width:1024px){.c-header__item--hide-lg{display:none;visibility:hidden}}@media only screen and (max-width:875px){.c-header__item--hide-md-max{display:none;visibility:hidden}.c-header__item--hide-md-max:first-child+*{margin-block-start:0}}.c-header__link{color:inherit;padding:8px;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}.c-header__link svg{transition-duration:.2s}.c-header__show-text{display:none;visibility:hidden}.has-tethered .c-header__heading--js-hide:first-child+*{margin-block-start:0}@media only screen and (min-width:768px){.c-header__show-text{display:inline;visibility:visible}}.c-header__show-text-sm{display:inline;visibility:visible}@media only screen and (min-width:768px){.c-header__show-text-sm{display:none;visibility:hidden}.c-header__show-text-sm:first-child+*{margin-block-start:0}}@media print{.c-header__dropdown{display:none}}.c-header__dropdown{background-color:#000;border-bottom:1px solid #2f2f2f;color:#eee;padding:16px 0;font-size:.875rem;line-height:1.2}.c-header__heading{display:inline-block;line-height:1.4;font-size:1.25rem;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;font-weight:400;margin-bottom:8px}.c-header__heading--keyline{border-top:1px solid;border-color:#2f2f2f;padding-top:16px;margin-top:16px;width:100%}.c-header__list{list-style:none;display:flex;flex-wrap:wrap;gap:0 16px;margin:0 -8px}.c-header__flush{margin:0 -8px}.c-header__visually-hidden{border:0;clip:rect(0,0,0,0);clip-path:inset(50%);height:1px;overflow:hidden;padding:0;white-space:nowrap;width:1px;position:absolute!important}.c-header__search-form{margin-bottom:8px}.c-header__search-layout{display:flex;gap:16px;flex-wrap:wrap}.c-header__search-layout>:first-child{flex:999 1 auto}.c-header__search-layout>*{flex:1 1 auto}.c-header__search-layout--max-width{max-width:720px}.c-header__search-button{align-items:center;cursor:pointer;display:flex;width:100%;margin:0;position:relative;text-decoration:none;font-size:1rem;line-height:1.15;justify-content:center;padding:8px 16px;transition:background-color .2s ease-in-out,border-color .2s ease-in-out,color .2s ease-in-out;border-radius:2px;border:1px solid #fff;color:#fff;background-color:transparent;background-image:none}.c-header__input,.c-header__select{padding:8px 16px;border:1px solid;border-radius:3px;font-size:1rem;width:100%;box-sizing:border-box}.c-header__select{display:block;min-width:150px;max-width:100%;margin:0;box-shadow:0 1px 0 1px rgba(0,0,0,.04);appearance:none;background-image:url("data:image/svg+xml,%3Csvg height='16' viewBox='0 0 16 16' width='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m5.58578644 3-3.29289322-3.29289322c-.39052429-.39052429-.39052429-1.02368927 0-1.41421356s1.02368927-.39052429 1.41421356 0l4 4c.39052429.39052429.39052429 1.02368927 0 1.41421356l-4 4c-.39052429.39052429-1.02368927.39052429-1.41421356 0s-.39052429-1.02368927 0-1.41421356z' fill='%23333' fill-rule='evenodd' transform='matrix(0 1 -1 0 11 3)'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .7em top 50%;background-size:1em auto}.u-button svg,.u-button--primary svg{fill:currentcolor}@media only screen and (min-width:768px){.c-header__menu--journal .c-header__item--dropdown-menu:last-child .c-header__dropdown.has-tethered{left:auto;right:0}}@media only screen and (min-width:876px){.c-header__menu--journal .c-header__item--dropdown-menu:last-child .c-header__dropdown.has-tethered{left:0;right:auto}}.c-header__dropdown.has-tethered{position:absolute;top:100%;transform:translateY(5px);z-index:2;left:0;width:100%;border-radius:0 0 2px 2px;border-bottom:0}@media only screen and (min-width:768px){.c-header__dropdown.has-tethered{transform:translateY(8px);width:auto}}@media only screen and (min-width:876px){.c-header__dropdown.has-tethered{min-width:225px}}.c-header__dropdown--full-width.has-tethered{width:100%;padding:32px 0 24px;transform:none}.has-tethered .c-header__heading--js-hide{display:none;visibility:hidden}.has-tethered .c-header__list--js-stack{flex-direction:column}.has-tethered .c-header__item--keyline,.has-tethered .c-header__list~.c-header__list .c-header__item:first-child{border-top:1px solid #f3f3f3;padding-top:8px;margin-top:8px}.c-header__item--snid-account-widget{display:flex}.c-header__container{padding:0 4px}.c-header__list{padding:0 12px}.c-header__menu .c-header__link{font-size:14px}.c-header__item--snid-account-widget .c-header__link{padding:8px}.c-header__menu--journal{margin-left:0}@media only screen and (min-width:768px){.c-header__container{padding:0 16px}.c-header__menu--journal{margin-left:-8px}.c-header__menu .c-header__link{font-size:16px}.c-header__link--search{gap:13px}}.u-button{align-items:center;cursor:pointer;display:inline-flex;margin:0;position:relative;text-decoration:none;width:auto;font-family:sans-serif;font-size:1rem;line-height:1.3;justify-content:center;padding:8px;transition:.25s,color .25s,border-color .25s;border-radius:2px;background-color:transparent;background-image:none;color:#069;border:1px solid #069}.u-button--primary{color:#fff;background-color:#069;background-image:none;border:1px solid #069}.u-button--full-width{display:flex;width:100%}.u-container{margin:0 auto;max-width:1280px;padding:0 16px}.u-justify-content-space-between{justify-content:space-between}.u-display-none{display:none}.js .u-js-hide,.u-hide{display:none;visibility:hidden}.u-hide:first-child+*{margin-block-start:0}.u-visually-hidden{border:0;clip:rect(0,0,0,0);clip-path:inset(50%);height:1px;overflow:hidden;padding:0;white-space:nowrap;width:1px;position:absolute!important}@media print{.u-hide-print{display:none}}@media only screen and (min-width:1024px){.u-hide-at-lg{display:none;visibility:hidden}.u-hide-at-lg:first-child+*{margin-block-start:0}}.u-icon{fill:currentcolor;transform:translate(0);display:inline-block;vertical-align:text-top;width:1em;height:1em}.u-full-height{height:100%}.u-list-reset{list-style:none;margin:0;padding:0}.c-reading-companion__figure-item figure{margin:0}.u-mt-8{margin-top:8px}.u-mt-24{margin-top:24px}.u-mb-8{margin-bottom:8px}.u-mb-16{margin-bottom:16px}.u-mb-24{margin-bottom:24px}.u-mb-32{margin-bottom:32px}.u-mb-48{margin-bottom:48px}.u-pa-16{padding:16px}.u-h3{font-size:clamp(1.25rem,4vw,1.5rem)}.u-h3,.u-h4{-webkit-font-smoothing:antialiased;font-size:1.25rem}.app-feedback .app-feedback__message--success .eds-c-status-message__icon{color:#007a4b}.u-h3,.u-h4,h1,h2,h3{font-family:Harding,Palatino,serif;font-weight:700;line-height:1.2}h1{letter-spacing:min(max(-.0117156rem,4vw),-.0390625rem)}.u-h3,.u-h4,h2,h3{letter-spacing:-.0117156rem}.c-article-sidebar{display:none}@media only screen and (min-width:1024px){.c-article-sidebar{display:block;margin-top:8px}}.c-article-section__title,.c-article-title{font-weight:700}.c-card__title{line-height:1.4em}.c-article-associated-content__container .c-card__title{font-size:min(max(1.125rem,3vw),1.25rem)}.c-article__button{background-color:#069;border:1px solid #069;border-radius:2px;color:#fff;font-size:.875rem;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;line-height:1.4;margin-bottom:16px;padding:13px;text-decoration:none;transition:background-color .2s ease-out,color .2s ease-out;display:flex}.c-article__button:hover{background-color:#fff;color:#069;text-decoration:none}.c-article__button:visited{color:#fff}.c-article__button--inverted{background-color:#fff;color:#069}.c-article__button--inverted:hover{background-color:#069;color:#fff}.c-article__button--inverted:visited{color:#069}.grade-c-hide{display:block}.c-pdf-download__link{padding:13px 24px}.u-color-open-access{color:#b74616} }
+(function () {
+        if ( typeof window.CustomEvent === "function" ) return false;
+        function CustomEvent ( event, params ) {
+            params = params || { bubbles: false, cancelable: false, detail: null };
+            var evt = document.createEvent( 'CustomEvent' );
+            evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+            return evt;
+        }
+
+        CustomEvent.prototype = window.Event.prototype;
+
+        window.CustomEvent = CustomEvent;
+    })();
+window.initGTM = function() {
+        if (window.config.mustardcut) {
+            (function (w, d, s, l, i) {
+                w[l] = w[l] || [];
+                w[l].push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+                var f = d.getElementsByTagName(s)[0],
+                        j = d.createElement(s),
+                        dl = l != 'dataLayer' ? '&l=' + l : '';
+                j.async = true;
+                j.src = 'https://sgtm.nature.com/gtm.js?id=' + i + dl;
+                f.parentNode.insertBefore(j, f);
+            })(window, document, 'script', 'dataLayer', 'GTM-MRVXSHQ');
+        }
+    }
+(function(w,d,t) {
+        function cc() {
+            var h = w.location.hostname;
+            if (h === 'preview-www.nature.com') return;
+            var e = d.createElement(t),
+                s = d.getElementsByTagName(t)[0];
+            e.setAttribute('crossorigin', 'anonymous');
+            if (h === 'nature.com' || h.endsWith('.nature.com')) {
+                e.src = 'https://cmp.nature.com/production_live/en/consent-bundle-8-latest.js';
+                
+                    e.setAttribute('onload', "initGTM(window,document,'script','dataLayer','GTM-MRVXSHQ')");
+                
+            } else {
+                e.src = '/oscar-static/js/cookie-consent-es5-bundle-c7e13f01d7.js';
+                e.setAttribute('data-consent', h);
+            }
+            s.insertAdjacentElement('afterend', e);
+        }
+        cc();
+    })(window,document,'script');
+(function(w, d) {
+        var moduleSupport = (function() {
+            return 'noModule' in d.createElement('script');
+        })();
+
+        if (w.config.mustardcut === true) {
+            w.loader = {
+                index: 0,
+                registered: [],
+                scripts: [
+                    
+                        {src: '/oscar-static/js/global-article-es6-bundle-f2e8a58cc7.js', test: 'global-article-js', module: true},
+                        {src: '/oscar-static/js/global-article-es5-bundle-d6d0db2d84.js', test: 'global-article-js', nomodule: true},
+                        {src: '/oscar-static/js/shared-es6-bundle-269e7f3e90.js', test: 'shared-js', module: true},
+                        {src: '/oscar-static/js/shared-es5-bundle-88de4f3978.js', test: 'shared-js', nomodule: true},
+                        {src: '/oscar-static/js/header-150-es6-bundle-8395667412.js', test: 'header-150-js', module: true},
+                        {src: '/oscar-static/js/header-150-es5-bundle-95c03c3888.js', test: 'header-150-js', nomodule: true}
+                    
+                ].filter(function (s) {
+                    if (s.src === null) return false;
+                    if (moduleSupport && s.nomodule) return false;
+                    return !(!moduleSupport && s.module);
+                }),
+
+                register: function (value) {
+                    this.registered.push(value);
+                },
+
+                ready: function () {
+                    if (this.registered.length === this.scripts.length) {
+                        this.registered.forEach(function (fn) {
+                            if (typeof fn === 'function') {
+                                setTimeout(fn, 0); 
+                            }
+                        });
+                        this.ready = function () {};
+                    }
+                },
+
+                insert: function (s) {
+                    var t = d.getElementById('js-position' + this.index);
+                    if (t && t.insertAdjacentElement) {
+                        t.insertAdjacentElement('afterend', s);
+                    } else {
+                        d.head.appendChild(s);
+                    }
+                    ++this.index;
+                },
+
+                createScript: function (script, beforeLoad) {
+                    var s = d.createElement('script');
+                    s.id = 'js-position' + (this.index + 1);
+                    s.setAttribute('data-test', script.test);
+                    if (beforeLoad) {
+                        s.defer = 'defer';
+                        s.onload = function () {
+                            if (script.noinit) {
+                                loader.register(true);
+                            }
+                            if (d.readyState === 'interactive' || d.readyState === 'complete') {
+                                loader.ready();
+                            }
+                        };
+                    } else {
+                        s.async = 'async';
+                    }
+                    s.src = script.src;
+                    return s;
+                },
+
+                init: function () {
+                    this.scripts.forEach(function (s) {
+                        loader.insert(loader.createScript(s, true));
+                    });
+
+                    d.addEventListener('DOMContentLoaded', function () {
+                        loader.ready();
+                        var conditionalScripts;
+                        
+                            conditionalScripts = [
+                                {match: 'div[data-pan-container]', src: '/oscar-static/js/pan-zoom-es6-bundle-1a117d29d6.js', test: 'pan-zoom-js',  module: true },
+                                {match: 'div[data-pan-container]', src: '/oscar-static/js/pan-zoom-es5-bundle-1a117d29d6.js', test: 'pan-zoom-js',  nomodule: true },
+                                {match: 'math,span.mathjax-tex', src: '/oscar-static/js/math-es6-bundle-8da0cf81d9.js', test: 'math-js', module: true},
+                                {match: 'math,span.mathjax-tex', src: '/oscar-static/js/math-es5-bundle-8da0cf81d9.js', test: 'math-js', nomodule: true}
+                            ];
+                        
+
+                        if (conditionalScripts) {
+                            conditionalScripts.filter(function (script) {
+                                return !!document.querySelector(script.match) && !((moduleSupport && script.nomodule) || (!moduleSupport && script.module));
+                            }).forEach(function (script) {
+                                loader.insert(loader.createScript(script));
+                            });
+                        }
+                    }, false);
+                }
+            };
+            loader.init();
+        }
+    })(window, document);
+{"mainEntity":{"headline":"The Virtual Lab of AI agents designs new SARS-CoV-2 nanobodies","description":"Science frequently benefits from teams of interdisciplinary researchers1–3, but many scientists do not have easy access to experts from multiple fields4,5. Although large language models (LLMs) have shown an impressive ability to aid researchers across diverse domains, their uses have been largely limited to answering specific scientific questions rather than performing open-ended research6–11. Here we expand the capabilities of LLMs for science by introducing the Virtual Lab, an artificial intelligence (AI)–human research collaboration to perform sophisticated, interdisciplinary science research. The Virtual Lab consists of an LLM Principal Investigator agent guiding a team of LLM scientist agents through a series of research meetings, with a human researcher providing high-level feedback. We applied the Virtual Lab to design nanobody binders to recent variants of SARS-CoV-2. The Virtual Lab created a novel computational nanobody design pipeline that incorporates the protein language model ESM, the protein folding model AlphaFold-Multimer and the computational biology software Rosetta and designed 92 new nanobodies. Experimental validation reveals a range of functional nanobodies with promising binding profiles across SARS-CoV-2 variants. In particular, two new nanobodies exhibit improved binding to the recent JN.1 or KP.3 variants12,13 while maintaining strong binding to the ancestral viral spike protein, suggesting that these are suitable candidates for further investigation. This work demonstrates how the Virtual Lab can rapidly make an impactful, real-world scientific discovery. Human collaboration with a team of artificial intelligence (AI) agents powered by large language models was used to efficiently design a complex interdisciplinary research project leading to the design of novel nanobodies against SARS-CoV-2 spike protein.","datePublished":"2025-07-29T00:00:00Z","dateModified":"2025-07-29T00:00:00Z","pageStart":"716","pageEnd":"723","sameAs":"https://doi.org/10.1038/s41586-025-09442-9","keywords":["Computer science","Computational models","Science","Humanities and Social Sciences","multidisciplinary"],"image":["https://media.springernature.com/lw1200/springer-static/image/art%3A10.1038%2Fs41586-025-09442-9/MediaObjects/41586_2025_9442_Fig1_HTML.png","https://media.springernature.com/lw1200/springer-static/image/art%3A10.1038%2Fs41586-025-09442-9/MediaObjects/41586_2025_9442_Fig2_HTML.png","https://media.springernature.com/lw1200/springer-static/image/art%3A10.1038%2Fs41586-025-09442-9/MediaObjects/41586_2025_9442_Fig3_HTML.png","https://media.springernature.com/lw1200/springer-static/image/art%3A10.1038%2Fs41586-025-09442-9/MediaObjects/41586_2025_9442_Fig4_HTML.png","https://media.springernature.com/lw1200/springer-static/image/art%3A10.1038%2Fs41586-025-09442-9/MediaObjects/41586_2025_9442_Fig5_HTML.png"],"isPartOf":{"name":"Nature","issn":["1476-4687","0028-0836"],"volumeNumber":"646","@type":["Periodical","PublicationVolume"]},"publisher":{"name":"Nature Publishing Group UK","logo":{"url":"https://www.springernature.com/app-sn/public/images/logo-springernature.png","@type":"ImageObject"},"@type":"Organization"},"author":[{"name":"Kyle Swanson","url":"http://orcid.org/0000-0002-7385-7844","affiliation":[{"name":"Stanford University","address":{"name":"Department of Computer Science, Stanford University, Stanford, USA","@type":"PostalAddress"},"@type":"Organization"}],"@type":"Person"},{"name":"Wesley Wu","url":"http://orcid.org/0000-0003-4594-0699","affiliation":[{"name":"Chan Zuckerberg Biohub","address":{"name":"Chan Zuckerberg Biohub, San Francisco, USA","@type":"PostalAddress"},"@type":"Organization"}],"@type":"Person"},{"name":"Nash L. Bulaong","affiliation":[{"name":"Chan Zuckerberg Biohub","address":{"name":"Chan Zuckerberg Biohub, San Francisco, USA","@type":"PostalAddress"},"@type":"Organization"}],"@type":"Person"},{"name":"John E. Pak","url":"http://orcid.org/0000-0002-2998-9735","affiliation":[{"name":"Chan Zuckerberg Biohub","address":{"name":"Chan Zuckerberg Biohub, San Francisco, USA","@type":"PostalAddress"},"@type":"Organization"}],"email":"john.pak@czbiohub.org","@type":"Person"},{"name":"James Zou","url":"http://orcid.org/0000-0001-8880-4764","affiliation":[{"name":"Stanford University","address":{"name":"Department of Computer Science, Stanford University, Stanford, USA","@type":"PostalAddress"},"@type":"Organization"},{"name":"Chan Zuckerberg Biohub","address":{"name":"Chan Zuckerberg Biohub, San Francisco, USA","@type":"PostalAddress"},"@type":"Organization"},{"name":"Stanford University","address":{"name":"Department of Biomedical Data Science, Stanford University, Stanford, USA","@type":"PostalAddress"},"@type":"Organization"}],"email":"jamesz@stanford.edu","@type":"Person"}],"isAccessibleForFree":false,"hasPart":{"isAccessibleForFree":false,"cssSelector":".main-content","@type":"WebPageElement"},"@type":"ScholarlyArticle"},"@context":"https://schema.org","@type":"WebPage"}
+Skip to main content
+Thank you for visiting nature.com. You are using a browser version with limited support for CSS. To obtain
+            the best experience, we recommend you use a more up to date browser (or turn off compatibility mode in
+            Internet Explorer). In the meantime, to ensure continued support, we are displaying the site without styles
+            and JavaScript.
+Advertisement
+window.SN = window.SN || {};
+            window.SN.libs = window.SN.libs || {};
+            window.SN.libs.ads = window.SN.libs.ads || {};
+            window.SN.libs.ads.slotConfig = window.SN.libs.ads.slotConfig || {};
+            
+                window.SN.libs.ads.slotConfig['top'] = {
+                    'pos': 'top',
+                    'type': 'article',
+                    'path': 's41586-025-09442-9'
+                };
+            
+            
+            window.SN.libs.ads.slotConfig['kwrd'] = 'Computer+science,Computational+models';
+            
+            
+            window.SN.libs.ads.slotConfig['subjmeta'] = '114,117,2397,631,639,705';
+            
+            
+            window.SN.libs.ads.slotConfig['techmeta'] = '119,82';
+View all journals
+Saved research
+Search
+Account
+Log in
+Content
+Explore content
+About
+the journal
+Publish
+with us
+Subscribe
+Sign up for alerts
+RSS feed
+nature
+articles
+article
+Article
+Published:
+29 July 2025
+The Virtual Lab of AI agents designs new SARS-CoV-2 nanobodies
+Kyle Swanson
+ORCID:
+orcid.org/0000-0002-7385-7844
+1
+,
+Wesley Wu
+ORCID:
+orcid.org/0000-0003-4594-0699
+2
+,
+Nash L. Bulaong
+2
+,
+John E. Pak
+ORCID:
+orcid.org/0000-0002-2998-9735
+2
+&
+…
+James Zou
+ORCID:
+orcid.org/0000-0001-8880-4764
+1
+,
+2
+,
+3
+Show authors
+Nature
+volume
+646
+,
+pages
+716–723 (
+2025
+)
+Cite this article
+Save article
+View saved research
+86k
+Accesses
+299
+Citations
+641
+Altmetric
+Metrics
+details
+Abstract
+Science frequently benefits from teams of interdisciplinary researchers
+1
+,
+2
+,
+3
+, but many scientists do not have easy access to experts from multiple fields
+4
+,
+5
+. Although large language models (LLMs) have shown an impressive ability to aid researchers across diverse domains, their uses have been largely limited to answering specific scientific questions rather than performing open-ended research
+6
+,
+7
+,
+8
+,
+9
+,
+10
+,
+11
+. Here we expand the capabilities of LLMs for science by introducing the Virtual Lab, an artificial intelligence (AI)–human research collaboration to perform sophisticated, interdisciplinary science research. The Virtual Lab consists of an LLM Principal Investigator agent guiding a team of LLM scientist agents through a series of research meetings, with a human researcher providing high-level feedback. We applied the Virtual Lab to design nanobody binders to recent variants of SARS-CoV-2. The Virtual Lab created a novel computational nanobody design pipeline that incorporates the protein language model ESM, the protein folding model AlphaFold-Multimer and the computational biology software Rosetta and designed 92 new nanobodies. Experimental validation reveals a range of functional nanobodies with promising binding profiles across SARS-CoV-2 variants. In particular, two new nanobodies exhibit improved binding to the recent JN.1 or KP.3 variants
+12
+,
+13
+while maintaining strong binding to the ancestral viral spike protein, suggesting that these are suitable candidates for further investigation. This work demonstrates how the Virtual Lab can rapidly make an impactful, real-world scientific discovery.
+This is a preview of subscription content,
+access via your institution
+Access options
+Access through your institution
+#lm-nature-buybox-content .c-journal-buybox{padding:2rem 1.5rem;border:1px solid #0070a8;border-radius:1rem;background-color:#f0f7fc;max-width:500px;margin:0 auto}#lm-nature-buybox-content .c-china-diversion h4{margin-top:0}#lm-nature-buybox-content .c-china-diversion p{margin-bottom:1.5rem}#lm-nature-buybox-content .c-buybox-option{display:flex;align-items:center;justify-content:center;margin-bottom:.5rem;padding:.75rem 1rem;border-radius:.5rem;font-size:1rem;text-align:center}#lm-nature-buybox-content .c-buybox-option__price{display:flex;flex-direction:column;align-items:center;white-space:nowrap}#lm-nature-buybox-content .c-buybox-option__price span{font-size:.875rem}#lm-nature-buybox-content .c-buybox-option__price .c-buybox-option__amount{font-size:1.75rem;font-weight:normal}#lm-nature-buybox-content .c-journal-buybox__content{display:flex;flex:1;flex-wrap:wrap;flex-direction:row-reverse;gap:1.5rem}#lm-nature-buybox-content .c-buybox-section--natureplus,#lm-nature-buybox-content .c-china-diversion,#lm-nature-buybox-content .c-buybox-tax{flex:1 1 100%}#lm-nature-buybox-content .c-buybox-section--subscribe{flex:4 1 300px}#lm-nature-buybox-content .c-buybox-section--article-buybox{flex:1 1 255px}#lm-nature-buybox-content .c-buybox-section{display:flex;flex-direction:column;align-items:center;text-align:center;padding:1.25rem;background:#f0f7fc;border-radius:.5rem}#lm-nature-buybox-content .c-buybox-section__heading,#lm-nature-buybox-content .title-readcube{margin:0 0 .5rem;font-size:1.5rem}#lm-nature-buybox-content .c-buybox-section__intro,#lm-nature-buybox-content .access-readcube{margin:0 0 1rem;font-size:.875rem;color:#555}#lm-nature-buybox-content .c-buybox-tax{font-size:.75rem;color:#555;text-align:center}#lm-nature-buybox-content .c-buybox-login__heading{margin:0 0 .5rem;font-weight:bold;font-size:.875rem}#lm-nature-buybox-content .c-buybox-login__list{display:flex;flex-wrap:wrap;justify-content:flex-start;gap:.25rem .75rem;list-style:none;padding:0;margin:0;font-size:1rem}#lm-nature-buybox-content .c-buybox-login__list li{display:flex;align-items:center;gap:.75rem}#lm-nature-buybox-content .c-buybox-login__list li:not(:first-child)::before{content:"|";color:#999}#lm-nature-buybox-content .c-buybox-login__list a{color:#0070a8;text-decoration:none}#lm-nature-buybox-content .readcube-buybox .box-inner{display:flex;flex-direction:column;align-items:center;text-align:center}#lm-nature-buybox-content .box-inner ul,#lm-nature-buybox-content .readcube-buybox ul{list-style:disc;padding-left:1.25rem;margin:0;text-align:left}#lm-nature-buybox-content .link-usp{padding-top:.25rem;text-align:start}#lm-nature-buybox-content .link-usp span{font-size:.875rem}#lm-nature-buybox-content .price-buybox,#lm-nature-buybox-content .price-buybox-to{margin:.5rem;font-size:1.75rem;text-align:center}#lm-nature-buybox-content .price-info-text{padding-right:.5rem;font-size:1rem}
+/*# sourceMappingURL=buybox-fragment-31b50dd.css.map */
+Access Nature and 54 other Nature Portfolio journals
+Get Nature+, our best-value online-access subscription
+$39.99
+/ 30 days
+cancel any time
+Learn more
+Subscribe to this journal
+Receive 51 print issues and online access
+$199.00
+per year
+only $3.90 per issue
+Learn more
+Buy this article
+Purchase on SpringerLink
+Instant access to the full article PDF.
+USD 39.95
+Prices may be subject to local taxes which are calculated during checkout
+Additional access options:
+Log in
+Learn about institutional subscriptions
+Read our FAQs
+Contact customer support
+Fig. 1: The Virtual Lab architecture.
+Fig. 2: Virtual Lab for nanobody design.
+Fig. 3: Nb21 nanobody analysis.
+Fig. 4: Experimental validation of Virtual Lab nanobodies.
+Fig. 5: Virtual Lab discussion analysis.
+Similar content being viewed by others
+Antibody–nanobody combination increases their neutralizing activity against SARS-CoV-2 and nanobody H11-H4 is effective against Alpha, Kappa and Delta variants
+Article
+Open access
+11 June 2022
+AI-assisted scaffold-based nanobody design identifies Nb01 as a promising pan-variant candidate targeting SARS-CoV-2 3CLpro
+Article
+Open access
+31 August 2026
+A broad neutralizing nanobody against SARS-CoV-2 engineered from an approved drug
+Article
+Open access
+28 June 2024
+window.dataLayer = window.dataLayer || [];
+                window.dataLayer.push({
+                    recommendations: {
+                        recommender: 'semantic',
+                        model: 'e5',
+                        policy_id: null,
+                        timestamp: 1794119828,
+                        embedded_user: 'null'
+                    }
+                });
+Explore related subjects
+Discover the latest articles and news in related subjects.
+Computational models
+Computer science
+Artificial Intelligence Applications in Medical Education
+Data availability
+The computational results of the nanobody design pipeline and the experimental ELISA binding data are available on Zenodo at
+https://doi.org/10.5281/zenodo.15331308
+(ref.
+62
+).
+Code availability
+Code for the Virtual Lab, full discussions by the agents and computational scores for the designed nanobodies are available on GitHub at
+https://github.com/zou-group/virtual_lab
+and on Zenodo at
+https://doi.org/10.5281/zenodo.15320491
+(ref.
+63
+).
+References
+Porter, A. L. & Rafols, I. Is science becoming more interdisciplinary? Measuring and mapping six research fields over time.
+Scientometrics
+81
+, 719–745 (2009).
+Article
+Google Scholar
+Sijp, W. Paper authorship goes hyper.
+Nature Index
+www.nature.com/nature-index/news/paper-authorship-goes-hyper
+(2018).
+Castelvecchi, D. Physics paper sets record with more than 5,000 authors.
+Nature
+https://doi.org/10.1038/nature.2015.17567
+(2015).
+Specht, A. & Crowston, K. Interdisciplinary collaboration from diverse science teams can produce significant outcomes.
+PLoS ONE
+17
+, e0278043 (2022).
+Article
+CAS
+PubMed
+PubMed Central
+Google Scholar
+Cohen, J. J. et al. Tackling the challenge of interdisciplinary energy research: a research toolkit.
+Energy Res. Soc. Sci.
+74
+, 101966 (2021).
+Article
+Google Scholar
+Kung, T. H. et al. Performance of ChatGPT on USMLE: potential for AI-assisted medical education using large language models.
+PLOS Digit. Health
+2
+, e0000198 (2023).
+Article
+PubMed
+PubMed Central
+Google Scholar
+Singhal, K. et al. Large language models encode clinical knowledge.
+Nature
+620
+, 172–180 (2023).
+Article
+ADS
+CAS
+PubMed
+PubMed Central
+Google Scholar
+Laurent, J. M. et al. LAB-Bench: measuring capabilities of language models for biology research. Preprint at
+https://doi.org/10.48550/arXiv.2407.10362
+(2024).
+Guo, T. et al. What can large language models do in chemistry? A comprehensive benchmark on eight tasks.
+Adv. Neural Inf. Process. Syst.
+36
+, 59662–59688 (2023).
+ADS
+Google Scholar
+Sun, L. et al. SciEval: a multi-level large language model evaluation benchmark for scientific research.
+Proc. AAAI Conf. Artif. Intell.
+38
+, 19053–19061 (2024).
+Google Scholar
+Stribling, D. et al. The model student: GPT-4 performance on graduate biomedical science exams.
+Sci. Rep.
+14
+, 5670 (2024).
+Article
+ADS
+CAS
+PubMed
+PubMed Central
+Google Scholar
+Kaku, Y. et al. Virological characteristics of the SARS-CoV-2 JN.1 variant.
+Lancet Infect. Dis.
+24
+, e82 (2024).
+Article
+CAS
+PubMed
+Google Scholar
+Kaku, Y. et al. Virological characteristics of the SARS-CoV-2 KP.3, LB.1, and KP.2.3 variants.
+Lancet Infect. Dis.
+24
+, e482–e483 (2024).
+Article
+CAS
+PubMed
+Google Scholar
+Jumper, J. et al. Highly accurate protein structure prediction with AlphaFold.
+Nature
+596
+, 583–589 (2021).
+Article
+ADS
+CAS
+PubMed
+PubMed Central
+Google Scholar
+Callaway, E. Chemistry Nobel goes to developers of AlphaFold AI that predicts protein structures.
+Nature
+634
+, 525–526 (2024).
+Article
+ADS
+CAS
+PubMed
+Google Scholar
+Bromham, L., Dinnage, R. & Hua, X. Interdisciplinary research has consistently lower funding success.
+Nature
+534
+, 684–687 (2016).
+Article
+ADS
+CAS
+PubMed
+Google Scholar
+OpenAI et al. GPT-4 Technical Report. Preprint at
+https://doi.org/10.48550/arXiv.2303.08774
+(2024).
+Anthropic. The Claude 3 Model Family: Opus, Sonnet, Haiku (Anthropic, 2024).
+Simon, E., Swanson, K. & Zou, J. Language models for biological research: a primer.
+Nat. Methods
+21
+, 1422–1429 (2024).
+Article
+CAS
+PubMed
+Google Scholar
+M. Bran, A. et al. Augmenting large language models with chemistry tools.
+Nat. Mach. Intell.
+6
+, 525–535 (2024).
+Article
+PubMed
+PubMed Central
+Google Scholar
+Boiko, D. A., MacKnight, R., Kline, B. & Gomes, G. Autonomous chemical research with large language models.
+Nature
+624
+, 570–578 (2023).
+Article
+ADS
+CAS
+PubMed
+PubMed Central
+Google Scholar
+Lu, C. et al. The AI scientist: towards fully automated open-ended scientific discovery. Preprint at
+https://doi.org/10.48550/arXiv.2408.06292
+(2024).
+Si, C., Yang, D. & Hashimoto, T. Can LLMs generate novel research ideas? A large-scale human study with 100+ NLP researchers. in
+13th Int. Conf. Learn. Represent.
+https://openreview.net/pdf?id=M23dTGWCZy
+(ICLR, 2025).
+Wu, Q. et al. AutoGen: enabling next-gen LLM applications via multi-agent conversation. In
+1st
+Conf. Lang. Model.
+https://openreview.net/forum?id=BAakY1hNKS
+(COLM, 2024).
+Gao, S. et al. Empowering biomedical discovery with AI agents.
+Cell
+187
+, 6125–6151 (2024).
+Article
+CAS
+PubMed
+Google Scholar
+Lin, Z. et al. Evolutionary-scale prediction of atomic-level protein structure with a language model.
+Science
+379
+, 1123–1130 (2023).
+Article
+ADS
+MathSciNet
+CAS
+PubMed
+Google Scholar
+Evans, R. et al. Protein complex prediction with AlphaFold-Multimer. Preprint at
+https://doi.org/10.1101/2021.10.04.463034
+(2021).
+Boorla, V. S. et al. De novo design and Rosetta‐based assessment of high‐affinity antibody variable regions (Fv) against the SARS‐CoV ‐2 spike receptor binding domain (RBD).
+Proteins Struct. Funct. Bioinformatics
+91
+, 196–208 (2023).
+Article
+CAS
+Google Scholar
+OpenAI et al. GPT-4o System Card. Preprint at
+https://doi.org/10.48550/arXiv.2410.21276
+(2024).
+Cao, Y. et al. Omicron escapes the majority of existing SARS-CoV-2 neutralizing antibodies.
+Nature
+602
+, 657–663 (2022).
+Article
+ADS
+CAS
+PubMed
+Google Scholar
+Planas, D. et al. Considerable escape of SARS-CoV-2 Omicron to antibody neutralization.
+Nature
+602
+, 671–675 (2022).
+Article
+ADS
+CAS
+PubMed
+Google Scholar
+Hanke, L. et al. An alpaca nanobody neutralizes SARS-CoV-2 by blocking receptor interaction.
+Nat. Commun.
+11
+, 4420 (2020).
+Article
+ADS
+CAS
+PubMed
+PubMed Central
+Google Scholar
+Huo, J. et al. Neutralizing nanobodies bind SARS-CoV-2 spike RBD and block interaction with ACE2.
+Nat. Struct. Mol. Biol.
+27
+, 846–854 (2020).
+Article
+CAS
+PubMed
+Google Scholar
+Xiang, Y. et al. Versatile and multivalent nanobodies efficiently neutralize SARS-CoV-2.
+Science
+370
+, 1479–1484 (2020).
+Article
+ADS
+CAS
+PubMed
+PubMed Central
+Google Scholar
+Wrapp, D. et al. Structural basis for potent neutralization of betacoronaviruses by single-domain camelid antibodies.
+Cell
+181
+, 1004–1015.e15 (2020).
+Article
+CAS
+PubMed
+PubMed Central
+Google Scholar
+Yin, R. & Pierce, B. G. Evaluation of AlphaFold antibody–antigen modeling with implications for improving predictive accuracy.
+Protein Sci.
+33
+, e4865 (2024).
+Article
+CAS
+PubMed
+PubMed Central
+Google Scholar
+Yang, J. et al. Computational design and modeling of nanobodies toward SARS‐CoV‐2 receptor binding domain.
+Chem. Biol. Drug Des.
+98
+, 1–18 (2021).
+Article
+CAS
+PubMed
+PubMed Central
+Google Scholar
+Hie, B. L. et al. Efficient evolution of human antibodies from general protein language models.
+Nat. Biotechnol.
+42
+, 275–283 (2024).
+Article
+CAS
+PubMed
+Google Scholar
+Planas, D. et al. Escape of SARS-CoV-2 variants KP.1.1, LB.1, and KP3.3 from approved monoclonal antibodies.
+Pathog. Immun.
+10
+, 1 (2024).
+Article
+PubMed
+PubMed Central
+Google Scholar
+Chan, C.-M. et al. ChatEval: towards better LLM-based evaluators through multi-agent debate. In
+12th Int. Conf. Learn. Represent.
+https://openreview.net/forum?id=FQepisCUWu
+(ICLR, 2024).
+Liu, Z., Zhang, Y., Li, P., Liu, Y. & Yang, D. A dynamic LLM-powered agent network for task-oriented agent collaboration. In
+1st
+Conf. on Lang. Model.
+https://openreview.net/forum?id=XII0Wp1XA9
+(COLM, 2024).
+Talebirad, Y. & Nadiri, A. Multi-agent collaboration: harnessing the power of intelligent LLM agents. Preprint at
+https://doi.org/10.48550/arXiv.2306.03314
+(2023).
+Wei, J. et al. Chain-of-thought prompting elicits reasoning in large language models. In
+Proc. 36th International Conference on Neural Information Processing Systems
+24824–24837 (Curran Associates, 2024).
+Cheng, J. et al. Dated data: tracing knowledge cutoffs in large language models. In
+1st Conf. Lang. Model.
+https://openreview.net/forum?id=wS7PxDjy6m
+(COLM, 2024).
+Abramson, J. et al. Accurate structure prediction of biomolecular interactions with AlphaFold 3.
+Nature
+630
+, 493–500 (2024).
+Article
+ADS
+CAS
+PubMed
+PubMed Central
+Google Scholar
+Lewis, P. et al. Retrieval-augmented generation for knowledge-intensive NLP tasks.
+Adv. Neural Inf. Process. Syst.
+33
+, 9459–9474 (2020).
+Google Scholar
+Gao, Y. et al. Retrieval-augmented generation for large language models: a survey. Preprint at
+https://doi.org/10.48550/arXiv.2312.10997
+(2024).
+Ding, N. et al. Parameter-efficient fine-tuning of large-scale pre-trained language models.
+Nat. Mach. Intell.
+5
+, 220–235 (2023).
+Article
+Google Scholar
+White, J. et al. A prompt pattern catalog to enhance prompt engineering with ChatGPT. In
+Proc. 30th Conference on Pattern Languages of Programs
+1–31 (Hillside Group, 2023).
+Ji, Z. et al. Survey of hallucination in natural language generation.
+ACM Comput. Surv.
+55
+, 1–38 (2023).
+Article
+Google Scholar
+Meng, E. C. et al. UCSF ChimeraX: tools for structure building and analysis.
+Protein Sci.
+32
+, e4792 (2023).
+Article
+CAS
+PubMed
+PubMed Central
+Google Scholar
+Yuksekgonul, M. et al. Optimizing generative AI by backpropagating language model feedback.
+Nature
+639
+, 609–616 (2025).
+Article
+ADS
+CAS
+PubMed
+Google Scholar
+Peeperkorn, M., Kouwenhoven, T., Brown, D. & Jordanous, A. Is temperature the creativity parameter of large language models? In
+15th Int. Conf. Comput. Creativity
+(Association for Computational Creativity, 2024).
+Chen, H. & Ding, N. Probing the “creativity” of large language models: can models produce divergent semantic association? In
+Findings of the Association for Computational Linguistics: EMNLP 2023
+(eds Bouamor, H., Pino, J. & Bali, K.) 12881–12888 (Association for Computational Linguistics, 2023).
+Chen, L. et al. Are more LLM calls all you need? Towards the scaling properties of compound AI systems. In
+38th Annual Conference on Neural Information Processing Systems
+(NeurIPS, 2024).
+Mirdita, M. et al. ColabFold: making protein folding accessible to all.
+Nat. Methods
+19
+, 679–682 (2022).
+Article
+CAS
+PubMed
+PubMed Central
+Google Scholar
+Kumar, S., Karuppanan, K. & Subramaniam, G. Omicron (BA.1) and sub-variants (BA.1.1, BA.2, and BA.3) of SARS-CoV-2 spike infectivity and pathogenicity: A comparative sequence and structural-based computational assessment.
+J. Med. Virol.
+94
+, 4780–4791 (2022).
+Article
+CAS
+PubMed
+PubMed Central
+Google Scholar
+Puccinelli, R. R. et al. Open-source milligram-scale, four channel, automated protein purification system.
+PLoS ONE
+19
+, e0297879 (2024).
+Article
+CAS
+PubMed
+PubMed Central
+Google Scholar
+Saez, N. J. & Vincentelli, R. in
+Structural Genomics: General Applications
+(ed. Chen, Y. W.) 33–53 (Humana Press, 2014).
+Pardon, E. et al. A general protocol for the generation of Nanobodies for structural biology.
+Nat. Protoc.
+9
+, 674–693 (2014).
+Article
+CAS
+PubMed
+PubMed Central
+Google Scholar
+Byrum, J. R. et al. MultiSero: an open-source multiplex-ELISA platform for measuring antibody responses to infection.
+Pathogens
+12
+, 671 (2023).
+Article
+CAS
+PubMed
+PubMed Central
+Google Scholar
+Swanson, K., Wu, W., Bulaong, N., Pak, J. & Zou, J. Virtual Lab Data.
+Zenodo
+https://doi.org/10.5281/zenodo.15331309
+(2025).
+Swanson, K. Virtual Lab Code.
+Zenodo
+https://doi.org/10.5281/zenodo.15320492
+(2025).
+Download references
+Acknowledgements
+The authors thank E. Simon and J. Silberg for their discussions of this work. K.S. acknowledges support from the Knight-Hennessy Scholarship and the Stanford Bio-X Fellowship. J.Z. is supported by funding from the Chan Zuckerberg Biohub, San Francisco.
+Author information
+Authors and Affiliations
+Department of Computer Science, Stanford University, Stanford, CA, USA
+Kyle Swanson & James Zou
+Chan Zuckerberg Biohub, San Francisco, CA, USA
+Wesley Wu, Nash L. Bulaong, John E. Pak & James Zou
+Department of Biomedical Data Science, Stanford University, Stanford, CA, USA
+James Zou
+Authors
+Kyle Swanson
+View author publications
+Search author on:
+PubMed
+Google Scholar
+Wesley Wu
+View author publications
+Search author on:
+PubMed
+Google Scholar
+Nash L. Bulaong
+View author publications
+Search author on:
+PubMed
+Google Scholar
+John E. Pak
+View author publications
+Search author on:
+PubMed
+Google Scholar
+James Zou
+View author publications
+Search author on:
+PubMed
+Google Scholar
+Contributions
+K.S. built the Virtual Lab framework and applied the Virtual Lab to create and run the computational nanobody design pipeline. W.W., N.L.B. and J.E.P. conducted the nanobody validation experiments. J.E.P. and J.Z. supervised the work. All authors contributed to the manuscript.
+Corresponding authors
+Correspondence to
+John E. Pak
+or
+James Zou
+.
+Ethics declarations
+Competing interests
+The authors declare no competing interests.
+Peer review
+Peer review information
+Nature
+thanks Bryan Briney, Olivier Elemento, Eric Topol and the other, anonymous, reviewer(s) for their contribution to the peer review of this work.
+Peer reviewer reports
+are available.
+Additional information
+Publisher’s note
+Springer Nature remains neutral with regard to jurisdictional claims in published maps and institutional affiliations.
+Extended data figures and tables
+Extended Data Fig. 1 Virtual Lab parallel meetings.
+The workflow for parallel meetings in the Virtual Lab. A set of meetings (team or individual) is run with the same agenda and agents but with different randomness in the LLM underlying the agents (with a high LLM temperature to encourage creativity across meetings). The answer from each parallel meeting is then provided to an agent in an individual meeting (with a low LLM temperature for consistency), and this agent is asked to merge the best components of the answers from each parallel meeting into a single optimal answer.
+Extended Data Fig. 2 Ty1 nanobody analysis.
+a-c
+, Evolution of mutant nanobody scores across four rounds of optimization.
+a
+, The distribution of ESM LLR values for proposed Ty1 mutant nanobodies across each round of optimization, with ESM LLR values computed relative to the input nanobody sequence from the previous round. Shown are the ESM LLR values of the top 20 proposed mutant nanobodies per input nanobody.
+b
+, The AF ipLDDT and the RS dG of the top five proposed nanobodies, selected by WS, at the end of each round of optimization.
+c
+, The distribution of WS values of the top five proposed nanobodies at the end of each round of optimization.
+d-f
+, Analysis of the final set of 23 mutant nanobodies selected across all rounds of optimization.
+d
+, The distribution of ESM LLR
+WT
+values (ESM LLR of the mutant sequence compared to the wild-type sequence) for the selected nanobodies and the wild-type nanobody.
+e
+, The AF ipLDDT and RS dG values of the selected nanobodies and the wild-type nanobody.
+f
+, The structure (predicted by AlphaFold-Multimer followed by Rosetta relaxation) of the receptor binding domain of the KP.3 spike protein (cyan) and the nanobody mutant Ty1 V32F-G59D-N54S-F32S (green). Side chains are shown for interface residues (within 4Å of the opposite chain). Mutant nanobody residues are in pink. (PyMol 3.1.3, Schrödinger, LLC.).
+Extended Data Fig. 3 H11-D4 nanobody analysis.
+a-c
+, Evolution of mutant nanobody scores across four rounds of optimization.
+a
+, The distribution of ESM LLR values for proposed H11-D4 mutant nanobodies across each round of optimization, with ESM LLR values computed relative to the input nanobody sequence from the previous round. Shown are the ESM LLR values of the top 20 proposed mutant nanobodies per input nanobody.
+b
+, The AF ipLDDT and the RS dG of the top five proposed nanobodies, selected by WS, at the end of each round of optimization.
+c
+, The distribution of WS values of the top five proposed nanobodies at the end of each round of optimization.
+d-f
+, Analysis of the final set of 23 mutant nanobodies selected across all rounds of optimization.
+d
+, The distribution of ESM LLR
+WT
+values (ESM LLR of the mutant sequence compared to the wild-type sequence) for the selected nanobodies and the wild-type nanobody.
+e
+, The AF ipLDDT and RS dG values of the selected nanobodies and the wild-type nanobody.
+f
+, The structure (predicted by AlphaFold-Multimer followed by Rosetta relaxation) of the receptor binding domain of the KP.3 spike protein (cyan) and the nanobody mutant H11-D4 A14P-Y88V-K74T-R27L (green). Side chains are shown for interface residues (within 4Å of the opposite chain). Mutant nanobody residues are in pink. (PyMol 3.1.3, Schrödinger, LLC.).
+Extended Data Fig. 4 VHH-72 nanobody analysis.
+a-c
+, Evolution of mutant nanobody scores across four rounds of optimization.
+a
+, The distribution of ESM LLR values for proposed VHH-72 mutant nanobodies across each round of optimization, with ESM LLR values computed relative to the input nanobody sequence from the previous round. Shown are the ESM LLR values of the top 20 proposed mutant nanobodies per input nanobody.
+b
+, The AF ipLDDT and the RS dG of the top five proposed nanobodies, selected by WS, at the end of each round of optimization.
+c
+, The distribution of WS values of the top five proposed nanobodies at the end of each round of optimization.
+d-f
+, Analysis of the final set of 23 mutant nanobodies selected across all rounds of optimization.
+d
+, The distribution of ESM LLR
+WT
+values (ESM LLR of the mutant sequence compared to the wild-type sequence) for the selected nanobodies and the wild-type nanobody.
+e
+, The AF ipLDDT and RS dG values of the selected nanobodies and the wild-type nanobody.
+f
+, The structure (predicted by AlphaFold-Multimer followed by Rosetta relaxation) of the receptor binding domain of the KP.3 spike protein (cyan) and the nanobody mutant VHH-72 R27Y-E31D-F37V-D89E (green). Side chains are shown for interface residues (within 4Å of the opposite chain). Mutant nanobody residues are in pink. (PyMol 3.1.3, Schrödinger, LLC.).
+Extended Data Fig. 5 Workflow for nanobody experimental validation.
+The four categories of experiments (nanobody expression, SARS-CoV-2 spike RBD expression, antigen array printing, and multiplexed ELISA) are enclosed in boxes. The ribbons representation of a nanobody (blue) and the RBD (purple) were rendered with ChimeraX
+51
+from PDB accession numbers 6XZN and 6M0J, respectively. Unique RBD and control proteins of the array are shown as colored spots with fiducial markers shown as black spots. Portions of this figure were created in BioRender. Bulaong, N. (2025)
+https://BioRender.com/6du2yu4
+.
+Extended Data Fig. 6 Nanobody expression.
+Periplasmic extracts containing soluble nanobody were separated by reducing SDS-PAGE and stained with Coomassie blue. An equal volume of periplasmic extract (8.3 uL) was loaded for each sample. Identifiers for each nanobody (A1 to H12) are shown, with the 4 unmutated parental nanobodies highlighted in yellow and the 92 Virtual Lab designs unhighlighted. The expected molecular weight for the nanobodies (~15 kDa) is enclosed in a red box. Uncropped images of samples analyzed once by SDS-PAGE are shown.
+Extended Data Fig. 7 Virtual Lab additional discussion analysis.
+a
+, The number of words (space-separated tokens) written by the Virtual Lab (human researcher and each LLM agent) in the tools selection phase.
+b
+, The number of words written by the Virtual Lab in AlphaFold implementation.
+c
+, The number of words written by the Virtual Lab in Rosetta implementation.
+d
+, The number of words written by the Virtual Lab in the team selection phase.
+e
+, The number of words written by the Virtual Lab in implementation agent selection.
+Extended Data Table 1 Nanobody score analysis
+Full size table
+Supplementary information
+Supplementary Information (download PDF
+)
+This file contains Supplementary Notes 1–6, Supplementary Figs. 1–3, Supplementary Table 1, Supplementary Boxes 1–3 and references.
+Reporting Summary (download PDF
+)
+Peer Review File (download PDF
+)
+Rights and permissions
+Springer Nature or its licensor (e.g. a society or other partner) holds exclusive rights to this article under a publishing agreement with the author(s) or other rightsholder(s); author self-archiving of the accepted manuscript version of this article is solely governed by the terms of such publishing agreement and applicable law.
+Reprints and permissions
+About this article
+Cite this article
+Swanson, K., Wu, W., Bulaong, N.L.
+et al.
+The Virtual Lab of AI agents designs new SARS-CoV-2 nanobodies.
+Nature
+646
+, 716–723 (2025). https://doi.org/10.1038/s41586-025-09442-9
+Download citation
+Received
+:
+26 November 2024
+Accepted
+:
+22 July 2025
+Published
+:
+29 July 2025
+Version of record
+:
+03 September 2025
+Issue date
+:
+16 October 2025
+DOI
+:
+https://doi.org/10.1038/s41586-025-09442-9
+Share this article
+Anyone you share the following link with will be able to read this content:
+Get shareable link
+Sorry, a shareable link is not currently available for this article.
+Copy shareable link to clipboard
+Provided by the Springer Nature SharedIt content-sharing initiative
+Access through your institution
+Buy or subscribe
+Advertisement
+window.SN = window.SN || {};
+            window.SN.libs = window.SN.libs || {};
+            window.SN.libs.ads = window.SN.libs.ads || {};
+            window.SN.libs.ads.slotConfig = window.SN.libs.ads.slotConfig || {};
+            
+                window.SN.libs.ads.slotConfig['right'] = {
+                    'pos': 'right',
+                    'type': 'article',
+                    'path': 's41586-025-09442-9'
+                };
+            
+            
+            window.SN.libs.ads.slotConfig['kwrd'] = 'Computer+science,Computational+models';
+            
+            
+            window.SN.libs.ads.slotConfig['subjmeta'] = '114,117,2397,631,639,705';
+            
+            
+            window.SN.libs.ads.slotConfig['techmeta'] = '119,82';
+window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+        page: {
+            attributes: {
+            ai_augmented_reading:
+                
+                    'ai tools tab not present'
+                
+            }
+        }
+    });
+Explore content
+Research articles
+News
+Opinion
+Research Analysis
+Careers
+Books & Culture
+Podcasts
+Videos
+Current issue
+Browse issues
+Collections
+Subjects
+Follow us on Facebook
+Follow us on Bluesky
+Follow us on X
+Subscribe
+Sign up for alerts
+RSS feed
+About the journal
+Journal Staff
+Research Cross-Journal Editorial Team
+Editors
+Journal Information
+Journal Metrics
+Our publishing models
+Editorial Values Statement
+Editorial policies
+Journalistic Principles
+History of Nature
+Awards
+Contact
+Send a news tip
+Publish with us
+For Authors
+For Referees
+Language editing services
+Open access funding
+Submit manuscript
+window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+            page: {
+                content: {
+                    fundingWidget: "true",
+                        }
+                    }
+                });
+Search
+Search articles by subject, keyword or author
+Show results from
+All journals
+This journal
+Search
+Advanced search
+Quick links
+Explore articles by subject
+Find a job
+Guide to authors
+Editorial policies
+Nature
+(
+Nature
+)
+ISSN
+1476-4687
+(online)
+ISSN
+0028-0836
+(print)
+nature.com footer links
+About Nature Portfolio
+About us
+Press releases
+Press office
+Contact us
+Discover content
+Journals A-Z
+Articles by subject
+protocols.io
+Nature Index
+Publishing policies
+Nature portfolio policies
+Open access
+Author & Researcher services
+Reprints & permissions
+Research data
+Language editing
+Scientific editing
+Nature Masterclasses
+Research Solutions
+Libraries & institutions
+Librarian service & tools
+Librarian portal
+Open research
+Recommend to library
+Advertising & partnerships
+Advertising
+Partnerships & Services
+Media kits
+Branded
+                        content
+Professional development
+Nature Awards
+Nature Careers
+Nature
+Conferences
+Regional websites
+Nature Africa
+Nature China
+Nature India
+Nature Japan
+Nature Middle East
+Privacy
+                Policy
+Use
+                of cookies
+Your privacy choices/Manage cookies
+Legal
+                notice
+Accessibility
+                statement
+Terms & Conditions
+Your US state privacy rights
+© 2026 Springer Nature Limited
+Close banner
+Close
+Sign up for the
+Nature Briefing: AI and Robotics
+newsletter — what matters in AI and robotics research, free to your inbox weekly.
+Email address
+Sign up
+I agree my information will be processed in accordance with the
+Nature
+and Springer Nature Limited
+Privacy Policy
+.
+Close banner
+Close
+Get the most important science stories of the day, free in your inbox.
+Sign up for Nature Briefing: AI and Robotics

@@ -1,0 +1,86 @@
+{
+  "summary": "现有实测显示，在本地 SQLite 3.51.3 固定轨迹中 reader snapshot 前缀位置与 PASSIVE checkpointed_frames 有稳定次序关系；单纯 reader 年龄没有显示帧数效应，生命周期策略比较仍不确定。该位置效应符合 SQLite 已知 end-mark 机制，不构成新机制或新颖性证据。剩余实验槽为 0，本阶段按要求 finalize，不排定实验。",
+  "artifacts": [
+    {
+      "path": "runs/v2_sqlite_001/stages/plan_03/attempt-001/workspace/report_zh.md",
+      "kind": "interpretation",
+      "description": "本阶段决定、实测证据与边界解释；明确区分直接观察和科学解释。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/snapshots/ledger_03.json",
+      "kind": "ledger_record",
+      "description": "当前账本快照；记录假说状态及 E02、E03、E04 的冻结分类与映射。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/result.json",
+      "kind": "observation_and_classification",
+      "description": "E02 实际结果：72 次运行及不确定的策略比较分类。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/experiment_01/attempt-001/workspace/result.json",
+      "kind": "observation_and_classification",
+      "description": "E03 实际结果：12/12 配对长短年龄条件均为 2 checkpointed frames。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/experiment_02/attempt-001/workspace/result.json",
+      "kind": "observation_and_classification",
+      "description": "E04 实际结果：12/12 种子 early/mid/late 为 2/14/25 帧，符合冻结 position_order 分类。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/bridge/attempt-001/workspace/result.json",
+      "kind": "literature_and_interpretation",
+      "description": "桥接阶段记录的公开来源、已知 end-mark 机制和 Walack 相关工作边界。"
+    }
+  ],
+  "evidence": [
+    {
+      "type": "direct_observation",
+      "source": "runs/v2_sqlite_001/stages/experiment_02/attempt-001/workspace/result.json",
+      "details": "E04 在 36/36 次运行中完成；12/12 有效种子均为 early/mid/late checkpointed_frames=2/14/25，log_frames=26，checkpoint 前 WAL=107152 bytes，reader 活动且 busy=0。"
+    },
+    {
+      "type": "direct_observation",
+      "source": "runs/v2_sqlite_001/stages/experiment_01/attempt-001/workspace/result.json",
+      "details": "E03 的 12/12 配对均匹配控制，长、短龄 reader 的 checkpointed_frames 均为 2，配对差均为 0。"
+    },
+    {
+      "type": "direct_observation",
+      "source": "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/result.json",
+      "details": "E02 heldout_H1 上 lifecycle 与两基线的 checkpoint 时间配对区间都包含零，且冻结分类为 uncertain_or_tradeoff。"
+    },
+    {
+      "type": "retrieved_literature",
+      "source": "https://www.sqlite.org/wal.html",
+      "details": "桥接阶段已查阅的 SQLite WAL 文档描述 reader end mark 对 checkpoint 进度的限制；该机制是已知解释。"
+    },
+    {
+      "type": "retrieved_literature",
+      "source": "https://doi.org/10.1109/icpads60453.2023.00179",
+      "details": "桥接阶段记录 Walack 摘要涉及基于读写请求调整 checkpoint 频率；全文未取得，不能据此界定精确重叠。"
+    }
+  ],
+  "claims": [
+    "按 E04 冻结分类，D1 获支持、D2 被反驳；该结果仅适用于所测 SQLite build 和固定轨迹。",
+    "E03 不支持该轨迹中的强 reader-age 代理效应；它不否定 snapshot-position 效应。",
+    "E02 未证明 lifecycle 策略在成本匹配后优于固定周期或 WAL-growth 基线。",
+    "当前最强解释仍是 SQLite 文档记载的 end-mark 机制；本运行没有形成有证据支持的新机制或策略收益主张。"
+  ],
+  "limitations": [
+    "E03/E04 使用单一 SQLite 3.51.3 build、单 reader/writer 和固定小型 workload；E04 的 SQL/schema 由执行者按 E03 记录作工程解析。",
+    "E02 只有一个 held-out shape，且串行回放延迟不能代表并发服务延迟。",
+    "Walack 全文未取得；不能作完整先前工作重叠判断或世界新颖性结论。",
+    "本阶段无剩余实验槽，所比较的两个后续方向均未执行。"
+  ],
+  "next_actions": [
+    "下一轮先确定实验槽用于跨 workload/page layout 的位置效应检验，或用于多个 held-out shape 的调度策略比较。",
+    "在新数据运行前冻结轨迹、观测权限、成本和延迟指标、互斥结果类及种子规则。",
+    "若提出新颖性主张，先补齐 Walack 全文及最近邻工作复核。"
+  ],
+  "requested_model": "GPT-6 Luna (requested; no inference performed in this stage)",
+  "decision": "finalize",
+  "proposals": [],
+  "plans": [],
+  "selected_plan_id": null,
+  "selection_reason": "账本记录剩余实验槽为 0，故依合同 finalize 且不选择计划。已比较的两个可行方向是：(1) 在新 workload/page layout 上复验 snapshot-position 效应，区分本地结果与跨配置效应；(2) 在至少两个新 held-out release/burst shape 上比较 lifecycle、固定周期和 WAL-growth 策略，检验可行动策略收益。两者分别回答不同问题，但当前无槽可执行，因此均不进入 plans，也不声称本轮完成了实验选择。",
+  "source_ledger": "runs/v2_sqlite_001/snapshots/ledger_03.json"
+}

@@ -1,0 +1,866 @@
+{
+  "request": {
+    "needed": true,
+    "gap": "未获得可读且相关的方法依据；此前返回摘要与问题无关。",
+    "why_now": "需要在解释 R07 的模型比较前，厘清条件历史预测信息的含义、有限样本比较条件及其因果边界。",
+    "queries": [
+      "截至2009年的传递熵或条件互信息如何刻画给定当前状态后，历史变量对下一状态的增量预测信息？",
+      "有限时间序列中，如何使用相同目标索引、共同有效样本及按时间留出段比较嵌套预测模型？",
+      "观察性轨迹中的预测增益在何种条件下不能识别因果互动或排除共同驱动？"
+    ],
+    "urls": [],
+    "source_ids": [],
+    "record_ids": [
+      "R07"
+    ],
+    "operations": [
+      {
+        "kind": "analysis",
+        "question": "修正形状和索引对齐后，在 R07 中加入此前10帧平均相对位移是否改善下一帧相对位移的时间顺序留出预测？",
+        "record_id": "R07",
+        "start": 10,
+        "variables": [
+          {
+            "name": "r",
+            "expression": "positions[:,1,:]-positions[:,0,:]",
+            "meaning": "B相对A的二维位置向量",
+            "units": "原生图像坐标"
+          },
+          {
+            "name": "dr",
+            "expression": "diff(r,axis=0)",
+            "meaning": "相邻帧相对位移",
+            "units": "原生图像坐标/帧"
+          },
+          {
+            "name": "target",
+            "expression": "shift(dr,-1)",
+            "meaning": "下一帧相对位移",
+            "units": "原生图像坐标/帧"
+          },
+          {
+            "name": "history10",
+            "expression": "rolling(dr,10)",
+            "meaning": "当前索引及此前窗口定义待控制器核实的10帧平均相对位移",
+            "units": "原生图像坐标/帧"
+          },
+          {
+            "name": "valid",
+            "expression": "isfinite(r[:,0])&isfinite(r[:,1])&isfinite(dr[:,0])&isfinite(dr[:,1])&isfinite(target[:,0])&isfinite(target[:,1])&isfinite(history10[:,0])&isfinite(history10[:,1])",
+            "meaning": "模型共有的有限值行；须保证各变量长度和索引相同",
+            "units": "布尔值"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "target",
+            "expression": "target"
+          }
+        ],
+        "groups": [
+          {
+            "name": "共同有效行",
+            "where": "valid",
+            "values": [
+              "r",
+              "dr",
+              "history10",
+              "target"
+            ]
+          }
+        ],
+        "model": {
+          "target": "target",
+          "features": [
+            "r",
+            "dr",
+            "history10"
+          ],
+          "train_fraction": 0.7
+        }
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "高分子体系的自洽场理论方法及其应用",
+      "date": "2006-02-01",
+      "doi": "https://doi.org/10.1360/zb2006-36-1-1",
+      "url": "https://doi.org/10.1360/zb2006-36-1-1",
+      "text": "高分子体系的自洽场理论(self-consistent field theory, SCFT)是基于平均场近似的粗粒化模型, 特别适合研究发生相分离的非均相高分子体系在平衡态的相结构及相图, 其突出的优点在于能够考虑链拓扑构型、链序列分布等链的细节特点. 本文将对高分子体系的SCFT方法作较为详尽的介绍. 重点根据多年来我们自己的研究工作并结合实例, 简要介绍SCFT方法在具有复杂拓扑结构的多嵌段共聚高分子本体及稀溶液中的微相分离形态的预测、表面接枝高分子的纳米颗粒间的相互作用、含液晶体系的界面问题以及表面锚泊高分子链的囊泡形状问题等诸多前沿领域的具体应用. 最后, 展望了SCFT方法的可能发展方向和应用前景.",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "K23fa0956201ec58e",
+      "retrieved_at": "2026-11-05T17:41:34.646750+00:00",
+      "query": "有限时间序列中，如何使用相同目标索引、共同有效样本及按时间留出段比较嵌套预测模型？"
+    },
+    {
+      "title": "时尚报刊、广告与当代中国消费意识形态",
+      "date": "2003-09-01",
+      "doi": "https://doi.org/10.14793/cs_etd.14",
+      "url": "https://doi.org/10.14793/cs_etd.14",
+      "text": "本论文针对 1990 年代以来中国社会在经济文化方面的巨大改变，归纳并指出一种新的“消费意识形态”在中国业已历史地形成并取代日渐式微的传统 意识形态，成为宰制当代中国社会的主导力量。论文批判地回顾了1949 年以后中国大陆语境中意识形态涵义的历史嬗变，以四个具有典型意义的时尚报刊和广告案例、广告事件为例，从不同侧面解析了广告形象以及广告产业如何作为 中介与以时尚报刊为代表的文化工业一起，参与当代中国“消费意识形态”建 构的社会过程。 论文通过对“消费意识形态”所遮蔽的当代中国社会问题的揭示，对“消费意识形态”在当代中国社会发生影响的深度和广度的阐释，回应了九十年代以来在中国思想界有较大影响的“后六·四”文化论争中的一些重要问题，展现了文化研究在中国大陆介入现实社会思考和批判的可能空间。",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "Kfcf508e6a76bb0f4",
+      "retrieved_at": "2026-11-05T16:32:17.126837+00:00",
+      "query": "动物群体轨迹研究中，如何区分距离接近的描述指标与互动或吸引机制推断？"
+    },
+    {
+      "title": "翻译、意识形态与话语 : 中国1895-1911 年文学翻译研究",
+      "date": "2006-06-01",
+      "doi": "https://doi.org/10.14793/tran_etd.6",
+      "url": "https://doi.org/10.14793/tran_etd.6",
+      "text": "1895－1911 年这一时期，是中国翻译史上第三次翻译高潮。现有的中国翻译史研究成果，由于受到各自的研究对象以及研究者自身的局限，均未能对这一断代史进行充分的研究。本文采取文化研究的视角，尝试建立一个新的理论模式――翻译社会学模式，即考察翻译场域中，翻译这一话语生产活动，如何在受到意识形态制约的 同时，通过不同途径（其中特别是通过主体性）获得各种资本，尤其是符号象征资本，对现有意识形态（尤其是主流意识形态）产生作用。在此基础上，对这一时期的文学翻译，特别是小说的翻译，加以研究。 本文认为：翻译这一社会行为，不仅是语言之间而是处在特定的历史语境之中的转换活动，因而势必会受到当时意识形态的制约；同时，翻译作为一种话语生产活动，亦会因此生产新的意识形态话语。由此，翻译与意识形态之间存在着一种互动关系。 本文采取纵横相结合的方法：首先从纵的即历史的跨度，考察这一时期翻译行为所处的社会文化语境，从文化史与思想史的高度，概述这一时期的翻译史特征，史论结合，以史为辅，以论为主。其次，截取其中某个时间横断面，对这一时期具有代表性的论者与译者，进行深入的个案分析（包括梁启超、林 纾、苏曼殊、周氏兄弟），希冀通过以点带面的方式，微观（文本分析）与宏观（文化研究）相结合，以微见著，从微观中看出宏观来，同时又能高屋建瓴， 从宏观解释微观，总结该时期的翻译活动的特征与规律。",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "Ka87f19b59cd350d0",
+      "retrieved_at": "2026-11-05T16:32:17.125957+00:00",
+      "query": "动物群体轨迹研究中，如何区分距离接近的描述指标与互动或吸引机制推断？"
+    },
+    {
+      "title": "遥感科学与技术中的一些前沿问题",
+      "date": "2009-01-01",
+      "doi": "https://doi.org/10.11834/jrs.20090101",
+      "url": "https://doi.org/10.11834/jrs.20090101",
+      "text": "将人不可及的观测统称为遥感,使地面传感器成为遥感的一部分。提出遥感科学与技术的基本内容,包括传感器研制、遥感数据获取、数据处理、信息提取和应用5个部分。其理论基础是辐射传输过程模拟与反演,贯穿于各个组成部分。数据的可视化及传输发布存在于从数据获取到应用的各个环节。遥感科学与技术正处于快速发展时期,各个方面都有前沿问题。辐射传输理论中的尺度和多角度问题,地形对辐射和图像几何影响及相应的多源多时相数据的匹配问题,遥感信息提取中自动化和目视解译的结合以及信息提取新策略问题,遥感与基于过程模拟的气候—水文—生态模式相结合的四维数据同化技术等是当前遥感科学与技术发展中的重要学科前沿。四维数据同化技术是突破遥感瞬时信息获取、实现图像与机理模型有机结合、改善自身数据产品质量和促进地学大范围模拟准确性的重要发展方向,能增强遥感对全球变化科学的贡献。",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "K21d7acaf8071b1b4",
+      "retrieved_at": "2026-11-05T17:41:34.649046+00:00",
+      "query": "有限时间序列中，如何使用相同目标索引、共同有效样本及按时间留出段比较嵌套预测模型？"
+    },
+    {
+      "title": "基于应用语义的网构软件松弛事务模型研究",
+      "date": "2006-10-01",
+      "doi": "https://doi.org/10.1360/zf2006-36-10-1170",
+      "url": "https://doi.org/10.1360/zf2006-36-10-1170",
+      "text": "事务处理是保障服务协作可靠性的关键技术, 由多个具备事务特性的服务通过交互和协作复合而成的服务称为事务性复合服务(transactional composite service, TCS). 为保证TCS执行的松弛原子性, 现有的研究主要依靠对TCS语法结构的分析, 但语法结构反映不出特定的应用语义信息, 从而对服务事务能力要求过高, 导致了很多不必要的失败恢复甚至放弃. 给出了一个基于应用语义的网构软件松弛事务模型, 包括系统模型、松弛原子性、松弛原子性可满足检查算法、执行保障算法. 用户可以根据应用语义, 为TCS赋予特定的松弛原子性约束e, 包括TCS合理结束配置, 以及对各个合理结束配置的倾向性顺序. e-松弛原子性可满足检查算法可以确保TCS执行满足指定的e-松弛原子性. 执行保障算法根据e约束监控TCS的执行, 主动进行重试、补偿等操作, 将松弛原子性的规约与保障抽象到系统层次进行, 分离了关注点.",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "Kf5f35679ff96583f",
+      "retrieved_at": "2026-11-05T17:41:34.649413+00:00",
+      "query": "有限时间序列中，如何使用相同目标索引、共同有效样本及按时间留出段比较嵌套预测模型？"
+    },
+    {
+      "title": "福利国家转变的数量维度 : 21个OECD国家的宏观统计改革轨迹 (1980-2001年)",
+      "date": "2008-01-01",
+      "doi": "https://openalex.org/W297779009",
+      "url": "https://openalex.org/W297779009",
+      "text": "本文讨论了21个OECD国家在1980年到2001年不同的福利改革轨迹。为了说明\"福利国家转变\"的多维度特征,本文探讨了社会保障支出、去商品化(和社会分层)以及福利成果这三个领域中众多的宏观统计指标的动态,使用了总计12个不同的指标(每个领域4个),并把这些领域的分析结果整合成一个\"福利国家转变\"的指数。该实证研究表明,OECD在20世纪最后20年里出现大范围的福利国家消解现象这一观点颇为言过其实。不过,\"福利反弹\"的理论也一样不什可靠。事实上,在该时期内一些国家确实缩减了福利支出,一些维持稳定,而另一些则明显地扩张了。有趣的是,艾斯平-安达森的福利国家分类框架并不足以解释这些截然不同的改革轨迹。\\nThis paper discusses the different welfare reform trajectories in 21 OECD countries between 1980 and 2001. To account for the multidimensional character of \"welfare state change\", it explores the dynamics of numerous macro-statistical indicators in three domains: social security expenditure, decommodification/stratification and welfare outcomes-using a total of 12 different indicators (four for each domain). The individual findings for these domains are integrated into an index of \"welfare state change\". The empirical findings suggest that notion of broad welfare state retrenchment across the OECD in the last two decades of the 20th century are somewhat overstated. The same is-however-true for the \"welfare resilience\" thesis. While some countries were indeed retrenched in the course of the observed period of times, others remained stable, while some expanded welfare noticeably. Interestingly, Esping-Andersen’s (1990) welfare state regimes types do not provide a sufficient explanation of these different reform trajectories.",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "K543e1087c1622e2c",
+      "retrieved_at": "2026-11-05T17:40:10.553160+00:00",
+      "query": "观察性时间序列中的预测增益为何不能单独识别因果互动或排除共同驱动？"
+    },
+    {
+      "title": "翻译操控论：从严复和鲁迅的翻译理论相关的例句实践看意识形态作用",
+      "date": "2006-12-13",
+      "doi": "https://doi.org/10.14793/tran_etd.7",
+      "url": "https://doi.org/10.14793/tran_etd.7",
+      "text": "翻译行为一直伴随人类活动。翻译理论却往往是“一堆意见”。翻译操控论正是这样一个值得争论的命题。 本文以翻译研究的语言学转向、文化转向和史学转向为背景，以赫曼斯的翻译操控论为理论架构，研究翻译过程中的意识形态作用，以便于理解翻译过程中的译者主体作用或操控行为。 本文拾起严复和鲁迅的老话题，是希望每次阅读都创造出不同于以往的历史主义的关怀和方法，以便在现在和历史的对话中加深对过去的理解，从中演绎出新意，进而服务于将来。在翻译实践中，严复和鲁迅实施两种截然 不同的翻译操控。本文通过具体的文本比对和译界传统的追溯研究，解读多元因素作用下的翻译实践，回答了前人(例如梁实秋)尚未解决的鲁迅硬译的缘由，贯穿了翻译的操控历史和历史在操控中进化的主题，同时也疏理了操控阵营的理论要点。赫曼斯所代表的操控学派缘起于具有激进倾向的因素作用研究，同时又强调中立描述的稳健立场。这为该派开展翻译规范研究和尝试普遍适用的理论假设提供了转机。鉴于意识形态缺乏恒定值，造成特殊性的普遍存在和普遍性的假想性质，操控学派中的因素论锐气渐弱，规范研究却力度渐强。籍此，本文在以下几个方面做了积极的论证。一、意识形态有若干特征，其关键特征是一时之态。理解意识形态的这种动态变化有利于减少意识形态的一时失态，促进意识形态的相互宽容和相互借鉴。二、本文将翻译操控论施诸严复和鲁迅的个案，界定了“信、达、雅”的“游移性、不确 定性、隐喻性、延异性”，从而揭示了“信、达、雅”变量的可选性、指导翻译实践的方向性和译者自主把握尺度的灵活性。三、在翻译操控论形成之前就有翻译的操控实践。只是在翻译中，操控乏力有碍交流，操控过度就超出了翻译范畴，操控适当才能有利于思想交流。本文指出，译员不操控等于不作为，不利于文本的认知、解读和阐释。查翻译操控论的未来走向，规范研究将促使翻译操控论转变激进立场，或者至少可以由规范研究来把握操控的信度和效度。",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "K51247831ec573f29",
+      "retrieved_at": "2026-11-05T16:32:17.128354+00:00",
+      "query": "动物群体轨迹研究中，如何区分距离接近的描述指标与互动或吸引机制推断？"
+    },
+    {
+      "title": "Dolmetschen und Übersetzen im Wirtschaftsbereich. Teil 2",
+      "date": "2009-01-01",
+      "doi": "https://doi.org/10.17875/gup2009-455",
+      "url": "https://doi.org/10.17875/gup2009-455",
+      "text": "可以说， 译员每理解一个信息，每获得一个知识，都为他继续分析创造了条件。 译员通过理解和分析而获得的知识，可以使他逐渐缩小自己已有知识 同信息之间的差距，把用在分析上的精力减少到最低限度。另外，译员在 分析时不会只满足于：把说话同业已存在的或刚刚获得的知识联系起来。 他知道，他还要分析谈话的内在联系。因为要正确理解，有时非了解隐匿 的意义不可。 分析是译员思想活动的组成部分，译员总是时时处处运用这种方法， 从逻辑出发进而推演到最大的可能性。理解一段简短的谈话需要靠这种方 法，理解一个国家的文化现象，也要靠这只用方法。深刻的理解就是在逻 辑性和可能性之间不断进行平衡。 2. 要有自己的看法 表达--创造性的活动 译员在忘掉说话人词汇的同时，能忠实地把意义复述出来，而且在极快的 速度下有时表达得十分生动。为什么能这样？仔细考虑一下我们就会清楚 ，这是因为译员使自己的表达适应了说话的内在逻辑，并且有意识地选择 了清晰的表达方式，这也是口译的本质所在。 我们来比较一下几个句子： auf dem Papier stehen 纸上谈兵 sich auf alle Fälle gründlich irren 大错而特错 voller Anteilnahme die Situation verfolgen 密切关注形势 Die Rolle ist ihm auf den Leib geschrieben.",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "Kf65b09652dc24e30",
+      "retrieved_at": "2026-11-05T16:32:22.397695+00:00",
+      "query": "鱼类群体自组织模型或经验研究中，成对距离、相对速度、方向一致性和滞后响应的典型操作定义与限制是什么？"
+    },
+    {
+      "title": "Chinese Neutrosophy and Taoist Natural Philosophy",
+      "date": "2008-01-01",
+      "doi": "https://openalex.org/W84622410",
+      "url": "https://openalex.org/W84622410",
+      "text": "这应当就是将马克思主义辨证法与中国传统辩证法结合 起来的产物，所以我决定从中智学中独立出来，另外起名。不过我还是要承认中道辨证法与 中智学的渊源关系，我把司马仁达奇先生看作是黑格尔之后西方的最伟大的辨证法家，作为 中国的马克思主义的学者，理应将其引进中国，加以改造创造出深植于中国土壤的新的辨证 法学说。或者说《中智学》的正确译名应当是\"中道学\" ，这样司马仁达奇先生的丰富思想 就会在接触中国传统中道学的过程中得到大大的提升。 (二)中智学简述 中智学是一个很复杂内容很丰富的思想体系，由于它讲究的是数学化的形式，笔者局限 于已有的知识，故难以加以全面的把握，笔者所感兴趣的是中智学的以下基本论述。 中智学, 新的哲学分支 (Neutrosophy -A New Branch of Philosophy) (美) 弗罗仁汀•司马仁达齐 摘要: 本文推出了一个新的哲学分支, 中智学 (neutrosphy), 研究中性的起源、本质和 范畴以及和不同思想观念的作用。它的基本点是: 任何观念具有 T%的真实性、I%的不确 定性以及 F%的谬误性, 其中 T, I, F 为╟ -0, 1 + ╢的标准或非标准子集。 基本理论:任何观念",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "K90156a91a17bd2c8",
+      "retrieved_at": "2026-11-05T16:32:17.127845+00:00",
+      "query": "动物群体轨迹研究中，如何区分距离接近的描述指标与互动或吸引机制推断？"
+    }
+  ],
+  "knowledge": {
+    "request": {
+      "needed": true,
+      "gap": "未获得可读且相关的方法依据；此前返回摘要与问题无关。",
+      "why_now": "需要在解释 R07 的模型比较前，厘清条件历史预测信息的含义、有限样本比较条件及其因果边界。",
+      "queries": [
+        "截至2009年的传递熵或条件互信息如何刻画给定当前状态后，历史变量对下一状态的增量预测信息？",
+        "有限时间序列中，如何使用相同目标索引、共同有效样本及按时间留出段比较嵌套预测模型？",
+        "观察性轨迹中的预测增益在何种条件下不能识别因果互动或排除共同驱动？"
+      ],
+      "urls": [],
+      "source_ids": [],
+      "record_ids": [
+        "R07"
+      ],
+      "operations": [
+        {
+          "kind": "analysis",
+          "question": "修正形状和索引对齐后，在 R07 中加入此前10帧平均相对位移是否改善下一帧相对位移的时间顺序留出预测？",
+          "record_id": "R07",
+          "start": 10,
+          "variables": [
+            {
+              "name": "r",
+              "expression": "positions[:,1,:]-positions[:,0,:]",
+              "meaning": "B相对A的二维位置向量",
+              "units": "原生图像坐标"
+            },
+            {
+              "name": "dr",
+              "expression": "diff(r,axis=0)",
+              "meaning": "相邻帧相对位移",
+              "units": "原生图像坐标/帧"
+            },
+            {
+              "name": "target",
+              "expression": "shift(dr,-1)",
+              "meaning": "下一帧相对位移",
+              "units": "原生图像坐标/帧"
+            },
+            {
+              "name": "history10",
+              "expression": "rolling(dr,10)",
+              "meaning": "当前索引及此前窗口定义待控制器核实的10帧平均相对位移",
+              "units": "原生图像坐标/帧"
+            },
+            {
+              "name": "valid",
+              "expression": "isfinite(r[:,0])&isfinite(r[:,1])&isfinite(dr[:,0])&isfinite(dr[:,1])&isfinite(target[:,0])&isfinite(target[:,1])&isfinite(history10[:,0])&isfinite(history10[:,1])",
+              "meaning": "模型共有的有限值行；须保证各变量长度和索引相同",
+              "units": "布尔值"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "target",
+              "expression": "target"
+            }
+          ],
+          "groups": [
+            {
+              "name": "共同有效行",
+              "where": "valid",
+              "values": [
+                "r",
+                "dr",
+                "history10",
+                "target"
+              ]
+            }
+          ],
+          "model": {
+            "target": "target",
+            "features": [
+              "r",
+              "dr",
+              "history10"
+            ],
+            "train_fraction": 0.7
+          }
+        }
+      ]
+    },
+    "sources": [
+      {
+        "title": "高分子体系的自洽场理论方法及其应用",
+        "date": "2006-02-01",
+        "doi": "https://doi.org/10.1360/zb2006-36-1-1",
+        "url": "https://doi.org/10.1360/zb2006-36-1-1",
+        "text": "高分子体系的自洽场理论(self-consistent field theory, SCFT)是基于平均场近似的粗粒化模型, 特别适合研究发生相分离的非均相高分子体系在平衡态的相结构及相图, 其突出的优点在于能够考虑链拓扑构型、链序列分布等链的细节特点. 本文将对高分子体系的SCFT方法作较为详尽的介绍. 重点根据多年来我们自己的研究工作并结合实例, 简要介绍SCFT方法在具有复杂拓扑结构的多嵌段共聚高分子本体及稀溶液中的微相分离形态的预测、表面接枝高分子的纳米颗粒间的相互作用、含液晶体系的界面问题以及表面锚泊高分子链的囊泡形状问题等诸多前沿领域的具体应用. 最后, 展望了SCFT方法的可能发展方向和应用前景.",
+        "access": "indexed_abstract_only",
+        "date_evidence": "OpenAlex publication_date",
+        "id": "K23fa0956201ec58e",
+        "retrieved_at": "2026-11-05T17:41:34.646750+00:00",
+        "query": "有限时间序列中，如何使用相同目标索引、共同有效样本及按时间留出段比较嵌套预测模型？"
+      },
+      {
+        "title": "时尚报刊、广告与当代中国消费意识形态",
+        "date": "2003-09-01",
+        "doi": "https://doi.org/10.14793/cs_etd.14",
+        "url": "https://doi.org/10.14793/cs_etd.14",
+        "text": "本论文针对 1990 年代以来中国社会在经济文化方面的巨大改变，归纳并指出一种新的“消费意识形态”在中国业已历史地形成并取代日渐式微的传统 意识形态，成为宰制当代中国社会的主导力量。论文批判地回顾了1949 年以后中国大陆语境中意识形态涵义的历史嬗变，以四个具有典型意义的时尚报刊和广告案例、广告事件为例，从不同侧面解析了广告形象以及广告产业如何作为 中介与以时尚报刊为代表的文化工业一起，参与当代中国“消费意识形态”建 构的社会过程。 论文通过对“消费意识形态”所遮蔽的当代中国社会问题的揭示，对“消费意识形态”在当代中国社会发生影响的深度和广度的阐释，回应了九十年代以来在中国思想界有较大影响的“后六·四”文化论争中的一些重要问题，展现了文化研究在中国大陆介入现实社会思考和批判的可能空间。",
+        "access": "indexed_abstract_only",
+        "date_evidence": "OpenAlex publication_date",
+        "id": "Kfcf508e6a76bb0f4",
+        "retrieved_at": "2026-11-05T16:32:17.126837+00:00",
+        "query": "动物群体轨迹研究中，如何区分距离接近的描述指标与互动或吸引机制推断？"
+      },
+      {
+        "title": "翻译、意识形态与话语 : 中国1895-1911 年文学翻译研究",
+        "date": "2006-06-01",
+        "doi": "https://doi.org/10.14793/tran_etd.6",
+        "url": "https://doi.org/10.14793/tran_etd.6",
+        "text": "1895－1911 年这一时期，是中国翻译史上第三次翻译高潮。现有的中国翻译史研究成果，由于受到各自的研究对象以及研究者自身的局限，均未能对这一断代史进行充分的研究。本文采取文化研究的视角，尝试建立一个新的理论模式――翻译社会学模式，即考察翻译场域中，翻译这一话语生产活动，如何在受到意识形态制约的 同时，通过不同途径（其中特别是通过主体性）获得各种资本，尤其是符号象征资本，对现有意识形态（尤其是主流意识形态）产生作用。在此基础上，对这一时期的文学翻译，特别是小说的翻译，加以研究。 本文认为：翻译这一社会行为，不仅是语言之间而是处在特定的历史语境之中的转换活动，因而势必会受到当时意识形态的制约；同时，翻译作为一种话语生产活动，亦会因此生产新的意识形态话语。由此，翻译与意识形态之间存在着一种互动关系。 本文采取纵横相结合的方法：首先从纵的即历史的跨度，考察这一时期翻译行为所处的社会文化语境，从文化史与思想史的高度，概述这一时期的翻译史特征，史论结合，以史为辅，以论为主。其次，截取其中某个时间横断面，对这一时期具有代表性的论者与译者，进行深入的个案分析（包括梁启超、林 纾、苏曼殊、周氏兄弟），希冀通过以点带面的方式，微观（文本分析）与宏观（文化研究）相结合，以微见著，从微观中看出宏观来，同时又能高屋建瓴， 从宏观解释微观，总结该时期的翻译活动的特征与规律。",
+        "access": "indexed_abstract_only",
+        "date_evidence": "OpenAlex publication_date",
+        "id": "Ka87f19b59cd350d0",
+        "retrieved_at": "2026-11-05T16:32:17.125957+00:00",
+        "query": "动物群体轨迹研究中，如何区分距离接近的描述指标与互动或吸引机制推断？"
+      },
+      {
+        "title": "遥感科学与技术中的一些前沿问题",
+        "date": "2009-01-01",
+        "doi": "https://doi.org/10.11834/jrs.20090101",
+        "url": "https://doi.org/10.11834/jrs.20090101",
+        "text": "将人不可及的观测统称为遥感,使地面传感器成为遥感的一部分。提出遥感科学与技术的基本内容,包括传感器研制、遥感数据获取、数据处理、信息提取和应用5个部分。其理论基础是辐射传输过程模拟与反演,贯穿于各个组成部分。数据的可视化及传输发布存在于从数据获取到应用的各个环节。遥感科学与技术正处于快速发展时期,各个方面都有前沿问题。辐射传输理论中的尺度和多角度问题,地形对辐射和图像几何影响及相应的多源多时相数据的匹配问题,遥感信息提取中自动化和目视解译的结合以及信息提取新策略问题,遥感与基于过程模拟的气候—水文—生态模式相结合的四维数据同化技术等是当前遥感科学与技术发展中的重要学科前沿。四维数据同化技术是突破遥感瞬时信息获取、实现图像与机理模型有机结合、改善自身数据产品质量和促进地学大范围模拟准确性的重要发展方向,能增强遥感对全球变化科学的贡献。",
+        "access": "indexed_abstract_only",
+        "date_evidence": "OpenAlex publication_date",
+        "id": "K21d7acaf8071b1b4",
+        "retrieved_at": "2026-11-05T17:41:34.649046+00:00",
+        "query": "有限时间序列中，如何使用相同目标索引、共同有效样本及按时间留出段比较嵌套预测模型？"
+      },
+      {
+        "title": "基于应用语义的网构软件松弛事务模型研究",
+        "date": "2006-10-01",
+        "doi": "https://doi.org/10.1360/zf2006-36-10-1170",
+        "url": "https://doi.org/10.1360/zf2006-36-10-1170",
+        "text": "事务处理是保障服务协作可靠性的关键技术, 由多个具备事务特性的服务通过交互和协作复合而成的服务称为事务性复合服务(transactional composite service, TCS). 为保证TCS执行的松弛原子性, 现有的研究主要依靠对TCS语法结构的分析, 但语法结构反映不出特定的应用语义信息, 从而对服务事务能力要求过高, 导致了很多不必要的失败恢复甚至放弃. 给出了一个基于应用语义的网构软件松弛事务模型, 包括系统模型、松弛原子性、松弛原子性可满足检查算法、执行保障算法. 用户可以根据应用语义, 为TCS赋予特定的松弛原子性约束e, 包括TCS合理结束配置, 以及对各个合理结束配置的倾向性顺序. e-松弛原子性可满足检查算法可以确保TCS执行满足指定的e-松弛原子性. 执行保障算法根据e约束监控TCS的执行, 主动进行重试、补偿等操作, 将松弛原子性的规约与保障抽象到系统层次进行, 分离了关注点.",
+        "access": "indexed_abstract_only",
+        "date_evidence": "OpenAlex publication_date",
+        "id": "Kf5f35679ff96583f",
+        "retrieved_at": "2026-11-05T17:41:34.649413+00:00",
+        "query": "有限时间序列中，如何使用相同目标索引、共同有效样本及按时间留出段比较嵌套预测模型？"
+      },
+      {
+        "title": "福利国家转变的数量维度 : 21个OECD国家的宏观统计改革轨迹 (1980-2001年)",
+        "date": "2008-01-01",
+        "doi": "https://openalex.org/W297779009",
+        "url": "https://openalex.org/W297779009",
+        "text": "本文讨论了21个OECD国家在1980年到2001年不同的福利改革轨迹。为了说明\"福利国家转变\"的多维度特征,本文探讨了社会保障支出、去商品化(和社会分层)以及福利成果这三个领域中众多的宏观统计指标的动态,使用了总计12个不同的指标(每个领域4个),并把这些领域的分析结果整合成一个\"福利国家转变\"的指数。该实证研究表明,OECD在20世纪最后20年里出现大范围的福利国家消解现象这一观点颇为言过其实。不过,\"福利反弹\"的理论也一样不什可靠。事实上,在该时期内一些国家确实缩减了福利支出,一些维持稳定,而另一些则明显地扩张了。有趣的是,艾斯平-安达森的福利国家分类框架并不足以解释这些截然不同的改革轨迹。\\nThis paper discusses the different welfare reform trajectories in 21 OECD countries between 1980 and 2001. To account for the multidimensional character of \"welfare state change\", it explores the dynamics of numerous macro-statistical indicators in three domains: social security expenditure, decommodification/stratification and welfare outcomes-using a total of 12 different indicators (four for each domain). The individual findings for these domains are integrated into an index of \"welfare state change\". The empirical findings suggest that notion of broad welfare state retrenchment across the OECD in the last two decades of the 20th century are somewhat overstated. The same is-however-true for the \"welfare resilience\" thesis. While some countries were indeed retrenched in the course of the observed period of times, others remained stable, while some expanded welfare noticeably. Interestingly, Esping-Andersen’s (1990) welfare state regimes types do not provide a sufficient explanation of these different reform trajectories.",
+        "access": "indexed_abstract_only",
+        "date_evidence": "OpenAlex publication_date",
+        "id": "K543e1087c1622e2c",
+        "retrieved_at": "2026-11-05T17:40:10.553160+00:00",
+        "query": "观察性时间序列中的预测增益为何不能单独识别因果互动或排除共同驱动？"
+      },
+      {
+        "title": "翻译操控论：从严复和鲁迅的翻译理论相关的例句实践看意识形态作用",
+        "date": "2006-12-13",
+        "doi": "https://doi.org/10.14793/tran_etd.7",
+        "url": "https://doi.org/10.14793/tran_etd.7",
+        "text": "翻译行为一直伴随人类活动。翻译理论却往往是“一堆意见”。翻译操控论正是这样一个值得争论的命题。 本文以翻译研究的语言学转向、文化转向和史学转向为背景，以赫曼斯的翻译操控论为理论架构，研究翻译过程中的意识形态作用，以便于理解翻译过程中的译者主体作用或操控行为。 本文拾起严复和鲁迅的老话题，是希望每次阅读都创造出不同于以往的历史主义的关怀和方法，以便在现在和历史的对话中加深对过去的理解，从中演绎出新意，进而服务于将来。在翻译实践中，严复和鲁迅实施两种截然 不同的翻译操控。本文通过具体的文本比对和译界传统的追溯研究，解读多元因素作用下的翻译实践，回答了前人(例如梁实秋)尚未解决的鲁迅硬译的缘由，贯穿了翻译的操控历史和历史在操控中进化的主题，同时也疏理了操控阵营的理论要点。赫曼斯所代表的操控学派缘起于具有激进倾向的因素作用研究，同时又强调中立描述的稳健立场。这为该派开展翻译规范研究和尝试普遍适用的理论假设提供了转机。鉴于意识形态缺乏恒定值，造成特殊性的普遍存在和普遍性的假想性质，操控学派中的因素论锐气渐弱，规范研究却力度渐强。籍此，本文在以下几个方面做了积极的论证。一、意识形态有若干特征，其关键特征是一时之态。理解意识形态的这种动态变化有利于减少意识形态的一时失态，促进意识形态的相互宽容和相互借鉴。二、本文将翻译操控论施诸严复和鲁迅的个案，界定了“信、达、雅”的“游移性、不确 定性、隐喻性、延异性”，从而揭示了“信、达、雅”变量的可选性、指导翻译实践的方向性和译者自主把握尺度的灵活性。三、在翻译操控论形成之前就有翻译的操控实践。只是在翻译中，操控乏力有碍交流，操控过度就超出了翻译范畴，操控适当才能有利于思想交流。本文指出，译员不操控等于不作为，不利于文本的认知、解读和阐释。查翻译操控论的未来走向，规范研究将促使翻译操控论转变激进立场，或者至少可以由规范研究来把握操控的信度和效度。",
+        "access": "indexed_abstract_only",
+        "date_evidence": "OpenAlex publication_date",
+        "id": "K51247831ec573f29",
+        "retrieved_at": "2026-11-05T16:32:17.128354+00:00",
+        "query": "动物群体轨迹研究中，如何区分距离接近的描述指标与互动或吸引机制推断？"
+      },
+      {
+        "title": "Dolmetschen und Übersetzen im Wirtschaftsbereich. Teil 2",
+        "date": "2009-01-01",
+        "doi": "https://doi.org/10.17875/gup2009-455",
+        "url": "https://doi.org/10.17875/gup2009-455",
+        "text": "可以说， 译员每理解一个信息，每获得一个知识，都为他继续分析创造了条件。 译员通过理解和分析而获得的知识，可以使他逐渐缩小自己已有知识 同信息之间的差距，把用在分析上的精力减少到最低限度。另外，译员在 分析时不会只满足于：把说话同业已存在的或刚刚获得的知识联系起来。 他知道，他还要分析谈话的内在联系。因为要正确理解，有时非了解隐匿 的意义不可。 分析是译员思想活动的组成部分，译员总是时时处处运用这种方法， 从逻辑出发进而推演到最大的可能性。理解一段简短的谈话需要靠这种方 法，理解一个国家的文化现象，也要靠这只用方法。深刻的理解就是在逻 辑性和可能性之间不断进行平衡。 2. 要有自己的看法 表达--创造性的活动 译员在忘掉说话人词汇的同时，能忠实地把意义复述出来，而且在极快的 速度下有时表达得十分生动。为什么能这样？仔细考虑一下我们就会清楚 ，这是因为译员使自己的表达适应了说话的内在逻辑，并且有意识地选择 了清晰的表达方式，这也是口译的本质所在。 我们来比较一下几个句子： auf dem Papier stehen 纸上谈兵 sich auf alle Fälle gründlich irren 大错而特错 voller Anteilnahme die Situation verfolgen 密切关注形势 Die Rolle ist ihm auf den Leib geschrieben.",
+        "access": "indexed_abstract_only",
+        "date_evidence": "OpenAlex publication_date",
+        "id": "Kf65b09652dc24e30",
+        "retrieved_at": "2026-11-05T16:32:22.397695+00:00",
+        "query": "鱼类群体自组织模型或经验研究中，成对距离、相对速度、方向一致性和滞后响应的典型操作定义与限制是什么？"
+      },
+      {
+        "title": "Chinese Neutrosophy and Taoist Natural Philosophy",
+        "date": "2008-01-01",
+        "doi": "https://openalex.org/W84622410",
+        "url": "https://openalex.org/W84622410",
+        "text": "这应当就是将马克思主义辨证法与中国传统辩证法结合 起来的产物，所以我决定从中智学中独立出来，另外起名。不过我还是要承认中道辨证法与 中智学的渊源关系，我把司马仁达奇先生看作是黑格尔之后西方的最伟大的辨证法家，作为 中国的马克思主义的学者，理应将其引进中国，加以改造创造出深植于中国土壤的新的辨证 法学说。或者说《中智学》的正确译名应当是\"中道学\" ，这样司马仁达奇先生的丰富思想 就会在接触中国传统中道学的过程中得到大大的提升。 (二)中智学简述 中智学是一个很复杂内容很丰富的思想体系，由于它讲究的是数学化的形式，笔者局限 于已有的知识，故难以加以全面的把握，笔者所感兴趣的是中智学的以下基本论述。 中智学, 新的哲学分支 (Neutrosophy -A New Branch of Philosophy) (美) 弗罗仁汀•司马仁达齐 摘要: 本文推出了一个新的哲学分支, 中智学 (neutrosphy), 研究中性的起源、本质和 范畴以及和不同思想观念的作用。它的基本点是: 任何观念具有 T%的真实性、I%的不确 定性以及 F%的谬误性, 其中 T, I, F 为╟ -0, 1 + ╢的标准或非标准子集。 基本理论:任何观念",
+        "access": "indexed_abstract_only",
+        "date_evidence": "OpenAlex publication_date",
+        "id": "K90156a91a17bd2c8",
+        "retrieved_at": "2026-11-05T16:32:17.127845+00:00",
+        "query": "动物群体轨迹研究中，如何区分距离接近的描述指标与互动或吸引机制推断？"
+      }
+    ],
+    "attempts": [
+      {
+        "query": "截至2009年的传递熵或条件互信息如何刻画给定当前状态后，历史变量对下一状态的增量预测信息？",
+        "provider": "europepmc",
+        "status": "completed",
+        "candidates": 0
+      },
+      {
+        "query": "截至2009年的传递熵或条件互信息如何刻画给定当前状态后，历史变量对下一状态的增量预测信息？",
+        "provider": "crossref",
+        "candidate": 0,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "截至2009年的传递熵或条件互信息如何刻画给定当前状态后，历史变量对下一状态的增量预测信息？",
+        "provider": "crossref",
+        "candidate": 1,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "截至2009年的传递熵或条件互信息如何刻画给定当前状态后，历史变量对下一状态的增量预测信息？",
+        "provider": "crossref",
+        "candidate": 2,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "截至2009年的传递熵或条件互信息如何刻画给定当前状态后，历史变量对下一状态的增量预测信息？",
+        "provider": "crossref",
+        "candidate": 3,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "截至2009年的传递熵或条件互信息如何刻画给定当前状态后，历史变量对下一状态的增量预测信息？",
+        "provider": "crossref",
+        "candidate": 4,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "截至2009年的传递熵或条件互信息如何刻画给定当前状态后，历史变量对下一状态的增量预测信息？",
+        "provider": "crossref",
+        "status": "completed",
+        "candidates": 5
+      },
+      {
+        "query": "截至2009年的传递熵或条件互信息如何刻画给定当前状态后，历史变量对下一状态的增量预测信息？",
+        "provider": "openalex",
+        "status": "completed",
+        "candidates": 0
+      },
+      {
+        "query": "有限时间序列中，如何使用相同目标索引、共同有效样本及按时间留出段比较嵌套预测模型？",
+        "provider": "europepmc",
+        "status": "completed",
+        "candidates": 0
+      },
+      {
+        "query": "有限时间序列中，如何使用相同目标索引、共同有效样本及按时间留出段比较嵌套预测模型？",
+        "provider": "crossref",
+        "candidate": 0,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "有限时间序列中，如何使用相同目标索引、共同有效样本及按时间留出段比较嵌套预测模型？",
+        "provider": "crossref",
+        "candidate": 1,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "有限时间序列中，如何使用相同目标索引、共同有效样本及按时间留出段比较嵌套预测模型？",
+        "provider": "crossref",
+        "candidate": 2,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "有限时间序列中，如何使用相同目标索引、共同有效样本及按时间留出段比较嵌套预测模型？",
+        "provider": "crossref",
+        "candidate": 3,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "有限时间序列中，如何使用相同目标索引、共同有效样本及按时间留出段比较嵌套预测模型？",
+        "provider": "crossref",
+        "candidate": 4,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "有限时间序列中，如何使用相同目标索引、共同有效样本及按时间留出段比较嵌套预测模型？",
+        "provider": "crossref",
+        "status": "completed",
+        "candidates": 5
+      },
+      {
+        "query": "有限时间序列中，如何使用相同目标索引、共同有效样本及按时间留出段比较嵌套预测模型？",
+        "provider": "openalex",
+        "status": "completed",
+        "candidates": 5
+      },
+      {
+        "query": "观察性轨迹中的预测增益在何种条件下不能识别因果互动或排除共同驱动？",
+        "provider": "europepmc",
+        "status": "completed",
+        "candidates": 0
+      },
+      {
+        "query": "观察性轨迹中的预测增益在何种条件下不能识别因果互动或排除共同驱动？",
+        "provider": "crossref",
+        "candidate": 0,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "观察性轨迹中的预测增益在何种条件下不能识别因果互动或排除共同驱动？",
+        "provider": "crossref",
+        "candidate": 1,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "观察性轨迹中的预测增益在何种条件下不能识别因果互动或排除共同驱动？",
+        "provider": "crossref",
+        "candidate": 2,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "观察性轨迹中的预测增益在何种条件下不能识别因果互动或排除共同驱动？",
+        "provider": "crossref",
+        "candidate": 3,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "观察性轨迹中的预测增益在何种条件下不能识别因果互动或排除共同驱动？",
+        "provider": "crossref",
+        "candidate": 4,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "观察性轨迹中的预测增益在何种条件下不能识别因果互动或排除共同驱动？",
+        "provider": "crossref",
+        "status": "completed",
+        "candidates": 5
+      },
+      {
+        "query": "观察性轨迹中的预测增益在何种条件下不能识别因果互动或排除共同驱动？",
+        "provider": "openalex",
+        "status": "completed",
+        "candidates": 5
+      }
+    ],
+    "status": "read_content_returned",
+    "remaining_gap": "",
+    "date_boundary": "2010-01-01",
+    "date_boundary_exclusive": true
+  },
+  "record_metadata": [
+    {
+      "record_id": "R07",
+      "frames": 44999,
+      "objects": 2,
+      "position_shape": [
+        44999,
+        2,
+        2
+      ],
+      "file": "records/R07.npz",
+      "sha256": "2ee8550a211e76b60e7228306fa758bd43f37157352e5a7892955447d01cd8d5",
+      "nonfinite_positions": 0
+    }
+  ],
+  "computed": [
+    {
+      "request": {
+        "kind": "analysis",
+        "question": "修正形状和索引对齐后，在 R07 中加入此前10帧平均相对位移是否改善下一帧相对位移的时间顺序留出预测？",
+        "record_id": "R07",
+        "start": 10,
+        "variables": [
+          {
+            "name": "r",
+            "expression": "positions[:,1,:]-positions[:,0,:]",
+            "meaning": "B相对A的二维位置向量",
+            "units": "原生图像坐标"
+          },
+          {
+            "name": "dr",
+            "expression": "diff(r,axis=0)",
+            "meaning": "相邻帧相对位移",
+            "units": "原生图像坐标/帧"
+          },
+          {
+            "name": "target",
+            "expression": "shift(dr,-1)",
+            "meaning": "下一帧相对位移",
+            "units": "原生图像坐标/帧"
+          },
+          {
+            "name": "history10",
+            "expression": "rolling(dr,10)",
+            "meaning": "当前索引及此前窗口定义待控制器核实的10帧平均相对位移",
+            "units": "原生图像坐标/帧"
+          },
+          {
+            "name": "valid",
+            "expression": "isfinite(r[:,0])&isfinite(r[:,1])&isfinite(dr[:,0])&isfinite(dr[:,1])&isfinite(target[:,0])&isfinite(target[:,1])&isfinite(history10[:,0])&isfinite(history10[:,1])",
+            "meaning": "模型共有的有限值行；须保证各变量长度和索引相同",
+            "units": "布尔值"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "target",
+            "expression": "target"
+          }
+        ],
+        "groups": [
+          {
+            "name": "共同有效行",
+            "where": "valid",
+            "values": [
+              "r",
+              "dr",
+              "history10",
+              "target"
+            ]
+          }
+        ],
+        "model": {
+          "target": "target",
+          "features": [
+            "r",
+            "dr",
+            "history10"
+          ],
+          "train_fraction": 0.7
+        }
+      },
+      "executed_plan": {
+        "kind": "analysis",
+        "question": "修正形状和索引对齐后，在 R07 中加入此前10帧平均相对位移是否改善下一帧相对位移的时间顺序留出预测？",
+        "record_id": "R07",
+        "start": 10,
+        "variables": [
+          {
+            "name": "r",
+            "expression": "positions[:,1,:]-positions[:,0,:]",
+            "meaning": "B相对A的二维位置向量",
+            "units": "原生图像坐标"
+          },
+          {
+            "name": "dr",
+            "expression": "diff(r,axis=0)",
+            "meaning": "相邻帧相对位移；索引 t 表示 r[t+1]-r[t]，长度比 r 少1"
+          },
+          {
+            "name": "target",
+            "expression": "shift(dr,-1)",
+            "meaning": "下一帧相对位移；索引 t 对应 dr[t+1]，末行填充 NaN"
+          },
+          {
+            "name": "history10",
+            "expression": "rolling(dr,10)",
+            "meaning": "以当前索引为窗口末端、包含当前及此前9个 dr 值的10帧尾随平均；前9行填充 NaN"
+          },
+          {
+            "name": "valid",
+            "expression": "isfinite(r[10:-1,0])&isfinite(r[10:-1,1])&isfinite(dr[10:-1,0])&isfinite(dr[10:-1,1])&isfinite(target[10:-1,0])&isfinite(target[10:-1,1])&isfinite(history10[10:-1,0])&isfinite(history10[10:-1,1])",
+            "meaning": "将长度对齐至 target 的有效行掩码；排除开头窗口不足行和末尾无下一步目标行。由于 r 比其他变量多一行，从索引10开始切片时仅取到倒数第二个 r 行。",
+            "units": "布尔值"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "target",
+            "expression": "target[10:-1]"
+          }
+        ],
+        "groups": [
+          {
+            "name": "共同有效行",
+            "where": "valid",
+            "values": [
+              "r[10:-1]",
+              "dr[10:-1]",
+              "history10[10:-1]",
+              "target[10:-1]"
+            ]
+          }
+        ],
+        "model": {
+          "target": "target",
+          "features": [
+            "r",
+            "dr",
+            "history10"
+          ],
+          "train_fraction": 0.7
+        }
+      },
+      "result": {
+        "status": "pending_controller",
+        "capability_task": {
+          "request": {
+            "kind": "analysis",
+            "question": "修正形状和索引对齐后，在 R07 中加入此前10帧平均相对位移是否改善下一帧相对位移的时间顺序留出预测？",
+            "record_id": "R07",
+            "start": 10,
+            "variables": [
+              {
+                "name": "r",
+                "expression": "positions[:,1,:]-positions[:,0,:]",
+                "meaning": "B相对A的二维位置向量",
+                "units": "原生图像坐标"
+              },
+              {
+                "name": "dr",
+                "expression": "diff(r,axis=0)",
+                "meaning": "相邻帧相对位移",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "target",
+                "expression": "shift(dr,-1)",
+                "meaning": "下一帧相对位移",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "history10",
+                "expression": "rolling(dr,10)",
+                "meaning": "当前索引及此前窗口定义待控制器核实的10帧平均相对位移",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "valid",
+                "expression": "isfinite(r[:,0])&isfinite(r[:,1])&isfinite(dr[:,0])&isfinite(dr[:,1])&isfinite(target[:,0])&isfinite(target[:,1])&isfinite(history10[:,0])&isfinite(history10[:,1])",
+                "meaning": "模型共有的有限值行；须保证各变量长度和索引相同",
+                "units": "布尔值"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "target",
+                "expression": "target"
+              }
+            ],
+            "groups": [
+              {
+                "name": "共同有效行",
+                "where": "valid",
+                "values": [
+                  "r",
+                  "dr",
+                  "history10",
+                  "target"
+                ]
+              }
+            ],
+            "model": {
+              "target": "target",
+              "features": [
+                "r",
+                "dr",
+                "history10"
+              ],
+              "train_fraction": 0.7
+            }
+          },
+          "reason": "shape mismatch: objects cannot be broadcast to a single shape.  Mismatch is between arg 0 with shape (44989,) and arg 1 with shape (44988,).",
+          "status": "pending_controller",
+          "scientific_disposition": "Interface gap; the research question remains open.",
+          "execution_error": "ValueError: Define variable meaning and units"
+        }
+      },
+      "executor_sha256": "32e81e66d65aabdb4d8e82b4a275939fe3eeb0a693bf8f26ee5acc52a7472e08",
+      "artifacts": [
+        "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/services/analysis/r1_return_2_continuation_request_op0/request.json",
+        "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/services/analysis/r1_return_2_continuation_request_op0/controller_task.json",
+        "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/services/analysis/r1_return_2_continuation_request_op0/controller_plan.json",
+        "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/services/analysis/r1_return_2_continuation_request_op0/executor.py"
+      ]
+    }
+  ],
+  "controller_pending": [
+    {
+      "request": {
+        "kind": "analysis",
+        "question": "修正形状和索引对齐后，在 R07 中加入此前10帧平均相对位移是否改善下一帧相对位移的时间顺序留出预测？",
+        "record_id": "R07",
+        "start": 10,
+        "variables": [
+          {
+            "name": "r",
+            "expression": "positions[:,1,:]-positions[:,0,:]",
+            "meaning": "B相对A的二维位置向量",
+            "units": "原生图像坐标"
+          },
+          {
+            "name": "dr",
+            "expression": "diff(r,axis=0)",
+            "meaning": "相邻帧相对位移",
+            "units": "原生图像坐标/帧"
+          },
+          {
+            "name": "target",
+            "expression": "shift(dr,-1)",
+            "meaning": "下一帧相对位移",
+            "units": "原生图像坐标/帧"
+          },
+          {
+            "name": "history10",
+            "expression": "rolling(dr,10)",
+            "meaning": "当前索引及此前窗口定义待控制器核实的10帧平均相对位移",
+            "units": "原生图像坐标/帧"
+          },
+          {
+            "name": "valid",
+            "expression": "isfinite(r[:,0])&isfinite(r[:,1])&isfinite(dr[:,0])&isfinite(dr[:,1])&isfinite(target[:,0])&isfinite(target[:,1])&isfinite(history10[:,0])&isfinite(history10[:,1])",
+            "meaning": "模型共有的有限值行；须保证各变量长度和索引相同",
+            "units": "布尔值"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "target",
+            "expression": "target"
+          }
+        ],
+        "groups": [
+          {
+            "name": "共同有效行",
+            "where": "valid",
+            "values": [
+              "r",
+              "dr",
+              "history10",
+              "target"
+            ]
+          }
+        ],
+        "model": {
+          "target": "target",
+          "features": [
+            "r",
+            "dr",
+            "history10"
+          ],
+          "train_fraction": 0.7
+        }
+      },
+      "reason": "shape mismatch: objects cannot be broadcast to a single shape.  Mismatch is between arg 0 with shape (44989,) and arg 1 with shape (44988,).",
+      "status": "pending_controller",
+      "scientific_disposition": "Interface gap; the research question remains open.",
+      "execution_error": "ValueError: Define variable meaning and units"
+    }
+  ],
+  "unavailable": [],
+  "measurement_context": {
+    "data_source": {
+      "repository": "Dryad",
+      "doi": "https://doi.org/10.5061/dryad.f0g32",
+      "license": "https://spdx.org/licenses/CC0-1.0.html",
+      "publication_date": "2017-03-28",
+      "scope": "Raw measurements and screened measurement facts are the task date exception."
+    },
+    "species": {
+      "value": "Danio rerio (zebrafish)",
+      "basis": "Data repository species keyword"
+    },
+    "recording": "13 records of two tracked fish; positions and tracker outputs, no supplied manipulation labels.",
+    "task": {
+      "value": null,
+      "status": "Specific experimental task/protocol not independently verified in screened metadata."
+    },
+    "scene_conditions": {
+      "value": null,
+      "status": "Arena geometry, lighting, age and preparation unknown from screened measurement sources."
+    },
+    "measurement_method": "Recorded two dimensional tracked image coordinates; camera/tracker implementation unspecified.",
+    "processing": "Archive arrays retained value-for-value, including NaN and negative tracker codes; no smoothing or quality exclusion.",
+    "units": "Native image coordinates and frame indices; physical scales/frame rate not independently verified.",
+    "quality": "Recorded tracker output; includes negative codes and fractional values. Not a calibrated probability. Semantics not documented in the measurement files.",
+    "screening": "Only source-data identity, species keyword, license, date, field layout and measurement facts supplied."
+  }
+}

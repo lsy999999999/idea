@@ -1,0 +1,25 @@
+{
+  "checked_at_utc": "2026-11-04",
+  "sources": [
+    {
+      "source": "bootstrap/v2_scout/sources_verified/wal.txt",
+      "url": "https://www.sqlite.org/wal.html",
+      "retrieved_utc": "2026-11-03T18:15:59.191374+00:00",
+      "observed_text": "Lines 61-70 define a reader's end mark as the last valid commit record, unchanged for the transaction; readers use WAL pages before that mark.",
+      "review_interpretation": "The end-mark mechanism underlying the E04 order is already explicit in SQLite documentation. E04 operationalizes a known relation; it does not establish novelty."
+    },
+    {
+      "source": "bootstrap/v2_scout/sources_verified/checkpoint.txt",
+      "url": "https://www.sqlite.org/c3ref/wal_checkpoint_v2.html",
+      "retrieved_utc": "2026-11-03T18:15:59.148993+00:00",
+      "observed_text": "Lines 10-14 define PASSIVE as checkpointing as many frames as possible without waiting and state it may leave the checkpoint unfinished when readers or writers are concurrent.",
+      "review_interpretation": "This documents the API behavior used by E02-E04; it does not test a lifecycle-aware policy's net benefit."
+    },
+    {
+      "source": "https://doi.org/10.1109/icpads60453.2023.00179",
+      "retrieval": "Public Crossref metadata endpoint, queried 2026-11-04 UTC; returned title 'Asynchronous and Adaptive Checkpoint for WAL-based Data Storage Systems', authors Li Zhu, Yanpeng Hu, Chundong Wang, 2023-12-17. No abstract returned.",
+      "review_interpretation": "A directly adjacent adaptive-checkpoint paper exists, but metadata alone cannot establish whether its method is comparable to SQLite reader lifecycle signals. Full-text comparison remains unresolved; no novelty claim is supported here."
+    }
+  ],
+  "scope": "Targeted closest-work check from project-saved official SQLite pages and the E02-cited DOI. This is not a comprehensive novelty review."
+}

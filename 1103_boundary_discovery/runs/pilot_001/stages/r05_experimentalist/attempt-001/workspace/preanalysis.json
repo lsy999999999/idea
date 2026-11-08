@@ -1,0 +1,45 @@
+{
+  "status": "frozen_before_2023_iv_parsing",
+  "frozen_at_utc": "2026-11-03",
+  "requested_model": "gpt-6-luna",
+  "backend_weights_verified": false,
+  "question": "Does daily air temperature range predict held-out 2023 within-day water-temperature amplitude and night/day slopes after controlling for air mean, month, and discharge?",
+  "data_scope": {
+    "water_temperature": "Original USGS instantaneous-value RDB files for sites 10396000, 11501000, 11502500; fit data from May-September 2014-2022 only; sole held-out year May-September 2023.",
+    "excluded_year": "2024 is excluded from fitting, tuning, and primary evaluation.",
+    "daily_predictors": "Join existing pilot paired_daily_panel.csv exactly by site and local calendar date. No interpolation or alternate weather/flow source. Require finite air_mean, air_range and positive flow; derive log(flow)."
+  },
+  "water_day_filter": {
+    "qualifier": "Retain only water-temperature rows with qualifier exactly A.",
+    "local_grid": "Parse the RDB local wall-clock datetime and retain timestamps exactly on a 15-minute grid (minute in 00,15,30,45 and second zero when present). Local date is the timestamp date; no UTC conversion.",
+    "daily_coverage": "At least 87 distinct valid observations among the expected 96 local 15-minute slots. Duplicate timestamps count once; if repeated, retain the first A-qualified record in file order.",
+    "targets": {
+      "A24": "OLS first harmonic on retained within-day points: intercept + sin(2*pi*hour/24) + cos(2*pi*hour/24); target sqrt(sin_coefficient^2 + cos_coefficient^2).",
+      "phi": "Harmonic peak phase (atan2(sin coefficient, cos coefficient), mapped to [0,24)); descriptive only in first analysis.",
+      "observed_extrema": "Clock time of observed daily maximum and minimum, descriptive only.",
+      "S_night": "OLS temperature versus actual local elapsed hours for 18:00 on date D through 06:00 on D+1; order by true timestamp. Require at least 40 observations in the interval.",
+      "S_day": "OLS temperature versus actual local hours from 06:00 through 18:00 on date D. Require at least 40 observations in the interval."
+    }
+  },
+  "primary_models": {
+    "fit_unit": "Separate OLS per USGS site and target, using all eligible dates in May-September 2014-2022. No hyperparameter tuning.",
+    "baseline": "Intercept + month categorical indicators + air_mean + ln(daily flow).",
+    "expanded": "Baseline + air_range.",
+    "comparison": "Use identical complete-case site-date rows for both models; report held-out 2023 MAE and paired per-date absolute-error improvement (baseline absolute error minus expanded absolute error).",
+    "training_direction": "Report the fitted air_range coefficient from expanded model for each site-target; coefficient sign is descriptive conditional association, not mechanism. Also report pooled within-site coefficient summary only if clearly labeled descriptive.",
+    "uncertainty": "For 2023 paired MAE improvement, moving-block bootstrap within each station's chronological test rows using 28-day blocks, 2000 replicates, RNG seed 20261103; circular block starts; report percentile 95% interval."
+  },
+  "secondary_river_network_test": {
+    "stations": ["11501000 Sprague River near Chiloquin", "11502500 Williamson River below Sprague River near Chiloquin"],
+    "network_verification": "Attempt public USGS NLDI/NHD network navigation from downstream station and check whether upstream mainstem navigation includes 11501000; save URL, retrieval date, status, and returned feature identifiers. If connectivity is not verified, remove flow-share/tributary-transfer interpretation and do not fit that explanatory model.",
+    "if_connected": "Only after checking network response, compare models for held-out 2023 A24_down/A24_up and signed circular phase difference phi_down-phi_up. Use same-day Q_Sprague/Q_Williamson as predictor; control month, shared OCHI air_mean and air_range. Any lag/parameter choice is selected only within 2014-2022. State explicitly that ratio need not equal tributary fraction because of intervening inflows, withdrawals, storage, and measurement timing.",
+    "status": "Secondary; no 2024 result is confirmatory evidence."
+  },
+  "interpretive_limits": [
+    "2023 daily-scale data and related daily temperature analyses have already been accessed in this project; this is a new high-frequency target analysis but not an untouched-year discovery context.",
+    "Prediction improvement does not identify heat-exchange causality.",
+    "Daily air range/mean are weather-station summaries, not subdaily heat flux; site-specific stations may share meteorological source and measurement error.",
+    "Do not claim novelty or promote 2024 exploratory clues to confirmation."
+  ],
+  "file_plan": ["preanalysis.json", "analysis.py", "analysis_results.json", "daily_diagnostics.csv", "report_zh.md", "result.json"]
+}

@@ -1,0 +1,59 @@
+{
+  "summary": "提出两项竞争且可用 pilot 现存数据检验的表征变更：相位不对称的日内热响应，以及气象来源分组下的支流/下游波形传递。对三站 2024 暖季 15 分钟水温做了谐波快算；Williamson below Sprague 波峰中位晚约 3.25 小时，但流量比与波形关系在控制月份和共享气象变量后转弱并反向。该信号足以指定判别实验，不足以支持机制或新颖性主张。",
+  "artifacts": [
+    {"path": "runs/pilot_001/parallel_theory/IDEA_PROPOSAL.md"},
+    {"path": "runs/pilot_001/parallel_theory/quick_check.py"},
+    {"path": "runs/pilot_001/parallel_theory/quick_check.json"},
+    {"path": "runs/pilot_001/parallel_theory/sources/README.md"},
+    {"path": "runs/pilot_001/parallel_theory/sources/openalex_diel_stream_temperature.json"},
+    {"path": "runs/pilot_001/parallel_theory/sources/crossref_thermal_insulation_capacitance.json"},
+    {"path": "runs/pilot_001/parallel_theory/sources/crossref_stream_temperature_primer.json"},
+    {"path": "runs/pilot_001/parallel_theory/sources/crossref_stream_temperature_timescale.json"}
+  ],
+  "evidence": [
+    {
+      "type": "existing_result",
+      "source": "runs/pilot_001/parallel_exploration/numeric_results.json",
+      "observation": "训练期空气日温幅斜率对水温日幅为 +0.108，日最高值为 +0.014，日最低值为 -0.094；低流量交互未获支持，整站留出表现不一致。"
+    },
+    {
+      "type": "metadata",
+      "source": "runs/pilot_001/stages/r00_boundary/attempt-001/workspace/data/usgs_seed_site_metadata.rdb; runs/pilot_001/parallel_exploration/numeric_results.json",
+      "observation": "10396000 使用 OPHI 气温站且为三站中唯一该源；11501000 与 11502500 共用 OCHI。后两站名分别为 Sprague near Chiloquin 与 Williamson below Sprague near Chiloquin。"
+    },
+    {
+      "type": "calculation",
+      "source": "runs/pilot_001/parallel_theory/quick_check.py and quick_check.json",
+      "observation": "2024 暖季每站 153 个日满足 A 旗标且至少 87/96 点；11502500 相对 11501000 的谐波振幅比中位数 0.973，峰时差 +3.25 h。流量比和波形比的原始 Spearman 为 +0.743，控制月份、air_mean、air_range 后为 -0.203。"
+    },
+    {
+      "type": "literature",
+      "source": "sources/README.md and preserved OpenAlex/Crossref JSON responses",
+      "observation": "现有研究已将潜流交换表述为 thermal capacitance，并区分日/季节波形；日内谐波和热储存概念本身不作为原创主张。"
+    }
+  ],
+  "claims": [
+    "首选可证伪的下一步是把目标从日温最大减最小改为 A24、phi、S_night 和 S_day，并按完整年份与气象站来源评估。",
+    "竞争解释是支流到下游的热波形传递；它只有在河网连通确认、天气/月度调整后仍能预测留出年份时才值得保留。",
+    "2024 单暖季结果是筛选线索，不证明夜间热交换或水文混合机制。"
+  ],
+  "limitations": [
+    "快算只检查三个已下载 2024 暖季原始 IV 文件，不将未完成的多年份覆盖 audit 当作证据。",
+    "水温峰时相对于本地钟时不等于相对于空气温度的物理相位滞后；输入只有日尺度气温。",
+    "Q_Sprague/Q_Williamson 是流量份额 proxy；河网、中间来水和传播时延尚未核实。",
+    "日序列强自相关；快算相关没有标准误或显著性解释。",
+    "搜索是有限范围，相关物理构念和方法已存在，不能宣称原创性。"
+  ],
+  "next_actions": [
+    "先核实 USGS/NHD 上 11501000 至 11502500 的河网连通，再用现有多年份暖季 IV 做一次整年留出配对检验：比较 air_range 对 A24/S_night/S_day 的预测与 Q_Sprague/Q_Williamson 对下游/支流振幅比和相位差的预测，控制月份及同源 OCHI 日天气；时延选择限于训练年。若河网不连通或流量比效应不跨年复现，淘汰混合解释；若空气日幅不预测高频振幅/夜间斜率，淘汰夜间不对称解释。"
+  ],
+  "candidate": {
+    "status": "proposed",
+    "question": "空气日温幅对河温日幅的预测增量，主要来自夜间冷却响应，还是来自河网传播/天气代理分组造成的站点差异？",
+    "distinctive_predictions": [
+      "相位不对称解释预测 air_range 对 S_night/A24 的关系强于 S_day，并在整年留出复现。",
+      "网络混合解释预测 Q_Sprague/Q_Williamson 对下游/支流热波振幅比和相位差的关系，在月份与共享天气调整后仍能外推。"
+    ],
+    "status_boundary": "候选与判别设计；非已证机制或新颖性判断。"
+  }
+}

@@ -1,0 +1,277 @@
+{
+  "summary": "提出一个可检验的轨迹层面问题：在单条记录中，两条轨迹当下较近时，之后的坐标距离是否更常缩小或增长较慢？这是位置转移问题，不等于结群、追随或感觉引导。初步窗口显示记录间轨迹尺度和形态不同，因此先按记录内距离分位数定义比较条件。",
+  "artifacts": [],
+  "evidence": [
+    {
+      "source_id": "measurements.json",
+      "type": "supplied_measurement_metadata",
+      "detail": "13条记录，每条44999帧、两个局部追踪标签A/B；坐标为原生图像单位，帧率和空间校准未提供。标签不保证记录内无身份交换。追踪分数语义未记录，不能视为校准概率。"
+    },
+    {
+      "source_id": "measurements.json",
+      "type": "sampled_windows",
+      "detail": "R07在1000至1156帧抽样窗口中，A与B的坐标距离从约275个原生单位增加至约1246；R13同一窗口中，起始距离约18，之后也明显增加。窗口是稀疏抽样，只能描述这些片段，不能代表整段记录。"
+    },
+    {
+      "source_id": "F2",
+      "type": "indexed_abstract",
+      "detail": "摘要介绍动物群体自组织模型，并称群体结构的历史可能影响转变期间的集体行为。它只提供一般模型背景，不证明当前记录存在群体记忆或吸引互动。"
+    },
+    {
+      "source_id": "F1",
+      "type": "indexed_abstract",
+      "detail": "摘要报告在特定装置和实验条件下，视觉受限的黑线鳕仍能结群。该结果说明行为机制依赖实验条件，不能直接解释本任务的斑马鱼坐标。"
+    },
+    {
+      "source_id": "F3",
+      "type": "indexed_abstract",
+      "detail": "摘要讨论斑马鱼常规转向运动学及其发育变化；本任务缺少姿态和身体长度，故无法据轨迹坐标判定转向运动学。"
+    },
+    {
+      "source_id": "F4",
+      "type": "indexed_abstract",
+      "detail": "摘要讨论幼鱼捕食追踪中的视觉引导动作；当前记录的具体任务和发育阶段未核实，不能将其用于识别本记录中的追踪行为。"
+    }
+  ],
+  "claims": [
+    {
+      "id": "C1",
+      "text": "所给数据允许描述A、B标签的坐标距离及其后续变化，但本身不能识别行为类别或感觉机制。",
+      "kind": "observation",
+      "use": "research_decision",
+      "consequence": "将首轮问题限定为距离状态与后续坐标转移的关联，不报告结群、追随或因果互动。",
+      "basis": {
+        "source_ids": ["measurements.json"],
+        "record_ids": ["R01", "R02", "R03", "R04", "R05", "R06", "R07", "R08", "R09", "R10", "R11", "R12", "R13"]
+      },
+      "depends_on": []
+    },
+    {
+      "id": "C2",
+      "text": "若局部吸引或维持接近的互动影响轨迹，较近距离状态之后的距离增长应较少，或距离缩小应较常见；现有数据尚未检验该方向性预期。",
+      "kind": "hypothesis",
+      "use": "exploratory",
+      "consequence": "以记录内距离分位数比较近距离与远距离状态之后的距离变化；结果仅用于探索关联。",
+      "basis": {
+        "source_ids": ["F2", "measurements.json"],
+        "record_ids": ["R07", "R13"]
+      },
+      "depends_on": ["C1"]
+    },
+    {
+      "id": "C3",
+      "text": "R07和R13所给稀疏窗口中的A-B距离都明显增大；这不代表整段记录中的距离趋势。",
+      "kind": "observation",
+      "use": "exploratory",
+      "consequence": "不依据这三个初始窗口推断稳定的吸引、排斥或记录间差异；需要对整段轨迹作记录内分析。",
+      "basis": {
+        "source_ids": ["measurements.json"],
+        "record_ids": ["R07", "R13"]
+      },
+      "depends_on": []
+    }
+  ],
+  "limitations": [
+    "没有独立行为标签、实验操作标签、姿态、实际感觉输入或经验证的场景几何；坐标距离变化不能区分主动互动与共同受环境或其他因素影响。",
+    "原生图像单位和帧索引不具备已核验的物理尺度或时间尺度；分析结果只能以图像坐标单位和帧表示。",
+    "A/B是局部追踪标签，记录内身份交换可能改变距离解释；追踪分数语义未知，不宜据其阈值筛选。",
+    "当前只能读取到已提供的来源摘要和测量上下文；未读取共享研究笔记，也未取得新的日期核验知识。"
+  ],
+  "next_actions": [
+    "按记录计算A-B欧氏距离，以每条记录内部距离的第25和第75分位数定义近、远状态，比较其后10帧的距离变化分布。",
+    "将该比较视为探索性描述；在解释前检查非有限坐标、R05和R10的缺失位置，以及追踪标签连续性可核实程度。",
+    "根据学习请求获取截至2010-01-01的鱼类双体距离、群聚/结群测量方法和基于轨迹判定互动的模型或例子。"
+  ],
+  "possible_pretraining_familiarity": "可能熟悉一般鱼类群聚和轨迹分析概念，但本次未以预训练记忆作为已核验来源；这里只使用了题目提供的摘要和测量材料。",
+  "observation": "每帧计算局部标签A与B的二维欧氏距离 d(t)=sqrt((Ax-Bx)^2+(Ay-By)^2)。另描述未来10帧的距离变化 Δd10(t)=d(t+10)-d(t)。单位分别为原生图像坐标单位和每10帧的原生图像坐标单位；不把正负变化命名为行为。",
+  "expectation": "若轨迹中存在局部维持接近的互动，记录内较近距离状态之后的Δd10应相对较低：平均或中位距离增长较小，或负变化较多。该方向性预期未被当前数据支持或检验。",
+  "expectation_basis": "F2的摘要提及动物群体自组织模型及群体历史对群体行为转变的影响，可作为一般模型背景；它不直接给出本分析的定量预测，也不是斑马鱼实证。方向性预测是待检验假设。坐标测量提供了计算距离变化的基础，但不提供互动机制证据。",
+  "conditions": "先在每条记录内部计算距离分位数；d不高于该记录第25分位数定义为近状态，不低于第75分位数定义为远状态，中间状态不进入该两组比较。比较每个有效起点后10帧的Δd10。分位数是研究者选择的操作定义，不是已验证的生物学阈值。保留原始坐标，不以含义不明的追踪分数过滤；非有限值及无法形成有效10帧配对的行排除并记录数量。不同记录不直接比较绝对距离。",
+  "initial_question": "在每条记录内，A-B距离较近的时刻之后10帧，距离变化是否比距离较远的时刻更低？",
+  "question_to_peers": "在缺少帧率、物理校准和稳定身份保证时，是否建议将10帧滞后作为纯图像轨迹的首轮描述窗口？若使用记录内距离分位数作近远条件，哪些轨迹连续性或时间依赖检查最关键？",
+  "worked_example": "R07所给窗口的起始坐标为A=(373.08,208.06)、B=(97.77,104.51)，距离约275个原生图像单位；末端抽样坐标为A=(997.45,927.91)、B=(101.98,61.35)，距离约1246。该窗口显示距离增大，但因窗口稀疏且仅覆盖记录的一小段，不能据此断定整条记录排斥或不存在近距离互动。",
+  "learning_request": {
+    "needed": true,
+    "gap": "缺少截至2010-01-01、可核验的鱼类双体轨迹互动测量基础，尤其是距离与相对运动如何操作化、如何避免把空间接近等同于社会互动，以及适用于斑马鱼的已发表例子。",
+    "why_now": "这些基础可帮助评估记录内分位数和滞后变化是否适合作为探索性指标，并约束对相关结果的解释；不影响先提出可计算的坐标观察。",
+    "queries": [
+      "截至2010年前，斑马鱼双体或鱼类结群研究如何从二维轨迹定义邻近、相对距离、趋近和跟随？",
+      "动物群体轨迹研究中，如何区分距离接近的描述指标与互动或吸引机制推断？",
+      "鱼类群体自组织模型或经验研究中，成对距离、相对速度、方向一致性和滞后响应的典型操作定义与限制是什么？"
+    ],
+    "urls": [
+      "https://doi.org/10.1006/jtbi.2002.3065",
+      "https://doi.org/10.1126/science.982056"
+    ],
+    "source_ids": [],
+    "record_ids": [],
+    "operations": []
+  },
+  "analysis_plan": {
+    "kind": "analysis",
+    "question": "在R07中，A-B距离近状态与远状态之后10帧的距离变化分布是否不同？",
+    "record_id": "R07",
+    "start": 0,
+    "stop": 44999,
+    "variables": [
+      {
+        "name": "distance",
+        "expression": "norm(positions[:,0,:]-positions[:,1,:],axis=1)",
+        "meaning": "局部标签A与B每帧的二维欧氏距离",
+        "units": "native image coordinate unit"
+      },
+      {
+        "name": "future_change_10",
+        "expression": "shift(distance,-10)-distance",
+        "meaning": "10帧后的距离减当前距离",
+        "units": "native image coordinate unit per 10 frames"
+      },
+      {
+        "name": "valid_pair",
+        "expression": "isfinite(distance)&isfinite(future_change_10)",
+        "meaning": "当前距离及10帧后配对距离均有限",
+        "units": "boolean"
+      },
+      {
+        "name": "near_threshold",
+        "expression": "quantile(distance,0.25)",
+        "meaning": "R07全记录距离第25分位数，供操作性分组使用",
+        "units": "native image coordinate unit"
+      },
+      {
+        "name": "far_threshold",
+        "expression": "quantile(distance,0.75)",
+        "meaning": "R07全记录距离第75分位数，供操作性分组使用",
+        "units": "native image coordinate unit"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "distance_and_future_change",
+        "expression": "distance"
+      },
+      {
+        "name": "future_distance_change",
+        "expression": "future_change_10"
+      }
+    ],
+    "groups": [
+      {
+        "name": "near",
+        "where": "valid_pair&(distance<=near_threshold)",
+        "values": ["distance", "future_change_10"]
+      },
+      {
+        "name": "far",
+        "where": "valid_pair&(distance>=far_threshold)",
+        "values": ["distance", "future_change_10"]
+      }
+    ],
+    "model": {
+      "target": "future_change_10",
+      "features": ["distance"],
+      "train_fraction": 0.7
+    }
+  },
+  "evidence_claims": [
+    {
+      "id": "C1",
+      "text": "坐标可支持对A-B间距和间距变化的描述，但不单独识别行为或感觉机制。",
+      "kind": "observation",
+      "use": "research_decision",
+      "consequence": "把首轮问题限定为轨迹转移关联。",
+      "basis": {
+        "source_ids": ["measurements.json"],
+        "record_ids": ["R01", "R02", "R03", "R04", "R05", "R06", "R07", "R08", "R09", "R10", "R11", "R12", "R13"]
+      },
+      "depends_on": []
+    },
+    {
+      "id": "C2",
+      "text": "局部维持接近的互动若存在，较近距离之后的距离增长预期较少；此方向是假设而非已证结论。",
+      "kind": "hypothesis",
+      "use": "exploratory",
+      "consequence": "比较记录内近远分位状态后的10帧距离变化。",
+      "basis": {
+        "source_ids": ["F2", "measurements.json"],
+        "record_ids": ["R07", "R13"]
+      },
+      "depends_on": ["C1"]
+    },
+    {
+      "id": "C3",
+      "text": "所给R07和R13窗口的抽样坐标显示A-B距离增加，但抽样窗口不能代表整条记录。",
+      "kind": "observation",
+      "use": "exploratory",
+      "consequence": "不以初始窗口作整条记录或机制结论。",
+      "basis": {
+        "source_ids": ["measurements.json"],
+        "record_ids": ["R07", "R13"]
+      },
+      "depends_on": []
+    }
+  ],
+  "doubts": [
+    {
+      "claim_ref": "C2",
+      "type": "unproved_hypothesis",
+      "reason": "F2提供一般群体模型摘要，不是当前斑马鱼记录的互动证据；距离自相关、身份交换和共同外部驱动也可造成滞后关联。",
+      "consequence": "即便近远组的后续变化不同，也只报告描述性关联，不据此推断社会吸引或因果互动。"
+    }
+  ],
+  "exploration": {
+    "missing_external_facts": [
+      "本记录具体实验任务、场景几何、光照、鱼龄和实验准备未核实；不能据坐标把轨迹映射到特定生态或实验行为。",
+      "未提供稳定个体身份核验、帧率或物理空间校准；分别限制个体连续性解释和物理速度/时间推断。"
+    ],
+    "unselected_definitions": [
+      "10帧滞后是便于首轮计算的操作选择；缺少帧率依据，尚未比较其他滞后。",
+      "近远距离使用记录内四分位阈值；尚未选择连续距离回归或其他分组作为主要定义。"
+    ],
+    "interface_gaps": [
+      "当前输入仅提供R01、R07、R13的稀疏窗口；尚未提供全记录分析结果。",
+      "共享研究笔记路径无法在当前受限读取接口中访问。"
+    ],
+    "next_action": "请求截至任务知识日期的轨迹互动测量方法与鱼类/斑马鱼研究例子，并对R07全记录执行上述探索性比较；随后根据结果和同记录依赖性修订观察定义。",
+    "stalled_reason": "",
+    "understanding_changed": true
+  },
+  "memory_notes": [
+    {
+      "key": "coordinates_do_not_identify_behavior",
+      "title": "坐标变化不等于行为机制",
+      "kind": "correction",
+      "mastery": "used",
+      "understanding": "二维坐标与局部追踪标签可用于描述位置和距离随帧变化，但不能单独识别姿态、行为类别、个体意图、感觉通路或因果互动。将观察定义为轨迹量后，仍可提出可检验的转移关联问题；这不会把行为机制自动识别出来。",
+      "conditions": "适用于当前所给测量与筛查上下文；当前具体任务、姿态、独立行为标签和身份稳定性未核实。",
+      "example": "本轮将R07中的A-B距离及10帧后的距离变化设为观察量；即使近距离状态之后距离变化较小，也只说明坐标转移关联，不能单独称为结群或吸引。",
+      "open_questions": [
+        "记录内A、B是否保持个体身份未知。",
+        "明确状态定义后，近远状态与后续距离变化的关联尚待全记录计算。",
+        "无法据现有测量解释该关联是否由感觉引导的社会互动产生。"
+      ],
+      "tags": ["tracking", "coordinates", "behavior", "追踪", "坐标", "行为", "interaction", "互动"],
+      "sources": [
+        "measurements.json",
+        "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_001/stages/r1_evidence_verify/result.json",
+        "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_001/stages/r2_evidence_verify/result.json"
+      ],
+      "revision_reason": "将既有边界知识具体用于新的距离状态与后续坐标变化问题；加入R07 worked example及待检验的轨迹关联，不把它提升为机制解释。"
+    }
+  ],
+  "memory_use": [
+    {
+      "key": "coordinates_do_not_identify_behavior",
+      "source_task": "fish_001/inquiry_001",
+      "used_for": "将观察量限定为坐标距离和后续距离变化，并限制对行为机制的解释。",
+      "scope_check": "当前仍是两条局部轨迹坐标，且身份稳定性、任务和行为标签未核实；该笔记适用于本问题。"
+    },
+    {
+      "key": "condition_bounded_behavior_claims",
+      "source_task": "fish_001/inquiry_001",
+      "used_for": "将F1等摘要作为特定条件的基础背景，不将其迁移为本记录的直接解释。",
+      "scope_check": "当前记录任务与场景条件未知，故只沿用条件限定，不外推行为结论。"
+    }
+  ],
+  "still_cannot_explain_or_use": "尚不能解释这些轨迹是否代表结群、追随、视觉或侧线引导，也不能使用缺失的物理校准推算速度或真实时间。F1-F4在本次仅按题目给出的索引摘要阅读，未据此声称已查阅全文或验证其全文方法。"
+}

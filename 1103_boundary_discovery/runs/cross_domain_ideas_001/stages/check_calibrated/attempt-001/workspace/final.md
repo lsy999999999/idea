@@ -1,0 +1,3 @@
+完成三项 idea 的校准复核。I-03 的已有工作判断改为 `already_done`：一篇空间共演博弈研究已直接涉及策略与环境反馈、策略切换及系统稳定性。I-01 和 I-02 在本次有限检索中未找到非常相近的方向；三项均未发现明显数学错误。
+
+已写入并验证 JSON 格式：[result.json](/Applications/ideas/1103_boundary_discovery/runs/cross_domain_ideas_001/stages/check_calibrated/attempt-001/workspace/result.json)。中文复核报告和来源摘录分别见 [CHECK.md](/Applications/ideas/1103_boundary_discovery/runs/cross_domain_ideas_001/stages/check_calibrated/attempt-001/workspace/CHECK.md) 与 [SOURCES.md](/Applications/ideas/1103_boundary_discovery/runs/cross_domain_ideas_001/stages/check_calibrated/attempt-001/workspace/SOURCES.md)。

@@ -1,0 +1,132 @@
+{
+  "arm": "G",
+  "operation": "separate:P3",
+  "raw": {
+    "evidence_refs": [
+      "P3",
+      "fresh_1_0",
+      "fresh_1_4",
+      "fresh_1_8",
+      "fresh_1_12"
+    ],
+    "experiments": [
+      {
+        "h": 0.5,
+        "history": [
+          -1,
+          0,
+          1,
+          0
+        ],
+        "purpose": "Probe an alternating history at a matched waiting time while varying current drive.",
+        "u": -0.4
+      },
+      {
+        "h": 1.5,
+        "history": [
+          -1,
+          0,
+          1,
+          0
+        ],
+        "purpose": "Compare waiting-time response for the same alternating history.",
+        "u": 0.7
+      },
+      {
+        "h": 0.5,
+        "history": [
+          0.25,
+          0.25,
+          0.25,
+          0.25
+        ],
+        "purpose": "Test a constant intermediate history against alternating histories.",
+        "u": 0.2
+      },
+      {
+        "h": 2.3,
+        "history": [
+          1,
+          -1,
+          1,
+          -1
+        ],
+        "purpose": "Probe a distinct alternating sequence at a long waiting time.",
+        "u": -0.9
+      }
+    ],
+    "exposed_inputs": [
+      "u",
+      "h",
+      "history"
+    ],
+    "left_expression": "intercept + drive_gain*u + wait_gain*h + history_gain*sum(history) + interaction_gain*h*sum(history)",
+    "measurement_requests": [],
+    "parameters": [
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.1,
+        "lower": -2,
+        "name": "intercept",
+        "upper": 2
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.9,
+        "lower": -2,
+        "name": "drive_gain",
+        "upper": 2
+      },
+      {
+        "dimension": [
+          -1,
+          1
+        ],
+        "initial": -0.2,
+        "lower": -2,
+        "name": "wait_gain",
+        "upper": 2
+      },
+      {
+        "dimension": [
+          0,
+          1
+        ],
+        "initial": 0.2,
+        "lower": -2,
+        "name": "history_gain",
+        "upper": 2
+      },
+      {
+        "dimension": [
+          -1,
+          1
+        ],
+        "initial": -0.1,
+        "lower": -2,
+        "name": "interaction_gain",
+        "upper": 2
+      }
+    ],
+    "quantities": [
+      {
+        "expression": "sum(history)",
+        "interpretation": "Dimensionless net prior drive across the four recorded intervals; interval duration is fixed at one second.",
+        "name": "history_total"
+      }
+    ],
+    "rationale": "P3 certifies that an unrestricted additive function of (history,h) and a separate function of u fits all supplied records below the stated threshold. P1 and P2 are empirically excluded under the same fixed times and dt context, so this replacement explicitly keeps u separate from a joint history-and-waiting-time contribution. The compact parameterized form is a testable candidate within that permitted structure, not a uniquely identified mechanism; its coefficients require refitting on fit data, and dev performance must be evaluated separately.",
+    "right_expression": "0",
+    "scientific_change": "Replace the failed present-state/history partitions with the supported separation of current drive from the joint history-and-waiting-time group. Use the net history sum and its interaction with waiting time as a compact, falsifiable representation; the certificate supports the broader partition but does not establish this particular functional form."
+  },
+  "result": {
+    "status": "construction_failed",
+    "error": "Complete equation must be scalar raw response, dimension [0,1]"
+  }
+}

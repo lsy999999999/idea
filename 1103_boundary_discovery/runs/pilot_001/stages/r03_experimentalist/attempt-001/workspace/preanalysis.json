@@ -1,0 +1,53 @@
+{
+  "frozen_at_utc": "2026-11-03T13:47:00Z",
+  "stage_id": "r03_experimentalist",
+  "purpose": "结果盲化的独立USGS站点复现，仅检验空气日温幅的增量预测信息；不检验低流量交互或机制。",
+  "requested_model": "gpt-6-luna",
+  "model_backend_weights_verified": false,
+  "selection": {
+    "selection_rule": "从项目既有USGS Oregon活跃水温站清单中排除10396000、11501000、11502500；只用站点目录、坐标和GHCN清单元数据筛选。保留USGS日值型00010与00060均在站点服务可查询的站。对每站计算距最近NOAA GHCN站的球面距离，要求该GHCN站同时有TMAX和TMIN且库存年份覆盖2014-2023，并排除USR0000OPHI和USR0000OCHI；选最近合格NOAA代理距离最短的USGS站，平局按USGS站号升序。选站期间不请求或查看河温数值。",
+    "selected_usgs_site": "14139940",
+    "selected_usgs_name": "BULL RUN RIVER BLW BULL RUN RES 2, NR BULL RUN, OR",
+    "selected_noaa_station": "USC00353770",
+    "selection_metadata": {
+      "usgs_latitude": 45.44852778,
+      "usgs_longitude": -122.1551944,
+      "noaa_latitude": 45.4489,
+      "noaa_longitude": -122.1556,
+      "great_circle_distance_km": 0.0394,
+      "noaa_tmax_inventory_years": [1897, 2011],
+      "noaa_tmin_inventory_years": [1897, 2011],
+      "noaa_tmax_tmin_joint_inventory_years": [1897, 2011],
+      "usgs_daily_value_metadata_checks": [
+        "site service query hasDataTypeCd=dv&parameterCd=00010 returns site 14139940",
+        "site service query hasDataTypeCd=dv&parameterCd=00060 returns site 14139940"
+      ]
+    },
+    "availability_status": "站点级日值参数存在已核实；USGS 2014-2023逐日共同覆盖及三项水温统计量在本文件冻结时尚未查看，作为冻结后的数据质量/任务完成性检查。若不满足，不按水温结果更换站点，报告失败及缺口。"
+  },
+  "prediction": {
+    "direction": "加入NOAA空气日温幅(TMAX-TMIN)后，测试期河水日温幅MAE相对基线下降；预先定义的差值为MAE_baseline - MAE_amplitude，正值为改善。",
+    "result_specificity_controls": ["河水日均温", "河水日最高温"],
+    "no_low_flow_interaction": true
+  },
+  "analysis_plan": {
+    "data_period": ["2014-01-01", "2023-12-31"],
+    "training_period": ["2014-01-01", "2018-12-31"],
+    "test_period": ["2019-01-01", "2023-12-31"],
+    "usgs_parameters": {
+      "water_temperature": "00010 daily maximum 00001, minimum 00002, mean 00003; Celsius",
+      "discharge": "00060 daily mean 00003; cubic feet per second"
+    },
+    "usgs_quality_filter": "四条必要日值序列均要求已批准限定符以A开头；保留A:e估算流量并单独计数，排除P及空值。",
+    "noaa_quality_filter": "要求TMAX与TMIN均非缺测且GHCN qflag为空；十分之一摄氏度转摄氏度。保留并报告mflag/sflag，不依其筛选。",
+    "pairing": "USGS本地日日期与NOAA GHCN年月日按完全相同的日历日期内连接；不作插值或前后移日。先筛选再计算water_range=water_max-water_min、air_range=air_tmax-air_tmin、air_mean=(air_tmax+air_tmin)/2。",
+    "complete_case": "四项USGS日值与NOAA TMAX/TMIN齐全且质量通过的日期进入三个响应量完全相同的分析样本；要求流量大于0以计算log10(discharge)，否则排除并计数。",
+    "baseline_predictors": ["月份分类变量", "NOAA空气日均温", "log10(USGS日均流量)"] ,
+    "expanded_predictors": ["基线全部变量", "NOAA空气日温幅"],
+    "model": "训练期普通最小二乘线性回归；类别月份使用哑变量；只用训练期拟合；测试期只用于预测及评价。单站不加入站点项。",
+    "primary_metric": "测试期水温日温幅MAE；报告MAE_baseline - MAE_expanded及摄氏度单位。",
+    "block_uncertainty": "测试期按测试年份分层；在每个年份内以连续28日历日为同步移动块，对同一日期的观测及两模型预测成对重抽样，跨年份保持各年测试行数，2000次重抽样，numpy随机种子20261103；给出差值百分位95%区间。若某年份边界有不满28日部分，移动块仅在该年内起抽，拼接后截取到该年原样本量。三个响应量均报告同一方法的差值区间。",
+    "selection_and_test_blinding": "前期项目已读取USGS活跃站点元数据及NOAA库存元数据。根据现有项目清单，USGS历史日值响应仅涵盖原三站，未检索到14139940的水温值；本阶段记录检索核查并在本次冻结后请求新站观测。水温训练期和测试期结果在冻结前均未查看。"
+  },
+  "predeclared_classification": "若新站USGS观测与NOAA配对在目标窗口内足以形成上述共同样本，此为新站/新代理验证；如果仅目录可用性或数据文件此前已被项目其他分析读取，则相应限制并标为探索性复用。"
+}

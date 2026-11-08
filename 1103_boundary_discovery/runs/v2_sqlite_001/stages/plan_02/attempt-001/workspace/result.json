@@ -1,0 +1,216 @@
+{
+  "summary": "读取 ledger_02.json、bridge 与 experiment_01 的实际结果后，决定将唯一剩余实验槽用于检验尚未改变的因素：reader snapshot 相对写入前缀的位置。E03 只检验固定位置下的年龄效应，12/12 配对两条件都为 2/26 checkpointed frames；它不能回答位置是否预测 PASSIVE 进度。比较了同为真实 SQLite、可在预算内执行的 240 行位置扫描与 2400 行位置扫描，选择前者以直接填补该证据缺口。仅冻结计划，不执行实验。",
+  "artifacts": [
+    {
+      "path": "runs/v2_sqlite_001/stages/plan_02/attempt-001/workspace/report_zh.md",
+      "kind": "interpretation",
+      "description": "计划选择理由、预注册分类和对已知机制及解释边界的说明。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/experiment_01/attempt-001/workspace/raw_trials.json",
+      "kind": "observation",
+      "description": "E03 的 24 次 SQLite 实测记录；用于说明当前证据只改变了 reader 年龄而未改变 snapshot 前缀。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/snapshots/ledger_02.json",
+      "kind": "ledger_evidence",
+      "description": "运行前账本快照，包含 A1/B1 已知 end-mark 预测、C3 年龄代理预测及 E02/E03 记录。"
+    }
+  ],
+  "evidence": [
+    {
+      "type": "ledger_observation",
+      "source": "runs/v2_sqlite_001/snapshots/ledger_02.json",
+      "details": "A1 与 B1 均预测 snapshot/end-mark 位置影响 checkpoint 前缀；A1/B1 兼容。ledger 将 B1 标为 supported，但其列出的 E03 实验仅改变 reader 年龄，不能作为位置效应的直接检验。"
+    },
+    {
+      "type": "experiment_observation",
+      "source": "runs/v2_sqlite_001/stages/experiment_01/attempt-001/workspace/raw_trials.json",
+      "details": "E03 在 SQLite 3.51.3、24 次提交、240 行、log_frames=26、WAL=107152 bytes 下，12/12 配对的短龄和长龄 reader 都得到 checkpointed_frames=2；snapshot 都在写入 burst 前建立。"
+    },
+    {
+      "type": "experiment_interpretation",
+      "source": "runs/v2_sqlite_001/stages/experiment_01/attempt-001/workspace/classification.json",
+      "details": "按 E03 冻结规则分类为 no_age_penalty。该分类约束年龄代理，不区分早/晚 snapshot 前缀。"
+    },
+    {
+      "type": "known_literature",
+      "source": "https://www.sqlite.org/wal.html",
+      "details": "bridge 阶段已查阅的 SQLite WAL 官方文档说明 reader end mark 可限制 checkpoint；机制是已知基线。"
+    },
+    {
+      "type": "measurement_interface",
+      "source": "https://www.sqlite.org/c3ref/wal_checkpoint_v2.html",
+      "details": "bridge 阶段已查阅该官方 API 文档，可用 PASSIVE 返回的 log 与 checkpointed frame 计数作为测量。"
+    }
+  ],
+  "claims": [
+    "此次计划的可区分问题是：在总写入、SQLite 配置和最终 WAL head 匹配时，改变 reader snapshot 前缀是否产生可重复的有序 checkpointed_frames 差异。",
+    "E03 不支持‘仅由墙钟年龄造成进度损失’的强预测；它没有测试 snapshot 位置，因此既不确认也不否定位置效应。",
+    "若位置效应在 E04 重现，它仍是 SQLite 文档所述机制的局部操作化，不构成新机制或策略收益证据。"
+  ],
+  "limitations": [
+    "未运行选定实验；结果分类仅为预注册计划。",
+    "位置扫描只覆盖单一 SQLite build、单一 page size、单一插入轨迹与活跃 reader 条件；页布局与 checkpoint 已完成前缀仍可能影响返回计数。",
+    "position_flat 类仅表示当前局部工作负载中观察到无差异，不推翻官方文档记载的一般 end-mark 限制。",
+    "没有进行新文献检索；现有官方资料已经解释该机制，未声称新颖性。"
+  ],
+  "next_actions": [
+    "由实验阶段先读取并冻结本结果，再按 E04 的种子、随机顺序、控制检查及分类阈值执行真实 SQLite 试验。",
+    "保存逐次事务轨迹、原始 PRAGMA 返回值及分类计算；控制失配不纳入有效配对且不得替换种子。",
+    "由独立复核阶段检查 snapshot 前缀是否确实改变、WAL head 是否匹配，并重新计算主要分类。"
+  ],
+  "decision": "experiment",
+  "proposals": [
+    {
+      "id": "D1",
+      "statement": "在当前 SQLite WAL 轨迹中，总写入量与最终 WAL head 固定时，reader 在更晚写入前缀建立 snapshot 会使其活动期间 PASSIVE checkpointed_frames 高于更早前缀条件。此为已知 end-mark 机制的本地可检验预测，不是新机制主张。",
+      "representation": "表示包含活动 reader snapshot 的写入前缀位置及最终 WAL head；reader 墙钟年龄不单独作为决定量。",
+      "measurement": "在新鲜 SQLite WAL 数据库中记录 reader 建立 snapshot 时的已提交批次数，之后完成相同余下写入；reader 保持活动时调用 PASSIVE，记录 checkpointed_frames 与 log_frames。",
+      "predictions": [
+        "在 12 个配对种子中，late-prefix 条件的 checkpointed_frames 至少 10 次高于 early-prefix；中间位置至少 10 次不低于 early。"
+      ],
+      "alternatives": [
+        "当前小型轨迹中，固定写入形状、页布局或已完成前缀使 snapshot 位置不能产生稳定的可测帧数差；已知机制在这个操作化下没有可分辨效应。"
+      ],
+      "prior_work": [
+        {
+          "url": "https://www.sqlite.org/wal.html",
+          "relation": "官方 WAL 文档已经说明 reader end mark 可限制 checkpoint；D1 是本地轨迹检验，不主张世界新颖性。"
+        },
+        {
+          "url": "https://www.sqlite.org/c3ref/wal_checkpoint_v2.html",
+          "relation": "定义 PASSIVE 行为和可观测 frame 计数。"
+        }
+      ],
+      "status": "proposed"
+    },
+    {
+      "id": "D2",
+      "statement": "在 E03 的 240 行、24 次提交工作负载中，改变 reader snapshot 前缀仍不会产生稳定的 checkpointed_frames 顺序差异；该轨迹的实际可测进度由其他 SQLite 状态或帧粒度主导。此为局部竞争解释，不是对一般 SQLite 语义的否定。",
+      "representation": "对于该固定轨迹，snapshot 前缀不是足以改变所测 PASSIVE frame count 的状态量；仍保留 log head、页布局与先前 checkpoint 前缀作为可能影响量。",
+      "measurement": "与 D1 同一位置扫描和同一实际测量，使用预先冻结的 position_flat 分类条件。",
+      "predictions": [
+        "至少 10/12 个有效种子的 early、mid、late 三条件 checkpointed_frames 完全相同；达不到该规则则预测未获支持或结果不确定。"
+      ],
+      "alternatives": [
+        "更晚的 end mark 允许 PASSIVE 跨过更多由后续写入产生的 frames，产生至少 10/12 个正向配对差。"
+      ],
+      "prior_work": [
+        {
+          "url": "https://www.sqlite.org/wal.html",
+          "relation": "文档中的一般 end-mark 限制使 D2 仅是特定写入规模下关于可测性的替代预测。"
+        }
+      ],
+      "status": "proposed"
+    }
+  ],
+  "plans": [
+    {
+      "id": "E04",
+      "question": "在 E03 同一 240 行轨迹中，reader snapshot 前缀位置是否能预测活动 reader 下单次 PASSIVE 的 checkpointed_frames？",
+      "hypothesis_ids": [
+        "D1",
+        "D2"
+      ],
+      "intervention": "使用项目 .venv Python 的 sqlite3 和独立临时数据库。固定 SQLite build、page_size=4096、journal_mode=WAL、synchronous=NORMAL、wal_autocheckpoint=0、24 次提交且每次 10 行、总 240 行、SQL/数据形状及最终写入总量。三条件分别在第 0、12、23 批提交后开启 reader 并建立 snapshot；保持 reader 活动，完成剩余批次后在 writer 上调用一次 PRAGMA wal_checkpoint(PASSIVE)。每个条件独立 fresh DB。记录事务事件、snapshot 时已提交批数、busy、log_frames、checkpointed_frames、checkpoint 前后 WAL bytes 和调用耗时。计划执行目标小于 120 秒，阶段硬上限 600 秒。",
+      "outcome_measure": "12 个固定种子 20261128–20261139；每种子内以该种子初始化的 RNG 打乱 early/mid/late 条件顺序。有效性要求三条件 SQLite/build/page size/synchronous/提交数、最终 log_frames 与 checkpoint 前 WAL bytes 匹配，reader 确在 checkpoint 时活动，且日志确认 snapshot 前缀分别为 0/12/23。主要量为每种子 late checkpointed_frames 减 early checkpointed_frames；同时检查 mid 与 early。至少 10/12 有效种子严格 late>early 且至少 10/12 mid>=early，分类 position_order。至少 10/12 有效种子的 early、mid、late checkpointed_frames 三者完全相同，分类 position_flat。两类互斥。有效种子少于 10、控制不符、分类规则均未达成、或出现其余非单调形态，一律 uncertain。调用时间只报告中位数和范围，不参与分类。种子不补抽。",
+      "predictions": [
+        {
+          "hypothesis_id": "D1",
+          "expected_outcome": "更晚 snapshot 前缀允许更大的连续 PASSIVE 进度，预期 position_order。",
+          "outcome_id": "position_order"
+        },
+        {
+          "hypothesis_id": "D2",
+          "expected_outcome": "在此 240 行设置下前缀位置不产生稳定帧数差，预期 position_flat。",
+          "outcome_id": "position_flat"
+        }
+      ],
+      "outcome_classes": [
+        {
+          "id": "position_order",
+          "description": "至少 10/12 有效种子 late checkpointed_frames 严格高于 early，且至少 10/12 的 mid 不低于 early。",
+          "effects": {
+            "D1": "supports",
+            "D2": "contradicts"
+          }
+        },
+        {
+          "id": "position_flat",
+          "description": "至少 10/12 有效种子的 early、mid、late checkpointed_frames 三者完全相同。",
+          "effects": {
+            "D1": "contradicts",
+            "D2": "supports"
+          }
+        },
+        {
+          "id": "uncertain",
+          "description": "有效配对少于 10/12、控制失败，或 position_order 与 position_flat 规则均未满足；非单调差异明确归此类。",
+          "effects": {
+            "D1": "inconclusive",
+            "D2": "inconclusive"
+          }
+        }
+      ],
+      "cost_minutes": 3,
+      "feasibility": "E03 已在项目环境用 Python sqlite3 成功执行 24 次真实 SQLite 临时数据库试验；本计划每种子 3 个条件，共 36 次小型运行，预计低于 120 秒计算时间，留有阶段预算余量。",
+      "selection_reason": "相较 E05，这个行动在 E03 的同一总写入量和 SQL 轨迹内改变其未改变的关键坐标，可直接解释固定位置下的 no_age_penalty；若位置效应不出现，也能限定该小型轨迹的可测边界。",
+      "replication": true
+    },
+    {
+      "id": "E05",
+      "question": "将 E04 的 snapshot 前缀位置干预用于 2400 行较大突发时，是否出现有序 checkpointed_frames 差异，从而提示效应依赖写入规模？",
+      "hypothesis_ids": [
+        "D1",
+        "D2"
+      ],
+      "intervention": "真实 fresh SQLite WAL 数据库；固定相同 build、page size、同步与自动 checkpoint 设置；240 次提交、每次 10 行、总 2400 行。reader 分别在第 0、120、239 批后建立 snapshot，完成余下写入后保持 reader 活动并调用一次 PASSIVE。三条件、每个 12 个固定种子随机顺序；不运行本计划的其他实验条件。",
+      "outcome_measure": "测量、控制、种子顺序和互斥分类完全使用 E04 的 position_order/position_flat/uncertain 规则，position_flat 要求至少 10/12 种子的 early、mid、late 三值完全相同；先检查 2400 行三条件 log_frames 与 WAL bytes 匹配。该计划单独检验更大 burst，不与 E03 或未来其他规模的数据合并分类。",
+      "predictions": [
+        {
+          "hypothesis_id": "D1",
+          "expected_outcome": "更晚 snapshot 前缀允许更大的连续 PASSIVE 进度，预期 position_order。",
+          "outcome_id": "position_order"
+        },
+        {
+          "hypothesis_id": "D2",
+          "expected_outcome": "若较大 burst 下仍受局部帧布局等因素主导，则无稳定位置差，预期 position_flat。",
+          "outcome_id": "position_flat"
+        }
+      ],
+      "outcome_classes": [
+        {
+          "id": "position_order",
+          "description": "至少 10/12 有效种子 late 高于 early，且至少 10/12 mid 不低于 early。",
+          "effects": {
+            "D1": "supports",
+            "D2": "contradicts"
+          }
+        },
+        {
+          "id": "position_flat",
+          "description": "至少 10/12 有效种子的 early、mid、late checkpointed_frames 三者完全相同。",
+          "effects": {
+            "D1": "contradicts",
+            "D2": "supports"
+          }
+        },
+        {
+          "id": "uncertain",
+          "description": "控制或有效配对不足，或数据不满足前两类规则。",
+          "effects": {
+            "D1": "inconclusive",
+            "D2": "inconclusive"
+          }
+        }
+      ],
+      "cost_minutes": 5,
+      "feasibility": "采用已成功运行的 SQLite Python API、临时数据库与同类短写入事务；36 次运行预计仍低于 120 秒，但更大的 WAL 状态比 E04 复杂。",
+      "selection_reason": "相较 E04 可探查 workload-scale dependence，但若差异出现，不能仅凭本实验分辨规模变化与 E03 小轨迹差异为何重要；优先直接检验原轨迹缺失的 snapshot 位置变量。",
+      "replication": true
+    }
+  ],
+  "selected_plan_id": "E04",
+  "selection_reason": "E04 与实际已完成的 E03 共享写入规模和事务形状，只干预 reader snapshot 前缀位置，能在预算内以真实 SQLite 结果区分已知 end-mark 位置预测与该局部轨迹的无稳定位置效应。E05 有价值但引入更大写入规模，作为本轮单槽选择时归因更弱。"
+}

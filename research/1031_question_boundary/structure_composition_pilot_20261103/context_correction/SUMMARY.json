@@ -1,0 +1,184 @@
+{
+  "time": "2026-11-03T12:56:25.685839+00:00",
+  "new_calls": 4,
+  "original_calls": 5,
+  "total_turn_calls": 9,
+  "certificates": [
+    {
+      "id": "P1",
+      "left": [
+        "u",
+        "h",
+        "times",
+        "dt"
+      ],
+      "right": [
+        "history",
+        "times",
+        "dt"
+      ],
+      "fixed_context": {
+        "times": [
+          -4.0,
+          -3.0,
+          -2.0,
+          -1.0
+        ],
+        "dt": 1.0
+      },
+      "minimum_rmse": 0.10536671677205332,
+      "hard_excluded": true
+    },
+    {
+      "id": "P2",
+      "left": [
+        "u",
+        "history",
+        "times",
+        "dt"
+      ],
+      "right": [
+        "h",
+        "times",
+        "dt"
+      ],
+      "fixed_context": {
+        "times": [
+          -4.0,
+          -3.0,
+          -2.0,
+          -1.0
+        ],
+        "dt": 1.0
+      },
+      "minimum_rmse": 0.10528189211987196,
+      "hard_excluded": true
+    },
+    {
+      "id": "P3",
+      "left": [
+        "history",
+        "h",
+        "times",
+        "dt"
+      ],
+      "right": [
+        "u",
+        "times",
+        "dt"
+      ],
+      "fixed_context": {
+        "times": [
+          -4.0,
+          -3.0,
+          -2.0,
+          -1.0
+        ],
+        "dt": 1.0
+      },
+      "minimum_rmse": 0.007724960747431271,
+      "hard_excluded": false
+    }
+  ],
+  "plans": {
+    "F": {
+      "evidence_refs": [
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "operation": "joint",
+      "reason": "P1 and P2 are certified hard exclusions for their additive partition classes on the supplied rows: each minimum RMSE exceeds 0.06. P3 is not excluded and its minimum RMSE is 0.00772, so evidence does not rule out separation with (history,h) and u. Choose joint to retain the unrestricted response class while accounting for the observed failures; this does not assert a unique mechanism."
+    },
+    "G": {
+      "evidence_refs": [
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "operation": "separate:P3",
+      "reason": "P1 and P2 are exactly certified as inadequate: their best possible additive models have minimum RMSE about 0.105, above 0.06. P3 remains empirically adequate on the supplied rows (minimum RMSE about 0.0077), so separating its two groups is permitted and evidence-grounded while preserving the observed history-and-waiting-time dependence."
+    }
+  },
+  "controls": {
+    "F": {
+      "allowed": [
+        "joint",
+        "separate:P1",
+        "separate:P2",
+        "separate:P3"
+      ],
+      "disabled": [],
+      "semantics": {
+        "joint": "One unrestricted whole response over any supplied information; may still emit an additive function and remains subject to common tests",
+        "separate": "Tool constructs a sum of two response branches, each restricted to one certified input group"
+      }
+    },
+    "G": {
+      "allowed": [
+        "joint",
+        "separate:P3"
+      ],
+      "disabled": [
+        "separate:P1",
+        "separate:P2"
+      ],
+      "semantics": {
+        "joint": "One unrestricted whole response over any supplied information; may still emit an additive function and remains subject to common tests",
+        "separate": "Tool constructs a sum of two response branches, each restricted to one certified input group"
+      }
+    }
+  },
+  "candidates": [
+    {
+      "arm": "F",
+      "expression": "a + b*u + c*h + d*sum(history*exp(times/tau)) + e*u*sum(history*exp(times/tau)) + f*h*sum(history*exp(times/tau))",
+      "operation": "joint",
+      "status": "executed",
+      "class_violation": false,
+      "residual_calls": 306
+    },
+    {
+      "arm": "G",
+      "expression": null,
+      "operation": "separate:P3",
+      "status": "construction_failed",
+      "class_violation": null,
+      "residual_calls": 0
+    }
+  ],
+  "independent": {
+    "time": "2026-11-03T12:56:25.665983+00:00",
+    "results": [
+      {
+        "arm": "F",
+        "status": "executed",
+        "dev_rmse": 0.06444380870064965,
+        "accepted": false,
+        "hidden_rmse": 0.06788127190247054,
+        "fixed_confirmation_rmse": 0.04924994001668308,
+        "all_prospective_rmse": 0.05549759531886078
+      },
+      {
+        "arm": "G",
+        "status": "construction_failed",
+        "dev_rmse": null,
+        "accepted": false
+      }
+    ],
+    "new_conditions": 10,
+    "new_observations": 40,
+    "fixed_conditions": 4,
+    "selection_sha256": "245a14ed834d839961eddf3c5773a09ec11205a181a516022c08a7b0047a1e95",
+    "prediction_sha256": "40b8493adf9370d21cecbd0c62e50c6dcbdbdc8ee4ec36f906000cf70cad719a",
+    "hidden_sha256": "a2370d423ef62b81ea6ff5fa6074dfc30eb233343be50c8f6a8d016948fb1c1a"
+  },
+  "usage": {
+    "input_tokens": 140801,
+    "cached_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 1511,
+    "reasoning_output_tokens": 0
+  },
+  "scope": "One valid development pair after separately recorded interface correction; no average advantage or open-discovery conclusion"
+}

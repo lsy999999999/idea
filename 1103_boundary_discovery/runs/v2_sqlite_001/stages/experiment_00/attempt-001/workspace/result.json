@@ -1,0 +1,78 @@
+{
+  "summary": "E02 已完成 72 次真实 SQLite WAL 策略回放（两个轨迹形状、12 个随机策略顺序种子、三种策略），每次提交 240 行；204 次 PASSIVE 调用均 busy=0，所有运行末尾残余帧为 0。按冻结分类规则，heldout_H1 的生命周期策略成本区间不能排除零，且终端 API 帧数低于基线；分类为 uncertain_or_tradeoff。",
+  "artifacts": [
+    {
+      "path": "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/preregistration.md",
+      "type": "execution preregistration",
+      "description": "测量前固定的轨迹、策略、随机顺序、统计和计划歧义处理；解释范围，不是观测。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/run_e02.py",
+      "type": "executable code",
+      "description": "创建临时 SQLite WAL 数据库、执行回放、保存逐次原始结果并计算汇总与 bootstrap 区间。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/raw_trials.json",
+      "type": "raw observations",
+      "description": "72 个独立运行及 204 个 checkpoint 调用的 API 返回、耗时、WAL bytes、事务数据和延迟。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/classification.json",
+      "type": "classification calculation",
+      "description": "配对均值差、95% bootstrap 区间、完成帧规则检查与预定分类。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/report_zh.md",
+      "type": "interpretation",
+      "description": "中文报告，区分观测、分类、限制和后续验证。"
+    }
+  ],
+  "evidence": [
+    {
+      "type": "experiment_observation",
+      "source": "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/raw_trials.json",
+      "observation": "72/72 次运行各提交 240 行，SQLite 3.51.3；204/204 次 PASSIVE 返回 busy=0；各运行末次 PASSIVE 的 residual_frames 均为 0。"
+    },
+    {
+      "type": "paired_measurement",
+      "source": "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/classification.json",
+      "observation": "Development: lifecycle 减 fixed-period checkpoint 时间均值 -0.0793 ms，95% CI [-0.1174,-0.0419]；减 WAL-growth -0.0776 ms，CI [-0.2224,0.0338]。Heldout_H1: 分别 +0.0202 ms，CI [-0.0296,0.0796]；+0.0174 ms，CI [-0.0301,0.0669]。"
+    },
+    {
+      "type": "terminal_api_values",
+      "source": "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/raw_trials.json",
+      "observation": "heldout_H1 每个种子的末次 (log_frames, checkpointed_frames) 固定周期为 (6,6)，WAL-growth 为 (24,24)，reader_lifecycle 为 (4,4)；三种策略每次 residual_frames 都为 0。这些是末次 API 值，不是跨 WAL 重启累计帧数。"
+    }
+  ],
+  "claims": [
+    "在本次固定的两个串行回放轨迹中，reader_lifecycle 的 development checkpoint 时间低于 fixed-period，且配对区间不含零；与 WAL-growth 的区间包含零。",
+    "Heldout_H1 上 lifecycle 相比两基线的 checkpoint 时间配对区间均包含零，终端 API 帧数更低；其 writer p95 相比 WAL-growth 更高，而 reader 最大完成延迟更低。",
+    "实际数字满足冻结 outcome rule `uncertain_or_tradeoff`：held-out 数据中成本优势未成立，完成量/延迟不能支持两种明确分类，而且明确类还要求第二个 held-out shape。此为实验结果分类，不构成对 C1/C2 的假说状态更新。"
+  ],
+  "limitations": [
+    "冻结干预仅指定一个 held-out shape，而 lifecycle_gain 与 baseline_sufficient 的分类描述都要求两个；没有增加第二个 shape。",
+    "回放是单线程串行执行；测得 reader completion delay 不代表并发客户端的实际服务分布。",
+    "SQLite PASSIVE 末次 log/checkpointed 帧数可能受 WAL 重启影响，不能跨调用直接累加；所有运行末次 residual_frames 为 0，但不据此声称调度策略成本等价。",
+    "仅一个 SQLite 3.51.3 build、临时本地文件和人为固定的小型轨迹；不能推断生产性能或世界新颖性。"
+  ],
+  "next_actions": [
+    "未来实验计划需先解决 held-out shape 数量不一致，并在新实验前冻结第二个不同的 release/burst held-out shape。",
+    "若继续，使用新数据库复验，保持本次阈值和配对规则不变，并进一步定义可跨 WAL reset 比较的累计完成工作量指标。"
+  ],
+  "observation": {
+    "experiment_id": "E02",
+    "execution_status": "completed",
+    "observed_outcome_id": "uncertain_or_tradeoff",
+    "summary": "72 个运行中，heldout_H1 生命周期策略相对 fixed-period 与 WAL-growth 的 checkpoint 时间差 95% 配对 bootstrap 区间分别为 [-0.0296,0.0796] ms 与 [-0.0301,0.0669] ms，均包含零；lifecycle 末次 API tuple 为 (busy,log,checkpointed)=(0,4,4)，基线分别为 (0,6,6) 与 (0,24,24)，且均为零残余帧。实际数字符合冻结规则 uncertain_or_tradeoff：成本未明确降低，帧数/延迟不能支持明确类；另因冻结干预仅有一个 held-out shape，不能满足需两个 shape 的明确类条件。",
+    "artifacts": [
+      "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/run_e02.py",
+      "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/raw_trials.json",
+      "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/classification.json",
+      "runs/v2_sqlite_001/stages/experiment_00/attempt-001/workspace/report_zh.md"
+    ],
+    "limitations": [
+      "一个 held-out shape 的计划矛盾限制了预先定义的 outcome class 判别。",
+      "串行回放延迟不代表并发客户端服务延迟；末次 API 帧数不等于跨 WAL 重启累计帧数。"
+    ]
+  }
+}

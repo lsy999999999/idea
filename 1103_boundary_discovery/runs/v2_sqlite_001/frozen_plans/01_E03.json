@@ -1,0 +1,52 @@
+{
+  "id": "E03",
+  "question": "在 reader 的 SQLite snapshot position、活动状态、写入轨迹和 WAL head 相同时，reader 墙钟年龄本身是否降低当前 PASSIVE 可完成帧数？",
+  "hypothesis_ids": [
+    "C3",
+    "B1"
+  ],
+  "intervention": "在项目 .venv 的 Python sqlite3 与本地临时 WAL 数据库上使用固定 SQLite build、page size、同步设置、SQL、事务边界及 checkpoint 模式。每个配对条件用新数据库：读事务执行 SELECT 建立初始 snapshot；短龄条件等待 1 ms、长龄条件等待 100 ms；然后执行完全相同的固定写入 burst，读者在 PASSIVE 时均保持活动。配对须具有相同 log_frames 和 WAL 文件字节数，否则按预先规则记为无效，不重调输入凑配。每次只调用一次 PASSIVE，记录 busy、log_frames、checkpointed_frames、WAL bytes、耗时。使用 12 个配对种子 20261116–20261127，每个种子用其固定伪随机顺序决定短/长条件先后；每次均为新鲜数据库。",
+  "outcome_measure": "主要测量每个有效配对的 Δ=长龄 checkpointed_frames−短龄 checkpointed_frames；报告逐对值、方向计数、中位配对差、12 对有效率与次要调用时间。仅当同一配对的数据库设置、reader snapshot 构造、写入数、log_frames 与 WAL bytes 匹配时计为有效。目标 12 对；少于 10 个有效配对一律 uncertain。",
+  "predictions": [
+    {
+      "hypothesis_id": "C3",
+      "expected_outcome": "长龄条件在至少 10/12 个有效配对中 checkpointed_frames 严格较少，方向性支持 reader age 在固定 snapshot position/head 下有额外作用。",
+      "outcome_id": "age_penalty"
+    },
+    {
+      "hypothesis_id": "B1",
+      "expected_outcome": "在至少 10/12 个有效配对中，长龄 checkpointed_frames 不低于短龄；年龄本身未表现为固定 end-mark 之外的稳定进度约束。",
+      "outcome_id": "no_age_penalty"
+    }
+  ],
+  "outcome_classes": [
+    {
+      "id": "age_penalty",
+      "description": "至少 10/12 个有效配对 Δ<0；至少 10 对有效且 WAL/head 控制均满足。否则不可归入本类。",
+      "effects": {
+        "C3": "supports",
+        "B1": "contradicts"
+      }
+    },
+    {
+      "id": "no_age_penalty",
+      "description": "至少 10/12 个有效配对 Δ>=0；至少 10 对有效且 WAL/head 控制均满足。平局归入无额外年龄惩罚方向。",
+      "effects": {
+        "C3": "contradicts",
+        "B1": "supports"
+      }
+    },
+    {
+      "id": "uncertain",
+      "description": "有效配对少于 10，或方向未达到任一 10/12 规则，或控制失败/结果落在未覆盖情形。",
+      "effects": {
+        "C3": "inconclusive",
+        "B1": "inconclusive"
+      }
+    }
+  ],
+  "cost_minutes": 3,
+  "feasibility": "项目 brief 和 E02 已在本项目环境用 Python 标准库 sqlite3 成功操作真实临时 WAL 数据库。24 个小型 fresh-DB 运行和约 100 ms 配对等待远低于 600 秒预算；此规划阶段没有执行它。",
+  "selection_reason": "相对 E04，E03 以较小成本直接分离年龄与 snapshot/end-mark 位置，给未检验的强代理假说明确反例机会；它也避免重复 E02 的策略回放和服务延迟解释问题。其结论范围有限且不等于新颖性。",
+  "replication": true
+}

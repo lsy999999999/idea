@@ -1,0 +1,120 @@
+{
+  "summary": "独立提案阶段完成：scout 的 PASSIVE 进度差异可由已知的 SQLite WAL 读者快照 end mark 约束解释；提出 B1（快照位置边界）与 B2（聚合遥测决策充分性反例），两者均未测试。检索到直接相关的 Walack 先前工作，因此不主张自适应 checkpoint 或读写负载感知为新概念。",
+  "artifacts": [
+    {
+      "path": "runs/v2_sqlite_001/stages/seed_B/attempt-001/workspace/report.md",
+      "type": "interpretation",
+      "description": "中文独立解释、来源、限制与下一项区分性实验。"
+    },
+    {
+      "path": "bootstrap/v2_scout/result.json",
+      "type": "observation",
+      "description": "原有 SQLite 3.51.3 单次配对探测；不是本阶段新实验。"
+    },
+    {
+      "path": "bootstrap/v2_scout/wal_checkpoint_probe.py",
+      "type": "observation_method",
+      "description": "scout 实际运行的临时 WAL 数据库探测代码。"
+    },
+    {
+      "path": "bootstrap/v2_scout/sources_verified/wal.txt",
+      "type": "public_source_copy",
+      "description": "SQLite WAL 官方文档的项目已验证副本。"
+    },
+    {
+      "path": "bootstrap/v2_scout/sources_verified/checkpoint.txt",
+      "type": "public_source_copy",
+      "description": "SQLite checkpoint API 官方文档的项目已验证副本。"
+    }
+  ],
+  "evidence": [
+    {
+      "kind": "existing_local_observation",
+      "source": "bootstrap/v2_scout/result.json",
+      "details": "固定 120 个事务、每事务 20 行，总计 2400 行；wal_bytes_before_checkpoint 均为 589192。无读者的 PASSIVE 为 [0,143,143]，旧读者条件为 [0,143,2]。两组单次提交延迟不能支持性能判断。"
+    },
+    {
+      "kind": "documented_mechanism",
+      "source": "https://www.sqlite.org/wal.html",
+      "details": "项目已验证文档副本说明读者 end mark 可限制 checkpoint 前进，长读事务可阻碍进度；WAL 文件保留分配空间不能单独说明尚未 checkpoint 的工作量。"
+    },
+    {
+      "kind": "documented_api",
+      "source": "https://www.sqlite.org/c3ref/wal_checkpoint_v2.html",
+      "details": "项目已验证文档副本说明 PASSIVE 不等待读者/写者，可能留下未完成 checkpoint，并返回 WAL log 与 checkpointed frame 计数。"
+    },
+    {
+      "kind": "public_literature_metadata_and_abstract",
+      "source": "https://doi.org/10.1109/icpads60453.2023.00179",
+      "retrieved": "2026-11-04",
+      "details": "OpenAlex W4393207694 摘要及 Crossref 元数据确认 Li Zhu、Yanpeng Hu、Chundong Wang 的 2023 ICPADS 论文《Asynchronous and Adaptive Checkpoint for WAL-based Data Storage Systems》。摘要称 Walack 观察读写请求并在线调整 checkpoint 频率；全文未审阅。"
+    }
+  ],
+  "claims": [
+    "在 scout 的本机设置与单次工作负载中，旧读者条件下同样 busy=0、log_frames=143、WAL 文件字节相同，但 checkpointed_frames 仅为 2；这是局部观察而非性能因果结论。",
+    "B1 将已知 end mark 机制细化为按快照位置而非单看读者年龄的可检验条件预测。",
+    "B2 提出检验聚合 checkpoint 遥测是否遗漏与短期进度相关的快照/释放信息；尚无观测历史不可区分或策略收益的证据。",
+    "Walack 已使通用的读写请求驱动自适应 checkpoint 成为明确先前基线；本阶段未检查全文，也不评估其与 SQLite 原生策略的定量可比性。"
+  ],
+  "limitations": [
+    "只有 scout 的一个本地 SQLite 3.51.3 配对运行；无重复、无 held-out 工作负载、无新实验。",
+    "SQLite 官方页面依据项目已验证副本；本阶段没有重新获取官方页面。",
+    "Walack 仅检查 OpenAlex 摘要与 Crossref 元数据，未获取全文或评价实验设置。",
+    "未验证 B1/B2 的条件预测、公共遥测充分性、策略收益或现实工作负载适用性。",
+    "独立提案仅在提示层独立，不表示统计独立。"
+  ],
+  "next_actions": [
+    "用新临时数据库冻结并执行匹配总写入的成对轨迹，只改变读者快照开始/释放相对写入前缀的时序；测量 PASSIVE 帧增量并记录生命周期。",
+    "在相同写入与释放轨迹上比较固定周期、WAL 大小触发与按公开读写请求率调频的策略，计入 checkpoint 调用、提交尾延迟、读者完成延迟及剩余 checkpoint 工作。",
+    "预留不同读者释放/写突发形状为 held-out；策略或关系只有在多次新数据库执行并报告不确定性后再评价。",
+    "如需主张文献缺口，获取 Walack 全文并沿其引用及相关 WAL checkpoint 调度工作做定向检索。"
+  ],
+  "proposals": [
+    {
+      "id": "B1",
+      "statement": "在写入量与 WAL 总帧数固定时，PASSIVE 可完成的 WAL 前缀受最老活动读者快照 end mark 限制；读者持续时间本身不是足够描述量。",
+      "representation": "活动读者快照位置相对于 WAL 帧序列的顺序，以及 WAL 末端；不同快照位置可被仅看写入计数、文件字节数或读者年龄的表示折叠。",
+      "measurement": "记录固定写入轨迹下每次 PASSIVE 的 busy、log_frames、checkpointed_frames；同时以事务事件日志记录每个读者 BEGIN/read snapshot 与结束时点、对应的写入前缀。帧增量由相邻 checkpointed_frames 差计算。",
+      "predictions": [
+        "控制写入帧数与事务设置后，最老读者的 end mark 越早，checkpointed_frames 上界越低；只改变读者年龄而保持快照位置和活跃状态相同，不应产生同方向的稳定进度差。结束唯一最老读者后，后续 PASSIVE 应能越过此前受限前缀。"
+      ],
+      "alternatives": [
+        "页重用、帧布局、先前已完成的 checkpoint 前缀及测量时序足以解释所见差异，读者快照位置对目标轨迹不是额外预测因素。"
+      ],
+      "prior_work": [
+        {
+          "url": "https://www.sqlite.org/wal.html",
+          "relation": "SQLite 官方文档已说明 reader end mark 可限制 checkpoint；B1 是该已知语义在匹配写入量下的操作化检验，不主张新概念。"
+        },
+        {
+          "url": "https://www.sqlite.org/c3ref/wal_checkpoint_v2.html",
+          "relation": "官方 API 文档规定 PASSIVE 行为及可读帧计数，为独立测量提供接口。"
+        }
+      ],
+      "status": "proposed"
+    },
+    {
+      "id": "B2",
+      "statement": "聚合 checkpoint 遥测与 WAL 文件字节数可能不足以决定何时再次执行 PASSIVE，因为相同的聚合状态可能遗漏活动读者快照位置和即将发生的释放顺序。",
+      "representation": "候选策略只能见到历史 busy/log/checkpointed、WAL 字节数、公开写读请求计数；诊断日志另保留快照位置/读者生命周期，但不提供给该策略。",
+      "measurement": "在轨迹执行中记录每次决策前的公开遥测、接下来的 PASSIVE checkpointed frame 增量及耗时；独立记录读者快照开始和释放时点。按公开遥测匹配决策点后，检验隐藏生命周期分层是否对应不同后续进度，并与固定周期、WAL 大小和请求率触发策略比较。",
+      "predictions": [
+        "若匹配的公开遥测历史下，具有不同快照位置/释放顺序的轨迹仍系统地产生不同的后续 PASSIVE 帧增量，则仅靠该聚合遥测的策略存在可观测性边界；若读写请求率/文件大小等基线在 held-out 轨迹同样预测进度且无额外代价收益，候选边界不支持实用新策略。"
+      ],
+      "alternatives": [
+        "Walack 一类依据读写请求在线调频的策略，或简单 WAL 大小/固定周期策略，已捕捉足够的可行动信息；额外的读者生命周期状态不带来成本匹配后的改进。"
+      ],
+      "prior_work": [
+        {
+          "url": "https://doi.org/10.1109/icpads60453.2023.00179",
+          "relation": "Zhu、Hu、Wang 的 Walack 摘要描述按读写请求自适应调整 WAL checkpoint 频率，直接构成先前策略基线；本阶段只读摘要/元数据，未判定其处理 SQLite 原生读者 end mark 的程度。"
+        },
+        {
+          "url": "https://www.sqlite.org/wal.html",
+          "relation": "SQLite WAL 文档提供被省略状态可能重要的已知机制背景。"
+        }
+      ],
+      "status": "proposed"
+    }
+  ]
+}

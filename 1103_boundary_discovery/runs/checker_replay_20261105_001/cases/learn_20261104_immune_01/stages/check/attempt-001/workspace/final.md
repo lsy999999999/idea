@@ -1,0 +1,3 @@
+已完成候选的两项检查，并写入 [result.json](/Applications/ideas/1103_boundary_discovery/runs/checker_replay_20261105_001/cases/learn_20261104_immune_01/stages/check/attempt-001/workspace/result.json) 和中文报告 [CHECK.md](/Applications/ideas/1103_boundary_discovery/runs/checker_replay_20261105_001/cases/learn_20261104_immune_01/stages/check/attempt-001/workspace/CHECK.md)。
+
+判断为 `already_done`（方向近邻）和 `PARTIAL_OVERLAP`：一项训练免疫后巨噬细胞功能响应研究与候选部分重叠，但群体预测关系的微观来源识别仍未确定。数学粗筛为 `no_obvious_error`。Europe PMC 与 PubMed 搜索服务出错，因此检索范围有限；查询记录和来源快照已保存。`validate_checks(..., require_claims=True)` 校验通过。

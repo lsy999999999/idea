@@ -1,0 +1,3 @@
+已完成 Economics and mechanism design 领域输入，整理出三种可迁移结构：私有信息下的策略实施、以互利偏离定义稳定性，以及制度规则对激励与利益分配的影响；并记录了效率与真实性、稳定与公平、形式性质与制度限制之间的三项张力。
+
+依据是两篇已读取的诺贝尔奖官方综述，原文及检索笔记已保存。结构化卡片和运行记录分别见 [domain_card.json](/Applications/ideas/1103_boundary_discovery/runs/cross_domain_ideas_001/stages/domain_03/attempt-001/workspace/domain_card.json) 和 [result.json](/Applications/ideas/1103_boundary_discovery/runs/cross_domain_ideas_001/stages/domain_03/attempt-001/workspace/result.json)。`result.json` 的 JSON 格式及其中列出的产物路径均已核验。

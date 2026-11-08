@@ -1,0 +1,47 @@
+{
+  "decision": "complete",
+  "research_status": "preliminary_evidence_report_corrected_no_new_experiment",
+  "summary": "更正 c07 报告并综合 r02、r04、r05、r06 与并行理论的实际证据。r03 超时后，r04 已独立复算新站 14092500；r05/r06 的 11502500 指定年度高频水温序列分别缺失，不能与新站结果混淆。2025 检验不支持夜间斜率主导，清晨谷值结果有不同的相对支持状态。",
+  "candidate": {
+    "status": "preliminary_competing_explanations",
+    "question": "空气日温幅的河温预测增量主要对应何种日内波形变化，又能否与河网波形传递区分？",
+    "supported_observation": "既有数据的日温幅预测改善在 r02、r04 中出现；r06 清晨谷值改善区间为正，但日内白天斜率增益大于夜间斜率。",
+    "failed_prediction": "r06 两个可分析站均不支持预冻结的夜间斜率关联强于白天斜率预测。",
+    "untested_alternative": "流量比在月份和共享天气控制后能否预测支流与下游波形振幅比、相位差，尚无指定 2023 downstream 高频序列检验。",
+    "novelty_status": "未建立世界新颖性；并行理论记录了相关热储/热容与波形研究，本轮未做系统综述。"
+  },
+  "source_coverage": [
+    {"source": "r02_skeptic", "status": "complete_independent_recompute", "evidence": "11,535 行复建；日幅 MAE 改善 0.05853°C [0.03443, 0.08513]；低流量交互区间跨零，留站结果不一致。", "path": "runs/pilot_001/stages/r02_skeptic/attempt-001/workspace/result.json"},
+    {"source": "r03_to_r04_new_site", "status": "r03_timeout_r04_independently_verified", "evidence": "r04 独立复算 14092500，共 3,360 日，测试 1,638 日；日幅 MAE 改善 0.007809°C [0.003584, 0.012414]，数值与保存数据复现一致。", "path": "runs/pilot_001/stages/r04_skeptic/attempt-001/workspace/independent_results.json"},
+    {"source": "r05_experimentalist", "status": "partial_2023_downstream_input_missing", "evidence": "NLDI 支持 11501000 至 11502500 路由连通；两站有 2023 测试结果且区块区间跨零。11502500 文件无温度列，transfer test 未做。", "path": "runs/pilot_001/stages/r05_experimentalist/attempt-001/workspace/analysis_results.json"},
+    {"source": "r06_experimentalist", "status": "partial_2025_downstream_temperature_missing", "evidence": "两站 2025 年各 153 配对日；S_day 改善大于 S_night；夜间主导预测失败，清晨谷值改善区间为正。11502500 无温度参数列。格式规范化未改数值。", "path": "runs/pilot_001/stages/r06_experimentalist/attempt-001/workspace/actual_results.json"},
+    {"source": "parallel_theory", "status": "proposal_and_exploratory_2024_calculation", "evidence": "2024 振幅比中位数 0.973、峰时差 +3.25 h；流量比相关经月份和天气调整后由 +0.743 转为 −0.203。", "path": "runs/pilot_001/parallel_theory/result.json"},
+    {"source": "r06_root_numerical_check", "status": "completed_saved_prediction_recheck", "evidence": "从已保存 heldout_predictions.csv 重算逐站 MAE；格式恢复保留科学字段。", "path": "runs/pilot_001/root_numerical_check.json"},
+    {"source": "c07_report", "status": "superseded_as_audit_record", "evidence": "保留旧报告用于审计；本报告纠正了新站验证与高频缺测表述。", "path": "runs/pilot_001/stages/c07_coordinator/attempt-001/workspace/REPORT.md"}
+  ],
+  "artifacts": [
+    {"path": "runs/pilot_001/stages/c08_report_correction/attempt-001/workspace/REPORT.md", "description": "更正后的证据覆盖、观察与解释边界；观察与推断分开呈现。"},
+    {"path": "runs/pilot_001/stages/c08_report_correction/attempt-001/workspace/result.json", "description": "本阶段结构化协调结果；汇总已有观察与有界解释，不含新实验。"}
+  ],
+  "evidence": [
+    {"type": "observation", "source": "r04 independent_results.json", "detail": "14092500 新站日尺度结果经原始数据独立复算；3360 个配对日，日温幅 MAE 改善 0.007809°C，95%区间 [0.003584, 0.012414]。"},
+    {"type": "observation", "source": "r05 analysis_results.json and network_check.json", "detail": "NLDI 路由连通得到支持；2023 可用两站各 153 个测试日，三项目标区间均跨零；11502500 高频目标缺失。"},
+    {"type": "observation", "source": "r06 actual_results.json and root_numerical_check.json", "detail": "2025 两站 S_day 改善高于 S_night；清晨谷值区间为正，午后峰值区间跨零。"},
+    {"type": "interpretation", "source": "cross-stage synthesis", "detail": "数据对预测关联有初步支持，但不识别热传递机制；夜间斜率主导预测失败，支流波形传递仍未测试。"}
+  ],
+  "claims": [
+    {"claim": "日气温幅在若干现有站点与既定划分中提供水温日幅的额外预测信息。", "status": "exploratory_association"},
+    {"claim": "2025 两站检验未支持夜间斜率关联强于白天斜率；清晨谷值相对午后峰值的结果另有支持。", "status": "bounded_directional_result"},
+    {"claim": "结果尚不能验证任何热交换或水文传递机制，也没有建立世界新颖性。", "status": "not_established"}
+  ],
+  "limitations": [
+    "本阶段仅更正报告，没有新实验。",
+    "r05 的 2023 与 r06 的 2025 downstream 高频文件分别缺少水温观测列；这不否定 r04 独立完成的 14092500 新站检验。",
+    "r04 是单一新增河站且气象代理近乎同址；不能据此估计跨站总体效果。",
+    "r06 实际只有两个独立气象代理来源，且 NOAA DLY 与 inventory 年份冲突。",
+    "空气日最高/最低温并非逐时气象强迫，缺少辐射、河岸气温、遮阴、传播时间及热量闭合数据。",
+    "2024 快算为单季描述性结果；原始流量相关在控制月份和天气后反向，不构成传递证据。",
+    "未进行系统文献新颖性审查；不能宣称原创机制或所有机制已验证。"
+  ],
+  "next_actions": []
+}

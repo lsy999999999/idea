@@ -1,0 +1,3 @@
+Completed the evolutionary ecology input. The card captures three portable structures and three open tensions, based on two abstracts retrieved and read. No experiments were run.
+
+The required [result.json](/Applications/ideas/1103_boundary_discovery/runs/cross_domain_ideas_001/stages/domain_01/attempt-001/workspace/result.json) is valid, and its listed artifact paths were verified. The readable card is in [domain_card.md](/Applications/ideas/1103_boundary_discovery/runs/cross_domain_ideas_001/stages/domain_01/attempt-001/workspace/domain_card.md); source notes and retrieved abstracts are saved alongside it.

@@ -1,0 +1,3 @@
+已完成三项跨学科构想，分别结合非平衡统计物理与进化生态、免疫记忆与机制设计、进化生态与机制设计。每项都包含研究问题、概念移动、交叉价值，以及至少两条说明类比边界的概念映射。
+
+中文报告：[IDEAS.md](/Applications/ideas/1103_boundary_discovery/runs/cross_domain_ideas_001/stages/synthesize/attempt-001/workspace/IDEAS.md)；机器可读结果：[result.json](/Applications/ideas/1103_boundary_discovery/runs/cross_domain_ideas_001/stages/synthesize/attempt-001/workspace/result.json)。已确认 JSON 有效、三项构想字段齐全，且文件存在。未进行实验或新颖性筛查。

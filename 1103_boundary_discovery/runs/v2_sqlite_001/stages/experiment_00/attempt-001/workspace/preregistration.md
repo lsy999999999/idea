@@ -1,0 +1,18 @@
+# E02 execution details fixed before this run
+
+Frozen plan: `runs/v2_sqlite_001/frozen_plans/00_E02.json` (SHA-256 in `frozen_plans/00_receipt.json`).
+
+- Requested model in dispatch: `gpt-6-luna` (backend weights not independently verified).
+- SQLite temporary file databases, WAL, 4096-byte pages, synchronous=NORMAL, `wal_autocheckpoint=0`, 1 ms busy timeout; one writer and two reader connections. Every policy/trial receives a fresh database.
+- Each trace has 24 single-transaction commits of 10 rows (240 rows total), identical SQL and commit boundaries. Each reader executes a SELECT after its scheduled begin event and remains in that read transaction until its scheduled release event. Event indices below mean immediately after that numbered commit.
+- Development shape: reader A begins after commit 2 and releases after commit 6; reader B begins after commit 13 and releases after commit 16. Writes are in three bursts at commits 1-6, 10-16, and 21-24, with 2 ms gaps between bursts and 0.25 ms between commits within bursts.
+- Held-out shape H1, frozen before measurement: reader A begins after commit 5 and releases after commit 18; reader B begins after commit 20 and releases after commit 22. Bursts are commits 1-5, 8-18, and 21-24 with the same gap schedule. This changes release/burst ordering from development.
+- Fixed-period strategy: PASSIVE after every 6th commit (6, 12, 18, 24).
+- WAL-size strategy: PASSIVE when WAL file byte growth since the previous attempt is at least 32768 bytes; byte-growth accumulator resets after each attempt. File allocation size itself is not treated as pending work.
+- Lifecycle strategy: PASSIVE on the transition from one or more application-visible active readers to zero, when commits have occurred since its previous attempt. No release event is exposed to other strategies.
+- All PASSIVE attempts are timed. After the trace, a final PASSIVE is called only if the last reported checkpointed frame count is below log frames; it is separately recorded as a cleanup attempt and included in cost, completion, and call count for all strategies. No TRUNCATE is used. Final residual frames are `max(0, log-checkpointed)` from the last PASSIVE tuple.
+- Twelve order seeds (20261104 through 20261115) independently shuffle the three strategies within each trace shape; each policy/shape/seed uses a new DB. The traces themselves are fixed, not randomized. The held-out evidence is exploratory if its outcome has previously been seen; no outcome data was accessed for it in this workspace before preregistration.
+- Primary paired measure: lifecycle minus each baseline cumulative PASSIVE call time per order seed, with a deterministic percentile bootstrap (10,000 resamples of paired seed differences, seed 9173) 95% percentile interval. The same procedure is applied to writer p95 and reader completion delay. No numeric practical threshold is added. Frame completion must be no lower and latency intervals must not show harm under the frozen rule.
+- The frozen plan has one held-out shape in its intervention, but the `lifecycle_gain` and `baseline_sufficient` class descriptions each require two held-out shapes. This execution uses the one explicitly specified held-out shape (H1); classification will honor the stricter two-shape rule and therefore cannot claim either specific class.
+
+This operationalizes omitted trace/threshold details without changing outcome mappings. Results are from serial event replay, so application service delays include checkpoint time that occurs between events; commits and readers are not concurrently scheduled on separate worker threads.

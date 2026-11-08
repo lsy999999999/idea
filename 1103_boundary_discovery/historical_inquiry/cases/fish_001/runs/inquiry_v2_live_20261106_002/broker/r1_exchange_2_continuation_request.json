@@ -1,0 +1,1022 @@
+{
+  "request": {
+    "needed": true,
+    "gap": "仍缺可核验的历史依赖或条件预测定义，以及有限时间序列中公平比较当前状态基线和滞后特征模型的方法依据。",
+    "why_now": "本轮实际返回的可读材料均与问题无关，R07 的预测比较也尚未计算；这些缺口分别阻碍方法依据与经验判断。",
+    "queries": [
+      "conditional mutual information history predicts next state given present state stochastic process operational definition",
+      "time series forecasting compare nested lag feature model baseline chronological holdout common target alignment",
+      "Granger predictive causality versus causal interaction observational time series confounding common input",
+      "鱼类双体轨迹历史依赖 条件预测 时间留出 因果互动 观测数据 方法"
+    ],
+    "urls": [],
+    "source_ids": [],
+    "record_ids": [
+      "R07"
+    ],
+    "operations": [
+      {
+        "kind": "analysis",
+        "question": "在 R07 中，加入前10帧平均相对位移的模型是否改善下一帧相对位移的按时间留出预测？",
+        "record_id": "R07",
+        "variables": [
+          {
+            "name": "r",
+            "expression": "positions[:,1,:]-positions[:,0,:]",
+            "meaning": "B相对A的二维位置向量",
+            "units": "原生图像坐标"
+          },
+          {
+            "name": "dr",
+            "expression": "diff(r,axis=0)",
+            "meaning": "相邻帧相对位移",
+            "units": "原生图像坐标/帧"
+          },
+          {
+            "name": "target",
+            "expression": "shift(dr,-1)",
+            "meaning": "下一帧的相对位移向量",
+            "units": "原生图像坐标/帧"
+          },
+          {
+            "name": "history10",
+            "expression": "rolling(dr,10)",
+            "meaning": "截至当前帧的前10个相对位移均值；需确认控制器 rolling 对窗口端点的定义",
+            "units": "原生图像坐标/帧"
+          },
+          {
+            "name": "valid",
+            "expression": "isfinite(r).all(axis=1) & isfinite(dr).all(axis=1) & isfinite(target).all(axis=1) & isfinite(history10).all(axis=1)",
+            "meaning": "两模型共用的有效样本掩码",
+            "units": "布尔值"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "target",
+            "expression": "target"
+          }
+        ],
+        "groups": [],
+        "model": {
+          "target": "target",
+          "features": [
+            "r",
+            "dr",
+            "history10"
+          ],
+          "train_fraction": 0.7
+        },
+        "start": 10
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "Abstracts of the Society of General Internal Medicine 32nd Annual Meeting. Miami Beach, Florida, USA. May 13 -16, 2009.",
+      "date": "2009-04-01",
+      "doi": "https://doi.org/10.1007/s11606-009-0963-3",
+      "url": "https://doi.org/10.1007/s11606-009-0963-3",
+      "text": "The content is available as a  PDF  (6.3 MB).",
+      "access": "article_body_excerpt_up_to_50000_chars",
+      "date_evidence": "Europe PMC firstPublicationDate",
+      "read_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC2670986/fullTextXML",
+      "id": "Ka714de5acee2a56a",
+      "retrieved_at": "2026-11-05T16:49:59.221194+00:00",
+      "query": "fish dyad trajectories operational definitions inter-individual distance bearing velocity matching directional correlation tracking error"
+    },
+    {
+      "title": "Stochastic resonance",
+      "date": "1998-01-01",
+      "doi": "https://doi.org/10.1103/revmodphys.70.223",
+      "url": "https://doi.org/10.1103/revmodphys.70.223",
+      "text": "Over the last two decades, stochastic resonance has continuously attracted considerable attention. The term is given to a phenomenon that is manifest in nonlinear systems whereby generally feeble input information (such as a weak signal) can be be amplified and optimized by the assistance of noise. The effect requires three basic ingredients: (i) an energetic activation barrier or, more generally, a form of threshold; (ii) a weak coherent input (such as a periodic signal); (iii) a source of noise that is inherent in the system, or that adds to the coherent input. Given these features, the response of the system undergoes resonance-like behavior as a function of the noise level; hence the name stochastic resonance. The underlying mechanism is fairly simple and robust. As a consequence, stochastic resonance has been observed in a large variety of systems, including bistable ring lasers, semiconductor devices, chemical reactions, and mechanoreceptor cells in the tail fan of a crayfish. In this paper, the authors report, interpret, and extend much of the current understanding of the theory and physics of stochastic resonance. They introduce the readers to the basic features of stochastic resonance and its recent history. Definitions of the characteristic quantities that are important to quantify stochastic resonance, together with the most important tools necessary to actually compute those quantities, are presented. The essence of classical stochastic resonance theory is presented, and important applications of stochastic resonance in nonlinear optics, solid state devices, and neurophysiology are described and put into context with stochastic resonance theory. More elaborate and recent developments of stochastic resonance theory are discussed, ranging from fundamental quantum properties---being important at low temperatures---over spatiotemporal aspects in spatially distributed systems, to realizations in chaotic maps. In conclusion the authors summarize the achievements and attempt to indicate the most promising areas for future research in theory and experiment.",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "K886f8a25c2c80917",
+      "retrieved_at": "2026-11-05T17:23:16.235162+00:00",
+      "query": "conditional mutual information history predicts next state given present state stochastic process operational definition"
+    },
+    {
+      "title": "A METHOD FOR INFERRING HIERARCHICAL DYNAMICS IN STOCHASTIC PROCESSES",
+      "date": "2008-02-01",
+      "doi": "https://doi.org/10.1142/s0219525908001507",
+      "url": "https://doi.org/10.1142/s0219525908001507",
+      "text": "Complex systems may often be characterized by their hierarchical dynamics. In this paper we present a method and an operational algorithm that automatically infer this property in a broad range of systems — discrete stochastic processes. The main idea is to systematically explore the set of projections from the state space of a process to smaller state spaces, and to determine which of the projections impose Markovian dynamics on the coarser level. These projections, which we call Markov projections, then constitute the hierarchical dynamics of the system. The algorithm operates on time series or other statistics, so a priori knowledge of the intrinsic workings of a system is not required in order to determine its hierarchical dynamics. We illustrate the method by applying it to two simple processes — a finite state automaton and an iterated map.",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "K70e2c39209dc19e5",
+      "retrieved_at": "2026-11-05T17:23:16.235874+00:00",
+      "query": "conditional mutual information history predicts next state given present state stochastic process operational definition"
+    },
+    {
+      "title": "Quantitative Evaluation of UML State Machines Using Stochastic Petri Nets",
+      "date": "2007-11-20",
+      "doi": "https://doi.org/10.14279/depositonce-1705",
+      "url": "https://doi.org/10.14279/depositonce-1705",
+      "text": "Heutige Systeme sind tendenziell sehr komplexer Natur und typischer Weise eingebettet in eine asynchrone, nebenläufige und verteilte Umgebung. Neben der funktionellen Korrektheit eines Systems ist die Überwachung und Betrachtung von Aspekten wie Verlässlichkeit, Zuverlässigkeit und Rechtzeitigkeit zwingend erforderlich. Da die Kosten für ein System eine nicht unwesentliche Rolle spielen, ist es wünschenswert, unkorrektes und ineffizientes Verhalten bereits in den frühen Entwurfsphasen festzustellen. Dadurch können Entwurfsentscheidungen leichter und billiger überarbeitet werden. Methoden und Werkzeuge werden benötigt, die sowohl die Modellierung als auch die Leistungsbewertung unterstützen. Diese Arbeit hat ihren Fokus auf der Anwendung der Unified Modeling Language (UML) für das Modellieren von Aspekten von Echtzeitsystemen. UML hat über die letzten Jahre eine weitreichende Akzeptanz als Standardwerkzeug für die Modellierung von diskreten Ereignis- und Softwaresystemen erfahren. Innerhalb von UML konzentriert sich diese Arbeit auf die Zustandsdiagramme. Diese sind in Kombination mit dem erweiternden Profile for Schedulability, Performance, and Time sehr gut geeignet, Lebenszyklen von Objekten mit den dazugehörigen quantitativen System Aspekten zu modellieren. Die direkte quantitative Bewertung der resultierenden Zustandsdiagramme ist aufwendig. Deshalb wird eine indirekte Methode vorgeschlagen, bei der die Zustandsdiagramme in Stochastische Petri Netze überführt werden. Somit wird die Wiederverwendung etablierter Methoden ermöglicht. Basierend auf Stochastischen Petri Netzen wird die quantitative Bewertung der Zustandsdiagramme mittels existierender Petri-Netz-Werkzeuge wie z.B. TimeNET durchgeführt. Des Weiteren geben die Stochastischen Petri Netze eine formale Semantik für die Zustandsdiagramme vor. TimeNET wurde als ein Resultat der Arbeit um eine neue Netzklasse für Zustandsdiagramme erweitert. Das erlaubt innerhalb eines Werkzeugs die Modellierung und die Bewertung, da Stochastische Petri Netze bereits unterstützt werden. Die Anwendung des vorgestellten Ansatzes auf das zukünftige europäische Zugsicherungssystem (ETCS) mit seinen hohen Anforderungen an Sicherheit, Rechtzeitigkeit und Zuverlässigkeit zeigt die Leistungsfähigkeit des Ansatzes.",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "Kd7fa59d204bbf5ce",
+      "retrieved_at": "2026-11-05T17:23:16.236461+00:00",
+      "query": "conditional mutual information history predicts next state given present state stochastic process operational definition"
+    },
+    {
+      "title": "Challenges in the analysis of mass-throughput data: a technical commentary from the statistical machine learning perspective.",
+      "date": "2007-02-16",
+      "doi": "https://europepmc.org/article/MED/19458765",
+      "url": "https://europepmc.org/article/MED/19458765",
+      "text": "Sound data analysis is critical to the success of modern molecular medicine research that involves collection and interpretation of mass-throughput data. The novel nature and high-dimensionality in such datasets pose a series of nontrivial data analysis problems. This technical commentary discusses the problems of over-fitting, error estimation, curse of dimensionality, causal versus predictive modeling, integration of heterogeneous types of data, and lack of standard protocols for data analysis. We attempt to shed light on the nature and causes of these problems and to outline viable methodological approaches to overcome them.",
+      "access": "indexed_abstract_only",
+      "date_evidence": "Europe PMC firstPublicationDate",
+      "id": "K54a098e496a0b662",
+      "retrieved_at": "2026-11-05T17:23:37.599168+00:00",
+      "query": "Granger predictive causality versus causal interaction observational time series confounding common input"
+    },
+    {
+      "title": "Causal time series analysis of functional magnetic resonance imaging data",
+      "date": "2009-12-10",
+      "doi": "https://openalex.org/W2118010729",
+      "url": "https://openalex.org/W2118010729",
+      "text": "This review focuses on dynamic causal analysis of functional magnetic resonance (fMRI) data to infer brain connectivity from a time series analysis and dynamical systems perspective.Causal influence is expressed in the Wiener-Akaike-Granger-Schweder (WAGS) tradition and dynamical systems are treated in a state space modeling framework.The nature of the fMRI signal is reviewed with emphasis on the involved neuronal, physiological and physical processes and their modeling as dynamical systems.In this context, two streams of development in modeling causal brain connectivity using fMRI are discussed: time series approaches to causality in a discrete time tradition and dynamic systems and control theory approaches in a continuous time tradition.This review closes with discussion of ongoing work and future perspectives on the integration of the two approaches.",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "K772e71ff470362e0",
+      "retrieved_at": "2026-11-05T17:23:45.303360+00:00",
+      "query": "Granger predictive causality versus causal interaction observational time series confounding common input"
+    },
+    {
+      "title": "Causal Inference from Statistical Data",
+      "date": "2008-01-01",
+      "doi": "https://doi.org/10.5445/ir/1000007981",
+      "url": "https://doi.org/10.5445/ir/1000007981",
+      "text": "The so-called kernel-based tests of independence are developed for automatic causal discovery between random variables from purely observational statistical data, i.e., without intervention. Beyond the independence relations, the complexity of conditional distriubtions is used as an additional inference principle of determining the causal ordering between variables. Experiments with simulated and real-world data show that the proposed methods surpass the state-of-the-art approaches.",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "K8a10fc31e129a044",
+      "retrieved_at": "2026-11-05T17:23:45.304302+00:00",
+      "query": "Granger predictive causality versus causal interaction observational time series confounding common input"
+    },
+    {
+      "title": "Bayesian network modeling of neural systems with functional MR images",
+      "date": "2007-01-01",
+      "doi": "https://doi.org/10.32657/10356/2585",
+      "url": "https://doi.org/10.32657/10356/2585",
+      "text": "Neuroscientists have shown an increased interest in knowing interactions among brain regions activated during sensory and cognitive tasks in order to obtain a holistic view of brain function.The existing methods of connectivity analysis, such as Structural Equation Modeling (SEM), Dynamic Causal Modeling (DCM), and Granger Causality Mapping (GCM), are confirmatory in the sense that they need a prior connectivity",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "Kd8d0e4931772355b",
+      "retrieved_at": "2026-11-05T17:23:45.304785+00:00",
+      "query": "Granger predictive causality versus causal interaction observational time series confounding common input"
+    },
+    {
+      "title": "Geo-spatial/temporal Analysis in Geo-processing",
+      "date": "1997-01-01",
+      "doi": "https://doi.org/10.11834/jrs.19970301",
+      "url": "https://doi.org/10.11834/jrs.19970301",
+      "text": "由于地球系统的复杂性和开放性,遥感信息的地学分析具有模糊和多解的特点。遥感信息源的获取能力有了飞跃的进步,而成象机理研究和地学处理过程相对滞后。该文尝试探讨遥感地学分析中所涉及的时间与空间分辨率的临界值与时/空转换问题。并侧重对快速反应、痕迹分析、历史再现与加入信息网络的讨论,从而提出了有关深度开发和充分利用卫星信息资源,集成规模生产流水线的建议。",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "Kbec4d0c0681aa017",
+      "retrieved_at": "2026-11-05T16:43:19.349678+00:00",
+      "query": "鱼类双体或群体游动轨迹中，如何定义相对距离、相对方位、速度匹配和方向相关性？"
+    },
+    {
+      "title": "时尚报刊、广告与当代中国消费意识形态",
+      "date": "2003-09-01",
+      "doi": "https://doi.org/10.14793/cs_etd.14",
+      "url": "https://doi.org/10.14793/cs_etd.14",
+      "text": "本论文针对 1990 年代以来中国社会在经济文化方面的巨大改变，归纳并指出一种新的“消费意识形态”在中国业已历史地形成并取代日渐式微的传统 意识形态，成为宰制当代中国社会的主导力量。论文批判地回顾了1949 年以后中国大陆语境中意识形态涵义的历史嬗变，以四个具有典型意义的时尚报刊和广告案例、广告事件为例，从不同侧面解析了广告形象以及广告产业如何作为 中介与以时尚报刊为代表的文化工业一起，参与当代中国“消费意识形态”建 构的社会过程。 论文通过对“消费意识形态”所遮蔽的当代中国社会问题的揭示，对“消费意识形态”在当代中国社会发生影响的深度和广度的阐释，回应了九十年代以来在中国思想界有较大影响的“后六·四”文化论争中的一些重要问题，展现了文化研究在中国大陆介入现实社会思考和批判的可能空间。",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "Kfcf508e6a76bb0f4",
+      "retrieved_at": "2026-11-05T16:32:17.126837+00:00",
+      "query": "动物群体轨迹研究中，如何区分距离接近的描述指标与互动或吸引机制推断？"
+    },
+    {
+      "title": "Dolmetschen und Übersetzen im Wirtschaftsbereich. Teil 2",
+      "date": "2009-01-01",
+      "doi": "https://doi.org/10.17875/gup2009-455",
+      "url": "https://doi.org/10.17875/gup2009-455",
+      "text": "可以说， 译员每理解一个信息，每获得一个知识，都为他继续分析创造了条件。 译员通过理解和分析而获得的知识，可以使他逐渐缩小自己已有知识 同信息之间的差距，把用在分析上的精力减少到最低限度。另外，译员在 分析时不会只满足于：把说话同业已存在的或刚刚获得的知识联系起来。 他知道，他还要分析谈话的内在联系。因为要正确理解，有时非了解隐匿 的意义不可。 分析是译员思想活动的组成部分，译员总是时时处处运用这种方法， 从逻辑出发进而推演到最大的可能性。理解一段简短的谈话需要靠这种方 法，理解一个国家的文化现象，也要靠这只用方法。深刻的理解就是在逻 辑性和可能性之间不断进行平衡。 2. 要有自己的看法 表达--创造性的活动 译员在忘掉说话人词汇的同时，能忠实地把意义复述出来，而且在极快的 速度下有时表达得十分生动。为什么能这样？仔细考虑一下我们就会清楚 ，这是因为译员使自己的表达适应了说话的内在逻辑，并且有意识地选择 了清晰的表达方式，这也是口译的本质所在。 我们来比较一下几个句子： auf dem Papier stehen 纸上谈兵 sich auf alle Fälle gründlich irren 大错而特错 voller Anteilnahme die Situation verfolgen 密切关注形势 Die Rolle ist ihm auf den Leib geschrieben.",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "Kf65b09652dc24e30",
+      "retrieved_at": "2026-11-05T16:32:22.397695+00:00",
+      "query": "鱼类群体自组织模型或经验研究中，成对距离、相对速度、方向一致性和滞后响应的典型操作定义与限制是什么？"
+    },
+    {
+      "title": "翻译操控论：从严复和鲁迅的翻译理论相关的例句实践看意识形态作用",
+      "date": "2006-12-13",
+      "doi": "https://doi.org/10.14793/tran_etd.7",
+      "url": "https://doi.org/10.14793/tran_etd.7",
+      "text": "翻译行为一直伴随人类活动。翻译理论却往往是“一堆意见”。翻译操控论正是这样一个值得争论的命题。 本文以翻译研究的语言学转向、文化转向和史学转向为背景，以赫曼斯的翻译操控论为理论架构，研究翻译过程中的意识形态作用，以便于理解翻译过程中的译者主体作用或操控行为。 本文拾起严复和鲁迅的老话题，是希望每次阅读都创造出不同于以往的历史主义的关怀和方法，以便在现在和历史的对话中加深对过去的理解，从中演绎出新意，进而服务于将来。在翻译实践中，严复和鲁迅实施两种截然 不同的翻译操控。本文通过具体的文本比对和译界传统的追溯研究，解读多元因素作用下的翻译实践，回答了前人(例如梁实秋)尚未解决的鲁迅硬译的缘由，贯穿了翻译的操控历史和历史在操控中进化的主题，同时也疏理了操控阵营的理论要点。赫曼斯所代表的操控学派缘起于具有激进倾向的因素作用研究，同时又强调中立描述的稳健立场。这为该派开展翻译规范研究和尝试普遍适用的理论假设提供了转机。鉴于意识形态缺乏恒定值，造成特殊性的普遍存在和普遍性的假想性质，操控学派中的因素论锐气渐弱，规范研究却力度渐强。籍此，本文在以下几个方面做了积极的论证。一、意识形态有若干特征，其关键特征是一时之态。理解意识形态的这种动态变化有利于减少意识形态的一时失态，促进意识形态的相互宽容和相互借鉴。二、本文将翻译操控论施诸严复和鲁迅的个案，界定了“信、达、雅”的“游移性、不确 定性、隐喻性、延异性”，从而揭示了“信、达、雅”变量的可选性、指导翻译实践的方向性和译者自主把握尺度的灵活性。三、在翻译操控论形成之前就有翻译的操控实践。只是在翻译中，操控乏力有碍交流，操控过度就超出了翻译范畴，操控适当才能有利于思想交流。本文指出，译员不操控等于不作为，不利于文本的认知、解读和阐释。查翻译操控论的未来走向，规范研究将促使翻译操控论转变激进立场，或者至少可以由规范研究来把握操控的信度和效度。",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "K51247831ec573f29",
+      "retrieved_at": "2026-11-05T16:32:17.128354+00:00",
+      "query": "动物群体轨迹研究中，如何区分距离接近的描述指标与互动或吸引机制推断？"
+    },
+    {
+      "title": "Chinese Neutrosophy and Taoist Natural Philosophy",
+      "date": "2008-01-01",
+      "doi": "https://openalex.org/W84622410",
+      "url": "https://openalex.org/W84622410",
+      "text": "这应当就是将马克思主义辨证法与中国传统辩证法结合 起来的产物，所以我决定从中智学中独立出来，另外起名。不过我还是要承认中道辨证法与 中智学的渊源关系，我把司马仁达奇先生看作是黑格尔之后西方的最伟大的辨证法家，作为 中国的马克思主义的学者，理应将其引进中国，加以改造创造出深植于中国土壤的新的辨证 法学说。或者说《中智学》的正确译名应当是\"中道学\" ，这样司马仁达奇先生的丰富思想 就会在接触中国传统中道学的过程中得到大大的提升。 (二)中智学简述 中智学是一个很复杂内容很丰富的思想体系，由于它讲究的是数学化的形式，笔者局限 于已有的知识，故难以加以全面的把握，笔者所感兴趣的是中智学的以下基本论述。 中智学, 新的哲学分支 (Neutrosophy -A New Branch of Philosophy) (美) 弗罗仁汀•司马仁达齐 摘要: 本文推出了一个新的哲学分支, 中智学 (neutrosphy), 研究中性的起源、本质和 范畴以及和不同思想观念的作用。它的基本点是: 任何观念具有 T%的真实性、I%的不确 定性以及 F%的谬误性, 其中 T, I, F 为╟ -0, 1 + ╢的标准或非标准子集。 基本理论:任何观念",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "K90156a91a17bd2c8",
+      "retrieved_at": "2026-11-05T16:32:17.127845+00:00",
+      "query": "动物群体轨迹研究中，如何区分距离接近的描述指标与互动或吸引机制推断？"
+    }
+  ],
+  "knowledge": {
+    "request": {
+      "needed": true,
+      "gap": "仍缺可核验的历史依赖或条件预测定义，以及有限时间序列中公平比较当前状态基线和滞后特征模型的方法依据。",
+      "why_now": "本轮实际返回的可读材料均与问题无关，R07 的预测比较也尚未计算；这些缺口分别阻碍方法依据与经验判断。",
+      "queries": [
+        "conditional mutual information history predicts next state given present state stochastic process operational definition",
+        "time series forecasting compare nested lag feature model baseline chronological holdout common target alignment",
+        "Granger predictive causality versus causal interaction observational time series confounding common input",
+        "鱼类双体轨迹历史依赖 条件预测 时间留出 因果互动 观测数据 方法"
+      ],
+      "urls": [],
+      "source_ids": [],
+      "record_ids": [
+        "R07"
+      ],
+      "operations": [
+        {
+          "kind": "analysis",
+          "question": "在 R07 中，加入前10帧平均相对位移的模型是否改善下一帧相对位移的按时间留出预测？",
+          "record_id": "R07",
+          "variables": [
+            {
+              "name": "r",
+              "expression": "positions[:,1,:]-positions[:,0,:]",
+              "meaning": "B相对A的二维位置向量",
+              "units": "原生图像坐标"
+            },
+            {
+              "name": "dr",
+              "expression": "diff(r,axis=0)",
+              "meaning": "相邻帧相对位移",
+              "units": "原生图像坐标/帧"
+            },
+            {
+              "name": "target",
+              "expression": "shift(dr,-1)",
+              "meaning": "下一帧的相对位移向量",
+              "units": "原生图像坐标/帧"
+            },
+            {
+              "name": "history10",
+              "expression": "rolling(dr,10)",
+              "meaning": "截至当前帧的前10个相对位移均值；需确认控制器 rolling 对窗口端点的定义",
+              "units": "原生图像坐标/帧"
+            },
+            {
+              "name": "valid",
+              "expression": "isfinite(r).all(axis=1) & isfinite(dr).all(axis=1) & isfinite(target).all(axis=1) & isfinite(history10).all(axis=1)",
+              "meaning": "两模型共用的有效样本掩码",
+              "units": "布尔值"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "target",
+              "expression": "target"
+            }
+          ],
+          "groups": [],
+          "model": {
+            "target": "target",
+            "features": [
+              "r",
+              "dr",
+              "history10"
+            ],
+            "train_fraction": 0.7
+          },
+          "start": 10
+        }
+      ]
+    },
+    "sources": [
+      {
+        "title": "Abstracts of the Society of General Internal Medicine 32nd Annual Meeting. Miami Beach, Florida, USA. May 13 -16, 2009.",
+        "date": "2009-04-01",
+        "doi": "https://doi.org/10.1007/s11606-009-0963-3",
+        "url": "https://doi.org/10.1007/s11606-009-0963-3",
+        "text": "The content is available as a  PDF  (6.3 MB).",
+        "access": "article_body_excerpt_up_to_50000_chars",
+        "date_evidence": "Europe PMC firstPublicationDate",
+        "read_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC2670986/fullTextXML",
+        "id": "Ka714de5acee2a56a",
+        "retrieved_at": "2026-11-05T16:49:59.221194+00:00",
+        "query": "fish dyad trajectories operational definitions inter-individual distance bearing velocity matching directional correlation tracking error"
+      },
+      {
+        "title": "Stochastic resonance",
+        "date": "1998-01-01",
+        "doi": "https://doi.org/10.1103/revmodphys.70.223",
+        "url": "https://doi.org/10.1103/revmodphys.70.223",
+        "text": "Over the last two decades, stochastic resonance has continuously attracted considerable attention. The term is given to a phenomenon that is manifest in nonlinear systems whereby generally feeble input information (such as a weak signal) can be be amplified and optimized by the assistance of noise. The effect requires three basic ingredients: (i) an energetic activation barrier or, more generally, a form of threshold; (ii) a weak coherent input (such as a periodic signal); (iii) a source of noise that is inherent in the system, or that adds to the coherent input. Given these features, the response of the system undergoes resonance-like behavior as a function of the noise level; hence the name stochastic resonance. The underlying mechanism is fairly simple and robust. As a consequence, stochastic resonance has been observed in a large variety of systems, including bistable ring lasers, semiconductor devices, chemical reactions, and mechanoreceptor cells in the tail fan of a crayfish. In this paper, the authors report, interpret, and extend much of the current understanding of the theory and physics of stochastic resonance. They introduce the readers to the basic features of stochastic resonance and its recent history. Definitions of the characteristic quantities that are important to quantify stochastic resonance, together with the most important tools necessary to actually compute those quantities, are presented. The essence of classical stochastic resonance theory is presented, and important applications of stochastic resonance in nonlinear optics, solid state devices, and neurophysiology are described and put into context with stochastic resonance theory. More elaborate and recent developments of stochastic resonance theory are discussed, ranging from fundamental quantum properties---being important at low temperatures---over spatiotemporal aspects in spatially distributed systems, to realizations in chaotic maps. In conclusion the authors summarize the achievements and attempt to indicate the most promising areas for future research in theory and experiment.",
+        "access": "indexed_abstract_only",
+        "date_evidence": "OpenAlex publication_date",
+        "id": "K886f8a25c2c80917",
+        "retrieved_at": "2026-11-05T17:23:16.235162+00:00",
+        "query": "conditional mutual information history predicts next state given present state stochastic process operational definition"
+      },
+      {
+        "title": "A METHOD FOR INFERRING HIERARCHICAL DYNAMICS IN STOCHASTIC PROCESSES",
+        "date": "2008-02-01",
+        "doi": "https://doi.org/10.1142/s0219525908001507",
+        "url": "https://doi.org/10.1142/s0219525908001507",
+        "text": "Complex systems may often be characterized by their hierarchical dynamics. In this paper we present a method and an operational algorithm that automatically infer this property in a broad range of systems — discrete stochastic processes. The main idea is to systematically explore the set of projections from the state space of a process to smaller state spaces, and to determine which of the projections impose Markovian dynamics on the coarser level. These projections, which we call Markov projections, then constitute the hierarchical dynamics of the system. The algorithm operates on time series or other statistics, so a priori knowledge of the intrinsic workings of a system is not required in order to determine its hierarchical dynamics. We illustrate the method by applying it to two simple processes — a finite state automaton and an iterated map.",
+        "access": "indexed_abstract_only",
+        "date_evidence": "OpenAlex publication_date",
+        "id": "K70e2c39209dc19e5",
+        "retrieved_at": "2026-11-05T17:23:16.235874+00:00",
+        "query": "conditional mutual information history predicts next state given present state stochastic process operational definition"
+      },
+      {
+        "title": "Quantitative Evaluation of UML State Machines Using Stochastic Petri Nets",
+        "date": "2007-11-20",
+        "doi": "https://doi.org/10.14279/depositonce-1705",
+        "url": "https://doi.org/10.14279/depositonce-1705",
+        "text": "Heutige Systeme sind tendenziell sehr komplexer Natur und typischer Weise eingebettet in eine asynchrone, nebenläufige und verteilte Umgebung. Neben der funktionellen Korrektheit eines Systems ist die Überwachung und Betrachtung von Aspekten wie Verlässlichkeit, Zuverlässigkeit und Rechtzeitigkeit zwingend erforderlich. Da die Kosten für ein System eine nicht unwesentliche Rolle spielen, ist es wünschenswert, unkorrektes und ineffizientes Verhalten bereits in den frühen Entwurfsphasen festzustellen. Dadurch können Entwurfsentscheidungen leichter und billiger überarbeitet werden. Methoden und Werkzeuge werden benötigt, die sowohl die Modellierung als auch die Leistungsbewertung unterstützen. Diese Arbeit hat ihren Fokus auf der Anwendung der Unified Modeling Language (UML) für das Modellieren von Aspekten von Echtzeitsystemen. UML hat über die letzten Jahre eine weitreichende Akzeptanz als Standardwerkzeug für die Modellierung von diskreten Ereignis- und Softwaresystemen erfahren. Innerhalb von UML konzentriert sich diese Arbeit auf die Zustandsdiagramme. Diese sind in Kombination mit dem erweiternden Profile for Schedulability, Performance, and Time sehr gut geeignet, Lebenszyklen von Objekten mit den dazugehörigen quantitativen System Aspekten zu modellieren. Die direkte quantitative Bewertung der resultierenden Zustandsdiagramme ist aufwendig. Deshalb wird eine indirekte Methode vorgeschlagen, bei der die Zustandsdiagramme in Stochastische Petri Netze überführt werden. Somit wird die Wiederverwendung etablierter Methoden ermöglicht. Basierend auf Stochastischen Petri Netzen wird die quantitative Bewertung der Zustandsdiagramme mittels existierender Petri-Netz-Werkzeuge wie z.B. TimeNET durchgeführt. Des Weiteren geben die Stochastischen Petri Netze eine formale Semantik für die Zustandsdiagramme vor. TimeNET wurde als ein Resultat der Arbeit um eine neue Netzklasse für Zustandsdiagramme erweitert. Das erlaubt innerhalb eines Werkzeugs die Modellierung und die Bewertung, da Stochastische Petri Netze bereits unterstützt werden. Die Anwendung des vorgestellten Ansatzes auf das zukünftige europäische Zugsicherungssystem (ETCS) mit seinen hohen Anforderungen an Sicherheit, Rechtzeitigkeit und Zuverlässigkeit zeigt die Leistungsfähigkeit des Ansatzes.",
+        "access": "indexed_abstract_only",
+        "date_evidence": "OpenAlex publication_date",
+        "id": "Kd7fa59d204bbf5ce",
+        "retrieved_at": "2026-11-05T17:23:16.236461+00:00",
+        "query": "conditional mutual information history predicts next state given present state stochastic process operational definition"
+      },
+      {
+        "title": "Challenges in the analysis of mass-throughput data: a technical commentary from the statistical machine learning perspective.",
+        "date": "2007-02-16",
+        "doi": "https://europepmc.org/article/MED/19458765",
+        "url": "https://europepmc.org/article/MED/19458765",
+        "text": "Sound data analysis is critical to the success of modern molecular medicine research that involves collection and interpretation of mass-throughput data. The novel nature and high-dimensionality in such datasets pose a series of nontrivial data analysis problems. This technical commentary discusses the problems of over-fitting, error estimation, curse of dimensionality, causal versus predictive modeling, integration of heterogeneous types of data, and lack of standard protocols for data analysis. We attempt to shed light on the nature and causes of these problems and to outline viable methodological approaches to overcome them.",
+        "access": "indexed_abstract_only",
+        "date_evidence": "Europe PMC firstPublicationDate",
+        "id": "K54a098e496a0b662",
+        "retrieved_at": "2026-11-05T17:23:37.599168+00:00",
+        "query": "Granger predictive causality versus causal interaction observational time series confounding common input"
+      },
+      {
+        "title": "Causal time series analysis of functional magnetic resonance imaging data",
+        "date": "2009-12-10",
+        "doi": "https://openalex.org/W2118010729",
+        "url": "https://openalex.org/W2118010729",
+        "text": "This review focuses on dynamic causal analysis of functional magnetic resonance (fMRI) data to infer brain connectivity from a time series analysis and dynamical systems perspective.Causal influence is expressed in the Wiener-Akaike-Granger-Schweder (WAGS) tradition and dynamical systems are treated in a state space modeling framework.The nature of the fMRI signal is reviewed with emphasis on the involved neuronal, physiological and physical processes and their modeling as dynamical systems.In this context, two streams of development in modeling causal brain connectivity using fMRI are discussed: time series approaches to causality in a discrete time tradition and dynamic systems and control theory approaches in a continuous time tradition.This review closes with discussion of ongoing work and future perspectives on the integration of the two approaches.",
+        "access": "indexed_abstract_only",
+        "date_evidence": "OpenAlex publication_date",
+        "id": "K772e71ff470362e0",
+        "retrieved_at": "2026-11-05T17:23:45.303360+00:00",
+        "query": "Granger predictive causality versus causal interaction observational time series confounding common input"
+      },
+      {
+        "title": "Causal Inference from Statistical Data",
+        "date": "2008-01-01",
+        "doi": "https://doi.org/10.5445/ir/1000007981",
+        "url": "https://doi.org/10.5445/ir/1000007981",
+        "text": "The so-called kernel-based tests of independence are developed for automatic causal discovery between random variables from purely observational statistical data, i.e., without intervention. Beyond the independence relations, the complexity of conditional distriubtions is used as an additional inference principle of determining the causal ordering between variables. Experiments with simulated and real-world data show that the proposed methods surpass the state-of-the-art approaches.",
+        "access": "indexed_abstract_only",
+        "date_evidence": "OpenAlex publication_date",
+        "id": "K8a10fc31e129a044",
+        "retrieved_at": "2026-11-05T17:23:45.304302+00:00",
+        "query": "Granger predictive causality versus causal interaction observational time series confounding common input"
+      },
+      {
+        "title": "Bayesian network modeling of neural systems with functional MR images",
+        "date": "2007-01-01",
+        "doi": "https://doi.org/10.32657/10356/2585",
+        "url": "https://doi.org/10.32657/10356/2585",
+        "text": "Neuroscientists have shown an increased interest in knowing interactions among brain regions activated during sensory and cognitive tasks in order to obtain a holistic view of brain function.The existing methods of connectivity analysis, such as Structural Equation Modeling (SEM), Dynamic Causal Modeling (DCM), and Granger Causality Mapping (GCM), are confirmatory in the sense that they need a prior connectivity",
+        "access": "indexed_abstract_only",
+        "date_evidence": "OpenAlex publication_date",
+        "id": "Kd8d0e4931772355b",
+        "retrieved_at": "2026-11-05T17:23:45.304785+00:00",
+        "query": "Granger predictive causality versus causal interaction observational time series confounding common input"
+      },
+      {
+        "title": "Geo-spatial/temporal Analysis in Geo-processing",
+        "date": "1997-01-01",
+        "doi": "https://doi.org/10.11834/jrs.19970301",
+        "url": "https://doi.org/10.11834/jrs.19970301",
+        "text": "由于地球系统的复杂性和开放性,遥感信息的地学分析具有模糊和多解的特点。遥感信息源的获取能力有了飞跃的进步,而成象机理研究和地学处理过程相对滞后。该文尝试探讨遥感地学分析中所涉及的时间与空间分辨率的临界值与时/空转换问题。并侧重对快速反应、痕迹分析、历史再现与加入信息网络的讨论,从而提出了有关深度开发和充分利用卫星信息资源,集成规模生产流水线的建议。",
+        "access": "indexed_abstract_only",
+        "date_evidence": "OpenAlex publication_date",
+        "id": "Kbec4d0c0681aa017",
+        "retrieved_at": "2026-11-05T16:43:19.349678+00:00",
+        "query": "鱼类双体或群体游动轨迹中，如何定义相对距离、相对方位、速度匹配和方向相关性？"
+      },
+      {
+        "title": "时尚报刊、广告与当代中国消费意识形态",
+        "date": "2003-09-01",
+        "doi": "https://doi.org/10.14793/cs_etd.14",
+        "url": "https://doi.org/10.14793/cs_etd.14",
+        "text": "本论文针对 1990 年代以来中国社会在经济文化方面的巨大改变，归纳并指出一种新的“消费意识形态”在中国业已历史地形成并取代日渐式微的传统 意识形态，成为宰制当代中国社会的主导力量。论文批判地回顾了1949 年以后中国大陆语境中意识形态涵义的历史嬗变，以四个具有典型意义的时尚报刊和广告案例、广告事件为例，从不同侧面解析了广告形象以及广告产业如何作为 中介与以时尚报刊为代表的文化工业一起，参与当代中国“消费意识形态”建 构的社会过程。 论文通过对“消费意识形态”所遮蔽的当代中国社会问题的揭示，对“消费意识形态”在当代中国社会发生影响的深度和广度的阐释，回应了九十年代以来在中国思想界有较大影响的“后六·四”文化论争中的一些重要问题，展现了文化研究在中国大陆介入现实社会思考和批判的可能空间。",
+        "access": "indexed_abstract_only",
+        "date_evidence": "OpenAlex publication_date",
+        "id": "Kfcf508e6a76bb0f4",
+        "retrieved_at": "2026-11-05T16:32:17.126837+00:00",
+        "query": "动物群体轨迹研究中，如何区分距离接近的描述指标与互动或吸引机制推断？"
+      },
+      {
+        "title": "Dolmetschen und Übersetzen im Wirtschaftsbereich. Teil 2",
+        "date": "2009-01-01",
+        "doi": "https://doi.org/10.17875/gup2009-455",
+        "url": "https://doi.org/10.17875/gup2009-455",
+        "text": "可以说， 译员每理解一个信息，每获得一个知识，都为他继续分析创造了条件。 译员通过理解和分析而获得的知识，可以使他逐渐缩小自己已有知识 同信息之间的差距，把用在分析上的精力减少到最低限度。另外，译员在 分析时不会只满足于：把说话同业已存在的或刚刚获得的知识联系起来。 他知道，他还要分析谈话的内在联系。因为要正确理解，有时非了解隐匿 的意义不可。 分析是译员思想活动的组成部分，译员总是时时处处运用这种方法， 从逻辑出发进而推演到最大的可能性。理解一段简短的谈话需要靠这种方 法，理解一个国家的文化现象，也要靠这只用方法。深刻的理解就是在逻 辑性和可能性之间不断进行平衡。 2. 要有自己的看法 表达--创造性的活动 译员在忘掉说话人词汇的同时，能忠实地把意义复述出来，而且在极快的 速度下有时表达得十分生动。为什么能这样？仔细考虑一下我们就会清楚 ，这是因为译员使自己的表达适应了说话的内在逻辑，并且有意识地选择 了清晰的表达方式，这也是口译的本质所在。 我们来比较一下几个句子： auf dem Papier stehen 纸上谈兵 sich auf alle Fälle gründlich irren 大错而特错 voller Anteilnahme die Situation verfolgen 密切关注形势 Die Rolle ist ihm auf den Leib geschrieben.",
+        "access": "indexed_abstract_only",
+        "date_evidence": "OpenAlex publication_date",
+        "id": "Kf65b09652dc24e30",
+        "retrieved_at": "2026-11-05T16:32:22.397695+00:00",
+        "query": "鱼类群体自组织模型或经验研究中，成对距离、相对速度、方向一致性和滞后响应的典型操作定义与限制是什么？"
+      },
+      {
+        "title": "翻译操控论：从严复和鲁迅的翻译理论相关的例句实践看意识形态作用",
+        "date": "2006-12-13",
+        "doi": "https://doi.org/10.14793/tran_etd.7",
+        "url": "https://doi.org/10.14793/tran_etd.7",
+        "text": "翻译行为一直伴随人类活动。翻译理论却往往是“一堆意见”。翻译操控论正是这样一个值得争论的命题。 本文以翻译研究的语言学转向、文化转向和史学转向为背景，以赫曼斯的翻译操控论为理论架构，研究翻译过程中的意识形态作用，以便于理解翻译过程中的译者主体作用或操控行为。 本文拾起严复和鲁迅的老话题，是希望每次阅读都创造出不同于以往的历史主义的关怀和方法，以便在现在和历史的对话中加深对过去的理解，从中演绎出新意，进而服务于将来。在翻译实践中，严复和鲁迅实施两种截然 不同的翻译操控。本文通过具体的文本比对和译界传统的追溯研究，解读多元因素作用下的翻译实践，回答了前人(例如梁实秋)尚未解决的鲁迅硬译的缘由，贯穿了翻译的操控历史和历史在操控中进化的主题，同时也疏理了操控阵营的理论要点。赫曼斯所代表的操控学派缘起于具有激进倾向的因素作用研究，同时又强调中立描述的稳健立场。这为该派开展翻译规范研究和尝试普遍适用的理论假设提供了转机。鉴于意识形态缺乏恒定值，造成特殊性的普遍存在和普遍性的假想性质，操控学派中的因素论锐气渐弱，规范研究却力度渐强。籍此，本文在以下几个方面做了积极的论证。一、意识形态有若干特征，其关键特征是一时之态。理解意识形态的这种动态变化有利于减少意识形态的一时失态，促进意识形态的相互宽容和相互借鉴。二、本文将翻译操控论施诸严复和鲁迅的个案，界定了“信、达、雅”的“游移性、不确 定性、隐喻性、延异性”，从而揭示了“信、达、雅”变量的可选性、指导翻译实践的方向性和译者自主把握尺度的灵活性。三、在翻译操控论形成之前就有翻译的操控实践。只是在翻译中，操控乏力有碍交流，操控过度就超出了翻译范畴，操控适当才能有利于思想交流。本文指出，译员不操控等于不作为，不利于文本的认知、解读和阐释。查翻译操控论的未来走向，规范研究将促使翻译操控论转变激进立场，或者至少可以由规范研究来把握操控的信度和效度。",
+        "access": "indexed_abstract_only",
+        "date_evidence": "OpenAlex publication_date",
+        "id": "K51247831ec573f29",
+        "retrieved_at": "2026-11-05T16:32:17.128354+00:00",
+        "query": "动物群体轨迹研究中，如何区分距离接近的描述指标与互动或吸引机制推断？"
+      },
+      {
+        "title": "Chinese Neutrosophy and Taoist Natural Philosophy",
+        "date": "2008-01-01",
+        "doi": "https://openalex.org/W84622410",
+        "url": "https://openalex.org/W84622410",
+        "text": "这应当就是将马克思主义辨证法与中国传统辩证法结合 起来的产物，所以我决定从中智学中独立出来，另外起名。不过我还是要承认中道辨证法与 中智学的渊源关系，我把司马仁达奇先生看作是黑格尔之后西方的最伟大的辨证法家，作为 中国的马克思主义的学者，理应将其引进中国，加以改造创造出深植于中国土壤的新的辨证 法学说。或者说《中智学》的正确译名应当是\"中道学\" ，这样司马仁达奇先生的丰富思想 就会在接触中国传统中道学的过程中得到大大的提升。 (二)中智学简述 中智学是一个很复杂内容很丰富的思想体系，由于它讲究的是数学化的形式，笔者局限 于已有的知识，故难以加以全面的把握，笔者所感兴趣的是中智学的以下基本论述。 中智学, 新的哲学分支 (Neutrosophy -A New Branch of Philosophy) (美) 弗罗仁汀•司马仁达齐 摘要: 本文推出了一个新的哲学分支, 中智学 (neutrosphy), 研究中性的起源、本质和 范畴以及和不同思想观念的作用。它的基本点是: 任何观念具有 T%的真实性、I%的不确 定性以及 F%的谬误性, 其中 T, I, F 为╟ -0, 1 + ╢的标准或非标准子集。 基本理论:任何观念",
+        "access": "indexed_abstract_only",
+        "date_evidence": "OpenAlex publication_date",
+        "id": "K90156a91a17bd2c8",
+        "retrieved_at": "2026-11-05T16:32:17.127845+00:00",
+        "query": "动物群体轨迹研究中，如何区分距离接近的描述指标与互动或吸引机制推断？"
+      }
+    ],
+    "attempts": [
+      {
+        "query": "conditional mutual information history predicts next state given present state stochastic process operational definition",
+        "provider": "europepmc",
+        "candidate": 0,
+        "status": "full_text_unavailable",
+        "error_type": "ValueError"
+      },
+      {
+        "query": "conditional mutual information history predicts next state given present state stochastic process operational definition",
+        "provider": "europepmc",
+        "candidate": 0,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "conditional mutual information history predicts next state given present state stochastic process operational definition",
+        "provider": "europepmc",
+        "candidate": 2,
+        "status": "full_text_unavailable",
+        "error_type": "ValueError"
+      },
+      {
+        "query": "conditional mutual information history predicts next state given present state stochastic process operational definition",
+        "provider": "europepmc",
+        "candidate": 2,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "conditional mutual information history predicts next state given present state stochastic process operational definition",
+        "provider": "europepmc",
+        "candidate": 3,
+        "status": "full_text_unavailable",
+        "error_type": "HTTPError"
+      },
+      {
+        "query": "conditional mutual information history predicts next state given present state stochastic process operational definition",
+        "provider": "europepmc",
+        "candidate": 3,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "conditional mutual information history predicts next state given present state stochastic process operational definition",
+        "provider": "europepmc",
+        "candidate": 4,
+        "status": "full_text_unavailable",
+        "error_type": "HTTPError"
+      },
+      {
+        "query": "conditional mutual information history predicts next state given present state stochastic process operational definition",
+        "provider": "europepmc",
+        "candidate": 4,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "conditional mutual information history predicts next state given present state stochastic process operational definition",
+        "provider": "europepmc",
+        "status": "completed",
+        "candidates": 5
+      },
+      {
+        "query": "conditional mutual information history predicts next state given present state stochastic process operational definition",
+        "provider": "crossref",
+        "candidate": 0,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "conditional mutual information history predicts next state given present state stochastic process operational definition",
+        "provider": "crossref",
+        "candidate": 1,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "conditional mutual information history predicts next state given present state stochastic process operational definition",
+        "provider": "crossref",
+        "candidate": 2,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "conditional mutual information history predicts next state given present state stochastic process operational definition",
+        "provider": "crossref",
+        "candidate": 3,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "conditional mutual information history predicts next state given present state stochastic process operational definition",
+        "provider": "crossref",
+        "candidate": 4,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "conditional mutual information history predicts next state given present state stochastic process operational definition",
+        "provider": "crossref",
+        "status": "completed",
+        "candidates": 5
+      },
+      {
+        "query": "conditional mutual information history predicts next state given present state stochastic process operational definition",
+        "provider": "openalex",
+        "candidate": 2,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "conditional mutual information history predicts next state given present state stochastic process operational definition",
+        "provider": "openalex",
+        "candidate": 3,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "conditional mutual information history predicts next state given present state stochastic process operational definition",
+        "provider": "openalex",
+        "status": "completed",
+        "candidates": 5
+      },
+      {
+        "query": "time series forecasting compare nested lag feature model baseline chronological holdout common target alignment",
+        "provider": "europepmc",
+        "status": "completed",
+        "candidates": 0
+      },
+      {
+        "query": "time series forecasting compare nested lag feature model baseline chronological holdout common target alignment",
+        "provider": "crossref",
+        "status": "retrieval_failed",
+        "error_type": "URLError"
+      },
+      {
+        "query": "time series forecasting compare nested lag feature model baseline chronological holdout common target alignment",
+        "provider": "openalex",
+        "status": "completed",
+        "candidates": 0
+      },
+      {
+        "query": "Granger predictive causality versus causal interaction observational time series confounding common input",
+        "provider": "europepmc",
+        "candidate": 0,
+        "status": "full_text_unavailable",
+        "error_type": "ValueError"
+      },
+      {
+        "query": "Granger predictive causality versus causal interaction observational time series confounding common input",
+        "provider": "europepmc",
+        "candidate": 1,
+        "status": "full_text_unavailable",
+        "error_type": "HTTPError"
+      },
+      {
+        "query": "Granger predictive causality versus causal interaction observational time series confounding common input",
+        "provider": "europepmc",
+        "candidate": 1,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "Granger predictive causality versus causal interaction observational time series confounding common input",
+        "provider": "europepmc",
+        "candidate": 2,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "Granger predictive causality versus causal interaction observational time series confounding common input",
+        "provider": "europepmc",
+        "status": "completed",
+        "candidates": 3
+      },
+      {
+        "query": "Granger predictive causality versus causal interaction observational time series confounding common input",
+        "provider": "crossref",
+        "candidate": 0,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "Granger predictive causality versus causal interaction observational time series confounding common input",
+        "provider": "crossref",
+        "candidate": 1,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "Granger predictive causality versus causal interaction observational time series confounding common input",
+        "provider": "crossref",
+        "candidate": 2,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "Granger predictive causality versus causal interaction observational time series confounding common input",
+        "provider": "crossref",
+        "candidate": 3,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "Granger predictive causality versus causal interaction observational time series confounding common input",
+        "provider": "crossref",
+        "candidate": 4,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "Granger predictive causality versus causal interaction observational time series confounding common input",
+        "provider": "crossref",
+        "status": "completed",
+        "candidates": 5
+      },
+      {
+        "query": "Granger predictive causality versus causal interaction observational time series confounding common input",
+        "provider": "openalex",
+        "candidate": 1,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "Granger predictive causality versus causal interaction observational time series confounding common input",
+        "provider": "openalex",
+        "candidate": 2,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "Granger predictive causality versus causal interaction observational time series confounding common input",
+        "provider": "openalex",
+        "status": "completed",
+        "candidates": 5
+      },
+      {
+        "query": "鱼类双体轨迹历史依赖 条件预测 时间留出 因果互动 观测数据 方法",
+        "provider": "europepmc",
+        "status": "completed",
+        "candidates": 0
+      },
+      {
+        "query": "鱼类双体轨迹历史依赖 条件预测 时间留出 因果互动 观测数据 方法",
+        "provider": "crossref",
+        "candidate": 0,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "鱼类双体轨迹历史依赖 条件预测 时间留出 因果互动 观测数据 方法",
+        "provider": "crossref",
+        "candidate": 1,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "鱼类双体轨迹历史依赖 条件预测 时间留出 因果互动 观测数据 方法",
+        "provider": "crossref",
+        "candidate": 2,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "鱼类双体轨迹历史依赖 条件预测 时间留出 因果互动 观测数据 方法",
+        "provider": "crossref",
+        "candidate": 3,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "鱼类双体轨迹历史依赖 条件预测 时间留出 因果互动 观测数据 方法",
+        "provider": "crossref",
+        "candidate": 4,
+        "status": "no_readable_content"
+      },
+      {
+        "query": "鱼类双体轨迹历史依赖 条件预测 时间留出 因果互动 观测数据 方法",
+        "provider": "crossref",
+        "status": "completed",
+        "candidates": 5
+      },
+      {
+        "query": "鱼类双体轨迹历史依赖 条件预测 时间留出 因果互动 观测数据 方法",
+        "provider": "openalex",
+        "status": "completed",
+        "candidates": 5
+      }
+    ],
+    "status": "read_content_returned",
+    "remaining_gap": "",
+    "date_boundary": "2010-01-01",
+    "date_boundary_exclusive": true
+  },
+  "record_metadata": [
+    {
+      "record_id": "R07",
+      "frames": 44999,
+      "objects": 2,
+      "position_shape": [
+        44999,
+        2,
+        2
+      ],
+      "file": "records/R07.npz",
+      "sha256": "2ee8550a211e76b60e7228306fa758bd43f37157352e5a7892955447d01cd8d5",
+      "nonfinite_positions": 0
+    }
+  ],
+  "computed": [
+    {
+      "request": {
+        "kind": "analysis",
+        "question": "在 R07 中，加入前10帧平均相对位移的模型是否改善下一帧相对位移的按时间留出预测？",
+        "record_id": "R07",
+        "variables": [
+          {
+            "name": "r",
+            "expression": "positions[:,1,:]-positions[:,0,:]",
+            "meaning": "B相对A的二维位置向量",
+            "units": "原生图像坐标"
+          },
+          {
+            "name": "dr",
+            "expression": "diff(r,axis=0)",
+            "meaning": "相邻帧相对位移",
+            "units": "原生图像坐标/帧"
+          },
+          {
+            "name": "target",
+            "expression": "shift(dr,-1)",
+            "meaning": "下一帧的相对位移向量",
+            "units": "原生图像坐标/帧"
+          },
+          {
+            "name": "history10",
+            "expression": "rolling(dr,10)",
+            "meaning": "截至当前帧的前10个相对位移均值；需确认控制器 rolling 对窗口端点的定义",
+            "units": "原生图像坐标/帧"
+          },
+          {
+            "name": "valid",
+            "expression": "isfinite(r).all(axis=1) & isfinite(dr).all(axis=1) & isfinite(target).all(axis=1) & isfinite(history10).all(axis=1)",
+            "meaning": "两模型共用的有效样本掩码",
+            "units": "布尔值"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "target",
+            "expression": "target"
+          }
+        ],
+        "groups": [],
+        "model": {
+          "target": "target",
+          "features": [
+            "r",
+            "dr",
+            "history10"
+          ],
+          "train_fraction": 0.7
+        },
+        "start": 10
+      },
+      "executed_plan": {
+        "kind": "analysis",
+        "question": "在 R07 中，加入前10帧平均相对位移的模型是否改善下一帧相对位移的按时间留出预测？",
+        "record_id": "R07",
+        "variables": [
+          {
+            "name": "r",
+            "expression": "positions[:,1,:]-positions[:,0,:]",
+            "meaning": "B相对A的二维位置向量",
+            "units": "原生图像坐标"
+          },
+          {
+            "name": "dr",
+            "expression": "diff(r,axis=0)",
+            "meaning": "相邻帧相对位移",
+            "units": "原生图像坐标/帧"
+          },
+          {
+            "name": "target",
+            "expression": "shift(dr,-1)",
+            "meaning": "下一帧的相对位移向量",
+            "units": "原生图像坐标/帧"
+          },
+          {
+            "name": "history10",
+            "expression": "rolling(dr,10)",
+            "meaning": "截至当前帧的前10个相对位移均值；需确认控制器 rolling 对窗口端点的定义",
+            "units": "原生图像坐标/帧"
+          },
+          {
+            "name": "valid",
+            "expression": "isfinite(r).all(axis=1) & isfinite(dr).all(axis=1) & isfinite(target).all(axis=1) & isfinite(history10).all(axis=1)",
+            "meaning": "两模型共用的有效样本掩码",
+            "units": "布尔值"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "target",
+            "expression": "target"
+          }
+        ],
+        "groups": [],
+        "model": {
+          "target": "target",
+          "features": [
+            "r",
+            "dr",
+            "history10"
+          ],
+          "train_fraction": 0.7
+        },
+        "start": 10
+      },
+      "result": {
+        "status": "pending_controller",
+        "capability_task": {
+          "request": {
+            "kind": "analysis",
+            "question": "在 R07 中，加入前10帧平均相对位移的模型是否改善下一帧相对位移的按时间留出预测？",
+            "record_id": "R07",
+            "variables": [
+              {
+                "name": "r",
+                "expression": "positions[:,1,:]-positions[:,0,:]",
+                "meaning": "B相对A的二维位置向量",
+                "units": "原生图像坐标"
+              },
+              {
+                "name": "dr",
+                "expression": "diff(r,axis=0)",
+                "meaning": "相邻帧相对位移",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "target",
+                "expression": "shift(dr,-1)",
+                "meaning": "下一帧的相对位移向量",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "history10",
+                "expression": "rolling(dr,10)",
+                "meaning": "截至当前帧的前10个相对位移均值；需确认控制器 rolling 对窗口端点的定义",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "valid",
+                "expression": "isfinite(r).all(axis=1) & isfinite(dr).all(axis=1) & isfinite(target).all(axis=1) & isfinite(history10).all(axis=1)",
+                "meaning": "两模型共用的有效样本掩码",
+                "units": "布尔值"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "target",
+                "expression": "target"
+              }
+            ],
+            "groups": [],
+            "model": {
+              "target": "target",
+              "features": [
+                "r",
+                "dr",
+                "history10"
+              ],
+              "train_fraction": 0.7
+            },
+            "start": 10
+          },
+          "reason": "Unsupported expression syntax: Call",
+          "status": "pending_controller",
+          "scientific_disposition": "Interface gap; the research question remains open.",
+          "execution_error": "ValueError: 当前执行接口不可用：工具环境拒绝运行命令（`code-mode host is disabled`），因此无法检查 `rolling` 窗口端点定义、验证表达式语法或将计划提交给控制器。原始分析请求仍待执行；不能据此判断模型是否改善预测。"
+        }
+      },
+      "executor_sha256": "32e81e66d65aabdb4d8e82b4a275939fe3eeb0a693bf8f26ee5acc52a7472e08",
+      "artifacts": [
+        "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/services/analysis/r1_exchange_2_continuation_request_op0/request.json",
+        "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/services/analysis/r1_exchange_2_continuation_request_op0/controller_task.json",
+        "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/services/analysis/r1_exchange_2_continuation_request_op0/executor.py"
+      ]
+    }
+  ],
+  "controller_pending": [
+    {
+      "request": {
+        "kind": "analysis",
+        "question": "在 R07 中，加入前10帧平均相对位移的模型是否改善下一帧相对位移的按时间留出预测？",
+        "record_id": "R07",
+        "variables": [
+          {
+            "name": "r",
+            "expression": "positions[:,1,:]-positions[:,0,:]",
+            "meaning": "B相对A的二维位置向量",
+            "units": "原生图像坐标"
+          },
+          {
+            "name": "dr",
+            "expression": "diff(r,axis=0)",
+            "meaning": "相邻帧相对位移",
+            "units": "原生图像坐标/帧"
+          },
+          {
+            "name": "target",
+            "expression": "shift(dr,-1)",
+            "meaning": "下一帧的相对位移向量",
+            "units": "原生图像坐标/帧"
+          },
+          {
+            "name": "history10",
+            "expression": "rolling(dr,10)",
+            "meaning": "截至当前帧的前10个相对位移均值；需确认控制器 rolling 对窗口端点的定义",
+            "units": "原生图像坐标/帧"
+          },
+          {
+            "name": "valid",
+            "expression": "isfinite(r).all(axis=1) & isfinite(dr).all(axis=1) & isfinite(target).all(axis=1) & isfinite(history10).all(axis=1)",
+            "meaning": "两模型共用的有效样本掩码",
+            "units": "布尔值"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "target",
+            "expression": "target"
+          }
+        ],
+        "groups": [],
+        "model": {
+          "target": "target",
+          "features": [
+            "r",
+            "dr",
+            "history10"
+          ],
+          "train_fraction": 0.7
+        },
+        "start": 10
+      },
+      "reason": "Unsupported expression syntax: Call",
+      "status": "pending_controller",
+      "scientific_disposition": "Interface gap; the research question remains open.",
+      "execution_error": "ValueError: 当前执行接口不可用：工具环境拒绝运行命令（`code-mode host is disabled`），因此无法检查 `rolling` 窗口端点定义、验证表达式语法或将计划提交给控制器。原始分析请求仍待执行；不能据此判断模型是否改善预测。"
+    }
+  ],
+  "unavailable": [],
+  "measurement_context": {
+    "data_source": {
+      "repository": "Dryad",
+      "doi": "https://doi.org/10.5061/dryad.f0g32",
+      "license": "https://spdx.org/licenses/CC0-1.0.html",
+      "publication_date": "2017-03-28",
+      "scope": "Raw measurements and screened measurement facts are the task date exception."
+    },
+    "species": {
+      "value": "Danio rerio (zebrafish)",
+      "basis": "Data repository species keyword"
+    },
+    "recording": "13 records of two tracked fish; positions and tracker outputs, no supplied manipulation labels.",
+    "task": {
+      "value": null,
+      "status": "Specific experimental task/protocol not independently verified in screened metadata."
+    },
+    "scene_conditions": {
+      "value": null,
+      "status": "Arena geometry, lighting, age and preparation unknown from screened measurement sources."
+    },
+    "measurement_method": "Recorded two dimensional tracked image coordinates; camera/tracker implementation unspecified.",
+    "processing": "Archive arrays retained value-for-value, including NaN and negative tracker codes; no smoothing or quality exclusion.",
+    "units": "Native image coordinates and frame indices; physical scales/frame rate not independently verified.",
+    "quality": "Recorded tracker output; includes negative codes and fractional values. Not a calibrated probability. Semantics not documented in the measurement files.",
+    "screening": "Only source-data identity, species keyword, license, date, field layout and measurement facts supplied."
+  }
+}

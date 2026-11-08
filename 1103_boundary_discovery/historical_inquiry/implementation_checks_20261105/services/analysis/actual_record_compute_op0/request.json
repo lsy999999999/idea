@@ -1,0 +1,37 @@
+{
+  "kind": "analysis",
+  "question": "接口核验：由研究者显式定义距离，并按有效坐标比较前后片段；不作机制结论。",
+  "record_id": "R01",
+  "start": 1000,
+  "stop": 1160,
+  "variables": [
+    {
+      "name": "distance",
+      "expression": "norm(positions[:,1,:]-positions[:,0,:],axis=1)",
+      "meaning": "两条追踪坐标间距",
+      "units": "native coordinate unit"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "distance",
+      "expression": "distance"
+    }
+  ],
+  "groups": [
+    {
+      "name": "first 80 frames",
+      "where": "(frame<1080)&isfinite(distance)",
+      "values": [
+        "distance"
+      ]
+    },
+    {
+      "name": "last 80 frames",
+      "where": "(frame>=1080)&isfinite(distance)",
+      "values": [
+        "distance"
+      ]
+    }
+  ]
+}

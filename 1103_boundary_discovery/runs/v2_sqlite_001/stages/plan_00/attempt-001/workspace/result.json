@@ -1,0 +1,184 @@
+{
+  "summary": "已读取当前账本、原始 scout 数字、Seed A retry/Seed B 结果、bridge 结果与 V2 合约。当前只有单次 scout 配对观测；A1/B1、A2/B2 分别兼容，均未由本轮新实验验证。比较两项可行行动后，选择检验应用可观察 reader 生命周期信号是否能在完成量及服务延迟匹配时改善 PASSIVE 调度成本。未执行实验。",
+  "artifacts": [
+    {
+      "path": "runs/v2_sqlite_001/stages/plan_00/attempt-001/workspace/report.md",
+      "kind": "interpretation",
+      "description": "本计划阶段的证据边界、候选行动比较和选择理由。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/snapshots/ledger_00.json",
+      "kind": "observation",
+      "description": "本阶段首先读取的当前账本；含 A1/A2/B1/B2 四项未测试解释，无 evidence 与 experiment 条目。"
+    },
+    {
+      "path": "bootstrap/v2_scout/result.json",
+      "kind": "observation",
+      "description": "实际 SQLite 3.51.3 单次配对测量及其限制；不是本阶段新实验。"
+    },
+    {
+      "path": "runs/v2_sqlite_001/stages/bridge/attempt-001/workspace/result.json",
+      "kind": "interpretation",
+      "description": "桥接阶段综合及其记录的已查阅来源；未添加实验观测。"
+    }
+  ],
+  "evidence": [
+    {
+      "type": "prior_experiment_observation",
+      "source": "bootstrap/v2_scout/result.json",
+      "details": "在 SQLite 3.51.3、120 次事务、每次 20 行、总 2400 行的单次条件测量中，两条件 checkpoint 前均有 143 log frames、589192 WAL bytes 且 busy=0。无 held reader 的 PASSIVE tuple 为 [0,143,143]；held reader 为 [0,143,2]。单次测量未改变快照前缀或 reader release 时序。"
+    },
+    {
+      "type": "prior_proposal_status",
+      "source": "runs/v2_sqlite_001/stages/seed_A_retry1/attempt-001/workspace/result.json",
+      "details": "A1/A2 为 proposed；没有本阶段实验。首次 Seed A attempt 超时，retry 成功。"
+    },
+    {
+      "type": "prior_proposal_status",
+      "source": "runs/v2_sqlite_001/stages/seed_B/attempt-001/workspace/result.json",
+      "details": "B1/B2 为 proposed；没有本阶段实验。"
+    },
+    {
+      "type": "prior_stage_status",
+      "source": "runs/v2_sqlite_001/stages/bridge/attempt-001/completion.json",
+      "details": "Bridge status=success，未超时；其 result.json 明确无新实验。"
+    },
+    {
+      "type": "retrieved_literature_as_recorded_by_prior_stage",
+      "source": "runs/v2_sqlite_001/stages/bridge/attempt-001/workspace/result.json",
+      "details": "SQLite WAL 文档说明 reader end mark 可限制 checkpoint；Walack 摘要/元数据描述依读写请求調整 checkpoint 频率。全文未取得，不能由此判断精确重叠或主张新颖性。"
+    }
+  ],
+  "claims": [
+    "现有 scout 观测与 SQLite 已知 reader end-mark 机制方向一致，但每条件仅一次，不能证明普遍性或调度收益。",
+    "A1 与 B1 是同一类、已知机制下的快照位置预测；A2 与 B2 是相容的未测调度问题，不能人为当成相反假说。",
+    "没有形成新变量、关系或原创性结论；目前有价值的下一步是测试额外可观察生命周期信号的实用增益及其代价。"
+  ],
+  "limitations": [
+    "本计划阶段按要求未运行所选实验。",
+    "已有数字只覆盖单一 SQLite build、单一机器/文件系统和单次工作负载。",
+    "Walack 仅有摘要/元数据证据；文献缺口与世界新颖性未确定。",
+    "生命周期信号必须是策略真实可得的应用层信息；实际未来 reader release 只可用于结果分析，不得泄漏给策略。"
+  ],
+  "next_actions": [
+    "执行冻结的 E02；使用项目 .venv Python、真实临时 SQLite WAL 数据库、新数据库和一致的事务轨迹。",
+    "在执行前锁定至少一个开发轨迹及一个不同 reader-release/write-burst shape 的 held-out 轨迹；随机化新数据库上的策略执行次序。",
+    "记录每次 PASSIVE 的 busy/log/checkpointed、WAL bytes、调用数与时间；另记录完成帧数、事务提交延迟分布和 reader 完成延迟。",
+    "实验后独立重算 E02 的配对分类，并检查 Walack 全文及其相邻工作，再讨论实现范围或文献定位。"
+  ],
+  "decision": "experiment",
+  "proposals": [
+    {
+      "id": "C1",
+      "parent_id": "A2",
+      "statement": "在本地可回放的 SQLite WAL reader-release/write-burst 轨迹中，策略可得的活动 reader 生命周期信号能使 PASSIVE 完成成本低于固定周期和 WAL 大小触发基线，同时保持相同完成量及 reader/writer 服务结果。范围限于测试的 SQLite build、应用信号和轨迹族。",
+      "representation": "在公开 checkpoint 历史、WAL bytes 与读写请求之外加入策略可观测的当前活动 reader 状态/年龄；不输入未来 release 时间。",
+      "measurement": "在新鲜临时数据库上对相同 trace 比较固定周期 PASSIVE、WAL 大小触发和仅用当前 reader lifecycle 的第三策略；测量总 PASSIVE 调用数、累计调用时间、完成帧、残余工作、commit latency 和 reader completion delay。",
+      "predictions": [
+        "在不同 release/burst shape 的 held-out 轨迹上，lifecycle 策略完成不低于基线的 WAL 工作，且其 checkpoint 调用时间低于两种基线，并且 reader 与 writer 延迟分布不劣于基线。"
+      ],
+      "alternatives": [
+        "固定周期或 WAL 大小策略已捕捉足够的可行动信息；观察 lifecycle 后没有成本下降，或下降依赖遗留更多 WAL 工作/更差服务延迟。"
+      ],
+      "prior_work": [
+        {
+          "url": "https://www.sqlite.org/c3ref/wal_checkpoint_v2.html",
+          "relation": "已查阅文档定义 PASSIVE 的非等待行为与帧计数；未检验额外 lifecycle 信号的策略净收益。"
+        },
+        {
+          "url": "https://doi.org/10.1109/icpads60453.2023.00179",
+          "relation": "前序阶段查阅摘要称 Walack 依据读写请求调节 WAL checkpoint 频率；此提案需与其已知一般基线区分，全文待查。"
+        }
+      ],
+      "status": "proposed"
+    },
+    {
+      "id": "C2",
+      "parent_id": "B2",
+      "statement": "在本地可回放的 SQLite WAL 轨迹上，匹配完成工作和 reader/writer 服务结果后，固定周期或 WAL 大小触发策略已足够；额外 reader lifecycle 信息不会降低 checkpoint 成本。范围限于测试轨迹族。",
+      "representation": "只使用固定时钟或 WAL 大小阈值策略，不添加 reader 生命周期状态；执行诊断可记录隐藏生命周期，但不能喂给基线策略。",
+      "measurement": "与 C1 相同的真实数据库轨迹、结果指标、执行次序随机化和 held-out shape。",
+      "predictions": [
+        "在满足完成量和延迟匹配的轨迹中，lifecycle 策略的累计 PASSIVE 时间不低于两种简单基线，或其表面时间下降由未完成工作/更差服务延迟解释。"
+      ],
+      "alternatives": [
+        "reader release 与 burst 的顺序提供超出固定周期及 WAL 大小信号的可行动信息，且应用可见 lifecycle 策略能在 held-out shape 上利用它。"
+      ],
+      "prior_work": [
+        {
+          "url": "https://www.sqlite.org/wal.html",
+          "relation": "已查阅文档描述 checkpoint 进度与 reader end mark、以及自动 checkpoint 的阈值行为；不能据此推断策略间的本地成本比较。"
+        },
+        {
+          "url": "https://www.sqlite.org/pragma.html",
+          "relation": "文档提供 WAL checkpoint 的公开返回状态与默认自动阈值信息；具体调度充分性仍待测。"
+        }
+      ],
+      "status": "proposed"
+    },
+    {
+      "id": "C3",
+      "parent_id": "B1",
+      "statement": "在受控 SQLite WAL 轨迹中，即使 reader snapshot 前缀、活动状态、写入和当前 WAL head 完全相同，较长的 reader 存续时间本身也会进一步降低当前 PASSIVE 可 checkpoint 的帧数。该强代理假说尚无证据，范围限于所测实现与轨迹。",
+      "representation": "在 B1 的 snapshot position 与 WAL head 之外，把 reader 已存续时间作为独立的进度解释变量；不以 checkpoint 结果构造该输入。",
+      "measurement": "配对新鲜临时数据库，使长龄与短龄 reader 在相同初始快照位置上保持活动，后续执行相同写入 burst，并在匹配 log head 调用 PASSIVE；对照 checkpointed_frames。",
+      "predictions": [
+        "在至少 12 个有效配对中，较长 reader 年龄稳定对应更少 checkpointed_frames，即使快照位置相同。"
+      ],
+      "alternatives": [
+        "已知 end-mark 解释足够：保持 snapshot position、活动状态和 WAL head 相同时，单纯墙钟年龄不改变 checkpoint 的可推进边界；可能出现的差异来自布局或测量噪声。"
+      ],
+      "prior_work": [
+        {
+          "url": "https://www.sqlite.org/wal.html",
+          "relation": "官方文档描述 reader end mark 限制 checkpoint；并未声称墙钟年龄本身在固定 end mark 下另有限制。此 proposal 是对 age 代理的强替代预测，不是已知机制结论。"
+        }
+      ],
+      "status": "proposed"
+    }
+  ],
+  "plans": [
+    {
+      "id": "E01",
+      "question": "在 reader snapshot 前缀、写入轨迹、log head 和 reader 活跃状态相同的情况下，增加 reader 已存续时间是否会独立改变一次 PASSIVE 的 checkpointed frame 数？",
+      "hypothesis_ids": ["B1", "C3"],
+      "intervention": "在临时 WAL 数据库用相同初始快照前缀建立 reader。短龄组立即执行固定写入 burst；长龄组在 reader 保持活动时先等待固定空闲间隔再执行同一 burst。达到相同 log head 后调用一次 PASSIVE。新数据库配对、组别随机顺序、至少 12 对；项目 .venv Python，目标 120 秒内。记录快照前缀、elapsed reader age、busy/log/checkpointed、WAL bytes。",
+      "outcome_measure": "每对计算长龄组减短龄组的 checkpointed_frames；按配对中位差及配对差异方向报告。预先分类：old_age_lower 若至少 10/12 对为负且中位差至少为 1 frame；no_age_effect 若至少 10/12 对差值为 0；uncertain 包括其他方向混合、log head 不匹配或测量缺失。阈值仅为此低成本边界检查的操作分类，不作为理论阈值。",
+      "predictions": [
+        {"hypothesis_id": "B1", "expected_outcome": "快照位置与活跃状态相同，年龄不独立改变受 end mark 限制的进度；预期 no_age_effect。", "outcome_id": "no_age_effect"},
+        {"hypothesis_id": "C3", "expected_outcome": "较老 reader 本身会进一步限制当前 PASSIVE；预期 old_age_lower。", "outcome_id": "old_age_lower"}
+      ],
+      "outcome_classes": [
+        {"id": "old_age_lower", "description": "至少 10/12 个有效配对的长龄组 checkpointed_frames 较少，且配对中位差至少低 1 frame。", "effects": {"B1": "contradicts", "C3": "supports"}},
+        {"id": "no_age_effect", "description": "至少 10/12 个有效配对差值为 0。", "effects": {"B1": "supports", "C3": "contradicts"}},
+        {"id": "uncertain", "description": "其余混合/精度不足情形，或任一关键控制失败。", "effects": {"B1": "inconclusive", "C3": "inconclusive"}}
+      ],
+      "cost_minutes": 2,
+      "feasibility": "scout 已在项目环境中用标准库 sqlite3 和临时 WAL 数据库执行成功；每次仅需小型写入与一次 PASSIVE。该计划检验窄的 reader-age 边界，不运行策略比较。",
+      "selection_reason": "可直接分开 end-mark 位置解释与把 reader 年龄本身当作进度状态的说法；但回答不了 brief 最关心的成本匹配策略收益。相较 E02，它是次优的阶段行动。",
+      "replication": true
+    },
+    {
+      "id": "E02",
+      "question": "在匹配工作完成量与 reader/writer 服务结果时，策略可见的当前 reader lifecycle 信息是否能降低真实 SQLite PASSIVE checkpoint 总成本，优于固定周期与 WAL 大小触发？",
+      "hypothesis_ids": ["C1", "C2"],
+      "intervention": "使用真实临时 WAL 数据库及相同的预写 trace，比较三种策略：固定周期 PASSIVE、WAL 大小触发 PASSIVE、依据当前应用可见的活动 reader 状态决定尝试时机的简单策略。各策略收到相同写入和 reader 到达/释放轨迹；策略不得读取未来 release。固定 SQLite build/page size/durability/事务边界，禁用自动 checkpoint 以隔离策略；新数据库运行并随机化次序。至少 12 个执行次序种子，包含一个开发 trace shape 和一个预先冻结、release/burst 排列不同的 held-out shape。记录每次 API 返回值和调用成本，以及 commit/read 完成时间。总执行目标小于 120 秒，stage 上限 600 秒。",
+      "outcome_measure": "主要对比累计 PASSIVE 调用时间，并同时报告调用数、最终 checkpointed/log frames、残余工作、峰值 WAL bytes、writer commit p95/p99 与 reader completion delay。对每个 held-out shape 计算配对策略差及其 95% bootstrap 区间。若所有有效配对的 lifecycle 策略均在完成帧不低于两简单基线且两类延迟均不劣时减少累计 checkpoint 时间，则归为 lifecycle_gain；若在完成量和延迟匹配后，其成本差区间包含 0 或基线更低，则归为 baseline_sufficient；若所谓成本优势伴随少完成帧/更差延迟、两个 held-out shape 方向冲突、控制失败或数据不足，则归为 uncertain_or_tradeoff。阈值由方向、工作完成和配对区间预先定义，不宣称任意工程收益幅度。",
+      "predictions": [
+        {"hypothesis_id": "C1", "expected_outcome": "仅使用当下可见的 reader lifecycle 策略在 held-out trace 上完成同等工作且不损害两类延迟，并降低 checkpoint 调用总时间；预期 lifecycle_gain。", "outcome_id": "lifecycle_gain"},
+        {"hypothesis_id": "C2", "expected_outcome": "固定周期或 WAL 大小基线在完成量和延迟匹配后同等或更低成本；预期 baseline_sufficient。", "outcome_id": "baseline_sufficient"}
+      ],
+      "outcome_classes": [
+        {"id": "lifecycle_gain", "description": "两个 held-out shape 均达到相同或更高最终 checkpointed frames，lifecycle 的累计 PASSIVE 时间配对区间均低于两简单基线，且 writer/reader 延迟没有更差的配对区间。", "effects": {"C1": "supports", "C2": "contradicts"}},
+        {"id": "baseline_sufficient", "description": "两 held-out shape 均满足完成量与延迟匹配；对每个 shape，至少一个简单基线的累计 PASSIVE 时间差区间包含零或优于 lifecycle。", "effects": {"C1": "contradicts", "C2": "supports"}},
+        {"id": "uncertain_or_tradeoff", "description": "完成工作或延迟不匹配、held-out shape 结果方向冲突、有效数据不足或执行条件偏离冻结方案。", "effects": {"C1": "inconclusive", "C2": "inconclusive"}}
+      ],
+      "cost_minutes": 10,
+      "feasibility": "brief 与 scout 已确认项目 .venv、标准库 sqlite3、临时真实 WAL 数据库可用。小型事务 trace、12 个配对次序和三种策略可在 600 秒总预算内执行；记录并校验每次 API 调用成本。",
+      "selection_reason": "E02 检验本项目未决的实际调度问题，并直接保留最强简单基线与服务成本约束；E01 主要检验已知机制的年龄代理边界。E02 的结果可支持继续做策略研究、否定额外信号价值，或暴露权衡。",
+      "replication": true
+    }
+  ],
+  "selected_plan_id": "E02",
+  "selection_reason": "执行 E02：它在一个预算内同时比较两种简单基线与一个受限的应用可见 lifecycle 策略，并要求 held-out trace、完成工作与读写延迟约束。这样得到的结果比重复确认已知 end-mark 效应更能改变当前对本地调度问题的判断。"
+}

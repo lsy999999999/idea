@@ -1,0 +1,108 @@
+{
+  "summary": "提出两个尚未检验的解释：A1 是已由 SQLite 文档说明的 reader snapshot end mark 对单次 PASSIVE 进度的约束；A2 是 reader release 时序可能改变重复 checkpoint 的有效时机。scout 结果与 A1 方向一致，但不足以检验快照位置、释放时序或调度收益。本阶段未做新实验，也不主张新颖性。",
+  "artifacts": [
+    {
+      "path": "runs/v2_sqlite_001/stages/seed_A_retry1/attempt-001/workspace/report.md",
+      "kind": "interpretation",
+      "description": "两项解释、可区分预测、强替代解释及最小后续判别方案。"
+    },
+    {
+      "path": "bootstrap/v2_scout/result.json",
+      "kind": "observation",
+      "description": "先前 scout 的原始记录和运行信息；非本阶段新实验。"
+    }
+  ],
+  "evidence": [
+    {
+      "type": "observation",
+      "source": "bootstrap/v2_scout/result.json",
+      "details": "SQLite 3.51.3，两个条件各一次；都提交 2,400 行、记录 143 个 WAL frames，checkpoint 前 WAL 均为 589,192 bytes，PASSIVE busy 均为 0。无 reader 时 checkpointed=143，持有 reader 时 checkpointed=2。"
+    },
+    {
+      "type": "observation",
+      "source": "bootstrap/v2_scout/wal_checkpoint_probe.py",
+      "details": "脚本使用临时 WAL 数据库、关闭 autocheckpoint，持 reader 条件在写入前开启读事务；每个条件只运行一次。"
+    },
+    {
+      "type": "literature",
+      "source": "https://www.sqlite.org/wal.html",
+      "details": "已读取项目保存的 HTTP 200 文档副本（sources.json 记录于 2026-11-03 UTC）；SQLite 说明 reader end marks 可限制 checkpoint 进度，并说明自动 checkpoint 与频率权衡。"
+    },
+    {
+      "type": "literature",
+      "source": "https://www.sqlite.org/c3ref/wal_checkpoint_v2.html",
+      "details": "已读取项目保存的 HTTP 200 文档副本；PASSIVE 不等待 reader/writer，可能未完成，并提供 log 与 checkpointed frame 计数。"
+    },
+    {
+      "type": "literature",
+      "source": "https://www.sqlite.org/pragma.html",
+      "details": "已读取项目保存的 HTTP 200 文档副本；记载 wal_checkpoint PRAGMA、PASSIVE 行为和返回列。"
+    }
+  ],
+  "claims": [
+    "A1：在固定 log head 和 PASSIVE 动作下，较早的 reader snapshot 预计允许 checkpoint 的 frame 少于较晚开启的 snapshot。此为已知机制下的可检验预测；当前 scout 未直接比较快照位置。",
+    "A2：在相同决策时点遥测和可比写入下，reader release 之后执行的 PASSIVE 可能有更高的每次调用进度；释放时机信号是否带来净调度收益尚未检验。",
+    "没有建立任何策略收益、普遍性能影响或世界新颖性。"
+  ],
+  "limitations": [
+    "本阶段没有运行新 SQLite 实验；所有解释状态均为 proposed。",
+    "Scout 每条件单次运行，且只比较无 reader 与写入前开启并持续持有的 reader；提交延迟不能用于性能推断。",
+    "受控回放可记录事务开始/释放，但这些事件时间不等于通用应用可得的精确 reader end mark；其可观测性和测量成本须在策略实验中明确。",
+    "已读取的最近邻为 SQLite 官方实现文档；未做学术文献检索，不能据此主张新颖性。",
+    "两项解释可能同时成立；下一阶段应先区分其条件预测，且保持工作完成量及 reader/writer 延迟可比。"
+  ],
+  "next_actions": [
+    "预注册新鲜临时数据库回放：固定 rows、事务边界、SQLite 版本和写入轨迹，只变更 reader snapshot 前缀与释放时点，随机化执行顺序。",
+    "先比较相同 WAL log head 下不同 snapshot 前缀的 PASSIVE frames advanced，检查 A1。",
+    "再冻结固定周期/size 基线与一个 reader-age/history 策略，在至少一种不同形状的 held-out release/burst 轨迹上比较；计入 PASSIVE 调用、checkpoint 时间、完成进度、reader completion 与 commit tail latency。",
+    "检索 checkpoint/reader-aware scheduling 的最接近数据库研究后再讨论研究缺口或新颖性。"
+  ],
+  "proposals": [
+    {
+      "id": "A1",
+      "statement": "在 SQLite WAL 的 PASSIVE checkpoint 中，当前最小的即时进度约束是 WAL head 与最老活动 reader snapshot end mark 的相对位置；在相同 log head 下，snapshot 越早，reader 之后写入的 frames 越可能暂时不能被 checkpoint。适用范围限于所测 SQLite WAL 设置。",
+      "representation": "将仅用 WAL bytes、写入数或 busy 标志描述工作负载的表示，扩充为 reader snapshot 相对写入前缀的位置（可用受控事务轨迹记录）及 WAL log head。文档已描述其机制，候选贡献只在于检验其是否构成该调度问题的最小有用状态。",
+      "measurement": "新鲜临时数据库上固定 SQLite build、rows、commit boundaries 和 log head；由预先记录的 reader BEGIN/写入前缀重建快照位置，独立调用 PRAGMA wal_checkpoint(PASSIVE)，记录 busy、log_frames、checkpointed_frames、WAL bytes 和调用时长。输入特征不使用 checkpoint 结果。",
+      "predictions": [
+        "在固定 log_frames 和 PASSIVE 时点，reader 在较早写入前缀开启时的 checkpointed_frames 将小于 reader 在较晚前缀开启时的值；若重复配对中进度差异消失，A1 在该轨迹族的实用解释力受限。"
+      ],
+      "alternatives": [
+        "reader 是否存在只是与 writer/checkpointer 争用、环境计时或其他未控制状态相关；在配对复现并控制这些因素后，snapshot 前缀不再预测进度。"
+      ],
+      "prior_work": [
+        {
+          "url": "https://www.sqlite.org/wal.html",
+          "relation": "官方文档明确 reader end mark 可以限制 checkpoint；因此机制本身已知。此提案检验受控的 snapshot 位置是否是本地调度问题的最小实用表示。"
+        },
+        {
+          "url": "https://www.sqlite.org/c3ref/wal_checkpoint_v2.html",
+          "relation": "官方 API 文档定义 PASSIVE 与 log/checkpointed frame 输出；支持所提操作测量，不提供新机制主张。"
+        }
+      ],
+      "status": "proposed"
+    },
+    {
+      "id": "A2",
+      "statement": "跨多次 checkpoint 的收益可能由 checkpoint 尝试与 reader release 的相对时序决定：当前 aggregate telemetry 未描述 reader 何时释放，因此相同的 log/checkpointed/busy 状态可能对应不同的近期可推进机会。释放时序信号能否改善固定成本策略仍未知。",
+      "representation": "在 A1 的当前 pinned-frame gap 之外加入决策时点可获得的 reader age/history 或应用层预计 release window，并与 WAL growth rate 一起表示近未来机会。受控轨迹中的真实 release timestamp 只用于分层和结果分析，不可作为策略输入，除非实验明确将其设为可用信号。",
+      "measurement": "预先固定重复尝试的时点和观察窗口；从回放调度器记录 BEGIN、release、write burst 的时间，记录每次 PASSIVE 返回值、frames advanced、调用耗时、调用次数及 reader/commit 完成延迟。先匹配行动时点的公开遥测，再比较 release 前后机会。",
+      "predictions": [
+        "在决策时点公共遥测与后续写入量相同的配对轨迹中，reader 释放后的固定窗口 PASSIVE 将比释放前推进更多 frames/单位 checkpoint 时间；将 reader-age/history 加入策略后，held-out release/burst 形状上的进度成本权衡优于固定周期或 WAL-size 基线，且不以未完成 WAL 工作或更差服务延迟换取。"
+      ],
+      "alternatives": [
+        "release timing 在固定周期或 size trigger 已匹配总 checkpoint completion 和服务延迟后没有额外净收益；表面改善来自调用次数增加、轨迹对齐或遗留更多工作。"
+      ],
+      "prior_work": [
+        {
+          "url": "https://www.sqlite.org/c3ref/wal_checkpoint_v2.html",
+          "relation": "文档确认 PASSIVE 可以在 reader 存在时不等待并留下未完成工作，但未检验 reader release 时机是否能形成有净收益的调度信号。"
+        },
+        {
+          "url": "https://www.sqlite.org/pragma.html",
+          "relation": "PRAGMA 返回 busy、log 与 checkpointed 信息，界定当前公共遥测；不证明这些字段不足或额外信号有用。"
+        }
+      ],
+      "status": "proposed"
+    }
+  ]
+}

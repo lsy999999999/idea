@@ -1,0 +1,425 @@
+{
+  "time": "2026-11-03T18:18:47.396668+00:00",
+  "raw": {
+    "candidate_id": "R1",
+    "evidence_refs": [
+      "E1",
+      "E2",
+      "dev_0",
+      "dev_6",
+      "dev_12",
+      "dev_18",
+      "fresh_1_0",
+      "fresh_1_4",
+      "fresh_1_8",
+      "fresh_1_12"
+    ],
+    "reason": "R1 is the best available candidate: it predicts a nonzero newest-history effect for both acquired intervention pairs, unlike C1, C2, and R2, whose executable expressions reduce to an intercept plus u. However, R1 is inadequate: current dev RMSE is 0.2113, and its reported RMSEs on E1 and E2 (0.0682 and 0.0659) exceed the 0.06 criterion. Its frozen active-pair contrasts also overstate the observed contrasts. No candidate meets acceptance, so this selection does not establish an accepted model.",
+    "refuted_assumptions": [
+      "The u,h-only response is inadequate: at fixed u and h, flipping history[3] changes the measured response substantially in both E1 and E2.",
+      "The executable C1, C2, and R2 models, which reduce to u-only linear fits despite listing history features, cannot represent the observed history contrasts."
+    ],
+    "remaining_uncertainties": [
+      "R1's finite feature set does not reach the dev or intervention-pair thresholds; whether a different history representation will do so remains unresolved.",
+      "The observations show history dependence, but do not identify a specific history kernel or establish that oldest-history or waiting-time modulation is needed.",
+      "Fresh hidden and random confirmation targets have not yet been evaluated."
+    ]
+  },
+  "valid": true,
+  "selected": {
+    "scaffold": {
+      "parameters": [
+        {
+          "name": "tool_coefficient_0",
+          "dimension": [
+            0,
+            1
+          ],
+          "lower": -1000000000000.0,
+          "initial": 0.07500537764957985,
+          "upper": 1000000000000.0
+        },
+        {
+          "name": "tool_coefficient_1",
+          "dimension": [
+            0,
+            1
+          ],
+          "lower": -1000000000000.0,
+          "initial": 0.9533155862181965,
+          "upper": 1000000000000.0
+        },
+        {
+          "name": "tool_coefficient_2",
+          "dimension": [
+            0,
+            1
+          ],
+          "lower": -1000000000000.0,
+          "initial": 0.52886890268077,
+          "upper": 1000000000000.0
+        },
+        {
+          "name": "tool_coefficient_3",
+          "dimension": [
+            -1,
+            1
+          ],
+          "lower": -1000000000000.0,
+          "initial": -0.1435292587295079,
+          "upper": 1000000000000.0
+        },
+        {
+          "name": "tool_coefficient_4",
+          "dimension": [
+            -2,
+            1
+          ],
+          "lower": -1000000000000.0,
+          "initial": -0.04238928928621362,
+          "upper": 1000000000000.0
+        },
+        {
+          "name": "tool_coefficient_5",
+          "dimension": [
+            0,
+            1
+          ],
+          "lower": -1000000000000.0,
+          "initial": 0.09783101758069875,
+          "upper": 1000000000000.0
+        },
+        {
+          "name": "tool_coefficient_6",
+          "dimension": [
+            0,
+            1
+          ],
+          "lower": -1000000000000.0,
+          "initial": 0.1648847948140114,
+          "upper": 1000000000000.0
+        },
+        {
+          "name": "tool_coefficient_7",
+          "dimension": [
+            0,
+            1
+          ],
+          "lower": -1000000000000.0,
+          "initial": -0.09356919891926528,
+          "upper": 1000000000000.0
+        }
+      ],
+      "quantities": [
+        {
+          "name": "tool_feature_0",
+          "expression": "u"
+        },
+        {
+          "name": "tool_feature_1",
+          "expression": "h"
+        },
+        {
+          "name": "tool_feature_2",
+          "expression": "history[0]"
+        },
+        {
+          "name": "tool_feature_3",
+          "expression": "history[3]"
+        }
+      ],
+      "exposed_inputs": [
+        "u",
+        "h",
+        "history",
+        "times",
+        "dt"
+      ]
+    },
+    "expression": "tool_coefficient_0+tool_coefficient_1*(tool_feature_0)+tool_coefficient_2*(tool_feature_3)+tool_coefficient_3*(tool_feature_1*tool_feature_3)+tool_coefficient_4*(tool_feature_1**2)+tool_coefficient_5*(tool_feature_2)+tool_coefficient_6*(tool_feature_0**2)+tool_coefficient_7*(tool_feature_2**2)",
+    "values": [
+      0.07500537764957985,
+      0.9533155862181965,
+      0.52886890268077,
+      -0.1435292587295079,
+      -0.04238928928621362,
+      0.09783101758069875,
+      0.1648847948140114,
+      -0.09356919891926528
+    ],
+    "train_rmse": 0.11191638198292396,
+    "dev_rmse": 0.21127759859200101,
+    "optimizer_converged": true,
+    "origin": "fit_only_grid_structure_proposal",
+    "feature_definitions": [
+      "u",
+      "h",
+      "history[0]",
+      "history[3]"
+    ],
+    "selected_basis": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        0,
+        1,
+        0,
+        1
+      ],
+      [
+        0,
+        2,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        0
+      ],
+      [
+        2,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        2,
+        0
+      ]
+    ],
+    "manifest": {
+      "equations": {
+        "tool_feature_0": "u",
+        "tool_feature_1": "h",
+        "tool_feature_2": "history[0]",
+        "tool_feature_3": "history[3]"
+      },
+      "response": "tool_coefficient_0 + tool_coefficient_1 * tool_feature_0 + tool_coefficient_2 * tool_feature_3 + tool_coefficient_3 * (tool_feature_1 * tool_feature_3) + tool_coefficient_4 * tool_feature_1 ** 2 + tool_coefficient_5 * tool_feature_2 + tool_coefficient_6 * tool_feature_0 ** 2 + tool_coefficient_7 * tool_feature_2 ** 2",
+      "parameter_bindings": {
+        "tool_coefficient_0": 0,
+        "tool_coefficient_1": 1,
+        "tool_coefficient_2": 2,
+        "tool_coefficient_3": 3,
+        "tool_coefficient_4": 4,
+        "tool_coefficient_5": 5,
+        "tool_coefficient_6": 6,
+        "tool_coefficient_7": 7
+      },
+      "types": {
+        "u": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "0"
+          ]
+        },
+        "h": {
+          "shape": "scalar",
+          "dimension": [
+            "1",
+            "0"
+          ]
+        },
+        "history": {
+          "shape": "vector4",
+          "dimension": [
+            "0",
+            "0"
+          ]
+        },
+        "times": {
+          "shape": "vector4",
+          "dimension": [
+            "1",
+            "0"
+          ]
+        },
+        "dt": {
+          "shape": "scalar",
+          "dimension": [
+            "1",
+            "0"
+          ]
+        },
+        "tool_coefficient_0": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "1"
+          ]
+        },
+        "tool_coefficient_1": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "1"
+          ]
+        },
+        "tool_coefficient_2": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "1"
+          ]
+        },
+        "tool_coefficient_3": {
+          "shape": "scalar",
+          "dimension": [
+            "-1",
+            "1"
+          ]
+        },
+        "tool_coefficient_4": {
+          "shape": "scalar",
+          "dimension": [
+            "-2",
+            "1"
+          ]
+        },
+        "tool_coefficient_5": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "1"
+          ]
+        },
+        "tool_coefficient_6": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "1"
+          ]
+        },
+        "tool_coefficient_7": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "1"
+          ]
+        },
+        "tool_feature_0": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "0"
+          ]
+        },
+        "tool_feature_1": {
+          "shape": "scalar",
+          "dimension": [
+            "1",
+            "0"
+          ]
+        },
+        "tool_feature_2": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "0"
+          ]
+        },
+        "tool_feature_3": {
+          "shape": "scalar",
+          "dimension": [
+            "0",
+            "0"
+          ]
+        }
+      },
+      "final_allowed_symbols": [
+        "dt",
+        "h",
+        "history",
+        "times",
+        "tool_coefficient_0",
+        "tool_coefficient_1",
+        "tool_coefficient_2",
+        "tool_coefficient_3",
+        "tool_coefficient_4",
+        "tool_coefficient_5",
+        "tool_coefficient_6",
+        "tool_coefficient_7",
+        "tool_feature_0",
+        "tool_feature_1",
+        "tool_feature_2",
+        "tool_feature_3",
+        "u"
+      ],
+      "source": "Derived from the one named specification"
+    },
+    "id": "R1",
+    "request": {
+      "parameters": [],
+      "quantities": [],
+      "features": [
+        "u",
+        "h",
+        "history[0]",
+        "history[3]"
+      ],
+      "degree": 2
+    },
+    "annotation": {
+      "degree": 2,
+      "evidence_refs": [
+        "active_0",
+        "active_4",
+        "active_8",
+        "active_12",
+        "frozen_prediction_results",
+        "fresh_1_0",
+        "fresh_1_4",
+        "fresh_1_8",
+        "fresh_1_12",
+        "observed_A_0",
+        "observed_A_4",
+        "observed_A_8",
+        "observed_A_12",
+        "observed_A_16",
+        "observed_A_20",
+        "observed_A_24",
+        "observed_A_28",
+        "observed_B_0",
+        "observed_B_4",
+        "dev_0",
+        "dev_6",
+        "dev_12",
+        "dev_18"
+      ],
+      "features": [
+        "u",
+        "h",
+        "history[0]",
+        "history[3]"
+      ],
+      "kernel_family_claim": "polynomial",
+      "label": "Endpoint history with waiting-time modulation",
+      "parameters": [],
+      "prospective_contrast": "At fixed u, compare histories that vary only history[3], including both active pairs and new held-out values of u and h. Also compare oldest-interval and newest-interval pulses across h to test whether the h-by-history effect is shared or interval-specific.",
+      "quantities": [],
+      "refutation_condition": "Reject this representation if a fit-only refit has raw dev RMSE above 0.06 or misses any fresh hidden, random confirmation, or intervention-pair target by more than the stated RMSE criterion. A failure of this finite feature set does not refute history[3] dependence generally.",
+      "scientific_change": "Replace the failed u,h-only response with a quadratic response in current drive, waiting time, and explicitly indexed oldest and newest history intervals. The active interventions preserve a large newest-interval effect; the fresh and observed contrasts motivate testing waiting-time modulation rather than treating the fitted C0 coefficients as supported."
+    },
+    "fit_rows_sha256": "6f1f968125e53998dcd2dad33bbbc1e6b932eb4dd5d4b53027d551a66b021f8d"
+  }
+}

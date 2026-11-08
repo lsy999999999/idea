@@ -1,0 +1,84 @@
+{
+  "summary": "完成了三站2014-2022暖季拟合和指定2023留年检验中的可用部分。预分析在解析2023高频IV结果前冻结。10396000与11501000各有153个可配对测试日；11502500的2023原始IV响应为无站点/无温度列，故三站完整检验和支流流量比留年预测未能完成，未替换留出年。可用站点中加入air_range改善A24及S_day的测试MAE点估计，但所有时间块区间跨0，S_night改善很小。",
+  "status": "partial_primary_analysis_required_2023_site_file_unavailable",
+  "requested_model": "gpt-6-luna",
+  "backend_weights_verified": false,
+  "artifacts": [
+    {"path": "runs/pilot_001/stages/r05_experimentalist/attempt-001/workspace/preanalysis.json", "description": "解析2023高频测试结果前冻结的筛选、模型、指标、区间和河网分析规则。"},
+    {"path": "runs/pilot_001/stages/r05_experimentalist/attempt-001/workspace/analysis.py", "description": "完整可复现的RDB解析、逐日波形提取、配对、建模、块bootstrap及NLDI查询脚本。"},
+    {"path": "runs/pilot_001/stages/r05_experimentalist/attempt-001/workspace/analysis_results.json", "description": "机器可读实际结果，包括逐站逐目标MAE、系数、样本数、区间、筛选计数和失败状态。"},
+    {"path": "runs/pilot_001/stages/r05_experimentalist/attempt-001/workspace/daily_diagnostics.csv", "description": "符合规则并与日协变量配对的训练/测试逐站逐日目标和预测量。"},
+    {"path": "runs/pilot_001/stages/r05_experimentalist/attempt-001/workspace/heldout_predictions.csv", "description": "可用两站2023各日各目标在基线和加air_range模型下的预测与绝对误差差值。"},
+    {"path": "runs/pilot_001/stages/r05_experimentalist/attempt-001/workspace/network_check.json", "description": "USGS NLDI下游导航原始响应和相关河网站点字段。"},
+    {"path": "runs/pilot_001/stages/r05_experimentalist/attempt-001/workspace/report_zh.md", "description": "中文研究报告，解释观察、推断边界、2023暴露和后续检验。"},
+    {"path": "runs/pilot_001/stages/r05_experimentalist/attempt-001/workspace/result.json", "description": "本阶段机器可读汇总。"}
+  ],
+  "evidence": [
+    {
+      "type": "observation",
+      "source": "runs/pilot_001/stages/r01_boundary/attempt-001/workspace/data/iv_11502500_2023_may_sep.rdb",
+      "detail": "文件文本为“No sites found matching all criteria”，数据列只有agency_cd、site_no、datetime且无观测行；分析记录0个合格日。",
+      "interpretation": "11502500的指定2023测试目标不可计算，三站完整留年检验未完成；按冻结方案不改换测试年。"
+    },
+    {
+      "type": "observation",
+      "source": "runs/pilot_001/stages/r05_experimentalist/attempt-001/workspace/analysis_results.json",
+      "detail": "10396000与11501000分别有153个2023站日；A24 MAE改善为0.0527和0.0488°C，S_night改善为0.0017和0.0012°C，S_day改善为0.0106和0.0113°C。两站三个目标的28日块bootstrap 95%区间均包含0。",
+      "interpretation": "点估计显示air_range对A24和S_day预测有较大改善，对S_night改善很小；测试季时间块不确定性不足以确认稳定增益。"
+    },
+    {
+      "type": "observation",
+      "source": "runs/pilot_001/stages/r05_experimentalist/attempt-001/workspace/analysis_results.json",
+      "detail": "训练期air_range条件斜率在两站的A24目标均为正；S_night均为负；S_day均为正。",
+      "interpretation": "该符号格局不是夜间单向响应；它是条件关联，不能单独说明热交换过程。"
+    },
+    {
+      "type": "observation",
+      "source": "runs/pilot_001/stages/r05_experimentalist/attempt-001/workspace/network_check.json",
+      "detail": "2026-11-03 USGS NLDI HTTP 200下游主河道导航从USGS-11501000返回USGS-11502500，亦有SPRAGUE RIVER ABOVE WILLIAMSON RIVER与WILLIAMSON BELOW SPRAGUE相关河段/站点记录。",
+      "interpretation": "公开河网资料支持观测位置的路由连通；不确定传播时延、流量闭合或支流流量占比。"
+    },
+    {
+      "type": "observation",
+      "source": "runs/pilot_001/parallel_exploration/paired_daily_panel.csv; runs/pilot_001/stages/r02_skeptic/attempt-001/workspace/recomputed_results.json; runs/pilot_001/stages/r04_skeptic/attempt-001/workspace/independent_results.json",
+      "detail": "项目既存日尺度温度/气象/流量配对面板和预测复核已经包含或使用2023数据。",
+      "interpretation": "本轮预分析先于2023高频IV目标读取，但2023不是项目层面完全未接触的新年份；本轮高频指标分析仍属探索性复核。"
+    }
+  ],
+  "claims": [
+    {
+      "claim": "对于两个有2023高频数据的站点，加入日空气温差使A24和S_day的测试MAE点估计下降，S_night下降较小。",
+      "status": "exploratory_prediction_result",
+      "basis": "逐站训练2014-2022并按预分析设计测试2023；所有28日块区间包含0。"
+    },
+    {
+      "claim": "当前可用高频结果没有稳健区分出夜间不对称响应与日幅/白天斜率预测关联。",
+      "status": "bounded_interpretation",
+      "basis": "训练期斜率方向为A24正、S_night负、S_day正；测试改善区间均跨0。"
+    },
+    {
+      "claim": "NLDI河网支持Sprague观测点沿下游河道连到Williamson below Sprague观测点。",
+      "status": "bounded_network_observation",
+      "basis": "NLDI navigation/DM/nwissite返回目标站和相关命名河段。"
+    },
+    {
+      "claim": "本阶段未能检验Sprague/Williamson的2023波形比和流量比竞争预测。",
+      "status": "incomplete_due_input_failure",
+      "basis": "指定Williamson 2023 IV文件没有观测值。"
+    }
+  ],
+  "limitations": [
+    "11502500的2023 IV请求未提供站点/水温数据；无法满足预注册的三站完整检验或Sprague-Williamson配对模型。",
+    "预分析冻结了变量构造、拟合和对比方式，但没有明确冻结air_range系数符号的方向性预言；符号解释为描述性结果。",
+    "2023已被项目其他日尺度面板和预测/复核分析接触，不能称为全项目新年份。",
+    "所有可用测试目标的28日块区间均跨0；两站有限结果不能证明总体稳定预测改进。",
+    "日最高最低气温和日均温并非逐时气象强迫或能量通量；预测关联不构成因果热交换机制证据。",
+    "流量比没有被解释为份额；即便河网连通，中间来水、取水、储存、旅行时间和测量时点都可能改变其意义。",
+    "未做全面探头历史审计或新颖性文献综述；不声称原创或新机制。"
+  ],
+  "next_actions": [
+    "核查USGS 11502500在2023年的站点目录、瞬时序列可用范围及原请求参数，解释已保存响应为何返回No sites found。",
+    "若能取得原定2023记录，在保留本次失败版本的前提下按相同冻结设计增补执行三站波形和支流/下游配对检验。",
+    "使用尚未接触的后续年份或独立连通河系做预先冻结的检验，并增加逐时气象/辐射信息来区分预测关联与过程解释。"
+  ]
+}

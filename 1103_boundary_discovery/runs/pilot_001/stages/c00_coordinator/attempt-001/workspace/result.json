@@ -1,0 +1,60 @@
+{
+  "summary": "基于 brief、侦察报告、USGS 样本审计和已有定向文献审计，选择河流热事件后的恢复轨迹作为暂定问题。现有证据只验证了三个站点在一个三日窗口内的 15 分钟数据可取且时间格完整，尚未验证多年的事件覆盖、跨站可比性或协变量可用性。派发 boundary 角色核查这些观测条件；本协调阶段没有执行实验。",
+  "artifacts": [
+    {
+      "path": "runs/pilot_001/stages/c00_coordinator/attempt-001/workspace/result.json",
+      "description": "本阶段协调决策、证据边界和下一角色任务。"
+    }
+  ],
+  "evidence": [
+    {
+      "type": "observation",
+      "source": "bootstrap/scout/evidence/usgs_sample_audit.json",
+      "detail": "USGS 站点 10396000、11501000、11502500 各返回 288 个水温观测，覆盖 2020-07-01 至 2020-07-03，当地时间间隔均为 900 秒，无重复或缺失的预期 15 分钟点；请求响应为 HTTP 200。",
+      "interpretation": "确认了短窗口数据获取和时间格完整性，不代表长期覆盖或足以检验候选问题。"
+    },
+    {
+      "type": "observation",
+      "source": "bootstrap/scout/SCOUT_REPORT.md",
+      "detail": "侦察报告将河温恢复候选排第一，原因是可立即取得真实多站观测；报告明示完整覆盖、气象协变量、传感器变更尚未审计，且热记忆、滞后和河流热浪研究成熟。",
+      "interpretation": "可行性依据尚窄，不能据此声称发现新机制。"
+    },
+    {
+      "type": "observation",
+      "source": "bootstrap/literature_audit/SEARCH_AND_OVERLAP.md",
+      "detail": "软件验证方向的定向文献审计发现自动数据验证、过程阶段约束和风险自适应测试均有近邻工作；审计非系统综述，未做全文或引文链检查。",
+      "interpretation": "该设计推荐的宽泛问题已有明显概念重叠，当前优先核查有真实观测支撑的河温候选；软件方向仍可在新证据下重开。"
+    }
+  ],
+  "claims": [
+    "当前最值得继续核查的问题是：在控制季节、气温和流量后，前一热事件后的实测水温恢复形状是否为下一次热事件峰值或超阈持续时间提供跨站可迁移的预测信息，且超过近期最大值与累计热暴露。",
+    "该问题是预测信息增量假设，不是河流中存在新物理状态或机制的证据。即使出现增益，也需要独立观察和最强替代解释检查。"
+  ],
+  "limitations": [
+    "现有水温样本仅覆盖三个站点的一个三日窗口，没有执行长期覆盖或协变量分析。",
+    "候选相关文献仅经侦察级 OpenAlex 检索；河流热浪和 2026 年河流温度滞后/滞回工作尚无全文重叠核查。",
+    "本阶段未执行任何数值实验，也没有模型输出或候选效果估计。",
+    "既有软件验证文献审计来自另一个初始方向，只作为当前设计推荐的重叠提示；不把它当作河温候选的证据。"
+  ],
+  "decision": "dispatch",
+  "research_status": "仅完成证据分流。河温候选有短窗口真实数据访问证据，但关键观测覆盖和测量适用性未明；尚不能判断其能否形成有区分力的天然观测检验。",
+  "candidate": {
+    "current_problem": "河流热事件之间的水温恢复轨迹是否包含超出季节、气温、流量、近期峰值和累计热暴露的信息，用于预测下一事件的峰值与超阈持续时间？",
+    "idea": "把前一热事件后的实测恢复曲线作为可操作的事件历史特征，检验其在留整站点条件下是否可迁移；不预设其物理成因。",
+    "evidence_status": "只有 USGS 三站点、三日窗口的完整 15 分钟采样记录访问核验；没有事件级、长期或跨站预测证据。",
+    "unresolved_question": "目标站点是否有足够连续多年的水温观测、可配对的气温与流量记录及可审计的传感器/站点元数据，以构造无泄漏的时间外和整站点留出检验？"
+  },
+  "next_actions": [
+    {
+      "role": "boundary",
+      "task": "审计河温候选的真实观测适用性。以已有 USGS 样本审计和 Oregon 活跃河流温度站点清单为起点，选取一个可复现且有明确选择规则的候选站点子集；查验逐站水温记录的可用年份、采样间隔、缺测/断档、参数与站点元数据变更，并检查同期气温和流量记录能否配对。不要拟合或执行候选预测实验。交付中文 result.json、源 URL/请求与检索时间、覆盖汇总表和一份说明哪些站点/时期足以进入后续检验、主要测量风险及推荐下一步的问题报告。若覆盖无法支撑留站或时间外测试，应据实建议缩小或放弃此候选。",
+      "inputs": [
+        "/Applications/ideas/1103_boundary_discovery/bootstrap/PILOT_BRIEF.md",
+        "/Applications/ideas/1103_boundary_discovery/bootstrap/scout/candidates.json",
+        "/Applications/ideas/1103_boundary_discovery/bootstrap/scout/evidence/usgs_sample_audit.json",
+        "/Applications/ideas/1103_boundary_discovery/bootstrap/scout/evidence/README.md",
+        "/Applications/ideas/1103_boundary_discovery/docs/DISCOVERY_PROTOCOL.md"
+      ]
+    }
+  ]
+}
