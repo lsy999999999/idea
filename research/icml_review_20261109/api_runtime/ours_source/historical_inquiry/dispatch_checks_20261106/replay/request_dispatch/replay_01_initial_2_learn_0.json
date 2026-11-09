@@ -1,0 +1,88 @@
+{
+  "source_stage": "replay_01_initial_2",
+  "source_result_object_sha256": "88950866af41136252b290b8f96a1a0a38390eb25c7caddeda4a156e61cf58ba",
+  "request": {
+    "needed": true,
+    "queries": [],
+    "urls": [],
+    "operations": [
+      {
+        "kind": "analysis",
+        "question": "在 R07 中，当前相对位置与相对位移之外，前 10 帧平均相对位移能否改善下一帧相对位移的探索性预测？",
+        "record_id": "R07",
+        "variables": [
+          {
+            "name": "relative_position",
+            "expression": "positions[:,0,:]-positions[:,1,:]",
+            "meaning": "A 减 B 的二维相对坐标向量",
+            "units": "原生图像坐标单位"
+          },
+          {
+            "name": "separation",
+            "expression": "norm(relative_position,axis=-1)",
+            "meaning": "两标签坐标间欧氏距离",
+            "units": "原生图像坐标单位"
+          },
+          {
+            "name": "relative_step",
+            "expression": "diff(relative_position,1,axis=0)",
+            "meaning": "相邻帧 A 减 B 的相对位移向量",
+            "units": "原生图像坐标单位/帧"
+          },
+          {
+            "name": "history_step_mean",
+            "expression": "rolling(relative_step,10)",
+            "meaning": "截至当前帧的过去 10 个相对位移的逐坐标平均；首 9 行缺失",
+            "units": "原生图像坐标单位/帧"
+          },
+          {
+            "name": "target_next_step",
+            "expression": "shift(relative_step,-1)",
+            "meaning": "下一帧的相对位移向量",
+            "units": "原生图像坐标单位/帧"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "distance_summary",
+            "expression": "separation"
+          },
+          {
+            "name": "next_step_prediction",
+            "expression": "target_next_step"
+          }
+        ],
+        "groups": [
+          {
+            "name": "finite_aligned_rows",
+            "where": "isfinite(separation)&isfinite(target_next_step[:,0])&isfinite(target_next_step[:,1])&isfinite(history_step_mean[:,0])&isfinite(history_step_mean[:,1])",
+            "values": [
+              "separation",
+              "relative_step",
+              "history_step_mean",
+              "target_next_step"
+            ]
+          }
+        ],
+        "model": {
+          "target": "target_next_step",
+          "features": [
+            "relative_position",
+            "relative_step",
+            "history_step_mean"
+          ],
+          "train_fraction": 0.7
+        }
+      }
+    ]
+  },
+  "knowledge_requested": false,
+  "routes": [
+    {
+      "field": "analysis_plan",
+      "index": 0,
+      "operation_index": 0,
+      "deduplicated": false
+    }
+  ]
+}

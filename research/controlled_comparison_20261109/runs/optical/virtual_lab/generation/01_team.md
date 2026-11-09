@@ -1,0 +1,390 @@
+## User
+
+This is the beginning of a team meeting to discuss your research project. This is a meeting with the team lead, Principal Investigator, and the following team members: Domain Scientist, Dynamical and Statistical Physicist.
+
+Here is context for this meeting:
+
+[begin context 1]
+
+{
+  "case": "optical",
+  "source": {
+    "title": "Degree-of-polarization modulation for high-dimensional optical computing",
+    "journal": "Nature",
+    "published": "2026-08-12",
+    "doi": "10.1038/s41586-026-10891-z",
+    "repository": "https://zenodo.org/records/20775840",
+    "files": [
+      "Figure2/Fig2a.mat",
+      "Figure2/Fig2b.mat"
+    ]
+  },
+  "data_dictionary": {
+    "scan": "Two different source scans; do not pool them as independent repeats.",
+    "dphi": "Phase-distribution spread control, exported in Fig2a. Unit convention requires source verification.",
+    "mean_phase": "Mean-phase control, exported in Fig2b, range 0 to 2pi.",
+    "DOP": "Source-export degree of polarization. Fig2a uses approximately 0-100 scale; Fig2b approximately 0-1. Preserve units per scan; do not combine raw scales.",
+    "S1/S2/S3": "Exported normalized polarization-direction components. Their squared norm should be inspected rather than assumed equal to the exported DOP."
+  },
+  "rows": 302,
+  "statistics": {
+    "dphi": {
+      "n": 102,
+      "min": 0.0,
+      "max": 0.5050000000000003,
+      "mean": 0.2525000000000001
+    },
+    "DOP": {
+      "n": 302,
+      "min": 0.6969392550000001,
+      "max": 93.139824,
+      "mean": 19.835836730452538
+    },
+    "S1": {
+      "n": 302,
+      "min": -0.9145613174158018,
+      "max": 0.8667067186353989,
+      "mean": 0.021601982294003574
+    },
+    "S2": {
+      "n": 302,
+      "min": -0.624171731610925,
+      "max": 0.6596299670792776,
+      "mean": 0.04424361624446888
+    },
+    "S3": {
+      "n": 302,
+      "min": -0.9210320760853088,
+      "max": 0.999356739723518,
+      "mean": 0.2731718502280629
+    },
+    "mean_phase": {
+      "n": 200,
+      "min": 0.0,
+      "max": 6.283185307179586,
+      "mean": 3.141592653589793
+    }
+  },
+  "preview": [
+    {
+      "dphi": 0.0,
+      "DOP": 93.139824,
+      "S1": 0.0266768974263289,
+      "S2": 0.0904556652152477,
+      "S3": 0.995542027234643,
+      "scan": "spread",
+      "mean_phase": NaN
+    },
+    {
+      "dphi": 0.13500000000000004,
+      "DOP": 81.22475666666668,
+      "S1": 0.0332872124063272,
+      "S2": 0.0360823778113844,
+      "S3": 0.998793039666925,
+      "scan": "spread",
+      "mean_phase": NaN
+    },
+    {
+      "dphi": 0.27000000000000013,
+      "DOP": 56.20188599999999,
+      "S1": 0.0385011284133245,
+      "S2": 0.141342386457727,
+      "S3": 0.989210505647654,
+      "scan": "spread",
+      "mean_phase": NaN
+    },
+    {
+      "dphi": 0.41000000000000025,
+      "DOP": 31.001004333333334,
+      "S1": 0.0659066296868944,
+      "S2": 0.0964375957074724,
+      "S3": 0.993147116494311,
+      "scan": "spread",
+      "mean_phase": NaN
+    },
+    {
+      "dphi": NaN,
+      "DOP": 0.7753992,
+      "S1": 0.6147996963283668,
+      "S2": 0.6538490269204854,
+      "S3": 0.4410173477833979,
+      "scan": "mean_phase",
+      "mean_phase": 0.2210165685942568
+    },
+    {
+      "dphi": NaN,
+      "DOP": 0.822448405,
+      "S1": 0.8574318227386268,
+      "S2": 0.38017385015886074,
+      "S3": -0.34680164860687224,
+      "scan": "mean_phase",
+      "mean_phase": 1.0735090474578188
+    },
+    {
+      "dphi": NaN,
+      "DOP": 0.787132115,
+      "S1": 0.6139125800008035,
+      "S2": -0.009068329948985484,
+      "S3": -0.7893194741907164,
+      "scan": "mean_phase",
+      "mean_phase": 1.957575321834846
+    },
+    {
+      "dphi": NaN,
+      "DOP": 0.8427613900000002,
+      "S1": 0.016982038798103026,
+      "S2": -0.42962551483549394,
+      "S3": -0.9028469706302319,
+      "scan": "mean_phase",
+      "mean_phase": 2.810067800698408
+    },
+    {
+      "dphi": NaN,
+      "DOP": 0.80507366,
+      "S1": -0.612621571984825,
+      "S2": -0.5872783336565545,
+      "S3": -0.5289587003215568,
+      "scan": "mean_phase",
+      "mean_phase": 3.66256027956197
+    },
+    {
+      "dphi": NaN,
+      "DOP": 0.78688193,
+      "S1": -0.9061455867173149,
+      "S2": -0.2792955555365603,
+      "S3": 0.31762685458867446,
+      "scan": "mean_phase",
+      "mean_phase": 4.546626553938997
+    },
+    {
+      "dphi": NaN,
+      "DOP": 0.72556984,
+      "S1": -0.4334832324130062,
+      "S2": 0.2738209229203421,
+      "S3": 0.8585529788912355,
+      "scan": "mean_phase",
+      "mean_phase": 5.399119032802559
+    },
+    {
+      "dphi": NaN,
+      "DOP": 0.7301895649999999,
+      "S1": 0.3510189584311359,
+      "S2": 0.6284449571068913,
+      "S3": 0.6941461789930579,
+      "scan": "mean_phase",
+      "mean_phase": 6.283185307179586
+    }
+  ],
+  "additional_context": "The source study programs optical polarization statistics using spatial light modulators. We use two calibration/source scans, 102 and 200 rows. These are measurements supplied with the paper; no independent repeats or raw acquisition uncertainty are supplied in this subset.",
+  "task": "Propose substantive follow-up scientific questions and explanatory hypotheses from the supplied actual source data. Distinguish published claims, observed measurements, and your new conditional proposals. Develop consequences and alternatives; do not require a completed proof or experiment. Do not claim independent rediscovery: the source study identity is visible.",
+  "data_file": "measurements.csv",
+  "retrieval_policy": "Use the same supplied source corpus for this controlled comparison; no external browsing. Data and source excerpts are shared with every system."
+}
+
+[end context 1]
+
+Here is the agenda for the meeting:
+
+Develop follow-up research hypotheses and concrete conditional consequences beyond the supplied study. Discuss observations and competing explanations; do not claim the paper conclusions as new.
+
+Principal Investigator will convene the meeting. Then, each team member will provide their thoughts on the discussion one-by-one in the order above. After all team members have given their input, Principal Investigator will synthesize the points raised by each team member, make decisions regarding the agenda based on team member input, and ask follow-up questions to gather more information and feedback about how to better address the agenda. This will continue for 3 rounds. Once the discussion is complete, Principal Investigator will summarize the meeting in detail for future discussions, provide a specific recommendation regarding the agenda, and answer the agenda questions (if any) based on the discussion while strictly adhering to the agenda rules (if any).
+
+## User
+
+Principal Investigator, please provide your initial thoughts on the agenda as well as any questions you have to guide the discussion among the team members.
+
+## Principal Investigator
+
+The source study establishes the context; our task is to develop conditional follow-up hypotheses, not to re-present its conclusions. The supplied data show two distinct control scans: a spread scan with DOP exported on an approximately 0–100 scale, and a mean-phase scan on an approximately 0–1 scale. They are not independent repeats and should not be pooled. The spread scan’s DOP decreases across the reported range of `dphi`, while the mean-phase scan’s exported Stokes-direction components change substantially with phase. These are observations in the supplied measurements, not evidence by themselves for a particular mechanism or uncertainty level. We also need to verify the unit convention for `dphi` and examine whether the Stokes-vector norm tracks DOP before interpreting either scan physically.
+
+For the discussion, I suggest we separate three levels: what the measurements directly show; what physical or measurement mechanisms could explain them; and what conditional predictions would distinguish those explanations. A useful working hypothesis is that phase spread primarily reduces polarization coherence, whereas changing mean phase primarily rotates the polarization state. A competing explanation is that scan-specific calibration, normalization, or instrumental effects contribute to the apparent DOP response or Stokes-vector behavior. The present subset cannot settle that competition because it supplies neither independent repeats nor raw acquisition uncertainties.
+
+Questions for the team:
+
+- Domain Scientist: What physical model of the programmed optical field predicts the observed DOP trend with phase spread, and what additional observable would distinguish loss of coherence from a change in polarization-state direction?
+- Dynamical and Statistical Physicist: How should we analyze the mean-phase trajectory and the relation between exported DOP and the Stokes-vector norm without treating rows as independent replicates? What features would count as evidence for a structured trajectory rather than measurement variation?
+- For both: Which conditional prediction is most informative if the two scans are repeated with matched calibration, documented units, and uncertainty estimates?
+- What should we treat as a prerequisite to interpretation: source verification of `dphi` units, confirmation of DOP scaling, or reconstruction of the export-to-measurement pipeline?
+
+I propose that each member first state one primary hypothesis, its strongest alternative, and a concrete prediction that would distinguish them. After hearing both views, I will synthesize the proposals and use the remaining rounds to narrow the analysis and identify the most informative follow-up measurements.
+
+## User
+
+Domain Scientist, please provide your thoughts on the discussion (round 1 of 3). If you do not have anything new or relevant to add, you may say "pass". Remember that you can and should (politely) disagree with other team members if you have a different perspective.
+
+## Domain Scientist
+
+The spread scan’s reported DOP falls from about 93.1 to 31.0 as `dphi` increases from 0 to 0.41, while its Stokes direction remains close to the positive S3 axis at the shown points. That combination is consistent with a conditional hypothesis: increasing programmed phase spread reduces the degree of polarization while leaving the mean polarization direction comparatively stable. A plausible mechanism is averaging over spatial or ensemble components with differing phases, which reduces the magnitude of the ensemble Stokes vector without requiring a large change in its direction.
+
+A competing explanation is that the apparent trend depends partly on scan-specific calibration or on how the export defines DOP. The supplied values do not include uncertainty estimates or independent repeats, and the `dphi` unit convention is unresolved. Also, the Stokes components are described as normalized direction components; their norm should not automatically be equated with exported DOP, especially across scans with different DOP scales.
+
+A discriminating follow-up would repeat the spread scan with documented phase units and matched calibration, recording raw Stokes measurements and uncertainty at each setting. If phase averaging is the dominant mechanism, increasing spread should reproducibly reduce the Stokes-vector magnitude or measured DOP while preserving direction, with the response following the specified phase distribution. If the direction shifts substantially, or the effect changes under calibration controls, that would weaken this simple interpretation and point toward state changes or measurement-system effects.
+
+## User
+
+Dynamical and Statistical Physicist, please provide your thoughts on the discussion (round 1 of 3). If you do not have anything new or relevant to add, you may say "pass". Remember that you can and should (politely) disagree with other team members if you have a different perspective.
+
+## Dynamical and Statistical Physicist
+
+I agree that the spread scan is consistent with reduced polarization magnitude at nearly stable direction, but I would be cautious about describing the Stokes components as a measured ensemble-vector magnitude until their normalization is verified. The displayed spread-scan points have directions near positive S3; the mean-phase scan instead traces substantially different directions. Since these are separate scans with different exported DOP scales, that contrast is suggestive, not a controlled comparison of two effects.
+
+For the mean-phase scan, a conditional hypothesis is that changing mean phase drives a reproducible, approximately periodic trajectory on the polarization-direction sphere, while DOP remains comparatively stable. The alternative is that the trajectory reflects scan-dependent offsets, phase-setting errors, or export conventions. The listed phase samples are not uniformly spaced, and the endpoints at 0 and 2π should represent the same physical setting; their discrepancy is therefore a useful closure diagnostic, but not evidence of a specific failure without uncertainties and calibration information.
+
+I would analyze each scan separately, first checking DOP scaling and the norm \(S_1^2+S_2^2+S_3^2\). Then assess the mean-phase trajectory with a circular model that respects phase periodicity, and report residuals and sensitivity to endpoint treatment rather than fitting an unconstrained trend. A matched, repeated scan with raw Stokes values and uncertainties would distinguish a genuine periodic response from drift: reproducible closure and stable DOP would support the rotation hypothesis; systematic nonclosure or calibration-dependent trajectories would favor instrument or export effects.
+
+## User
+
+This concludes round 1 of 3 of discussion. Principal Investigator, please synthesize the points raised by each team member, make decisions regarding the agenda based on team member input, and ask follow-up questions to gather more information and feedback about how to better address the agenda.
+
+## Principal Investigator
+
+**Round 1 Synthesis**
+
+The supplied measurements support two separate observations, not a pooled comparison. In the spread scan, exported DOP declines across the shown `dphi` range, while the reported Stokes direction remains near positive S3 at the displayed settings. In the mean-phase scan, the direction components vary substantially over a 0-to-2π sweep. The scan-specific DOP scales differ, so I will not compare their raw DOP values or treat either scan’s rows as independent repeats.
+
+The Domain Scientist’s leading hypothesis is that phase spread reduces polarization magnitude through averaging over differing phase components, with direction comparatively stable. The strongest alternative raised is a contribution from calibration or export conventions. The proposed discriminator is a repeated spread scan with verified phase units, matched calibration, raw Stokes measurements, and uncertainty estimates.
+
+The Dynamical and Statistical Physicist’s leading hypothesis is that mean phase produces a reproducible, periodic trajectory on the polarization-direction sphere, with DOP comparatively stable. They emphasized that periodic closure at 0 and 2π is a diagnostic, not proof of an instrumental problem: the supplied endpoint difference could also reflect measurement variation. Their proposed analysis is to check DOP scaling and Stokes-vector norms first, then assess the trajectory with a circular model and report residuals and endpoint sensitivity.
+
+**Decisions**
+
+For the rest of the discussion, we will keep the scans separate and distinguish observations from hypotheses. Before assigning physical meaning to Stokes norms or comparing DOP behavior, we will treat verification of the export definitions and DOP scaling as prerequisites. The `dphi` unit convention and acquisition uncertainty remain unresolved. No mechanism will be presented as established by this subset.
+
+Our working hypotheses are therefore conditional: (1) spread reduces polarization magnitude primarily through phase averaging while direction stays stable; and (2) mean phase produces a periodic direction trajectory. Calibration, phase-setting, and export effects remain viable alternatives for both.
+
+**Round 2 Questions**
+
+1. Domain Scientist: What specific dependence of polarization magnitude on the programmed phase distribution would distinguish phase averaging from generic calibration drift? What behavior would you expect if the distribution shape changed while its spread remained fixed?
+2. Dynamical and Statistical Physicist: Which circular-model diagnostics would be most informative with these data, given the nonuniform phase samples and uncertain measurement errors? How should we evaluate endpoint closure without overstating its significance?
+3. Both: If only one follow-up measurement could be added, would you prioritize a repeated matched scan, direct raw-Stokes acquisition, or an independent calibration reference? Please explain which competing explanations it would best separate.
+
+## User
+
+Domain Scientist, please provide your thoughts on the discussion (round 2 of 3). If you do not have anything new or relevant to add, you may say "pass". Remember that you can and should (politely) disagree with other team members if you have a different perspective.
+
+## Domain Scientist
+
+A more specific prediction follows from ensemble averaging. If the programmed phase distribution is the cause, the measured polarization magnitude should depend on its *characteristic function* at the relevant phase difference, not just on a generic monotonic “spread” parameter. For example, under a simple model with a fixed polarization direction and phase offsets \(\phi\), the coherence factor is proportional to \(\left|\langle e^{i\phi}\rangle\right|\). Different distribution shapes with the same variance can therefore produce different magnitude reductions. This is a conditional model, not something established by the supplied scan: the exact optical field and the meaning of `dphi` need verification first.
+
+That gives a useful discriminating test: hold the mean phase and nominal spread fixed, program two different phase-distribution shapes, and measure raw Stokes parameters under the same calibration. A reproducible difference in magnitude consistent with the predicted coherence factors would support phase averaging; similar dependence only on nominal spread, or changes tracking calibration references, would weaken it. I would prioritize raw-Stokes acquisition together with a calibration reference in that experiment. A repeated scan is still important for reproducibility, but repeats alone may not distinguish a systematic export or calibration effect from the proposed mechanism.
+
+## User
+
+Dynamical and Statistical Physicist, please provide your thoughts on the discussion (round 2 of 3). If you do not have anything new or relevant to add, you may say "pass". Remember that you can and should (politely) disagree with other team members if you have a different perspective.
+
+## Dynamical and Statistical Physicist
+
+For the mean-phase scan, I would fit the direction components jointly with periodic basis functions, such as a low-order Fourier model in phase, rather than fit each component with a nonperiodic trend. With only 200 rows and no supplied uncertainty model, I would keep the model low-dimensional, inspect residual structure, and avoid treating dense sampling as a substitute for independent repeats. The phase values are not uniformly spaced, so the fit and any summary should use the actual phase locations.
+
+Endpoint closure should be assessed as a paired physical constraint, not as a standalone significance test: compare the estimates near 0 and \(2\pi\) with their measurement uncertainties, and check whether the fitted periodic curve closes. Without uncertainties or repeated scans, the observed endpoint difference is only a diagnostic flag.
+
+I would slightly qualify the proposed single-measurement priority. Raw Stokes acquisition plus a calibration reference best addresses whether the exported DOP and direction are faithful measurements. But it does not establish repeatability or separate a stable systematic bias from a reproducible physical response. Ideally, the follow-up is one matched, repeated phase sweep that records raw Stokes values and calibration references; if forced to choose one element, I would prioritize raw Stokes plus calibration, then add repeats as soon as feasible.
+
+## User
+
+This concludes round 2 of 3 of discussion. Principal Investigator, please synthesize the points raised by each team member, make decisions regarding the agenda based on team member input, and ask follow-up questions to gather more information and feedback about how to better address the agenda.
+
+## Principal Investigator
+
+**Round 2 Synthesis**
+
+The Domain Scientist sharpened the phase-averaging hypothesis: under a simple ensemble model, polarization magnitude depends on the phase distribution’s characteristic function, so distributions with equal variance can yield different coherence factors. This is a conditional prediction, not a conclusion from the supplied scan; it depends on verifying the programmed field and the meaning of `dphi`. A useful test would hold mean phase and nominal spread fixed while changing distribution shape, with raw Stokes measurements and a calibration reference.
+
+The Dynamical and Statistical Physicist recommends modeling the mean-phase trajectory with a low-order periodic basis, using the actual nonuniform phase samples. Residual structure and closure should be inspected, but the 0 and 2π endpoints cannot support a strong inference without uncertainty estimates or repeats. They also noted that raw Stokes data and calibration are valuable for checking the export, while a matched repeated sweep is needed to assess reproducibility.
+
+I agree with both points. We will retain the characteristic-function prediction as a mechanism-specific hypothesis, and use periodic modeling only as a descriptive analysis until uncertainty and repeatability are available. For the next measurement, the preferred design is a matched repeated sweep recording raw Stokes values and calibration references. If resources force a narrower choice, we will prioritize raw Stokes plus calibration, then add repeats as soon as feasible. We will not claim that either design alone proves a physical mechanism.
+
+**Round 3 Questions**
+
+1. Domain Scientist: Which phase-distribution shapes would make the cleanest and most interpretable comparison at fixed mean and spread? What observable or control would best test the predicted coherence-factor dependence?
+2. Dynamical and Statistical Physicist: What minimum uncertainty and repeat structure would permit a defensible periodic-closure assessment and distinguish drift from measurement noise?
+3. Both: What should be the primary preregistered outcome for a follow-up: DOP or raw Stokes-vector magnitude, direction stability, phase-distribution dependence, or periodic closure? Please identify one primary outcome and one secondary diagnostic.
+4. What explicit result would lead you to revise or reject your leading hypothesis, rather than attribute disagreement to an unspecified calibration issue?
+
+## User
+
+Domain Scientist, please provide your thoughts on the discussion (round 3 of 3). If you do not have anything new or relevant to add, you may say "pass". Remember that you can and should (politely) disagree with other team members if you have a different perspective.
+
+## Domain Scientist
+
+For a clean test, I would compare a uniform phase distribution with a symmetric two-point distribution at offsets \(\pm a\), choosing \(a\) so both have the same mean and variance. They have distinct characteristic-function magnitudes: the two-point case gives \(|\cos a|\), while the uniform distribution over \([-\sqrt{3}\sigma,\sqrt{3}\sigma]\) gives \(\left|\sin(\sqrt{3}\sigma)/(\sqrt{3}\sigma)\right|\), where \(\sigma\) is the shared standard deviation. The exact predicted observable depends on how programmed phase enters the optical field, so this comparison should follow verification of the `dphi` convention and field model.
+
+I would preregister **raw Stokes-vector magnitude** as the primary outcome, computed from calibrated raw Stokes measurements rather than inferred from the exported DOP. The primary contrast would be the magnitude difference between the two distributions at fixed mean and variance. Direction stability and exported DOP would be secondary diagnostics. A calibration reference and repeated acquisitions at each programmed condition are essential to determine whether any contrast is reproducible and not an instrument offset.
+
+I would revise the phase-averaging hypothesis if the predicted distribution-shape contrast were absent or opposite in repeated, calibrated measurements across a range where the two predicted coherence factors differ appreciably, while the raw Stokes data remained stable and the phase programs were verified. That outcome would argue against this simple averaging model; it would not by itself identify the alternative mechanism.
+
+## User
+
+Dynamical and Statistical Physicist, please provide your thoughts on the discussion (round 3 of 3). If you do not have anything new or relevant to add, you may say "pass". Remember that you can and should (politely) disagree with other team members if you have a different perspective.
+
+## Dynamical and Statistical Physicist
+
+I agree with using calibrated raw Stokes data as the primary measurement, but I would not preregister the Euclidean norm \(\sqrt{S_1^2+S_2^2+S_3^2}\) as the primary outcome until the export and acquisition conventions are verified. The supplied dictionary calls these normalized polarization-direction components, so their norm may encode direction normalization rather than the physical polarization magnitude. I would instead preregister the calibrated Stokes vector itself as the primary outcome, with its norm and direction as derived diagnostics once their definitions are established. Exported DOP remains a secondary cross-check.
+
+For the phase-shape comparison, match the *implemented* phase distributions, not only their nominal mean and variance: verify the phase histogram at the modulator and account for finite sampling and phase-setting error. Then compare measured Stokes responses against the specific optical-field model’s predictions. The characteristic-function formulas are useful conditional predictions, but their direct application depends on which phase differences interfere in the measured signal.
+
+For a defensible periodic-closure assessment, I would require at least two independently reacquired full sweeps under unchanged calibration, with raw Stokes values and per-setting uncertainty estimates. Randomizing or reversing sweep order would help reveal drift. Closure should be evaluated against propagated measurement uncertainty and between-sweep variability, not by comparing endpoints alone. A reproducible nonclosure larger than that uncertainty would challenge the simple periodic-response model; absent independent sweeps, the present endpoints cannot do so.
+
+## User
+
+Principal Investigator, please summarize the meeting in detail for future discussions, provide a specific recommendation regarding the agenda, and answer the agenda questions (if any) based on the discussion while strictly adhering to the agenda rules (if any).
+
+As a reminder, here is the agenda for the meeting:
+
+Develop follow-up research hypotheses and concrete conditional consequences beyond the supplied study. Discuss observations and competing explanations; do not claim the paper conclusions as new.
+
+Your summary should take the following form.
+
+### Agenda
+
+Restate the agenda in your own words.
+
+### Team Member Input
+
+Summarize all of the important points raised by each team member. This is to ensure that key details are preserved for future meetings.
+
+### Recommendation
+
+Provide your expert recommendation regarding the agenda. You should consider the input from each team member, but you must also use your expertise to make a final decision and choose one option among several that may have been discussed. This decision can conflict with the input of some team members as long as it is well justified. It is essential that you provide a clear, specific, and actionable recommendation. Please justify your recommendation as well.
+
+### Next Steps
+
+Outline the next steps that the team should take based on the discussion.
+
+## Principal Investigator
+
+### Agenda
+Develop follow-up hypotheses and testable consequences beyond the supplied study. Keep direct observations distinct from physical interpretations, retain competing explanations, and do not present the source paper’s conclusions as new findings.
+
+### Team Member Input
+**Domain Scientist**
+- In the supplied spread scan, exported DOP decreases across the shown `dphi` range, while the displayed Stokes direction remains near positive S3. This is consistent with, but does not establish, a hypothesis that phase spread reduces polarization magnitude while leaving direction comparatively stable.
+- A plausible mechanism is ensemble averaging over phase offsets. In a simple model, coherence depends on the phase distribution’s characteristic function, so distributions with equal variance need not produce the same magnitude.
+- A discriminating test would hold mean and variance fixed while changing distribution shape. The proposed example compares a uniform distribution with a symmetric two-point distribution at offsets \(\pm a\). Under the stated simple model their coherence factors differ, but applying these formulas requires verifying how programmed phase enters the optical field and what `dphi` means.
+- The proposed primary contrast was calibrated raw Stokes-vector magnitude, with direction stability and exported DOP as secondary diagnostics. The hypothesis would be weakened if the predicted shape-dependent contrast were absent or opposite in repeated calibrated data with verified phase programs.
+
+**Dynamical and Statistical Physicist**
+- The mean-phase scan’s components vary substantially over the 0-to-2π range. A periodic polarization-direction trajectory is a testable hypothesis, but scan-specific offsets, phase-setting errors, drift, and export conventions remain alternatives.
+- The phase samples are nonuniform. A low-order periodic model using the actual phase values is preferable to a nonperiodic trend; residuals and endpoint sensitivity should be reported. The difference between the 0 and 2π endpoints is a diagnostic, not evidence of nonclosure without uncertainty estimates and repeat sweeps.
+- The supplied components are described as normalized direction components. Their Euclidean norm may not represent physical polarization magnitude, so it should not be preregistered as the primary outcome until measurement and export definitions are verified. The calibrated raw Stokes vector should be primary; norm and direction can be derived diagnostics once conventions are established.
+- For closure and drift assessment, the proposed minimum was two independently reacquired full sweeps under unchanged calibration, with raw Stokes values and per-setting uncertainty estimates. Randomized or reversed sweep order would help expose drift. Compare closure against propagated uncertainty and between-sweep variability.
+
+**Principal Investigator’s synthesis**
+The scans must remain separate: they have different DOP scales and are not independent repeats. The spread scan’s DOP trend and near-positive-S3 direction, and the mean-phase scan’s varying components, are observations in the supplied subset. Neither establishes a mechanism. The unit convention for `dphi`, DOP scaling, Stokes normalization, acquisition uncertainty, and export pipeline remain unresolved.
+
+### Recommendation
+Proceed with a **matched, repeated follow-up that tests phase-distribution shape dependence**, while measuring the calibrated raw Stokes vector and recording calibration references. This is the most mechanism-specific proposal raised and can distinguish simple phase averaging from explanations based only on nominal spread or generic calibration drift. Do not treat the characteristic-function formulas as predictions for the apparatus until the phase convention and optical-field model are verified.
+
+Use the following conditional hypotheses:
+- **Spread scan:** If ensemble phase averaging dominates, changing the implemented phase-distribution shape at fixed mean and variance should change the calibrated Stokes response in the direction predicted by the verified field model. A stable direction with the predicted magnitude contrast would support this model. No reproducible contrast, or a contrast inconsistent with the model, would weaken it.
+- **Mean-phase scan:** If mean phase drives a periodic polarization response, repeated calibrated sweeps should produce a reproducible periodic trajectory and closure within measurement and between-sweep uncertainty. Systematic nonclosure beyond those uncertainties would challenge the simple periodic-response model and motivate examination of drift, phase-setting, or export effects.
+
+The primary recorded outcome should be the **calibrated raw Stokes vector**. After confirming its convention, preregister the model-derived contrast in Stokes response between the two verified phase distributions as the primary test of the spread hypothesis. Treat derived magnitude, direction stability, exported DOP, and periodic closure as specified secondary diagnostics. This resolves the concern that the norm of normalized direction components may not encode physical polarization magnitude, while preserving a direct test of the proposed mechanism.
+
+### Next Steps
+1. Verify the `dphi` unit and definition, DOP scaling for each scan, Stokes normalization, phase-program implementation, and export-to-measurement pipeline.
+2. Specify the optical-field model linking the programmed phase distribution to the measured Stokes vector. Use it to select two phase distributions with equal implemented mean and variance but sufficiently distinct predicted responses.
+3. Acquire raw Stokes values, uncertainty estimates, and calibration references for each condition. Include repeated acquisitions and at least two independently reacquired full sweeps; randomize or reverse sweep order to help detect drift.
+4. Analyze scans separately. For the mean-phase sweep, fit a low-order periodic model at the actual nonuniform phase values; report residuals, uncertainty, between-sweep variability, and endpoint closure.
+5. Report outcomes as observations and conditional evidence for or against the specified models. Do not infer a unique alternative mechanism from a failed prediction alone.
+

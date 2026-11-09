@@ -1,0 +1,65 @@
+{
+  "summary": "A local SQLite 3.51.3 probe with matched writes observed a large difference in PASSIVE checkpoint progress between no-reader and long-lived-reader conditions. The busy field was zero in both; WAL file bytes were equal before checkpoint. This is a scoped software-behavior observation, not a novelty or performance claim.",
+  "artifacts": [
+    "bootstrap/v2_scout/BRIEF.md",
+    "bootstrap/v2_scout/wal_checkpoint_probe.py",
+    "bootstrap/v2_scout/source_fetch_log.md",
+    "bootstrap/v2_scout/result.json"
+  ],
+  "evidence": [
+    {
+      "type": "experiment",
+      "code": "bootstrap/v2_scout/wal_checkpoint_probe.py",
+      "command": ".venv/bin/python bootstrap/v2_scout/wal_checkpoint_probe.py",
+      "environment": "Python project virtualenv; sqlite3.sqlite_version=3.51.3; temporary local database; WAL mode; wal_autocheckpoint=0",
+      "observations": [
+        {
+          "hold_reader": false,
+          "writes": 120,
+          "rows_per_write": 20,
+          "rows_total": 2400,
+          "wal_bytes_before_checkpoint": 589192,
+          "passive_checkpoint_busy_log_checkpointed": [0, 143, 143],
+          "wal_bytes_after_passive": 589192,
+          "truncate_checkpoint_after_reader_close": [0, 0, 0],
+          "wal_bytes_after_truncate": 0,
+          "commit_ms_median": 0.042292,
+          "commit_ms_p95": 0.074125
+        },
+        {
+          "hold_reader": true,
+          "writes": 120,
+          "rows_per_write": 20,
+          "rows_total": 2400,
+          "wal_bytes_before_checkpoint": 589192,
+          "passive_checkpoint_busy_log_checkpointed": [0, 143, 2],
+          "wal_bytes_after_passive": 589192,
+          "truncate_checkpoint_after_reader_close": [0, 0, 0],
+          "wal_bytes_after_truncate": 0,
+          "commit_ms_median": 0.03875,
+          "commit_ms_p95": 0.069792
+        }
+      ]
+    },
+    {
+      "type": "literature retrieval attempt",
+      "source_log": "bootstrap/v2_scout/source_fetch_log.md",
+      "result": "DNS resolution failed for www.sqlite.org and api.openalex.org; no remote source content was obtained."
+    }
+  ],
+  "claims": [
+    "Under this local setup and workload, a long-lived reader coincided with much lower PASSIVE checkpoint progress even though busy=0 and WAL file bytes matched the no-reader case.",
+    "After ending the reader, the requested TRUNCATE checkpoint reduced the WAL file to zero bytes."
+  ],
+  "limitations": [
+    "One run per condition, one SQLite build, one local filesystem, one write-batch configuration, and one snapshot timing; the experiment is exploratory.",
+    "No claim about durability, production impact, causal generality, or literature novelty.",
+    "The commit latency differences are single-run timing noise until replicated.",
+    "Nearby-work URLs are listed but could not be fetched because DNS resolution failed; targeted literature review remains outstanding."
+  ],
+  "next_actions": [
+    "Fetch and inspect SQLite WAL/PRAGMA documentation and nearby database literature; record the passages bearing on checkpoint progress and reader snapshots.",
+    "Predeclare a paired follow-up varying reader snapshot timing and duration while matching total rows and commits; use fresh databases, randomized condition order, repeated runs, and a held-out write-batch configuration.",
+    "Measure the same checkpoint tuple, WAL bytes, and commit latency distribution; retain or discard the question based on whether competing workload explanations separate reproducibly."
+  ]
+}

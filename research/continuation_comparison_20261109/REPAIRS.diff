@@ -1,0 +1,151 @@
+--- before/run_ours.py
++++ after/run_ours.py
+@@ -1,6 +1,6 @@
+ """Native inquiry controller with compact, tool-capable, provider-neutral transport."""
+ from __future__ import annotations
+-import argparse, hashlib, json, os, sys, time, traceback
++import argparse, difflib, hashlib, json, os, sys, time, traceback
+ from pathlib import Path
+ from types import SimpleNamespace
+ from urllib.parse import urlparse
+@@ -16,11 +16,11 @@
+ from learning_memory import Memory, validate_notes
+ from discover import read, write
+ from learning_support import QuestionState, HypothesisState, validate_uptake, audit_review, material_coverage, service_request, validate_memory_use
+-from hypothesis_cycle import validate_step
++from hypothesis_cycle import validate_step, anchored, texts
+ from analysis_executor import expression
+ from knowledge_broker import KnowledgeBroker, SourcePolicy
+ 
+-VERSION='tool-transport-v4'
++VERSION='tool-transport-v5'
+ SUBMIT=function('submit_result','Submit the complete stage result as an object. Local validators return precise repair instructions before any question or memory state is committed.',
+                 {'result':{'type':'object','additionalProperties':True}},strict=False)
+ 
+@@ -112,6 +112,27 @@
+                 if 'source' in row:
+                     old=row['source'];row['source']=source(old)
+                     if old!=row['source']:changes.append({'field':'development source','from':old,'to':row['source']})
++                    original=store.documents[store.resolve(row['source'])]['text']
++                    pointer=row.get('quote_pointer')
++                    if pointer is not None:
++                        if not isinstance(pointer,str) or not pointer.startswith('/'):
++                            raise ValueError('quote_pointer must be a JSON pointer to a string in the named source')
++                        value=json.loads(original)
++                        for token in pointer[1:].split('/'):
++                            token=token.replace('~1','/').replace('~0','~')
++                            value=value[int(token)] if isinstance(value,list) else value[token]
++                        if not isinstance(value,str) or not value.strip():
++                            raise ValueError('quote_pointer must select a nonempty source string')
++                        if row.get('quote') is not None and row['quote']!=value:
++                            raise ValueError('quote conflicts with the exact quote_pointer value; omit the duplicate quote or supply the identical value')
++                        row['quote']=value
++                        changes.append({'field':'development quote','rule':'Resolve author-selected JSON pointer to exact source string','source':row['source'],'pointer':pointer})
++                    quote=row.get('quote')
++                    if quote is not None and not anchored(quote,original):
++                        candidates=list(dict.fromkeys(t for t in texts(original) if 0<len(t)<=1200))
++                        close=difflib.get_close_matches(quote,candidates,n=2,cutoff=.4) if isinstance(quote,str) else []
++                        raise ValueError('Development quote is absent from '+str(old)+'. Quote an exact source string value, not a field-name plus its value. '
++                                         'You may use quote_pointer to select the exact JSON string. Closest source strings (suggestions only): '+dumps(close))
+             req=result.get('learning_request')
+             if isinstance(req,dict) and req.get('context_ref')=='development_step':
+                 # The author chooses a structural reference; do not reconcile different prose silently.
+@@ -253,6 +274,7 @@
+                 'Use search_sources for actual missing public knowledge; returned access depth is explicit, not proof of relevance. analyze_csv reads every selected row, not the 12-row preview. '
+                 'Submit using submit_result; validators return actionable errors in this same conversation. Every result requires summary (nonempty string) and artifacts, evidence, claims, limitations, next_actions (arrays, empty allowed), plus stage-specific fields. '
+                 'For development_step focus/uptake source, use an exact S-number from source_bindings and a verbatim quote from that document. '
++                'For a JSON source, quote the exact string VALUE, without adding its field name. Alternatively supply quote_pointer (JSON pointer to a string) and omit quote; the exact selected string will be resolved and logged. '
+                 'For learning_request, context_ref="development_step" may replace duplicate gap/why_now strings; this references your own gap/reason, never changes its content. '
+                 'For sources[].local_path use the returned D-document ID to avoid copying long paths; it resolves to the exact registered file. '
+                 'source_use covers exactly broker_reply_source_ids, not the whole source catalog or new searches in this turn. Cite newly read tool sources in evidence/memory_notes with actual paths/URLs. '
+
+--- before/research_tools.py
++++ after/research_tools.py
+@@ -26,15 +26,15 @@
+ 
+ 
+ READ = function('read_document', 'Read a supplied immutable document, including omitted context. JSON pointer selects a section; pagination never silently truncates. raw=true returns original text for quotations.', {
+-    'ref': {'type': 'string'}, 'pointer': {'type': 'string'}, 'offset': {'type': 'integer'}, 'limit': {'type': 'integer'}, 'raw': {'type': 'boolean'}})
++    'ref': {'type': 'string'}, 'pointer': {'type': 'string'}, 'offset': {'type': 'integer','minimum':0}, 'limit': {'type': 'integer','minimum':1,'maximum':12000}, 'raw': {'type': 'boolean'}})
+ READ_BATCH = function('read_documents', 'Read several needed documents in one call to avoid repeated model round-trips. Each page has explicit next_offset and SHA. Total requested characters must be at most 24000.', {
+-    'requests': {'type':'array','items':{'type':'object','properties':READ['function']['parameters']['properties'],
++    'requests': {'type':'array','minItems':1,'maxItems':8,'items':{'type':'object','properties':READ['function']['parameters']['properties'],
+     'required':READ['function']['parameters']['required'],'additionalProperties':False}}})
+ ANALYZE = function('analyze_csv', 'Compute on the ENTIRE registered CSV (not preview rows). Numeric column names are arrays. scan selections use group_column/group_value. Define variables in order and output safe array expressions. Functions: abs,sqrt,sin,cos,mean,sum,std,min,max,median,quantile,isfinite,where,clip,diff(axis=0),norm(axis=-1),shift,rolling. No Python execution or file access.', {
+     'dataset': {'type': 'string'}, 'group_column': {'type': ['string', 'null']}, 'group_value': {'type': ['string', 'null']},
+     'variables': {'type': 'array', 'items': {'type': 'object', 'properties': {'name': {'type': 'string'}, 'expression': {'type': 'string'}}, 'required': ['name','expression'], 'additionalProperties': False}},
+     'outputs': {'type': 'array', 'items': {'type': 'object', 'properties': {'name': {'type': 'string'}, 'expression': {'type': 'string'}}, 'required': ['name','expression'], 'additionalProperties': False}}})
+-SEARCH = function('search_sources', 'Search actual public scientific indexes, save eligible readable sources and return IDs, access depth and excerpts. Search success is not evidence of relevance or understanding.', {'queries': {'type': 'array', 'items': {'type': 'string'}}})
++SEARCH = function('search_sources', 'Search actual public scientific indexes, save eligible readable sources and return IDs, access depth and excerpts. Search success is not evidence of relevance or understanding.', {'queries': {'type': 'array','minItems':1,'maxItems':2,'items': {'type': 'string','minLength':1,'maxLength':400}}})
+ 
+ 
+ class ResearchTools:
+
+--- before/ours_source/src/learning_lab.py
++++ after/ours_source/src/learning_lab.py
+@@ -52,6 +52,26 @@
+ Also return memory_use: array of {key,source_task,used_for,scope_check} for notes actually used;
+ return [] if none. State what you still cannot explain/use.
+ """
++
++
++def archive_material_sources(history, library):
++    """Preserve source versions actually read before AND during material recovery."""
++    sources, files = [], []
++    for result_path, result in history:
++        for item in result['sources']:
++            path = inside(item['local_path'])
++            if not path.is_file():
++                raise ValueError('Missing downloaded source')
++            content_hash = digest(path)
++            archive = library / (content_hash + path.suffix)
++            archive.parent.mkdir(parents=True, exist_ok=True)
++            if not archive.exists():
++                shutil.copy2(path, archive)
++            sources.append({**item, 'archived_path': str(archive),
++                            'sha256': content_hash, 'origin_result': str(result_path)})
++            if archive not in files:
++                files.append(archive)
++    return sources, files
+ 
+ 
+ def run_case(case, run, args, memory):
+@@ -286,6 +306,7 @@
+ """, [], args.check_timeout)
+     if not source_result.get("materials") or not source_result.get("sources"):
+         raise ValueError("Materials/source records missing")
++    material_history = [(source, source_result)]
+     coverage = material_coverage(source_result)
+     if coverage['status'] == 'incomplete':
+         coverage_path = run/'material_gap.json'
+@@ -298,22 +319,17 @@
+             "relevance_reason and exact supporting_quote. Preserve useful existing sources. "
+             "If access remains unavailable, report the concrete gap; do not relabel metadata as original text.",
+             [source, coverage_path], args.check_timeout)
++        material_history.append((source, source_result))
+         coverage = material_coverage(source_result)
+     write(run/'MATERIAL_COVERAGE.json', coverage)
+-    source_files = []
+-    for item in source_result["sources"]:
+-        path = inside(item["local_path"])
+-        if not path.is_file():
+-            raise ValueError("Missing downloaded source")
+-        archive = LAB / "library" / (digest(path) + path.suffix)
+-        if not archive.exists():
+-            archive.parent.mkdir(parents=True, exist_ok=True)
+-            shutil.copy2(path, archive)
+-        source_files.append(archive)
++    # Recovery can return a weaker subset. Keep every previously supplied source
++    # and its curator record rather than replacing body text with a later abstract.
++    source_records, source_files = archive_material_sources(material_history, LAB/'library')
+     write(run / "source_catalog.json", {"source_result": str(source),
+-        "sources": [{**item, "archived_path": str(path), "sha256": digest(path)}
+-                    for item, path in zip(source_result["sources"], source_files)]})
+-    base = [source, run / "source_catalog.json", run/"MATERIAL_COVERAGE.json", *source_files]
++        "materials_history": [str(path) for path, _ in material_history],
++        "sources": source_records})
++    base = [*[path for path, _ in material_history], run / "source_catalog.json",
++            run/"MATERIAL_COVERAGE.json", *source_files]
+     # Immutable retrieval snapshots allow exact resumption even after memory updates.
+     packets = {}
+     for rid, domain in CASES[case]:

@@ -1,0 +1,107 @@
+{
+  "source_stage": "replay_r1_exchange_0",
+  "source_result_object_sha256": "5128874ff0ee212a19a3ccc9807c55037a38dca361d50ac9023731d47f2a316b",
+  "request": {
+    "needed": true,
+    "queries": [],
+    "urls": [],
+    "operations": [
+      {
+        "kind": "analysis",
+        "question": "在R07中，较近与较远距离状态之后10帧的距离变化是否不同，同时描述两标签各自10帧位移大小？",
+        "record_id": "R07",
+        "start": 0,
+        "stop": 44999,
+        "variables": [
+          {
+            "name": "distance",
+            "expression": "norm(positions[:,0,:]-positions[:,1,:],axis=-1)",
+            "meaning": "A与B坐标间二维欧氏距离",
+            "units": "原生图像坐标单位"
+          },
+          {
+            "name": "change_10",
+            "expression": "shift(distance,-10)-distance",
+            "meaning": "10帧后距离减当前距离，有向距离变化",
+            "units": "原生图像坐标单位/10帧"
+          },
+          {
+            "name": "A_displacement_10",
+            "expression": "norm(shift(positions[:,0,:],-10)-positions[:,0,:],axis=-1)",
+            "meaning": "A在10帧间隔上的位移大小",
+            "units": "原生图像坐标单位/10帧"
+          },
+          {
+            "name": "B_displacement_10",
+            "expression": "norm(shift(positions[:,1,:],-10)-positions[:,1,:],axis=-1)",
+            "meaning": "B在10帧间隔上的位移大小",
+            "units": "原生图像坐标单位/10帧"
+          },
+          {
+            "name": "valid_pair",
+            "expression": "isfinite(distance)&isfinite(change_10)&isfinite(A_displacement_10)&isfinite(B_displacement_10)",
+            "meaning": "当前及10帧后两条坐标均可用于配对",
+            "units": "boolean"
+          },
+          {
+            "name": "near_threshold",
+            "expression": "quantile(distance,0.25)",
+            "meaning": "R07全记录距离第25分位数",
+            "units": "原生图像坐标单位"
+          },
+          {
+            "name": "far_threshold",
+            "expression": "quantile(distance,0.75)",
+            "meaning": "R07全记录距离第75分位数",
+            "units": "原生图像坐标单位"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "distance",
+            "expression": "distance"
+          },
+          {
+            "name": "future_distance_change",
+            "expression": "change_10"
+          },
+          {
+            "name": "individual_displacements",
+            "expression": "A_displacement_10"
+          }
+        ],
+        "groups": [
+          {
+            "name": "near",
+            "where": "valid_pair&(distance<=near_threshold)",
+            "values": [
+              "distance",
+              "change_10",
+              "A_displacement_10",
+              "B_displacement_10"
+            ]
+          },
+          {
+            "name": "far",
+            "where": "valid_pair&(distance>=far_threshold)",
+            "values": [
+              "distance",
+              "change_10",
+              "A_displacement_10",
+              "B_displacement_10"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "knowledge_requested": false,
+  "routes": [
+    {
+      "field": "analysis_plan",
+      "index": 0,
+      "operation_index": 0,
+      "deduplicated": false
+    }
+  ]
+}

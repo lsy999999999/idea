@@ -1,0 +1,79 @@
+{
+  "summary": "提出两个可检验解释：spread扫描中的DOP衰减符合高斯相位分布经空间统计平均产生的特征函数衰减；mean-phase扫描的方向绕行则符合平均相位旋转有效SOP而DOP近似不变。完整CSV支持方向分量近单位模与DOP标量分离，但不足以证明因果机制或方向恒定。",
+  "artifacts": [
+    "_summary_715930b3af1f.md"
+  ],
+  "evidence": [
+    {
+      "source": "D1902cc4c1b22eb01a1f2",
+      "quote": "In both experiments and theory, we find that ρ is solely determined by δϕ.",
+      "locator": "原论文摘录；不是本轮新结果"
+    },
+    {
+      "source": "Da5dc813b39f8c80c1602",
+      "quote": "spread组102行：DOP均值57.1706、范围8.4249–93.1398；S1²+S2²+S3²均值0.9999934，范围0.9999438–0.9999983。",
+      "locator": "完整CSV计算记录"
+    }
+  ],
+  "claims": [
+    {
+      "text": "spread扫描归一化方向分量平方范数几乎为1，DOP却在约8.42至93.14间变化；单位模是归一化属性，不代表方向固定。",
+      "status": "observed_measurement"
+    },
+    {
+      "text": "原论文报告ρ=exp(−δϕ²/2)且扫描固定均相位；这属于论文结果，不是新发现。",
+      "status": "published_knowledge"
+    },
+    {
+      "text": "假说H1：在原文所述高斯相位PDF和相干/空间统计模型成立时，平均相位因子满足E[e^{iϕ}]=e^{iμ}e^{−δ²/2}，故归一化DOP随δ呈指数衰减而有效SOP方向保持。",
+      "status": "conditional_hypothesis"
+    },
+    {
+      "text": "假说H2：固定展宽时改变均相位主要旋转有效偏振方向，DOP保持近似不变；只有在相位统计或测量窗同时改变时才偏离。",
+      "status": "conditional_hypothesis"
+    }
+  ],
+  "limitations": [
+    "数据字典给dphi范围0至0.505，但单位未核实；原文摘录使用δϕ且示例标度涉及π，不能直接把CSV dphi代入论文公式。",
+    "两条扫描不是独立重复，DOP导出尺度不同，且无原始测量误差；spread方向分量随展宽并非严格固定方向。",
+    "归一化方向的单位模不能作为固定方向或DOP不变的证据；仅由汇总数值不能识别空间平均、噪声或校准的贡献。"
+  ],
+  "next_actions": [
+    "核对图2导出dphi与原文δϕ的单位/比例，逐点比较DOP与理论曲线。",
+    "用同一校准与测量窗重复相位展宽和均相位扫描，并报告方向角及DOP不确定度。"
+  ],
+  "hypotheses": [
+    {
+      "id": "H1_phase_spread_attenuation",
+      "question": "展宽相位PDF是否通过空间统计平均降低有效偏振度，而非改变归一化方向的模长？",
+      "assumptions": [
+        "局部场近似为偏振态相同、相位随机变量ϕ服从高斯分布N(μ,δ²)。",
+        "探测器对空间微模作统计平均，且有效偏振相干项正比于复相位平均E[e^{iϕ}]；CSV dphi与δ的映射仍待核实。"
+      ],
+      "derivation": "高斯变量的特征函数给E[e^{iϕ}]=exp(iμ−δ²/2)，故相干幅度相对值为exp(−δ²/2)。在SOP基准固定且DOP定义对应该相干幅度的模型下，DOP随δ衰减；归一化Stokes方向s=S/||S||在非零时按定义||s||=1，不能表示DOP幅度。CSV spread组DOP均值57.17、范围8.42–93.14，而方向平方范数均值0.999993、范围0.999944–0.999998。",
+      "prediction": "若dphi映射和平均模型吻合，按正确单位换算后log(DOP)对δ²应近似线性，斜率接近−1/2（依DOP尺度作归一化）；固定均相位下方向角应稳定。",
+      "alternative": "有限样本、偏振分析器/波片响应、空间窗口或导出归一化误差可造成DOP变化；单一扫描不能排除这些效应。",
+      "evidence_status": "条件性模型推导；原论文摘录已报告该指数关系，当前数据计算仅核实字段尺度差异及近单位方向范数，不构成独立发现。",
+      "remaining_gap": "需核对dphi与δϕ单位映射，并取得逐行测量误差、重复mask数据及空间积分/重建细节，以检验斜率和因果解释。"
+    },
+    {
+      "id": "H2_mean_phase_rotation",
+      "question": "固定相位展宽时，改变均相位是否主要旋转SOP而不显著改变DOP？",
+      "assumptions": [
+        "相位PDF形状与方差保持固定，均值μ变化只给相干平均乘上相位因子exp(iμ)。",
+        "光学变换及探测标定在扫描期间稳定。"
+      ],
+      "derivation": "在H1的高斯相位平均中，E[e^{iϕ}]=e^{iμ}e^{−δ²/2}；μ改变复因子的相位而不改变模，故模型预言有效SOP变化而DOP不变。mean_phase扫描200行覆盖0至2π，预览中方向分量显著改变；该方向向量的平方范数需与其固定模长性质区分。",
+      "prediction": "在固定δ下，随均相位扫描应观察到归一化Stokes方向周期性轨迹，而DOP在测量不确定度内近似恒定；若DOP系统性随μ变化，则反驳纯相位旋转模型或提示测量耦合。",
+      "alternative": "实际扫描可能伴随相位分布宽度、空间模式权重或偏振分析器响应变化，造成DOP与均相位耦合；现有摘要统计不足以排除。",
+      "evidence_status": "条件性推导，与论文对固定δϕ均相位扫描的描述相容；本轮完整数据计算集中于spread扫描，未定量验证mean_phase的DOP恒定性。",
+      "remaining_gap": "需对mean_phase全组计算DOP离散度、方向轨迹和不确定度，并确认该组与spread组DOP尺度不可直接合并。"
+    }
+  ],
+  "transport_bindings": [
+    {
+      "field": "artifacts",
+      "rule": "Saved exact author summary as a real file"
+    }
+  ]
+}

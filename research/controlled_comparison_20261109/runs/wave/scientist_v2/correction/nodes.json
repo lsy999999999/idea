@@ -1,0 +1,30 @@
+[
+  {
+    "index": 0,
+    "operation": "draft",
+    "plan": "I\u2019ll inspect the supplied CSV and its column names, then write an executable audit script that computes the time spacing, checks the inverse-width relationship, and evaluates the limits of claims W3 and W4. It will preserve the source\u2019s actual measurements, save item-level judgments to `audit.json`, and report regression sensitivity as descriptive evidence rather than treating a time series as independent runs.The script reads `measurements.csv` and checks the time units and sample interval directly from the measurements, while treating the supplied data dictionary\u2019s seconds unit as the reference. It tests the inverse-width claim against the stated normalization, `width[1]/width`, and reports the reciprocal behavior when width doubles. It preserves W3 as correct: temporal sample count alone does not identify independent physical realizations. It rejects W4 as an inference because a finite record cannot establish a universal asymptotic exponent independent of system size or preparation. For context, it fits log-width against log-time over several finite windows and reports how the estimated slope varies; these are descriptive fits, not proof of a power law. It writes the item-level judgments and corrected values to `audit.json`. It also saves a diagnostic plot and prints the calculated evidence. I have not run this code here, so the numeric outputs will be produced when it is executed in the directory containing the CSV.",
+    "exec_time": 0.3429417610168457,
+    "exc_type": null,
+    "term_out": [
+      "{\n  \"sample_count\": 2199,\n  \"median_interval_s\": 0.0033333333333333895,\n  \"estimated_frequency_hz\": 299.99999999999494,\n  \"width_doubling_inverse_ratio\": 0.5,\n  \"descriptive_fit_sensitivity\": [\n    {\n      \"time_window_s\": [\n        0.1,\n        2.0\n      ],\n      \"n_samples\": 571,\n      \"log_log_slope\": 0.8210300588849374,\n      \"r_squared\": 0.9017622947845391\n    },\n    {\n      \"time_window_s\": [\n        0.5,\n        3.0\n      ],\n      \"n_samples\": 751,\n      \"log_log_slope\": 1.1130626734038525,\n      \"r_squared\": 0.9573390000024096\n    },\n    {\n      \"time_window_s\": [\n        1.0,\n        5.0\n      ],\n      \"n_samples\": 1201,\n      \"log_log_slope\": 0.6409413319648507,\n      \"r_squared\": 0.7232427809821769\n    },\n    {\n      \"time_window_s\": [\n        2.0,\n        7.0\n      ],\n      \"n_samples\": 1498,\n      \"log_log_slope\": 0.2049559705268409,\n      \"r_squared\": 0.18851406806089469\n    }\n  ],\n  \"audit_file\": \"audit.json\",\n  \"plot_file\": \"audit_diagnostics.png\"\n}",
+      "\n",
+      "Execution time: a moment seconds (time limit is 2 minutes)."
+    ],
+    "analysis": "",
+    "is_buggy": false
+  },
+  {
+    "index": 1,
+    "operation": "improve",
+    "plan": "The audit will read the supplied measurements and derive the sampling interval from the observed time values, retaining the data dictionary\u2019s seconds unit. It will distinguish temporal sample count from independent physical realizations. For the source normalization, doubling width halves `width[1] / width`; it does not double it. Finite-record log-log slopes will be reported only as descriptive fits over explicit time windows, not as evidence of a universal asymptotic exponent. The output records a judgment, corrected values, and hypothesis implications for each memo item in `audit.json`. The script also prints the key calculated evidence.",
+    "exec_time": 0.15463924407958984,
+    "exc_type": null,
+    "term_out": [
+      "{\n  \"sample_count\": 2199,\n  \"median_interval_s\": 0.0033333333333333895,\n  \"estimated_frequency_hz\": 299.99999999999494,\n  \"inverse_normalization_ratio_after_width_doubles\": 0.5,\n  \"finite_record_fit_sensitivity\": [\n    {\n      \"time_window_s\": [\n        0.1,\n        2.0\n      ],\n      \"n_samples\": 571,\n      \"log_log_slope\": 0.8210300588849374,\n      \"r_squared\": 0.9017622947845391\n    },\n    {\n      \"time_window_s\": [\n        0.5,\n        3.0\n      ],\n      \"n_samples\": 751,\n      \"log_log_slope\": 1.1130626734038525,\n      \"r_squared\": 0.9573390000024096\n    },\n    {\n      \"time_window_s\": [\n        1.0,\n        5.0\n      ],\n      \"n_samples\": 1201,\n      \"log_log_slope\": 0.6409413319648507,\n      \"r_squared\": 0.7232427809821769\n    },\n    {\n      \"time_window_s\": [\n        2.0,\n        7.0\n      ],\n      \"n_samples\": 1498,\n      \"log_log_slope\": 0.2049559705268409,\n      \"r_squared\": 0.18851406806089469\n    }\n  ],\n  \"audit_file\": \"audit.json\"\n}",
+      "\n",
+      "Execution time: a moment seconds (time limit is 2 minutes)."
+    ],
+    "analysis": "",
+    "is_buggy": false
+  }
+]

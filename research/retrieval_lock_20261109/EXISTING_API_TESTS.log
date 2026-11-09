@@ -1,0 +1,54 @@
+.............EE.......test/response/probe 1 12 5
+.test/unknown/probe 1 0 0
+.test/system/probe 1 50 4
+...
+======================================================================
+ERROR: test_native_controller_reaches_first_stage (test_research_interface.StartupTests.test_native_controller_reaches_first_stage)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Applications/ideas/research/controlled_comparison_20261109/runtime/test_research_interface.py", line 183, in test_native_controller_reaches_first_stage
+    with self.assertRaises(ReachedStage):adapter.generation()
+                                         ~~~~~~~~~~~~~~~~~~^^
+  File "/Applications/ideas/research/controlled_comparison_20261109/runtime/run_ours.py", line 349, in generation
+    assert_measurements(self.case,self.root/'cases'/self.case/'measurements.csv')
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Applications/ideas/research/controlled_comparison_20261109/runtime/ours_source/historical_inquiry/case_access.py", line 51, in assert_measurements
+    if hashlib.sha256(path.read_bytes()).hexdigest() != CASE_RULES[case]['csv_sha256']:
+                      ~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 777, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/var/folders/nh/l18c6czd35d3_9qtz7qm533w0000gn/T/tmp6xubs9ff/cases/optical/measurements.csv'
+
+======================================================================
+ERROR: test_native_material_recovery_keeps_previously_read_body_in_initial_inputs (test_research_interface.StartupTests.test_native_material_recovery_keeps_previously_read_body_in_initial_inputs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Applications/ideas/research/controlled_comparison_20261109/runtime/test_research_interface.py", line 174, in test_native_material_recovery_keeps_previously_read_body_in_initial_inputs
+    with self.assertRaises(ReachedInitial):runner.lab.run_case('optical',root/'run',args,memory)
+                                           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Applications/ideas/research/controlled_comparison_20261109/runtime/ours_source/src/learning_lab.py", line 132, in run_case
+    if not hidden_brief.exists():write(hidden_brief,expected)
+                                 ~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Applications/ideas/research/controlled_comparison_20261109/runtime/ours_source/src/discover.py", line 34, in write
+    tmp.write_text(json.dumps(obj, ensure_ascii=False, indent=2, allow_nan=False) + "\n")
+                   ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/__init__.py", line 242, in dumps
+    **kw).encode(obj)
+          ~~~~~~^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/encoder.py", line 202, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/encoder.py", line 263, in iterencode
+    return _iterencode(o, 0)
+ValueError: Out of range float values are not JSON compliant: nan
+when serializing dict item 'mean_phase'
+when serializing list item 0
+when serializing dict item 'preview'
+
+----------------------------------------------------------------------
+Ran 27 tests in 0.065s
+
+FAILED (errors=2)

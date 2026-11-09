@@ -1,0 +1,39 @@
+{
+  "id": "resp_0b71b89459ac3265016af0a906302087d29ac27abe5877dca4",
+  "object": "chat.completion",
+  "created": 1794156810,
+  "model": "gpt-6-luna",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_5f31b2e20f634c17bc07fceb075dc223",
+            "type": "function",
+            "function": {
+              "name": "execute",
+              "arguments": "{\"command\":\"python -c \\\"import pandas as p; d=p.read_csv('/measurements.csv'); d['bin']=d.time_s.astype(int); print(d.groupby('bin').agg(n=('time_s','size'),wmean=('correlation_width','mean'),wmed=('correlation_width','median'),smean=('mean_shear_magnitude','mean'),wstd=('correlation_width','std')).to_string()); print('first/last width',d.correlation_width.iloc[0],d.correlation_width.iloc[-1]); print('width plateau-ish max/min bins',d.groupby('bin').correlation_width.mean().to_dict())\\\"\"}"
+            }
+          }
+        ]
+      },
+      "finish_reason": "tool_calls"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 24955,
+    "completion_tokens": 145,
+    "total_tokens": 25100,
+    "prompt_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 24192,
+      "cache_write_tokens_details": null
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    }
+  }
+}

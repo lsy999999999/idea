@@ -1,0 +1,29 @@
+--- before/analysis_executor.py
+
++++ analysis_executor.py
+
+@@ -59,11 +59,21 @@
+
+     return out
+ 
+ 
++def diff(x, n=1, axis=0, **kwargs):
++    """Time is the leading axis, as specified in the researcher protocol."""
++    return np.diff(x, n=n, axis=axis, **kwargs)
++
++
++def norm(x, axis=-1, **kwargs):
++    """By default measure each vector, rather than the entire trajectory array."""
++    return np.linalg.norm(x, axis=axis, **kwargs)
++
++
+ FUNCTIONS = {'abs': np.abs, 'sqrt': np.sqrt, 'sin': np.sin, 'cos': np.cos,
+              'arctan2': np.arctan2, 'sum': np.sum, 'mean': np.mean, 'std': np.std,
+              'min': np.min, 'max': np.max, 'median': np.median, 'quantile': np.quantile,
+-             'isfinite': np.isfinite, 'where': np.where, 'clip': np.clip, 'diff': np.diff,
+-             'norm': np.linalg.norm, 'shift': shift, 'rolling': rolling}
++             'isfinite': np.isfinite, 'where': np.where, 'clip': np.clip, 'diff': diff,
++             'norm': norm, 'shift': shift, 'rolling': rolling}
+ BINARY = {ast.Add: operator.add, ast.Sub: operator.sub, ast.Mult: operator.mul,
+           ast.Div: operator.truediv, ast.Pow: operator.pow, ast.Mod: operator.mod,
+           ast.BitAnd: operator.and_, ast.BitOr: operator.or_}

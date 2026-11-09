@@ -1,0 +1,419 @@
+{
+  "requested_model": "gpt-6-luna",
+  "reasoning_effort": "low",
+  "api_style": "responses",
+  "payload": {
+    "model": "gpt-6-luna",
+    "stream": false,
+    "messages": [
+      {
+        "content": [
+          {
+            "type": "text",
+            "text": "You are the planner-agent. You do NOT implement code. You create and update experimental plans\nthat are practical to run locally.\n\nBefore planning, check `/memory/ideation-memory.md` and `/memory/experiment-memory.md`\nfor prior knowledge from past research cycles. Incorporate relevant entries into\nyour plan (e.g., proven strategies, known failed directions). Skip if these files\ndo not exist yet.\n\nYou may be invoked in two modes:\n1) PLAN MODE: produce an initial experimental plan.\n2) REFLECTION MODE: update the plan based on stage results.\n\nThe caller should start the task with either:\n- MODE: PLAN\n- MODE: REFLECTION\nIf MODE is not specified, assume PLAN.\n\nPLAN MODE output (Markdown):\n1) Assumptions & scope\n2) Stages (numbered). For each stage include:\n   - goal\n   - success signals (metrics/thresholds or qualitative checks)\n   - what to run (scripts/commands at a high level)\n   - expected artifacts (tables/plots/logs)\n3) Dependencies (data, compute, environment)\n4) Iteration triggers (when to change dataset/model/objective)\n5) Evaluation protocol (splits, primary metrics, baselines) and data quality checks\n6) Environment preflight (GPU/CUDA/VRAM/disk) and required dependencies (pip packages)\n\nREFLECTION MODE output (JSON only, no extra text):\n{\n  \"completed\": [\"...\"],\n  \"unmet_success_signals\": [\"...\"],\n  \"skill_suggestions\": [\"...\"],\n  \"stage_modifications\": [\n    {\"stage\": \"Stage name or index\", \"change\": \"What to adjust and why\"}\n  ],\n  \"new_stages\": [\n    {\n      \"title\": \"...\",\n      \"goal\": \"...\",\n      \"success_signals\": [\"...\"],\n      \"what_to_run\": [\"...\"],\n      \"expected_artifacts\": [\"...\"]\n    }\n  ],\n  \"todo_updates\": [\"...\"]\n}\n\nEmpty arrays are valid. If no changes are needed, return the JSON with empty arrays.\n\"skill_suggestions\" should use skill names from your available skills listing.\n\nKeep the structure flexible (not rigid templates). If model size is unspecified, default to\n<=7B-class models and lightweight baselines.\n"
+          },
+          {
+            "type": "text",
+            "text": "\n\n## `write_todos`\n\nYou have access to the `write_todos` tool to help you manage and plan complex objectives.\nUse this tool for complex objectives to ensure that you are tracking each necessary step.\nThis tool is very helpful for planning complex objectives, and for breaking down these larger complex objectives into smaller steps.\n\nIt is critical that you mark todos as completed as soon as you are done with a step. Do not batch up multiple steps before marking them as completed.\nFor simple objectives that only require a few steps, it is better to just complete the objective directly and NOT use this tool.\nWriting todos takes time and tokens, use it when it is helpful for managing complex many-step problems! But not for simple few-step requests.\n\n## Important To-Do List Usage Notes to Remember\n\n- The `write_todos` tool should never be called multiple times in parallel.\n- Don't be afraid to revise the To-Do list as you go. New information may reveal new tasks that need to be done, or old tasks that are irrelevant.\n\n## Finishing a task\n\nWhen you finish all work, write your final answer in the message AFTER your last `write_todos` call — not in the same turn as that call. Start the final message with the substantive content the user asked for — the data, computation, summary, or analysis. The user wants the result, not confirmation that the work is done."
+          },
+          {
+            "type": "text",
+            "text": "\n\n## Following Conventions\n\n- Read files before editing — understand existing content before making changes\n- Mimic existing style, naming conventions, and patterns\n\n## Filesystem Tools `ls`, `read_file`, `write_file`, `edit_file`, `glob`, `grep`\n\nYou have access to a filesystem which you can interact with using these tools.\nAll file paths must start with a /. Follow the tool docs for the available tools, and use pagination (offset/limit) when reading large files.\n\n- ls: list files in a directory (requires absolute path)\n- read_file: read a file from the filesystem\n- write_file: write to a file in the filesystem\n- edit_file: edit a file in the filesystem\n- glob: find files matching a pattern (e.g., \"**/*.py\")\n- grep: search for text within files\n\n## Large Tool Results\n\nWhen a tool result is too large, it may be offloaded into the filesystem instead of being returned inline. In those cases, use `read_file` to inspect the saved result in chunks, or use `grep` within `/large_tool_results/` if you need to search across offloaded tool results and do not know the exact file path. Offloaded tool results are stored under `/large_tool_results/<tool_call_id>`.\n\n## Execute Tool `execute`\n\nYou have access to an `execute` tool for running shell commands in a sandboxed environment.\nUse this tool to run commands, scripts, tests, builds, and other shell operations.\n\n- execute: run a shell command in the sandbox (returns output and exit code)"
+          },
+          {
+            "type": "text",
+            "text": "\n\n\n\n## Skills System\n\nYou have access to a skills library that provides specialized capabilities and domain knowledge.\n\n**Skills Skills**: `/skills/` (higher priority)\n\n**Available Skills:**\n\n- **find-skills**: Helps users discover agent skills from the open ecosystem. Searches skills.sh and presents options for installation via the built-in skill_manager tool.\n  -> Read `/skills/find-skills/SKILL.md` for full instructions\n- **skill-creator**: Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, update or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy.\n  -> Read `/skills/skill-creator/SKILL.md` for full instructions\n\n**How to Use Skills (Progressive Disclosure):**\n\nSkills follow a **progressive disclosure** pattern - you see their name and description above, but only read full instructions when needed:\n\n1. **Recognize when a skill applies**: Check if the user's task matches a skill's description\n2. **Read the skill's full instructions**: Use the path shown in the skill list above\n3. **Follow the skill's instructions**: SKILL.md contains step-by-step workflows, best practices, and examples\n4. **Access supporting files**: Skills may include helper scripts, configs, or reference docs - use absolute paths\n\n**When to Use Skills:**\n- User's request matches a skill's domain (e.g., \"research X\" -> web-research skill)\n- You need specialized knowledge or structured workflows\n- A skill provides proven patterns for complex tasks\n\n**Executing Skill Scripts:**\nSkills may contain Python scripts or other executable files. Always use absolute paths from the skill list.\n\n**Example Workflow:**\n\nUser: \"Can you research the latest developments in quantum computing?\"\n\n1. Check available skills -> See \"web-research\" skill with its path\n2. Read the skill using the path shown\n3. Follow the skill's research workflow (search -> organize -> synthesize)\n4. Use any helper scripts with absolute paths\n\nRemember: Skills make you more capable and consistent. When in doubt, check if a skill exists for the task!\n"
+          }
+        ],
+        "role": "system"
+      },
+      {
+        "content": "MODE: PLAN. Based strictly on the provided dossier and measurement summary: one 111-unit 2D mechatronic array, single 2199-row aggregate trajectory at 300 Hz over 7.33 s; correlation width grows early then fluctuates high; mean shear magnitude rises early then is relatively stable; source paper already discusses spatial coarsening. Develop a compact research agenda of 3-4 genuinely competing mechanistic explanations (e.g. coupling-mediated coarsening vs shared drive/relaxation vs finite-size/saturation vs measurement/aggregation artifact), concrete questions, predictions that distinguish them, and conditional consequences. Do not browse. Return concise, evidence-limited hypotheses, no invented findings.",
+        "role": "user"
+      },
+      {
+        "content": null,
+        "name": "planner-agent",
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "type": "function",
+            "id": "call_05ba6992cea84f84b7a6f12e12824a57",
+            "function": {
+              "name": "write_todos",
+              "arguments": "{\"todos\": [{\"content\": \"Check available prior research memory files and relevant skills\", \"status\": \"in_progress\"}, {\"content\": \"Construct evidence-limited competing hypotheses and discriminating local analyses\", \"status\": \"pending\"}, {\"content\": \"Deliver the requested compact research agenda in PLAN format\", \"status\": \"pending\"}]}"
+            }
+          }
+        ]
+      },
+      {
+        "content": "Updated todo list to [{'content': 'Check available prior research memory files and relevant skills', 'status': 'in_progress'}, {'content': 'Construct evidence-limited competing hypotheses and discriminating local analyses', 'status': 'pending'}, {'content': 'Deliver the requested compact research agenda in PLAN format', 'status': 'pending'}]",
+        "role": "tool",
+        "tool_call_id": "call_05ba6992cea84f84b7a6f12e12824a57"
+      },
+      {
+        "content": null,
+        "name": "planner-agent",
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "type": "function",
+            "id": "call_728830a7062740e3a3c7439a6a29a1d2",
+            "function": {
+              "name": "read_file",
+              "arguments": "{\"file_path\": \"/memory/ideation-memory.md\"}"
+            }
+          },
+          {
+            "type": "function",
+            "id": "call_a109a71afcf748e2a8fa054f8f5e6a1d",
+            "function": {
+              "name": "read_file",
+              "arguments": "{\"file_path\": \"/memory/experiment-memory.md\"}"
+            }
+          },
+          {
+            "type": "function",
+            "id": "call_93e73e0e3a43402082bee071f17459b5",
+            "function": {
+              "name": "ls",
+              "arguments": "{\"path\": \"/skills\"}"
+            }
+          }
+        ]
+      },
+      {
+        "content": "Error: File '/ideation-memory.md' not found",
+        "role": "tool",
+        "tool_call_id": "call_728830a7062740e3a3c7439a6a29a1d2"
+      },
+      {
+        "content": "Error: File '/experiment-memory.md' not found",
+        "role": "tool",
+        "tool_call_id": "call_a109a71afcf748e2a8fa054f8f5e6a1d"
+      },
+      {
+        "content": "['/skills/find-skills/', '/skills/skill-creator/']",
+        "role": "tool",
+        "tool_call_id": "call_93e73e0e3a43402082bee071f17459b5"
+      },
+      {
+        "content": null,
+        "name": "planner-agent",
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "type": "function",
+            "id": "call_a747d666d59745c4bdd97dba5e56bc8f",
+            "function": {
+              "name": "write_todos",
+              "arguments": "{\"todos\": [{\"content\": \"Check available prior research memory files and relevant skills\", \"status\": \"completed\"}, {\"content\": \"Construct evidence-limited competing hypotheses and discriminating local analyses\", \"status\": \"in_progress\"}, {\"content\": \"Deliver the requested compact research agenda in PLAN format\", \"status\": \"pending\"}]}"
+            }
+          }
+        ]
+      },
+      {
+        "content": "Updated todo list to [{'content': 'Check available prior research memory files and relevant skills', 'status': 'completed'}, {'content': 'Construct evidence-limited competing hypotheses and discriminating local analyses', 'status': 'in_progress'}, {'content': 'Deliver the requested compact research agenda in PLAN format', 'status': 'pending'}]",
+        "role": "tool",
+        "tool_call_id": "call_a747d666d59745c4bdd97dba5e56bc8f"
+      },
+      {
+        "content": null,
+        "name": "planner-agent",
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "type": "function",
+            "id": "call_d67e1d3437fe47de8ddf2339080d7512",
+            "function": {
+              "name": "think_tool",
+              "arguments": "{\"reflection\": \"No memory files exist, and no listed skill is relevant to this evidence-limited experimental planning task. The dossier gives only a single aggregate short trajectory, so the agenda must distinguish plausible mechanisms via reanalysis/perturbation ideas while clearly labeling current evidence as non-identifying. Avoid claiming access to raw per-unit data or experimental intervention unless conditional.\"}"
+            }
+          }
+        ]
+      },
+      {
+        "content": "Reflection recorded: No memory files exist, and no listed skill is relevant to this evidence-limited experimental planning task. The dossier gives only a single aggregate short trajectory, so the agenda must distinguish plausible mechanisms via reanalysis/perturbation ideas while clearly labeling current evidence as non-identifying. Avoid claiming access to raw per-unit data or experimental intervention unless conditional.",
+        "role": "tool",
+        "tool_call_id": "call_d67e1d3437fe47de8ddf2339080d7512"
+      }
+    ],
+    "max_completion_tokens": 2600,
+    "tools": [
+      {
+        "type": "function",
+        "function": {
+          "name": "write_todos",
+          "description": "Use this tool to create and manage a structured task list for your current work session. This helps you track progress and organize complex tasks.\n\nOnly use this tool if you think it will be helpful in staying organized. If the user's request is trivial and takes less than 3 steps, it is better to NOT use this tool and just do the task directly.\n\n## When to Use This Tool\n\nUse this tool in these scenarios:\n\n1. Complex multi-step tasks - When a task requires 3 or more distinct steps or actions\n2. Non-trivial and complex tasks - Tasks that require careful planning or multiple operations\n3. User explicitly requests todo list - When the user directly asks you to use the todo list\n4. User provides multiple tasks - When users provide a list of things to be done (numbered or comma-separated)\n5. The plan may need future revisions or updates based on results from the first few steps\n\n## How to Use This Tool\n\n1. When you start working on a task - Mark it as in_progress BEFORE beginning work.\n2. After completing a task - Mark it as completed and add any new follow-up tasks discovered during implementation.\n3. You can also update future tasks, such as deleting them if they are no longer necessary, or adding new tasks that are necessary. Don't change previously completed tasks.\n4. You can make several updates to the todo list at once. For example, when you complete a task, you can mark the next task you need to start as in_progress.\n\n## When NOT to Use This Tool\n\nIt is important to skip using this tool when:\n1. There is only a single, straightforward task\n2. The task is trivial and tracking it provides no benefit\n3. The task can be completed in less than 3 trivial steps\n4. The task is purely conversational or informational\n\n## Task States and Management\n\n1. **Task States**: Use these states to track progress:\n    - pending: Task not yet started\n    - in_progress: Currently working on (you can have multiple tasks in_progress at a time if they are not related to each other and can be run in parallel)\n    - completed: Task finished successfully\n\n2. **Task Management**:\n    - Update task status in real-time as you work\n    - Mark tasks complete IMMEDIATELY after finishing (don't batch completions)\n    - Complete current tasks before starting new ones\n    - Remove tasks that are no longer relevant from the list entirely\n    - IMPORTANT: When you write this todo list, you should mark your first task (or tasks) as in_progress immediately!.\n    - IMPORTANT: Unless all tasks are completed, you should always have at least one task in_progress.\n\n3. **Task Completion Requirements**:\n    - ONLY mark a task as completed when you have FULLY accomplished it\n    - If you encounter errors, blockers, or cannot finish, keep the task as in_progress\n    - When blocked, create a new task describing what needs to be resolved\n    - Never mark a task as completed if:\n        - There are unresolved issues or errors\n        - Work is partial or incomplete\n        - You encountered blockers that prevent completion\n        - You couldn't find necessary resources or dependencies\n        - Quality standards haven't been met\n\n4. **Task Breakdown**:\n    - Create specific, actionable items\n    - Break complex tasks into smaller, manageable steps\n    - Use clear, descriptive task names\n\nBeing proactive with task management ensures you complete all requirements successfully\nRemember: If you only need to make a few tool calls to complete a task, and it is clear what you need to do, it is better to just do the task directly and NOT call this tool at all.\n\n## When You Finish\n\n`write_todos` tracks your work; it does not deliver the answer. Whatever the user asked for — computations, summaries, comparisons, data — must appear as text content in a message after your final `write_todos` call. Marking the last todo complete is not itself an answer to the user.",
+          "parameters": {
+            "properties": {
+              "todos": {
+                "items": {
+                  "description": "A single todo item with content and status.",
+                  "properties": {
+                    "content": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "enum": [
+                        "pending",
+                        "in_progress",
+                        "completed"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "content",
+                    "status"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              }
+            },
+            "required": [
+              "todos"
+            ],
+            "type": "object"
+          }
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "ls",
+          "description": "Lists all files in a directory.\n\nThis is useful for exploring the filesystem and finding the right file to read or edit.\nYou should almost ALWAYS use this tool before using the read_file or edit_file tools.",
+          "parameters": {
+            "properties": {
+              "path": {
+                "description": "Absolute path to the directory to list. Must be absolute, not relative.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "path"
+            ],
+            "type": "object"
+          }
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "read_file",
+          "description": "Reads a file from the filesystem.\n\nAssume this tool is able to read all files. If the User provides a path to a file assume that path is valid. It is okay to read a file that does not exist; an error will be returned.\n\nUsage:\n- By default, it reads up to 100 lines starting from the beginning of the file\n- **IMPORTANT for large files and codebase exploration**: Use pagination with offset and limit parameters to avoid context overflow\n  - First scan: read_file(path, limit=100) to see file structure\n  - Read more sections: read_file(path, offset=100, limit=200) for next 200 lines\n  - Only omit limit (read full file) when necessary for editing\n- Specify offset and limit: read_file(path, offset=0, limit=100) reads first 100 lines\n- Results are returned using cat -n format, with line numbers starting at 1\n- Lines longer than 5,000 characters will be split into multiple lines with continuation markers (e.g., 5.1, 5.2, etc.). When you specify a limit, these continuation lines count towards the limit.\n- You have the capability to call multiple tools in a single response. It is always better to speculatively read multiple files as a batch that are potentially useful.\n- If you read a file that exists but has empty contents you will receive a system reminder warning in place of file contents.\n- Image files (`.png`, `.jpg`, `.jpeg`, `.gif`, `.webp`) are returned as multimodal image content blocks (see https://docs.langchain.com/oss/python/langchain/messages#multimodal).\n\nFor image tasks:\n- Use `read_file(file_path=...)` for `.png/.jpg/.jpeg/.gif/.webp`\n- Do NOT use `offset`/`limit` for images (pagination is text-only)\n- If image details were compacted from history, call `read_file` again on the same path\n\n- You should ALWAYS make sure a file has been read before editing it.",
+          "parameters": {
+            "properties": {
+              "file_path": {
+                "description": "Absolute path to the file to read. Must be absolute, not relative.",
+                "type": "string"
+              },
+              "offset": {
+                "default": 0,
+                "description": "Line number to start reading from (0-indexed). Use for pagination of large files.",
+                "type": "integer"
+              },
+              "limit": {
+                "default": 100,
+                "description": "Maximum number of lines to read. Use for pagination of large files.",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "file_path"
+            ],
+            "type": "object"
+          }
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "write_file",
+          "description": "Writes to a new file in the filesystem.\n\nUsage:\n- The write_file tool will create the a new file.\n- Prefer to edit existing files (with the edit_file tool) over creating new ones when possible.",
+          "parameters": {
+            "properties": {
+              "file_path": {
+                "description": "Absolute path where the file should be created. Must be absolute, not relative.",
+                "type": "string"
+              },
+              "content": {
+                "description": "The text content to write to the file. This parameter is required.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "file_path",
+              "content"
+            ],
+            "type": "object"
+          }
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "edit_file",
+          "description": "Performs exact string replacements in files.\n\nUsage:\n- You must read the file before editing. This tool will error if you attempt an edit without reading the file first.\n- When editing, preserve the exact indentation (tabs/spaces) from the read output. Never include line number prefixes in old_string or new_string.\n- ALWAYS prefer editing existing files over creating new ones.\n- Only use emojis if the user explicitly requests it.",
+          "parameters": {
+            "properties": {
+              "file_path": {
+                "description": "Absolute path to the file to edit. Must be absolute, not relative.",
+                "type": "string"
+              },
+              "old_string": {
+                "description": "The exact text to find and replace. Must be unique in the file unless replace_all is True.",
+                "type": "string"
+              },
+              "new_string": {
+                "description": "The text to replace old_string with. Must be different from old_string.",
+                "type": "string"
+              },
+              "replace_all": {
+                "default": false,
+                "description": "If True, replace all occurrences of old_string. If False (default), old_string must be unique.",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "file_path",
+              "old_string",
+              "new_string"
+            ],
+            "type": "object"
+          }
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "glob",
+          "description": "Find files matching a glob pattern.\n\nSupports standard glob patterns: `*` (any characters), `**` (any directories), `?` (single character).\nReturns a list of absolute file paths that match the pattern.\n\nExamples:\n- `**/*.py` - Find all Python files\n- `*.txt` - Find all text files in root\n- `/subdir/**/*.md` - Find all markdown files under /subdir",
+          "parameters": {
+            "properties": {
+              "pattern": {
+                "description": "Glob pattern to match files (e.g., '**/*.py', '*.txt', '/subdir/**/*.md').",
+                "type": "string"
+              },
+              "path": {
+                "default": "/",
+                "description": "Base directory to search from. Defaults to root '/'.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "pattern"
+            ],
+            "type": "object"
+          }
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "grep",
+          "description": "Search for a text pattern across files.\n\nSearches for literal text (not regex) and returns matching files or content based on output_mode.\nSpecial characters like parentheses, brackets, pipes, etc. are treated as literal characters, not regex operators.\n\nExamples:\n- Search all files: `grep(pattern=\"TODO\")`\n- Search Python files only: `grep(pattern=\"import\", glob=\"*.py\")`\n- Show matching lines: `grep(pattern=\"error\", output_mode=\"content\")`\n- Search for code with special chars: `grep(pattern=\"def __init__(self):\")`",
+          "parameters": {
+            "properties": {
+              "pattern": {
+                "description": "Text pattern to search for (literal string, not regex).",
+                "type": "string"
+              },
+              "path": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Directory to search in. Defaults to current working directory."
+              },
+              "glob": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Glob pattern to filter which files to search (e.g., '*.py')."
+              },
+              "output_mode": {
+                "default": "files_with_matches",
+                "description": "Output format: 'files_with_matches' (file paths only, default), 'content' (matching lines with context), 'count' (match counts per file).",
+                "enum": [
+                  "files_with_matches",
+                  "content",
+                  "count"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "pattern"
+            ],
+            "type": "object"
+          }
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "execute",
+          "description": "Executes a shell command in an isolated sandbox environment.\n\nUsage:\nExecutes a given command in the sandbox environment with proper handling and security measures.\nBefore executing the command, please follow these steps:\n1. Directory Verification:\n   - If the command will create new directories or files, first use the ls tool to verify the parent directory exists and is the correct location\n   - For example, before running \"mkdir foo/bar\", first use ls to check that \"foo\" exists and is the intended parent directory\n2. Command Execution:\n   - Always quote file paths that contain spaces with double quotes (e.g., cd \"path with spaces/file.txt\")\n   - Examples of proper quoting:\n     - cd \"/Users/name/My Documents\" (correct)\n     - cd /Users/name/My Documents (incorrect - will fail)\n     - python \"/path/with spaces/script.py\" (correct)\n     - python /path/with spaces/script.py (incorrect - will fail)\n   - After ensuring proper quoting, execute the command\n   - Capture the output of the command\nUsage notes:\n  - Commands run in an isolated sandbox environment\n  - Returns combined stdout/stderr output with exit code\n  - If the output is very large, it may be truncated\n  - For long-running commands, use the optional timeout parameter to override the default timeout (e.g., execute(command=\"make build\", timeout=300))\n  - A timeout of 0 may disable timeouts on backends that support no-timeout execution\n  - VERY IMPORTANT: You MUST avoid using search commands like find and grep. Instead use the grep, glob tools to search. You MUST avoid read tools like cat, head, tail, and use read_file to read files.\n  - When issuing multiple commands, use the ';' or '&&' operator to separate them. DO NOT use newlines (newlines are ok in quoted strings)\n    - Use '&&' when commands depend on each other (e.g., \"mkdir dir && cd dir\")\n    - Use ';' only when you need to run commands sequentially but don't care if earlier commands fail\n  - Try to maintain your current working directory throughout the session by using absolute paths and avoiding usage of cd\n\nExamples:\n  Good examples:\n    - execute(command=\"pytest /foo/bar/tests\")\n    - execute(command=\"python /path/to/script.py\")\n    - execute(command=\"npm install && npm test\")\n    - execute(command=\"make build\", timeout=300)\n\n  Bad examples (avoid these):\n    - execute(command=\"cd /foo/bar && pytest tests\")  # Use absolute path instead\n    - execute(command=\"cat file.txt\")  # Use read_file tool instead\n    - execute(command=\"find . -name '*.py'\")  # Use glob tool instead\n    - execute(command=\"grep -r 'pattern' .\")  # Use grep tool instead\n\nNote: This tool is only available if the backend supports execution (SandboxBackendProtocol).\nIf execution is not supported, the tool will return an error message.",
+          "parameters": {
+            "properties": {
+              "command": {
+                "description": "Shell command to execute in the sandbox environment.",
+                "type": "string"
+              },
+              "timeout": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Optional timeout in seconds for this command. Overrides the default timeout. Use 0 for no-timeout execution on backends that support it."
+              }
+            },
+            "required": [
+              "command"
+            ],
+            "type": "object"
+          }
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "think_tool",
+          "description": "Tool for structured reflection and strategic decision-making. Use this tool to pause and reason carefully at any decision point — not just\nafter searches, but before, during, and after any significant step. This creates\na deliberate checkpoint for quality thinking. When to use:\n- Before starting work: What do I know? What skills and prior knowledge are available?\n- After obtaining results: What did I learn? Does this change the approach?\n- When choosing between options: What are the trade-offs? Which path is strongest?\n- When stuck or failing: What went wrong? Is there a proven strategy to apply?\n- Before concluding: Is the evidence sufficient? What does the next phase need from me? Your reflection should address the relevant dimensions below: 1. Progress — What has been accomplished? What concrete steps remain?\n2. Evidence quality — Is the current evidence sufficient for the goal?\n   Would a critical reviewer accept it, or are there gaps to fill?\n3. Skills leverage — Is there an installed skill that provides a structured\n   workflow for what I'm doing? Check your available skills listing and read\n   the relevant `SKILL.md` for full instructions. Skills cover various research\n   phases — ideation, experiment execution, paper writing, review, and more.\n   Follow a skill's workflow rather than improvising when one is available.\n4. Prior knowledge — Have I checked research memory before starting?\n   `/memory/ideation-memory.md` records promising and failed research directions.\n   `/memory/experiment-memory.md` records proven strategies from past cycles.\n   Read these at the start of new work. After completing or failing a task,\n   consider whether the outcome should be recorded back into memory.\n   Skip this if the memory files do not exist yet.\n5. Strategy — Should I continue the current approach, adjust it, or try\n   something different? What evidence supports this decision?\n6. Handoff — Is this phase complete? What artifacts and results does the\n   next phase or the caller need? Am I leaving clear, well-organized outputs?\n7. Resource & compute — Before heavy operations (training, large evals),\n   estimate runtime and memory. The sandbox has a 300s execution timeout\n   and 100KB output limit. For tasks likely exceeding these, plan background\n   execution with log files. After a timeout or OOM, reflect on whether to\n   retry with reduced parameters (smaller model, fewer epochs, data subset)\n   or switch to background execution. Not every reflection needs all seven dimensions. Pick the ones relevant to\nthe current moment. A focused two or three dimension reflection is better\nthan a shallow pass over all seven.",
+          "parameters": {
+            "properties": {
+              "reflection": {
+                "description": "Your structured reflection addressing the relevant dimensions above",
+                "type": "string"
+              }
+            },
+            "required": [
+              "reflection"
+            ],
+            "type": "object"
+          }
+        }
+      }
+    ]
+  },
+  "estimated_input_tokens": 29990,
+  "max_output_tokens": 2600
+}

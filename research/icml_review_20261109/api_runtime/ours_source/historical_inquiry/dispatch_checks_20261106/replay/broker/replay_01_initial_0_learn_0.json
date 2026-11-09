@@ -1,0 +1,445 @@
+{
+  "request": {
+    "needed": true,
+    "queries": [],
+    "urls": [],
+    "operations": [
+      {
+        "kind": "analysis",
+        "question": "在R07中，A-B距离近状态与远状态之后10帧的距离变化分布是否不同？",
+        "record_id": "R07",
+        "start": 0,
+        "stop": 44999,
+        "variables": [
+          {
+            "name": "distance",
+            "expression": "norm(positions[:,0,:]-positions[:,1,:],axis=1)",
+            "meaning": "局部标签A与B每帧的二维欧氏距离",
+            "units": "native image coordinate unit"
+          },
+          {
+            "name": "future_change_10",
+            "expression": "shift(distance,-10)-distance",
+            "meaning": "10帧后的距离减当前距离",
+            "units": "native image coordinate unit per 10 frames"
+          },
+          {
+            "name": "valid_pair",
+            "expression": "isfinite(distance)&isfinite(future_change_10)",
+            "meaning": "当前距离及10帧后配对距离均有限",
+            "units": "boolean"
+          },
+          {
+            "name": "near_threshold",
+            "expression": "quantile(distance,0.25)",
+            "meaning": "R07全记录距离第25分位数，供操作性分组使用",
+            "units": "native image coordinate unit"
+          },
+          {
+            "name": "far_threshold",
+            "expression": "quantile(distance,0.75)",
+            "meaning": "R07全记录距离第75分位数，供操作性分组使用",
+            "units": "native image coordinate unit"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "distance_and_future_change",
+            "expression": "distance"
+          },
+          {
+            "name": "future_distance_change",
+            "expression": "future_change_10"
+          }
+        ],
+        "groups": [
+          {
+            "name": "near",
+            "where": "valid_pair&(distance<=near_threshold)",
+            "values": [
+              "distance",
+              "future_change_10"
+            ]
+          },
+          {
+            "name": "far",
+            "where": "valid_pair&(distance>=far_threshold)",
+            "values": [
+              "distance",
+              "future_change_10"
+            ]
+          }
+        ],
+        "model": {
+          "target": "future_change_10",
+          "features": [
+            "distance"
+          ],
+          "train_fraction": 0.7
+        }
+      }
+    ]
+  },
+  "sources": [],
+  "knowledge": null,
+  "record_metadata": [],
+  "computed": [
+    {
+      "request": {
+        "kind": "analysis",
+        "question": "在R07中，A-B距离近状态与远状态之后10帧的距离变化分布是否不同？",
+        "record_id": "R07",
+        "start": 0,
+        "stop": 44999,
+        "variables": [
+          {
+            "name": "distance",
+            "expression": "norm(positions[:,0,:]-positions[:,1,:],axis=1)",
+            "meaning": "局部标签A与B每帧的二维欧氏距离",
+            "units": "native image coordinate unit"
+          },
+          {
+            "name": "future_change_10",
+            "expression": "shift(distance,-10)-distance",
+            "meaning": "10帧后的距离减当前距离",
+            "units": "native image coordinate unit per 10 frames"
+          },
+          {
+            "name": "valid_pair",
+            "expression": "isfinite(distance)&isfinite(future_change_10)",
+            "meaning": "当前距离及10帧后配对距离均有限",
+            "units": "boolean"
+          },
+          {
+            "name": "near_threshold",
+            "expression": "quantile(distance,0.25)",
+            "meaning": "R07全记录距离第25分位数，供操作性分组使用",
+            "units": "native image coordinate unit"
+          },
+          {
+            "name": "far_threshold",
+            "expression": "quantile(distance,0.75)",
+            "meaning": "R07全记录距离第75分位数，供操作性分组使用",
+            "units": "native image coordinate unit"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "distance_and_future_change",
+            "expression": "distance"
+          },
+          {
+            "name": "future_distance_change",
+            "expression": "future_change_10"
+          }
+        ],
+        "groups": [
+          {
+            "name": "near",
+            "where": "valid_pair&(distance<=near_threshold)",
+            "values": [
+              "distance",
+              "future_change_10"
+            ]
+          },
+          {
+            "name": "far",
+            "where": "valid_pair&(distance>=far_threshold)",
+            "values": [
+              "distance",
+              "future_change_10"
+            ]
+          }
+        ],
+        "model": {
+          "target": "future_change_10",
+          "features": [
+            "distance"
+          ],
+          "train_fraction": 0.7
+        }
+      },
+      "executed_plan": {
+        "kind": "analysis",
+        "question": "在R07中，A-B距离近状态与远状态之后10帧的距离变化分布是否不同？",
+        "record_id": "R07",
+        "start": 0,
+        "stop": 44999,
+        "variables": [
+          {
+            "name": "distance",
+            "expression": "norm(positions[:,0,:]-positions[:,1,:],axis=1)",
+            "meaning": "局部标签A与B每帧的二维欧氏距离",
+            "units": "native image coordinate unit"
+          },
+          {
+            "name": "future_change_10",
+            "expression": "shift(distance,-10)-distance",
+            "meaning": "10帧后的距离减当前距离",
+            "units": "native image coordinate unit per 10 frames"
+          },
+          {
+            "name": "valid_pair",
+            "expression": "isfinite(distance)&isfinite(future_change_10)",
+            "meaning": "当前距离及10帧后配对距离均有限",
+            "units": "boolean"
+          },
+          {
+            "name": "near_threshold",
+            "expression": "quantile(distance,0.25)",
+            "meaning": "R07全记录距离第25分位数，供操作性分组使用",
+            "units": "native image coordinate unit"
+          },
+          {
+            "name": "far_threshold",
+            "expression": "quantile(distance,0.75)",
+            "meaning": "R07全记录距离第75分位数，供操作性分组使用",
+            "units": "native image coordinate unit"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "distance_and_future_change",
+            "expression": "distance"
+          },
+          {
+            "name": "future_distance_change",
+            "expression": "future_change_10"
+          }
+        ],
+        "groups": [
+          {
+            "name": "near",
+            "where": "valid_pair&(distance<=near_threshold)",
+            "values": [
+              "distance",
+              "future_change_10"
+            ]
+          },
+          {
+            "name": "far",
+            "where": "valid_pair&(distance>=far_threshold)",
+            "values": [
+              "distance",
+              "future_change_10"
+            ]
+          }
+        ],
+        "model": {
+          "target": "future_change_10",
+          "features": [
+            "distance"
+          ],
+          "train_fraction": 0.7
+        }
+      },
+      "result": {
+        "status": "executed",
+        "question": "在R07中，A-B距离近状态与远状态之后10帧的距离变化分布是否不同？",
+        "outputs": {
+          "distance_and_future_change": {
+            "shape": [
+              44999
+            ],
+            "finite_values": 44999,
+            "mean": 426.3231293,
+            "quantiles_10_50_90": [
+              73.1113725,
+              309.62007,
+              925.761535
+            ],
+            "preview": [
+              482.2874701,
+              487.6126663,
+              489.5830424,
+              490.1779266,
+              489.1288963,
+              478.7157596,
+              452.5101569,
+              425.0887485
+            ]
+          },
+          "future_distance_change": {
+            "shape": [
+              44999
+            ],
+            "finite_values": 44989,
+            "mean": -0.0752553,
+            "quantiles_10_50_90": [
+              -126.1943898,
+              1.1032651,
+              123.5027646
+            ],
+            "preview": [
+              -139.3936248,
+              -167.4951789,
+              -189.8737195,
+              -208.1320476,
+              -224.3999436,
+              -230.1920194,
+              -218.259239,
+              -215.537952
+            ]
+          }
+        },
+        "groups": [
+          {
+            "name": "near",
+            "selected_rows": 11242,
+            "values": {
+              "distance": {
+                "shape": [
+                  11242
+                ],
+                "finite_values": 11242,
+                "mean": 79.1274916,
+                "quantiles_10_50_90": [
+                  30.5665073,
+                  83.4126597,
+                  119.7877422
+                ],
+                "preview": [
+                  123.6846343,
+                  104.2449108,
+                  82.5460474,
+                  61.4856777,
+                  46.5175637,
+                  38.8094574,
+                  38.0855226,
+                  39.8631251
+                ]
+              },
+              "future_change_10": {
+                "shape": [
+                  11242
+                ],
+                "finite_values": 11242,
+                "mean": 30.5277479,
+                "quantiles_10_50_90": [
+                  -42.5826299,
+                  20.5204371,
+                  118.8212876
+                ],
+                "preview": [
+                  -54.8612391,
+                  -22.8097147,
+                  11.1636028,
+                  43.5602644,
+                  66.8794371,
+                  82.8833832,
+                  94.7140068,
+                  102.8110634
+                ]
+              }
+            }
+          },
+          {
+            "name": "far",
+            "selected_rows": 11250,
+            "values": {
+              "distance": {
+                "shape": [
+                  11250
+                ],
+                "finite_values": 11250,
+                "mean": 918.2822819,
+                "quantiles_10_50_90": [
+                  776.8535513,
+                  906.0655968,
+                  1077.2327992
+                ],
+                "preview": [
+                  742.4413017,
+                  756.2368857,
+                  774.9667241,
+                  793.453941,
+                  810.3428264,
+                  825.3274628,
+                  838.6302831,
+                  849.9143724
+                ]
+              },
+              "future_change_10": {
+                "shape": [
+                  11250
+                ],
+                "finite_values": 11250,
+                "mean": -14.4935059,
+                "quantiles_10_50_90": [
+                  -132.7114172,
+                  -6.8679991,
+                  95.7274707
+                ],
+                "preview": [
+                  132.6056471,
+                  125.1861733,
+                  112.9016552,
+                  100.6034672,
+                  88.972286,
+                  78.9901528,
+                  69.6208107,
+                  62.0091058
+                ]
+              }
+            }
+          }
+        ],
+        "model": {
+          "method": "ordinary least squares with intercept",
+          "coefficients": [
+            16.3982526,
+            -0.039353
+          ],
+          "feature_order": [
+            "intercept",
+            "distance"
+          ],
+          "rank": 2,
+          "split_row": 31499,
+          "training_rows": 31499,
+          "evaluation_rows": 13490,
+          "evaluation_rmse": 96.1867831,
+          "scope": "Exploratory chronological holdout; temporal dependence/leakage require researcher audit, no mechanism identified."
+        },
+        "data_sha256": "2ee8550a211e76b60e7228306fa758bd43f37157352e5a7892955447d01cd8d5",
+        "full_outputs": "/Users/LSY/.codex/worktrees/a57d/ideas/1103_boundary_discovery/historical_inquiry/dispatch_checks_20261106/replay/services/analysis/replay_01_initial_0_learn_0_op0/outputs.npz",
+        "full_outputs_sha256": "c608ae49fe6ca76da43e7455a4b05ec49311075ac36ed459e80ae03ac2be640b"
+      },
+      "executor_sha256": "32e81e66d65aabdb4d8e82b4a275939fe3eeb0a693bf8f26ee5acc52a7472e08",
+      "artifacts": [
+        "/Users/LSY/.codex/worktrees/a57d/ideas/1103_boundary_discovery/historical_inquiry/dispatch_checks_20261106/replay/services/analysis/replay_01_initial_0_learn_0_op0/request.json",
+        "/Users/LSY/.codex/worktrees/a57d/ideas/1103_boundary_discovery/historical_inquiry/dispatch_checks_20261106/replay/services/analysis/replay_01_initial_0_learn_0_op0/outputs.npz",
+        "/Users/LSY/.codex/worktrees/a57d/ideas/1103_boundary_discovery/historical_inquiry/dispatch_checks_20261106/replay/services/analysis/replay_01_initial_0_learn_0_op0/executor.py"
+      ]
+    }
+  ],
+  "controller_pending": [],
+  "unavailable": [],
+  "measurement_context": {
+    "data_source": {
+      "repository": "Dryad",
+      "doi": "https://doi.org/10.5061/dryad.f0g32",
+      "license": "https://spdx.org/licenses/CC0-1.0.html",
+      "publication_date": "2017-03-28",
+      "scope": "Raw measurements and screened measurement facts are the task date exception."
+    },
+    "species": {
+      "value": "Danio rerio (zebrafish)",
+      "basis": "Data repository species keyword"
+    },
+    "recording": "13 records of two tracked fish; positions and tracker outputs, no supplied manipulation labels.",
+    "task": {
+      "value": null,
+      "status": "Specific experimental task/protocol not independently verified in screened metadata."
+    },
+    "scene_conditions": {
+      "value": null,
+      "status": "Arena geometry, lighting, age and preparation unknown from screened measurement sources."
+    },
+    "measurement_method": "Recorded two dimensional tracked image coordinates; camera/tracker implementation unspecified.",
+    "processing": "Archive arrays retained value-for-value, including NaN and negative tracker codes; no smoothing or quality exclusion.",
+    "units": "Native image coordinates and frame indices; physical scales/frame rate not independently verified.",
+    "quality": "Recorded tracker output; includes negative codes and fractional values. Not a calibrated probability. Semantics not documented in the measurement files.",
+    "screening": "Only source-data identity, species keyword, license, date, field layout and measurement facts supplied."
+  }
+}

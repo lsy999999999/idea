@@ -1,0 +1,112 @@
+{
+  "schema_version": "claim-centric-v2",
+  "summary": "按学习与共同提问流程整理两条光学扫描的开放情境，保留观察、未知预期依据、条件性解释及分支问题。未取得原研究可读正文或独立偏振光学基础资料；固定语料无法补齐该缺口，且未提供 broker 回复或 development_step.gap。",
+  "artifacts": [
+    "NOTE.md"
+  ],
+  "evidence": [
+    {
+      "source_id": "D1",
+      "quote": "Two different source scans; do not pool them as independent repeats.",
+      "locator": "data_dictionary.scan"
+    },
+    {
+      "source_id": "D1",
+      "quote": "Fig2a uses approximately 0-100 scale; Fig2b approximately 0-1. Preserve units per scan; do not combine raw scales.",
+      "locator": "data_dictionary.DOP"
+    },
+    {
+      "source_id": "D1",
+      "quote": "At dphi=0.0, DOP=93.139824; at dphi=0.41000000000000025, DOP=31.001004333333334.",
+      "locator": "preview, spread scan"
+    },
+    {
+      "source_id": "D1",
+      "quote": "The source study programs optical polarization statistics using spatial light modulators.",
+      "locator": "additional_context"
+    }
+  ],
+  "claims": [
+    {
+      "type": "observation",
+      "text": "提供的 spread 扫描预览中，dphi 从 0 增至约 0.41 时 DOP 从约 93.14 降至约 31.00；这是已提供测量，不是独立发现。"
+    },
+    {
+      "type": "question",
+      "text": "mean_phase 扫描中，DOP 是否随相位系统变化，还是近似稳定而偏振方向变化？预览不足以判断完整扫描。"
+    },
+    {
+      "type": "hypothesis",
+      "text": "条件性解释：spread 扫描的偏振度下降可能与相位分布变宽造成不同空间贡献相消相容；机制未核实。"
+    },
+    {
+      "type": "question",
+      "text": "相位分布宽度和平均相位对偏振度与偏振方向的作用，是否可在各自扫描中区分？两条扫描不可当作独立重复。"
+    }
+  ],
+  "limitations": [
+    "原论文正文、方法与图注不可读；无法核实发表解释或 dphi 单位。",
+    "独立偏振光学基础资料不在固定语料中；该基础来源缺口无法在此封闭语料中补齐。",
+    "无原始测量不确定度；DOP 标度不同，不能合并原始数值。",
+    "无 broker 回复，故 source_use=[]；无 development_step.gap，不能复制学习请求字段。"
+  ],
+  "next_actions": [
+    "取得原研究可读方法与图注后，核实 dphi 单位、DOP 定义、采样和误差来源。",
+    "补入独立偏振光学教材或综述，逐字保存来源与支持引文；当前不可用外部检索补齐。",
+    "分别保留 spread 与 mean_phase 分支，并记录新材料如何改变理解。"
+  ],
+  "materials": [
+    {
+      "id": "M1",
+      "observation": "spread 扫描 102 行；预览 DOP 从约 93.14 降至约 31.00；统计 dphi 范围 0–约 0.505。",
+      "conditions": "Fig2a；DOP 约 0–100 标度。单位待核实，无独立重复及原始不确定度。",
+      "expectation": "未知。",
+      "expectation_basis": "缺少独立理论或综述。",
+      "existing_explanations": "相位展宽导致贡献相消仅为条件性解释，未核实。",
+      "unknowns": "dphi 单位、DOP 定义、测量汇总、扫描顺序、误差、控制变量及完整曲线。",
+      "source_ids": [
+        "D1"
+      ]
+    },
+    {
+      "id": "M2",
+      "observation": "mean_phase 扫描 200 行，覆盖 0 至 2π；预览 DOP 约 0.73–0.84，方向分量随预览点变化。",
+      "conditions": "Fig2b；DOP 约 0–1 标度，不与 Fig2a 原始值合并。",
+      "expectation": "未知。可提出平均相位是否主要改变方向而非偏振度的问题。",
+      "expectation_basis": "缺少独立领域基础资料。",
+      "existing_explanations": "未提供论文解释。",
+      "unknowns": "完整响应、周期处理、S 分量约定、DOP 关系及误差。",
+      "source_ids": [
+        "D1"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "D1",
+      "title": "Degree-of-polarization modulation for high-dimensional optical computing",
+      "url": "https://doi.org/10.1038/s41586-026-10891-z",
+      "access_level": "supplied dataset dossier only; paper full text unavailable",
+      "local_path": "/Applications/ideas/research/controlled_comparison_20261109/runtime/ours_source/case_data/optical/dossier.json",
+      "content_note": "可读数据字典、摘要统计、预览与研究题名；非原论文正文。",
+      "source_kind": "dataset",
+      "content_access": "excerpt",
+      "domain_relation": "direct",
+      "relevance_reason": "提供扫描条件、单位警告及观测预览。",
+      "supporting_quote": "The source study programs optical polarization statistics using spatial light modulators."
+    },
+    {
+      "id": "F1",
+      "title": "独立光学偏振基础资料",
+      "url": "",
+      "access_level": "unavailable in fixed corpus",
+      "local_path": "/Applications/ideas/research/controlled_comparison_20261109/runtime/ours_source/case_data/optical/dossier.json",
+      "content_note": "该路径只含案卷，不含独立基础资料；此记录表示来源缺口。",
+      "source_kind": "textbook",
+      "content_access": "failed",
+      "domain_relation": "background",
+      "relevance_reason": "需要基础资料解释偏振度、Stokes 分量及相位平均；固定语料未提供。",
+      "supporting_quote": ""
+    }
+  ]
+}

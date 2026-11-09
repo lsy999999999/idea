@@ -1,0 +1,315 @@
+/home/lsy/ideas_replication_20261108/upstream/AI-Scientist-v2-96bd51617cfdbb494a9fc283af00fe090edfae48/ai_scientist/tools/semantic_scholar.py:40: UserWarning: No Semantic Scholar API key found. Requests will be subject to stricter rate limits. Set the S2_API_KEY environment variable for higher limits.
+  warnings.warn(
+No ideas found in /home/lsy/ideas_controlled_20261109/runs/wave/scientist_v2/generation/ideas.json. Starting from scratch.
+
+Generating proposal 1/1
+Action: SearchSemanticScholar
+Arguments: {"query":"mechatronic metamaterials time crystallization wave coarsening spatial correlation length shear dynamics finite-size scaling"}
+Action: FinalizeIdea
+Arguments: {"idea":{"Name":"coarsening_shear_memory","Title":"Does Shear Remember the Coarsening Path? A Conditional Test of Memory in Mechatronic Time Crystallization","Short Hypothesis":"The source study reports spatial coarsening; this follow-up asks whether mean shear magnitude is determined by the instantaneous correlation width or also depends on the width’s recent trajectory. In the supplied aggregate, width rises overall while shear is elevated early and later settles into a narrower range, making a lagged, path-dependent relation a testable hypothesis, not an established result. The key test is whether shear differs at matched widths when width is growing versus shrinking, after accounting for serial dependence and time trends.","Related Work":"The visible source, “Wave coarsening drives time crystallization in mechatronic metamaterials,” reports coarsening in this system. The proposed analysis does not claim to rediscover coarsening or establish a new material mechanism; it tests a distinct conditional question about hysteresis or memory between coarsening and shear. The supplied corpus is the only literature context available here, so novelty relative to other literature remains unresolved.","Abstract":"Spatial coarsening is an established conclusion of the source study. A distinct follow-up question is whether the shear observable tracks the instantaneous spatial correlation width, or retains information about the recent coarsening path. We hypothesize conditionally that, at the same width, mean shear may differ depending on whether width has recently been increasing or decreasing. This would be consistent with a lagged response or hysteresis, but could also arise from a shared time trend, smoothing, or measurement noise. We will analyze only the supplied 2,199-sample experimental aggregate, treating samples as a serial time series rather than independent replicates. After checking sampling regularity and plotting both observables, we will compare a baseline smooth model of shear from width and time against a model that additionally includes a prespecified lagged width change and its interaction with width-growth direction. We will test robustness across reasonable smoothing windows and lag choices, using blocked time-series validation and block-bootstrap uncertainty rather than row-wise random splits. The conditional prediction is that the lag term improves held-out prediction and the estimated shear difference between growth and decline remains directionally stable at matched widths. If this pattern vanishes after controlling for time or is unstable to analysis choices, the memory hypothesis is unsupported by this export. Even a robust association would motivate, not prove, a dynamical mechanism: the aggregate lacks repeated-run identifiers, raw image sequences, and independently characterized uncertainty. The result would be a careful hypothesis-generating test and a concrete specification for future controlled experiments.","Experiments":["Load measurements.csv, verify columns, row count, time ordering, missing values, and duplicate timestamps. Plot time series and scatterplots of width and shear. Exclude or explicitly flag zero-width rows if present; do not use the inverse-width column where width is zero.","Fit a baseline smooth regression predicting mean_shear_magnitude from correlation_width and time using low-complexity splines. Fit an augmented model adding lagged width change over a prespecified primary window (for example, 0.1 s), plus an interaction with the sign of that change. Standardize predictors; compare nested models using blocked contiguous time-series folds, not random splits.","Estimate the matched-width growth-versus-decline shear contrast only where increasing and decreasing segments have overlapping width ranges. Report its sign, magnitude, uncertainty, and effective time coverage; avoid extrapolating across non-overlap.","Assess uncertainty with a moving-block bootstrap over contiguous samples, with block sizes chosen to cover plausible autocorrelation scales estimated from residuals. Treat results as descriptive for this single aggregate, not as replication-level inference.","Run sensitivity checks across a small, declared set of lag windows and smoothness settings, and compare against time-only and width-only baselines. Report held-out RMSE and MAE, residual autocorrelation, and whether the directional contrast is stable. Do not select and report only the best lag."] ,"Risk Factors and Limitations":"This is one exported aggregate, not independent experimental runs; serial samples cannot establish population-level significance. Width and shear may share time trends, and unreported aggregation or smoothing may create apparent lag or hysteresis. The exported standard-error column lacks documented independence and aggregation details, so it cannot support conventional replicate-level uncertainty. Growth and decline may not overlap sufficiently in width for a fair matched comparison. Results could be sensitive to lag and smoothing choices, and no causal mechanism can be inferred without raw trajectories or controlled perturbations. External literature novelty is unresolved because external search was disabled."}}
+Proposal finalized: {'Name': 'coarsening_shear_memory', 'Title': 'Does Shear Remember the Coarsening Path? A Conditional Test of Memory in Mechatronic Time Crystallization', 'Short Hypothesis': 'The source study reports spatial coarsening; this follow-up asks whether mean shear magnitude is determined by the instantaneous correlation width or also depends on the width’s recent trajectory. In the supplied aggregate, width rises overall while shear is elevated early and later settles into a narrower range, making a lagged, path-dependent relation a testable hypothesis, not an established result. The key test is whether shear differs at matched widths when width is growing versus shrinking, after accounting for serial dependence and time trends.', 'Related Work': 'The visible source, “Wave coarsening drives time crystallization in mechatronic metamaterials,” reports coarsening in this system. The proposed analysis does not claim to rediscover coarsening or establish a new material mechanism; it tests a distinct conditional question about hysteresis or memory between coarsening and shear. The supplied corpus is the only literature context available here, so novelty relative to other literature remains unresolved.', 'Abstract': 'Spatial coarsening is an established conclusion of the source study. A distinct follow-up question is whether the shear observable tracks the instantaneous spatial correlation width, or retains information about the recent coarsening path. We hypothesize conditionally that, at the same width, mean shear may differ depending on whether width has recently been increasing or decreasing. This would be consistent with a lagged response or hysteresis, but could also arise from a shared time trend, smoothing, or measurement noise. We will analyze only the supplied 2,199-sample experimental aggregate, treating samples as a serial time series rather than independent replicates. After checking sampling regularity and plotting both observables, we will compare a baseline smooth model of shear from width and time against a model that additionally includes a prespecified lagged width change and its interaction with width-growth direction. We will test robustness across reasonable smoothing windows and lag choices, using blocked time-series validation and block-bootstrap uncertainty rather than row-wise random splits. The conditional prediction is that the lag term improves held-out prediction and the estimated shear difference between growth and decline remains directionally stable at matched widths. If this pattern vanishes after controlling for time or is unstable to analysis choices, the memory hypothesis is unsupported by this export. Even a robust association would motivate, not prove, a dynamical mechanism: the aggregate lacks repeated-run identifiers, raw image sequences, and independently characterized uncertainty. The result would be a careful hypothesis-generating test and a concrete specification for future controlled experiments.', 'Experiments': ['Load measurements.csv, verify columns, row count, time ordering, missing values, and duplicate timestamps. Plot time series and scatterplots of width and shear. Exclude or explicitly flag zero-width rows if present; do not use the inverse-width column where width is zero.', 'Fit a baseline smooth regression predicting mean_shear_magnitude from correlation_width and time using low-complexity splines. Fit an augmented model adding lagged width change over a prespecified primary window (for example, 0.1 s), plus an interaction with the sign of that change. Standardize predictors; compare nested models using blocked contiguous time-series folds, not random splits.', 'Estimate the matched-width growth-versus-decline shear contrast only where increasing and decreasing segments have overlapping width ranges. Report its sign, magnitude, uncertainty, and effective time coverage; avoid extrapolating across non-overlap.', 'Assess uncertainty with a moving-block bootstrap over contiguous samples, with block sizes chosen to cover plausible autocorrelation scales estimated from residuals. Treat results as descriptive for this single aggregate, not as replication-level inference.', 'Run sensitivity checks across a small, declared set of lag windows and smoothness settings, and compare against time-only and width-only baselines. Report held-out RMSE and MAE, residual autocorrelation, and whether the directional contrast is stable. Do not select and report only the best lag.'], 'Risk Factors and Limitations': 'This is one exported aggregate, not independent experimental runs; serial samples cannot establish population-level significance. Width and shear may share time trends, and unreported aggregation or smoothing may create apparent lag or hysteresis. The exported standard-error column lacks documented independence and aggregation details, so it cannot support conventional replicate-level uncertainty. Growth and decline may not overlap sufficiently in width for a fair matched comparison. Results could be sensitive to lag and smoothing choices, and no causal mechanism can be inferred without raw trajectories or controlled perturbations. External literature novelty is unresolved because external search was disabled.'}
+Stored 1 ideas in /home/lsy/ideas_controlled_20261109/runs/wave/scientist_v2/generation/ideas.json
+--------------------------------
+self.task_desc
+Use the supplied actual measurements.csv in the current working directory. CPU 
+only (4 threads), numpy/pandas/scipy/sklearn/matplotlib/torch available. No 
+external downloads or training. Do not substitute synthetic data for these 
+measurements. Each script <=120 seconds. Source identity is visible; focus on 
+substantive follow-up hypotheses and distinguish predictions from observed 
+facts. {
+  "case": "wave",
+  "source": {
+    "title": "Wave coarsening drives time crystallization in mechatronic 
+metamaterials",
+    "journal": "Nature",
+    "published": "2026-10-14",
+    "doi": "10.1038/s41586-026-11163-6",
+    "repository": "https://zenodo.org/records/22541069",
+    "concept_doi": "10.5281/zenodo.17398589",
+    "files": [
+      "FIG2/data/experiment/Experiment2Dcoarsening"
+    ]
+  },
+  "data_dictionary": {
+    "time_s": "Elapsed seconds; 300 samples per second.",
+    "correlation_width": "Source fwhm array, used as a spatial 
+correlation-length proxy; do not confuse a length with its reciprocal.",
+    "width_ste_export": "Source ste array. Original aggregation/independence 
+details are not provided by this small export.",
+    "mean_shear_magnitude": "Source magmean array: mean shear magnitude.",
+    "inverse_correlation_length_normalized": "Exactly the published notebook 
+normalization fwhm[1]/fwhm; retains the source definition without fitting an 
+exponent."
+  },
+  "rows": 2199,
+  "statistics": {
+    "time_s": {
+      "n": 2199,
+      "min": 0.0,
+      "max": 7.326666666666667,
+      "mean": 3.663333333333334
+    },
+    "correlation_width": {
+      "n": 2199,
+      "min": 0.0,
+      "max": 17.145553448661612,
+      "mean": 9.692878838211099
+    },
+    "width_ste_export": {
+      "n": 2199,
+      "min": 0.0,
+      "max": 4.762896722078401,
+      "mean": 0.7136185284244031
+    },
+    "mean_shear_magnitude": {
+      "n": 2199,
+      "min": 0.04598883407217158,
+      "max": 0.2157139163763838,
+      "mean": 0.17193841793950992
+    },
+    "inverse_correlation_length_normalized": {
+      "n": 2199,
+      "min": 0.1020408163265306,
+      "max": Infinity,
+      "mean": Infinity
+    }
+  },
+  "preview": [
+    {
+      "time_s": 0.0,
+      "correlation_width": 1.5046097924335702,
+      "width_ste_export": 0.13641974154451827,
+      "mean_shear_magnitude": 0.04598883407217158,
+      "inverse_correlation_length_normalized": 1.1627906976744184
+    },
+    {
+      "time_s": 0.6633333333333333,
+      "correlation_width": 2.3443920021639344,
+      "width_ste_export": 0.4497388964636566,
+      "mean_shear_magnitude": 0.14680165900531286,
+      "inverse_correlation_length_normalized": 0.746268656716418
+    },
+    {
+      "time_s": 1.33,
+      "correlation_width": 5.493575288652803,
+      "width_ste_export": 0.7060887842818663,
+      "mean_shear_magnitude": 0.18423916251212713,
+      "inverse_correlation_length_normalized": 0.31847133757961776
+    },
+    {
+      "time_s": 1.9966666666666666,
+      "correlation_width": 9.20261338162858,
+      "width_ste_export": 1.747865898886338,
+      "mean_shear_magnitude": 0.1874169073552045,
+      "inverse_correlation_length_normalized": 0.1901140684410646
+    },
+    {
+      "time_s": 2.6633333333333336,
+      "correlation_width": 10.742214099467581,
+      "width_ste_export": 1.0002754441589214,
+      "mean_shear_magnitude": 0.17026260049869432,
+      "inverse_correlation_length_normalized": 0.16286644951140064
+    },
+    {
+      "time_s": 3.33,
+      "correlation_width": 10.147368367575242,
+      "width_ste_export": 0.7585851860815591,
+      "mean_shear_magnitude": 0.1793700453993739,
+      "inverse_correlation_length_normalized": 0.17241379310344823
+    },
+    {
+      "time_s": 3.993333333333333,
+      "correlation_width": 13.086606101631515,
+      "width_ste_export": 0.7126475596184839,
+      "mean_shear_magnitude": 0.17850216557639584,
+      "inverse_correlation_length_normalized": 0.13368983957219252
+    },
+    {
+      "time_s": 4.66,
+      "correlation_width": 11.547005383792515,
+      "width_ste_export": 1.6679415591246916,
+      "mean_shear_magnitude": 0.173074738084425,
+      "inverse_correlation_length_normalized": 0.1515151515151515
+    },
+    {
+      "time_s": 5.326666666666667,
+      "correlation_width": 12.246823891901151,
+      "width_ste_export": 1.3272998885136038,
+      "mean_shear_magnitude": 0.1743745190082492,
+      "inverse_correlation_length_normalized": 0.14285714285714285
+    },
+    {
+      "time_s": 5.993333333333333,
+      "correlation_width": 12.94664240000979,
+      "width_ste_export": 0.0,
+      "mean_shear_magnitude": 0.17255379325077014,
+      "inverse_correlation_length_normalized": 0.13513513513513511
+    },
+    {
+      "time_s": 6.66,
+      "correlation_width": 8.747731351357965,
+      "width_ste_export": 0.0,
+      "mean_shear_magnitude": 0.18029654581113705,
+      "inverse_correlation_length_normalized": 0.19999999999999998
+    },
+    {
+      "time_s": 7.326666666666667,
+      "correlation_width": 15.046097924335701,
+      "width_ste_export": 0.0,
+      "mean_shear_magnitude": 0.1701746910005381,
+      "inverse_correlation_length_normalized": 0.11627906976744184
+    }
+  ],
+  "additional_context": "A two-dimensional array of 111 active mechatronic units
+is studied through time-dependent spatial correlation and shear observables. 
+Published source identity is visible. This subset contains 2199 time samples 
+from an exported experimental aggregate, not 2199 independent runs; underlying 
+image sequences and repeated-run identifiers are not included. The authors 
+discuss spatial coarsening; infer additional hypotheses rather than claiming 
+this published finding as new.",
+  "task": "Propose substantive follow-up scientific questions and explanatory 
+hypotheses from the supplied actual source data. Distinguish published claims, 
+observed measurements, and your new conditional proposals. Develop consequences 
+and alternatives; do not require a completed proof or experiment. Do not claim 
+independent rediscovery: the source study identity is visible.",
+  "data_file": "measurements.csv",
+  "retrieval_policy": "Use the same supplied source corpus for this controlled 
+comparison; no external browsing. Data and source excerpts are shared with every
+system."
+}
+Research idea: {"Name": "coarsening_shear_memory", "Title": "Does Shear Remember
+the Coarsening Path? A Conditional Test of Memory in Mechatronic Time 
+Crystallization", "Short Hypothesis": "The source study reports spatial 
+coarsening; this follow-up asks whether mean shear magnitude is determined by 
+the instantaneous correlation width or also depends on the width\u2019s recent 
+trajectory. In the supplied aggregate, width rises overall while shear is 
+elevated early and later settles into a narrower range, making a lagged, 
+path-dependent relation a testable hypothesis, not an established result. The 
+key test is whether shear differs at matched widths when width is growing versus
+shrinking, after accounting for serial dependence and time trends.", "Related 
+Work": "The visible source, \u201cWave coarsening drives time crystallization in
+mechatronic metamaterials,\u201d reports coarsening in this system. The proposed
+analysis does not claim to rediscover coarsening or establish a new material 
+mechanism; it tests a distinct conditional question about hysteresis or memory 
+between coarsening and shear. The supplied corpus is the only literature context
+available here, so novelty relative to other literature remains unresolved.", 
+"Abstract": "Spatial coarsening is an established conclusion of the source 
+study. A distinct follow-up question is whether the shear observable tracks the 
+instantaneous spatial correlation width, or retains information about the recent
+coarsening path. We hypothesize conditionally that, at the same width, mean 
+shear may differ depending on whether width has recently been increasing or 
+decreasing. This would be consistent with a lagged response or hysteresis, but 
+could also arise from a shared time trend, smoothing, or measurement noise. We 
+will analyze only the supplied 2,199-sample experimental aggregate, treating 
+samples as a serial time series rather than independent replicates. After 
+checking sampling regularity and plotting both observables, we will compare a 
+baseline smooth model of shear from width and time against a model that 
+additionally includes a prespecified lagged width change and its interaction 
+with width-growth direction. We will test robustness across reasonable smoothing
+windows and lag choices, using blocked time-series validation and 
+block-bootstrap uncertainty rather than row-wise random splits. The conditional 
+prediction is that the lag term improves held-out prediction and the estimated 
+shear difference between growth and decline remains directionally stable at 
+matched widths. If this pattern vanishes after controlling for time or is 
+unstable to analysis choices, the memory hypothesis is unsupported by this 
+export. Even a robust association would motivate, not prove, a dynamical 
+mechanism: the aggregate lacks repeated-run identifiers, raw image sequences, 
+and independently characterized uncertainty. The result would be a careful 
+hypothesis-generating test and a concrete specification for future controlled 
+experiments.", "Experiments": ["Load measurements.csv, verify columns, row 
+count, time ordering, missing values, and duplicate timestamps. Plot time series
+and scatterplots of width and shear. Exclude or explicitly flag zero-width rows 
+if present; do not use the inverse-width column where width is zero.", "Fit a 
+baseline smooth regression predicting mean_shear_magnitude from 
+correlation_width and time using low-complexity splines. Fit an augmented model 
+adding lagged width change over a prespecified primary window (for example, 0.1 
+s), plus an interaction with the sign of that change. Standardize predictors; 
+compare nested models using blocked contiguous time-series folds, not random 
+splits.", "Estimate the matched-width growth-versus-decline shear contrast only 
+where increasing and decreasing segments have overlapping width ranges. Report 
+its sign, magnitude, uncertainty, and effective time coverage; avoid 
+extrapolating across non-overlap.", "Assess uncertainty with a moving-block 
+bootstrap over contiguous samples, with block sizes chosen to cover plausible 
+autocorrelation scales estimated from residuals. Treat results as descriptive 
+for this single aggregate, not as replication-level inference.", "Run 
+sensitivity checks across a small, declared set of lag windows and smoothness 
+settings, and compare against time-only and width-only baselines. Report 
+held-out RMSE and MAE, residual autocorrelation, and whether the directional 
+contrast is stable. Do not select and report only the best lag."], "Risk Factors
+and Limitations": "This is one exported aggregate, not independent experimental 
+runs; serial samples cannot establish population-level significance. Width and 
+shear may share time trends, and unreported aggregation or smoothing may create 
+apparent lag or hysteresis. The exported standard-error column lacks documented 
+independence and aggregation details, so it cannot support conventional 
+replicate-level uncertainty. Growth and decline may not overlap sufficiently in 
+width for a fair matched comparison. Results could be sensitive to lag and 
+smoothing choices, and no causal mechanism can be inferred without raw 
+trajectories or controlled perturbations. External literature novelty is 
+unresolved because external search was disabled."}
+--------------------------------
+MinimalAgent: Getting plan and code
+MinimalAgent: Draft complete
+Checking if response contains metric name and description
+{
+    'is_bug': True,
+    'summary': 'The reported matched-width contrast and bootstrap are not 
+correctly matched/valid. Growth and decline are pooled across the whole time 
+series, so shared time trends can create the contrast; furthermore the bootstrap
+samples blocks from `idx` (already filtered rows) but applies those positions as
+original row indices, mixing unrelated observations and invalidating its 
+interval. Also `np.nan_to_num` makes unavailable lag values zero, although the 
+common interval excludes those rows for the primary fit but sensitivity eval may
+have distinct masks. Use contiguous original-index moving blocks, and estimate 
+the contrast conditional on width (and time), restricted to genuine support 
+overlap; interpret forecast scores cautiously since expanding TimeSeriesSplit 
+tests later regimes only.'
+}
+Checking if response contains metric name and description
+{
+    'is_bug': True,
+    'summary': 'Execution fails at the time-only baseline: fit_predict assumes 
+two spline columns, but time-only X has one feature, so ColumnTransformer 
+requests nonexistent column index 1. Fix by allowing spline_cols=1 for that 
+model (or make design construction handle single-column predictors); then rerun.
+The reported two earlier scores show the augmented lag model slightly worse than
+the time+width baseline, but the script terminates before completing 
+diagnostics.'
+}
+Checking if response contains metric name and description
+{
+    'is_bug': True,
+    'summary': 'The execution completes, but the claimed matched-width contrast 
+is not actually conditioned on time: it separately fits growth and decline shear
+against width, so shared temporal trends can produce the apparent difference. 
+The reported bootstrap interval is for a different unadjusted raw mean contrast,
+with direction and width range held fixed and resampling indices independently 
+across blocks, so it does not quantify uncertainty for the displayed smoothed 
+contrast or preserve a proper moving-block resample. Also, the lagged 
+augmentation does not improve blocked scores over the baseline (slightly worse 
+RMSE/MAE), and high residual ACF indicates substantial unmodeled serial 
+dependence. Revise the matched contrast to estimate growth-direction effect 
+conditional on both width and time, use a block bootstrap that refits that same 
+estimand, and characterize dependence/validation uncertainty; interpret current 
+output as no predictive evidence for added memory.'
+}
+Plan + code extraction failed, retrying...
+Checking if response contains metric name and description
+{
+    'is_bug': True,
+    'summary': 'The analysis has a substantive modeling bug: `fit_predict` 
+places `width` and `time` in the spline transformer but sets `n_smooth = min(2, 
+train_x.shape[1])`; for the time-only baseline, its sole time feature is smooth 
+as intended, but `X_aug` appends lag delta/direction/interaction as linear 
+terms. More importantly, the reported bootstrap contrast resamples rows as 
+blocks but preserves precomputed direction labels, not recomputing lagged deltas
+on each resampled trajectory; this does not estimate uncertainty for the stated 
+matched growth/decline contrast. The 0.1 s blocks are also shorter than 
+indicated residual dependence (ACF1=0.865), so intervals are not reliable. In 
+addition, expanding-window `TimeSeriesSplit` tests only later periods, 
+confounding validation with temporal regime change; the augmented model does not
+improve versus the baseline (slightly worse RMSE/MAE), and the contrast CI 
+includes zero. Fix by recomputing direction from each bootstrap block/trajectory
+with boundary handling, selecting blocks based on residual autocorrelation, and 
+reporting that current evidence does not support predictive memory.'
+}
+wave generation complete

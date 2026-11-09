@@ -1,0 +1,85 @@
+{
+  "status": "BOUNDED_PILOT_FINISHED_WITH_FAILURES",
+  "date": "2026-11-09",
+  "provider": {
+    "family": "GPT-6",
+    "model_id": "gpt-6-luna",
+    "api_style": "responses",
+    "reasoning_mode": "low",
+    "credential_source": "existing_codex_config",
+    "credentials_in_artifacts": false
+  },
+  "systems": [
+    "ours",
+    "researchagent",
+    "virtual_lab",
+    "scientist_v2",
+    "evoscientist"
+  ],
+  "cases_target": 2,
+  "replicates": 1,
+  "fairness": {
+    "same_model": true,
+    "same_input_hashes": true,
+    "same_retrieval_snapshot": true,
+    "same_hardware_limits": true,
+    "task_memory": "fresh_per_system_and_case",
+    "actual_resource_comparability_tolerance": 0.1,
+    "pad_unused_budget": false,
+    "bill_subagents_and_retries_to_parent": true
+  },
+  "draft_budget_per_system_per_case": {
+    "input_tokens": 200000,
+    "output_tokens_including_reasoning_if_billed_here": 32000,
+    "model_calls_including_internal_and_retries": 96,
+    "search_calls": 16,
+    "tool_calls_total": 64,
+    "tool_return_utf8_bytes": 1500000,
+    "cpu_core_seconds": 600,
+    "gpu_seconds": 0,
+    "wall_seconds": 7200,
+    "peak_memory_mib": 8192,
+    "concurrency": 1
+  },
+  "draft_correction_budget_per_system_per_case": {
+    "input_tokens": 40000,
+    "output_tokens_including_reasoning_if_billed_here": 8000,
+    "model_calls_including_internal_and_retries": 12,
+    "search_calls": 4,
+    "tool_calls_total": 16,
+    "tool_return_utf8_bytes": 1500000,
+    "cpu_core_seconds": 180,
+    "gpu_seconds": 0,
+    "wall_seconds": 1800,
+    "peak_memory_mib": 8192,
+    "concurrency": 1
+  },
+  "budget_status": "Token-estimated preflight; actual returned usage reconciled; no claim of equal actual resources",
+  "readiness": {
+    "exact_model_confirmed": true,
+    "data_downloaded_and_verified": true,
+    "source_exposure_audited": true,
+    "all_system_adapters_wired": true,
+    "global_budget_gate_wired": false,
+    "correction_truth_frozen": true,
+    "model_calls_started": true
+  },
+  "stop_policy": [
+    "hard budget exhausted -> preserve partial result, mark incomplete",
+    "permanent quota/auth error -> stop; no blind retries",
+    "no silent controller scientific repairs",
+    "final evaluation only after generation freeze"
+  ],
+  "execution_notes": [
+    "Source identity and published coarsening context visible to all; this is follow-up ideation, not blind rediscovery.",
+    "Luna now; configurable chat/responses API retained for later replacement.",
+    "No assertion of equal actual spend; show measured input/output differences.",
+    "Discussion adapters receive the common dossier and 12-row previews; execution systems can also inspect the full CSV. This is a material exposure/tool asymmetry.",
+    "Only wave correction was executed. Optical correction packets remain prepared and unrun.",
+    "EvoScientist optical generation not launched after wave budget failure to limit further cost.",
+    "Budget estimator changed from UTF-8 byte upper bound to o200k_base plus margin; logs retained.",
+    "Optical ours transport received clearer closed-corpus and source-ID formatting guidance after wave errors; this is recorded interface intervention."
+  ],
+  "actual_budget_config": "model_config.json",
+  "full_matched_reproduction_complete": false
+}

@@ -1,0 +1,3923 @@
+{
+  "status": "complete",
+  "run": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002",
+  "supervised_budget_amendment": {
+    "kind": "controller_budget_amendment",
+    "original_max_rounds": 6,
+    "effective_max_rounds": 1,
+    "original_max_request_hops": 3,
+    "effective_max_request_hops": 1,
+    "applies_from": "continuation after r1_exchange_0_learn_0; completed later stages remain retained if present",
+    "reason": "Repeated low-relevance retrieval and unexecuted analysis requests already expose interface failures; complete one mutual exchange/verification/return cycle, then terminal evaluation. This is a supervised diagnostic pilot, not an unchanged-protocol comparison.",
+    "interrupted_process_groups": [
+      54520,
+      59608
+    ],
+    "original_setup_preserved": true,
+    "scientific_content_edited": false
+  },
+  "substantive_novelty_review_complete": false,
+  "accepted_stages": 29,
+  "accepted_learning_stages": 14,
+  "top_level_plans_proposed": 8,
+  "operations_requested_in_broker": 3,
+  "additional_broker_operation_results": 3,
+  "additional_successful_broker_computations": 0,
+  "pending_broker_computations": 3,
+  "initial_sample_windows_returned": 3,
+  "initial_foundation_sources": 4,
+  "distinct_sources_returned": 67,
+  "source_date_violations": [],
+  "forbidden_identity_hits_in_generation_prompts": [],
+  "generation_attempt_audit_files": 42,
+  "reused_execution_records": 1,
+  "physical_audited_generation_calls_across_both_runs": 43,
+  "generation_tool_events": 0,
+  "execution_planner_audits": [
+    {
+      "requested_model": "gpt-6-luna",
+      "returncode": 0,
+      "unexpected_items": [],
+      "tool_events": 0,
+      "disabled_host_notices": 1,
+      "usage": [
+        {
+          "input_tokens": 29527,
+          "cached_input_tokens": 22784,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 179,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "requested_model": "gpt-6-luna",
+      "returncode": 0,
+      "unexpected_items": [],
+      "tool_events": 0,
+      "disabled_host_notices": 1,
+      "usage": [
+        {
+          "input_tokens": 29401,
+          "cached_input_tokens": 25856,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 197,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "requested_model": "gpt-6-luna",
+      "returncode": 0,
+      "unexpected_items": [],
+      "tool_events": 0,
+      "disabled_host_notices": 1,
+      "usage": [
+        {
+          "input_tokens": 14720,
+          "cached_input_tokens": 11392,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 488,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    }
+  ],
+  "protected_baseline_files": 718,
+  "changed_protected_baseline_files": [],
+  "generation_frozen": true,
+  "changed_frozen_generation_files": [],
+  "stages": [
+    {
+      "stage": "01_initial_0",
+      "role": "animal_behaviorist",
+      "summary": "提出一个可检验的轨迹层面问题：在单条记录中，两条轨迹当下较近时，之后的坐标距离是否更常缩小或增长较慢？这是位置转移问题，不等于结群、追随或感觉引导。初步窗口显示记录间轨迹尺度和形态不同，因此先按记录内距离分位数定义比较条件。",
+      "personal_question": "在每条记录内，A-B距离较近的时刻之后10帧，距离变化是否比距离较远的时刻更低？",
+      "shared_question_update": null,
+      "learning_request": {
+        "needed": true,
+        "gap": "缺少截至2010-01-01、可核验的鱼类双体轨迹互动测量基础，尤其是距离与相对运动如何操作化、如何避免把空间接近等同于社会互动，以及适用于斑马鱼的已发表例子。",
+        "why_now": "这些基础可帮助评估记录内分位数和滞后变化是否适合作为探索性指标，并约束对相关结果的解释；不影响先提出可计算的坐标观察。",
+        "queries": [
+          "截至2010年前，斑马鱼双体或鱼类结群研究如何从二维轨迹定义邻近、相对距离、趋近和跟随？",
+          "动物群体轨迹研究中，如何区分距离接近的描述指标与互动或吸引机制推断？",
+          "鱼类群体自组织模型或经验研究中，成对距离、相对速度、方向一致性和滞后响应的典型操作定义与限制是什么？"
+        ],
+        "urls": [
+          "https://doi.org/10.1006/jtbi.2002.3065",
+          "https://doi.org/10.1126/science.982056"
+        ],
+        "source_ids": [],
+        "record_ids": [],
+        "operations": []
+      },
+      "top_level_analysis_plan": {
+        "kind": "analysis",
+        "question": "在R07中，A-B距离近状态与远状态之后10帧的距离变化分布是否不同？",
+        "record_id": "R07",
+        "start": 0,
+        "stop": 44999,
+        "variables": [
+          {
+            "name": "distance",
+            "expression": "norm(positions[:,0,:]-positions[:,1,:],axis=1)",
+            "meaning": "局部标签A与B每帧的二维欧氏距离",
+            "units": "native image coordinate unit"
+          },
+          {
+            "name": "future_change_10",
+            "expression": "shift(distance,-10)-distance",
+            "meaning": "10帧后的距离减当前距离",
+            "units": "native image coordinate unit per 10 frames"
+          },
+          {
+            "name": "valid_pair",
+            "expression": "isfinite(distance)&isfinite(future_change_10)",
+            "meaning": "当前距离及10帧后配对距离均有限",
+            "units": "boolean"
+          },
+          {
+            "name": "near_threshold",
+            "expression": "quantile(distance,0.25)",
+            "meaning": "R07全记录距离第25分位数，供操作性分组使用",
+            "units": "native image coordinate unit"
+          },
+          {
+            "name": "far_threshold",
+            "expression": "quantile(distance,0.75)",
+            "meaning": "R07全记录距离第75分位数，供操作性分组使用",
+            "units": "native image coordinate unit"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "distance_and_future_change",
+            "expression": "distance"
+          },
+          {
+            "name": "future_distance_change",
+            "expression": "future_change_10"
+          }
+        ],
+        "groups": [
+          {
+            "name": "near",
+            "where": "valid_pair&(distance<=near_threshold)",
+            "values": [
+              "distance",
+              "future_change_10"
+            ]
+          },
+          {
+            "name": "far",
+            "where": "valid_pair&(distance>=far_threshold)",
+            "values": [
+              "distance",
+              "future_change_10"
+            ]
+          }
+        ],
+        "model": {
+          "target": "future_change_10",
+          "features": [
+            "distance"
+          ],
+          "train_fraction": 0.7
+        }
+      },
+      "exploration": {
+        "missing_external_facts": [
+          "本记录具体实验任务、场景几何、光照、鱼龄和实验准备未核实；不能据坐标把轨迹映射到特定生态或实验行为。",
+          "未提供稳定个体身份核验、帧率或物理空间校准；分别限制个体连续性解释和物理速度/时间推断。"
+        ],
+        "unselected_definitions": [
+          "10帧滞后是便于首轮计算的操作选择；缺少帧率依据，尚未比较其他滞后。",
+          "近远距离使用记录内四分位阈值；尚未选择连续距离回归或其他分组作为主要定义。"
+        ],
+        "interface_gaps": [
+          "当前输入仅提供R01、R07、R13的稀疏窗口；尚未提供全记录分析结果。",
+          "共享研究笔记路径无法在当前受限读取接口中访问。"
+        ],
+        "next_action": "请求截至任务知识日期的轨迹互动测量方法与鱼类/斑马鱼研究例子，并对R07全记录执行上述探索性比较；随后根据结果和同记录依赖性修订观察定义。",
+        "stalled_reason": "",
+        "understanding_changed": true
+      },
+      "learning_change": null,
+      "memory_notes": [
+        {
+          "key": "coordinates_do_not_identify_behavior",
+          "mastery": "used"
+        }
+      ],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/01_initial_0/result.json",
+      "sha256": "c680d871403aac38b996cd326b07562344d5a3d72482879762adc5e85da53842"
+    },
+    {
+      "stage": "01_initial_0_learn_0",
+      "role": "animal_behaviorist",
+      "summary": "本轮未获得可核验的鱼类轨迹方法或斑马鱼已发表实例：检索返回内容与所问主题无关，两个指定 DOI 也没有可读内容。因此没有新增外部方法知识。当前记录上下文仍支持提出一个纯坐标层面的探索性问题，但尚无计算结果。",
+      "personal_question": {
+        "base": {
+          "id": "personal:animal_behaviorist",
+          "owner": "animal_behaviorist",
+          "version": 1
+        },
+        "action": "retain",
+        "question": "在每条记录内，A-B距离较近的时刻之后10帧，距离变化是否比距离较远的时刻更低？",
+        "reason": "检索未提供足以改变问题的相关方法证据，故保留原问题。",
+        "influenced_by": []
+      },
+      "shared_question_update": null,
+      "learning_request": {
+        "needed": true,
+        "gap": "本轮未取得可读且主题相关的鱼类轨迹方法来源。",
+        "why_now": "需要可核验的操作定义来约束后续距离分组与滞后变化的解释；当前坐标观察仍可独立开展。",
+        "queries": [
+          "2002年 DOI 10.1006/jtbi.2002.3065 的论文题目、方法和鱼类成对距离定义是什么？",
+          "DOI 10.1126/science.982056 对斑马鱼结群行为和实验条件报告了什么？",
+          "2010年前，二维轨迹研究如何区分邻近描述、趋近、跟随和社会吸引推断？"
+        ],
+        "urls": [
+          "https://doi.org/10.1006/jtbi.2002.3065",
+          "https://doi.org/10.1126/science.982056"
+        ],
+        "source_ids": [],
+        "record_ids": [],
+        "operations": []
+      },
+      "top_level_analysis_plan": {
+        "kind": "analysis",
+        "question": "每条记录内A-B距离较近的时刻之后10帧，距离变化是否比距离较远的时刻更低？",
+        "record_id": "",
+        "variables": [
+          {
+            "name": "distance",
+            "expression": "norm(positions[:,0,:]-positions[:,1,:],axis=-1)",
+            "meaning": "两只追踪目标的二维图像坐标间距离",
+            "units": "native image coordinates"
+          },
+          {
+            "name": "distance_change_10",
+            "expression": "shift(distance,-10)-distance",
+            "meaning": "10帧后的距离减当前距离；须排除缺失及记录末端无效行",
+            "units": "native image coordinates"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "near_far_distance_change",
+            "expression": "mean(distance_change_10 | near)-mean(distance_change_10 | far)"
+          }
+        ],
+        "groups": [
+          {
+            "name": "near",
+            "where": "distance <= quantile(distance,0.25)",
+            "values": [
+              "distance",
+              "distance_change_10"
+            ]
+          },
+          {
+            "name": "far",
+            "where": "distance >= quantile(distance,0.75)",
+            "values": [
+              "distance",
+              "distance_change_10"
+            ]
+          }
+        ]
+      },
+      "exploration": {
+        "missing_external_facts": [
+          "2010年以前可读、可核验的鱼类双体轨迹方法来源及斑马鱼实例。"
+        ],
+        "unselected_definitions": [
+          "“较近”和“较远”的距离阈值尚未选择；可考虑记录内分位数，但本轮没有选定具体分位点。",
+          "“距离变化”可定义为10帧后距离减当前距离，或其绝对值；当前尚未选择。"
+        ],
+        "interface_gaps": [
+          "当前输入没有提供轨迹数组或记录 ID，无法在此处执行计算。"
+        ],
+        "next_action": "继续寻求主题相关且可读的外部来源；同时保留坐标层面的探索分支。",
+        "stalled_reason": "当前检索返回的可读内容与目标科学问题不匹配，指定 DOI 也未提供可读内容。",
+        "understanding_changed": false
+      },
+      "learning_change": "没有新增可用的外部鱼类轨迹知识。实际阅读了返回摘要并判断其主题不匹配；未能据此解释或使用鱼类互动方法。",
+      "memory_notes": [],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/01_initial_0_learn_0/result.json",
+      "sha256": "276b53f4cc918294eff370310f470195c31bc04aa1322ec2564c89a5312fcfa6"
+    },
+    {
+      "stage": "01_initial_0_learn_1",
+      "role": "animal_behaviorist",
+      "summary": "本轮没有取得可读且主题相关的鱼类轨迹方法资料，也没有提供可分析的记录数组或计算结果。因此保留个人问题，并将后续分析限定为坐标描述，不推断行为机制。",
+      "personal_question": {
+        "base": {
+          "id": "personal:animal_behaviorist",
+          "owner": "animal_behaviorist",
+          "version": 1
+        },
+        "action": "retain",
+        "question": "在每条记录内，A-B距离较近的时刻之后10帧，距离变化是否比距离较远的时刻更低？",
+        "reason": "检索没有提供相关方法来源，且本轮没有记录数组或计算结果；现阶段没有依据修改原问题。",
+        "influenced_by": []
+      },
+      "shared_question_update": null,
+      "learning_request": {
+        "needed": true,
+        "gap": "尚无可读且主题相关的鱼类轨迹方法来源。",
+        "why_now": "可核验的方法来源能帮助明确距离分组与滞后变化的操作定义；数据计算则需要对应记录的数组。",
+        "queries": [
+          "10.1006/jtbi.2002.3065 对应论文的可读全文或摘要，以及其鱼类成对距离定义",
+          "10.1126/science.982056 对应论文的可读摘要或全文及实验条件",
+          "2010年前二维鱼类轨迹研究如何操作定义邻近、趋近、跟随与社会吸引，并区分轨迹描述与机制推断"
+        ],
+        "urls": [
+          "https://doi.org/10.1006/jtbi.2002.3065",
+          "https://doi.org/10.1126/science.982056"
+        ],
+        "source_ids": [],
+        "record_ids": [],
+        "operations": []
+      },
+      "top_level_analysis_plan": null,
+      "exploration": {
+        "missing_external_facts": [
+          "鱼类轨迹方法文献的可读内容及其操作定义。",
+          "当前记录具体任务与场景条件。"
+        ],
+        "unselected_definitions": [
+          "“较近”和“较远”的距离阈值或分位数划分尚未指定。",
+          "10帧距离变化的符号约定、质量筛选和有效样本条件尚未指定。"
+        ],
+        "interface_gaps": [
+          "当前输入没有轨迹数组记录可供计算。"
+        ],
+        "next_action": "取得可分析记录数组后，明确分组阈值和差值符号，再计算近远状态后的10帧距离变化；同步继续检索可读的方法来源。",
+        "stalled_reason": "本轮返回的来源不相关，且未提供数组，不能执行所问的记录内比较。",
+        "understanding_changed": false
+      },
+      "learning_change": "阅读了两条返回来源的摘要：一条讨论生态管理，一条讨论口译；它们不提供鱼类轨迹方法知识。解释了本轮检索结果为何不能支持距离定义。没有获得可用于分析的轨迹数据，因此没有实际使用该方法或计算结果。",
+      "memory_notes": [],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/01_initial_0_learn_1/result.json",
+      "sha256": "01136676b436caff3a60112bc64124340bd7b91713fe2035ed6ac660c870cea5"
+    },
+    {
+      "stage": "01_initial_0_learn_2",
+      "role": "animal_behaviorist",
+      "summary": "本轮学习未从来源中获得鱼类轨迹方法知识：唯一返回的来源与鱼类行为无关，目标 DOI 搜索也没有返回可读内容。可以把问题落实为轨迹层面的描述性比较，但当前没有对应记录数组，尚不能计算。",
+      "personal_question": {
+        "base": {
+          "id": "personal:animal_behaviorist",
+          "owner": "animal_behaviorist",
+          "version": 1
+        },
+        "action": "retain",
+        "question": "在每条记录内，A-B距离较近的时刻之后10帧，距离变化是否比距离较远的时刻更低？",
+        "reason": "本轮没有新证据促使修改问题，但缺少执行比较所需的记录数组及可核验操作定义。",
+        "influenced_by": []
+      },
+      "shared_question_update": null,
+      "learning_request": {
+        "needed": true,
+        "gap": "没有可读的鱼类二维轨迹方法来源，也没有可用于当前比较的具体记录数组。",
+        "why_now": "方法来源可帮助核验操作定义；记录数组是估计所问滞后差异的必要输入。",
+        "queries": [
+          "2010年前鱼类二维轨迹研究如何定义成对距离、邻近或趋近，并区分描述性关联与互动机制",
+          "10.1006/jtbi.2002.3065 的可读摘要或全文及成对距离定义",
+          "10.1126/science.982056 的可读摘要或全文及实验条件"
+        ],
+        "urls": [
+          "https://doi.org/10.1006/jtbi.2002.3065",
+          "https://doi.org/10.1126/science.982056"
+        ],
+        "source_ids": [],
+        "record_ids": [],
+        "operations": []
+      },
+      "top_level_analysis_plan": null,
+      "exploration": {
+        "missing_external_facts": [
+          "可读的鱼类轨迹方法来源及其操作定义。",
+          "当前记录的实验任务、场地条件和物理尺度。"
+        ],
+        "unselected_definitions": [
+          "近距离与远距离的阈值或分组规则尚未选定。",
+          "距离变化可用绝对距离变化或有方向的差值表达，尚未定稿。"
+        ],
+        "interface_gaps": [
+          "本轮未提供具体轨迹数组或记录 ID，无法提交可执行分析计划。"
+        ],
+        "next_action": "请求相关记录数组及可读方法来源；随后预先定义距离分组与 10 帧距离差，再按记录比较。",
+        "stalled_reason": "当前仅有来源检索结果和测量概述，没有可读相关来源或数组。",
+        "understanding_changed": true
+      },
+      "learning_change": "未增加鱼类行为方法方面的来源知识。澄清了可提出的轨迹问题与当前不能执行该问题之间的区别。",
+      "memory_notes": [],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/01_initial_0_learn_2/result.json",
+      "sha256": "d90e91e5eb060ad4698d7acb3886e9ae5c2ab51eeeb1304286c052d22dc53635"
+    },
+    {
+      "stage": "01_initial_1",
+      "role": "sensorimotor_biologist",
+      "summary": "可把这些材料用于描述二维坐标随帧的变化，但不能据此确定感觉输入、运动意图、行为类别或因果机制。建议先量化两条轨迹的相对位置和逐帧运动，再讨论它们是否符合某种交互模型。",
+      "personal_question": "在记录内，两个追踪标签的相对距离和运动方向如何随帧变化？这些变化是否足以提出可检验的相互运动描述，而不将其命名为感觉引导行为？",
+      "shared_question_update": null,
+      "learning_request": {
+        "needed": true,
+        "gap": "缺少将双鱼二维坐标轨迹转化为谨慎的相对运动学描述、处理追踪误差并区分相关运动与追随行为的基础方法。",
+        "why_now": "这会决定 R07 初步比较应采用哪些可解释变量，并帮助避免把轨迹共变误读为感觉或因果机制。",
+        "queries": [
+          "鱼类双体或群体游动轨迹中，如何定义相对距离、相对方位、速度匹配和方向相关性？",
+          "仅有二维质心坐标时，哪些观测量可以描述追随，哪些额外证据才支持追随或感觉引导？",
+          "动物追踪数据中，未知评分语义与可能身份交换时，如何做稳健性分析？",
+          "鱼类群体运动的局部交互模型如何与观察性轨迹分析区分？"
+        ],
+        "urls": [],
+        "source_ids": [],
+        "record_ids": [],
+        "operations": []
+      },
+      "top_level_analysis_plan": {
+        "kind": "analysis",
+        "question": "描述 R07 全记录内 A/B 的相对距离与逐帧位移大小；不作行为分类。",
+        "record_id": "R07",
+        "start": 1,
+        "stop": 44999,
+        "variables": [
+          {
+            "name": "relative_position",
+            "expression": "positions[:,0,:] - positions[:,1,:]",
+            "meaning": "A 相对 B 的二维位置向量",
+            "units": "原生图像坐标单位"
+          },
+          {
+            "name": "distance",
+            "expression": "norm(relative_position,axis=-1)",
+            "meaning": "A 与 B 的欧氏距离",
+            "units": "原生图像坐标单位"
+          },
+          {
+            "name": "A_step",
+            "expression": "norm(diff(positions[:,0,:],axis=0),axis=-1)",
+            "meaning": "A 相邻帧位移大小",
+            "units": "原生图像坐标单位/帧"
+          },
+          {
+            "name": "B_step",
+            "expression": "norm(diff(positions[:,1,:],axis=0),axis=-1)",
+            "meaning": "B 相邻帧位移大小",
+            "units": "原生图像坐标单位/帧"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "distance",
+            "expression": "distance"
+          },
+          {
+            "name": "A_step",
+            "expression": "A_step"
+          },
+          {
+            "name": "B_step",
+            "expression": "B_step"
+          }
+        ],
+        "groups": [
+          {
+            "name": "all_frames",
+            "where": "isfinite(distance)",
+            "values": [
+              "distance",
+              "A_step",
+              "B_step"
+            ]
+          }
+        ]
+      },
+      "exploration": {
+        "missing_external_facts": [
+          "当前记录的具体实验任务、场景几何、鱼的年龄与准备条件。",
+          "相机帧率和空间标定。",
+          "tracker_score 的定义及记录内身份交换情况。"
+        ],
+        "unselected_definitions": [
+          "是否把方向一致性定义为相邻帧位移向量夹角的余弦，需在控制短位移和追踪噪声后决定。",
+          "是否按记录阶段或分值分层比较，须先确认阶段信息及分值语义。"
+        ],
+        "interface_gaps": [
+          "当前通道未提供知识检索或分析执行工具；已在 learning_request 和 analysis_plan 中提交可执行请求。"
+        ],
+        "next_action": "获取基础方法资料并运行 R07 的距离与逐帧位移摘要，再决定是否扩展到其他记录。",
+        "stalled_reason": "机制解释受缺失任务和感觉输入限制；坐标描述分析仍可继续。",
+        "understanding_changed": true
+      },
+      "learning_change": null,
+      "memory_notes": [
+        {
+          "key": "trajectory_position_is_not_sensorimotor_state",
+          "mastery": "used"
+        }
+      ],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/01_initial_1/result.json",
+      "sha256": "6f0665b4c2c23e935c6ce61fc2bb95acb768bef6eacb441340a8aa76f063cdaf"
+    },
+    {
+      "stage": "01_initial_1_learn_0",
+      "role": "sensorimotor_biologist",
+      "summary": "本轮返回的检索材料没有提供可用的鱼类双体运动学方法证据：结果主要涉及翻译、哲学和遥感；相关检索还出现读取失败或无可读内容。因此我不能把它们当作鱼类运动研究知识。基于任务给出的测量说明，我能保留一个方法学判断：二维追踪坐标可用于定义相对位置与运动学变量，但不能单独证明追随或感觉引导。",
+      "personal_question": {
+        "base": {
+          "id": "personal:sensorimotor_biologist",
+          "owner": "sensorimotor_biologist",
+          "version": 1
+        },
+        "action": "retain",
+        "question": "在记录内，两个追踪标签的相对距离和运动方向如何随帧变化？这些变化是否足以提出可检验的相互运动描述，而不将其命名为感觉引导行为？",
+        "reason": "本轮没有具体轨迹数组或可用运动学来源，尚无依据改变问题范围。",
+        "influenced_by": []
+      },
+      "shared_question_update": null,
+      "learning_request": {
+        "needed": true,
+        "gap": "需要可读且日期合规的鱼类双体/群体轨迹方法来源，尤其是相对方位、速度匹配、方向相关性、追随操作化及追踪误差处理。",
+        "why_now": "这些基础将决定后续记录分析选择哪些变量、时间窗口和稳健性检查，避免将相关运动解释为感觉或因果机制。",
+        "queries": [
+          "fish dyad trajectories operational definitions inter-individual distance bearing velocity matching directional correlation tracking error",
+          "zebrafish pair following behavior trajectory observational evidence versus causal sensory guidance",
+          "animal tracking identity swaps confidence scores negative values robustness sensitivity analysis",
+          "fish collective motion local interaction models observational trajectories lagged response"
+        ],
+        "urls": [],
+        "source_ids": [],
+        "record_ids": [],
+        "operations": []
+      },
+      "top_level_analysis_plan": null,
+      "exploration": {
+        "missing_external_facts": [
+          "可核验的鱼类双体轨迹指标定义与适用范围。",
+          "追踪评分的语义、身份交换风险及稳健性分析依据。",
+          "当前记录的实验任务、场景条件、帧率和物理标定。"
+        ],
+        "unselected_definitions": [
+          "相对速度与方向相关性的差分、平滑和时间窗口定义尚未选择；需结合帧率与追踪质量信息。"
+        ],
+        "interface_gaps": [
+          "本轮材料没有提供可执行的 record_id 或 positions 数组，无法提出基于该记录的实际分析计划。"
+        ],
+        "next_action": "请求补充目标记录数组，并在后续检索中优先寻找可读、日期合规的鱼类双体运动学与追踪方法来源。",
+        "stalled_reason": "本轮返回的知识检索与鱼类轨迹运动学无关，且没有可计算的记录数组。",
+        "understanding_changed": true
+      },
+      "learning_change": "检索内容没有带来鱼类双体运动学方法知识。依据已提供的测量上下文，具体说明了坐标可支持相对运动描述、但不足以识别追随机制。",
+      "memory_notes": [
+        {
+          "key": "trajectory_position_is_not_sensorimotor_state",
+          "mastery": "used"
+        }
+      ],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/01_initial_1_learn_0/result.json",
+      "sha256": "faab264650d129363c0c66d3a1d24c44316e2beb5034669312adc4b45094cfb9"
+    },
+    {
+      "stage": "01_initial_1_learn_1",
+      "role": "sensorimotor_biologist",
+      "summary": "本轮返回的可读来源没有提供鱼类双体轨迹操作定义，也没有解释当前追踪器分数的语义；因此不能据此规定追随行为或质量阈值。\n有一条可用但物种不同的群体运动实例：冲浪黑雁研究重建群体成员轨迹，并分析邻居空间分布和角度偏差；它可作为描述性变量的例子，不能直接移植为斑马鱼双体行为标准。",
+      "personal_question": {
+        "base": {
+          "id": "personal:sensorimotor_biologist",
+          "owner": "sensorimotor_biologist",
+          "version": 1
+        },
+        "action": "retain",
+        "question": "在记录内，两个追踪标签的相对距离和运动方向如何随帧变化？这些变化是否足以提出可检验的相互运动描述，而不将其命名为感觉引导行为？",
+        "reason": "本轮未收到可计算轨迹或鱼类双体方法证据，因此原问题仍适用。",
+        "influenced_by": []
+      },
+      "shared_question_update": null,
+      "learning_request": {
+        "needed": true,
+        "gap": "需要日期合规且可读的鱼类双体轨迹方法来源，尤其是相对方位、速度匹配、方向相关性、追随操作化及追踪误差处理。",
+        "why_now": "这些方法会决定记录分析采用的变量、时间窗口和稳健性检查；当前返回材料只提供跨物种描述性例子。",
+        "queries": [
+          "zebrafish dyad trajectory methods relative bearing speed matching directional correlation following operational definition",
+          "fish pair collective motion trajectory lagged turning response tracking identity error methods",
+          "animal pose tracking two fish identity swaps confidence score validation trajectory robustness"
+        ],
+        "urls": [],
+        "source_ids": [],
+        "record_ids": [],
+        "operations": []
+      },
+      "top_level_analysis_plan": null,
+      "exploration": {
+        "missing_external_facts": [
+          "鱼类双体轨迹中方位、方向相关、速度匹配和追随的日期合规操作化方法。",
+          "目标记录追踪分数与标签身份的验证语义。"
+        ],
+        "unselected_definitions": [
+          "相对方位应以哪条鱼的朝向为参考，以及鱼头朝向是否在坐标中可得。",
+          "方向相关性采用瞬时相似、有限时间窗还是带滞后比较。",
+          "追随是否要求领先鱼先发生运动变化，以及采用何种时间窗和质量规则。"
+        ],
+        "interface_gaps": [
+          "没有提供可引用的记录 ID 或轨迹数组，无法请求具体计算。"
+        ],
+        "next_action": "继续请求鱼类双体方法来源；若取得记录数组，先计算并报告明确定义的相对运动描述。",
+        "stalled_reason": "当前返回材料没有符合目标的鱼类双体方法来源，也没有可计算记录载荷。",
+        "understanding_changed": true
+      },
+      "learning_change": "解释了一个跨物种方法实例：冲浪黑雁轨迹研究用邻居空间分布和角度偏差描述群体组织。它支持把邻居几何和方向偏差作为候选描述量，不支持将其直接称作鱼类追随。",
+      "memory_notes": [
+        {
+          "key": "trajectory_position_is_not_sensorimotor_state",
+          "mastery": "explained"
+        }
+      ],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/01_initial_1_learn_1/result.json",
+      "sha256": "5e4293dec7d02c132f9a8754a47e5fa63cc59eaba8098c52a2db1e82d0dc2853"
+    },
+    {
+      "stage": "01_initial_1_learn_2",
+      "role": "sensorimotor_biologist",
+      "summary": "本轮返回的可读材料没有提供鱼类双体轨迹操作化方法，也没有当前记录的轨迹计算结果。实际读到的跨物种群体运动摘要支持一个有限概念：可以用个体位置、邻居空间分布和角度偏差描述群体运动；这些描述本身不等于追随、感觉引导或因果关系。",
+      "personal_question": {
+        "base": {
+          "id": "personal:sensorimotor_biologist",
+          "owner": "sensorimotor_biologist",
+          "version": 1
+        },
+        "action": "retain",
+        "question": "在记录内，两个追踪标签的相对距离和运动方向如何随帧变化？这些变化是否足以提出可检验的相互运动描述，而不将其命名为感觉引导行为？",
+        "reason": "本轮没有可用轨迹计算或鱼类双体方法来源，尚无依据改变个人问题。",
+        "influenced_by": []
+      },
+      "shared_question_update": null,
+      "learning_request": {
+        "needed": true,
+        "gap": "需要日期合规、可读的鱼类双体轨迹方法全文或可靠方法段落，覆盖相对方位、方向相关、速度匹配、追随的时间滞后操作化，以及身份交换和置信分数验证。",
+        "why_now": "现有来源只有潜水鸭群的摘要性描述，不能决定鱼类双体分析变量、时间窗口或追踪质量稳健性检查。",
+        "queries": [
+          "zebrafish dyad trajectory methods relative bearing speed matching directional correlation following operational definition",
+          "fish pair collective motion trajectory lagged turning response tracking identity error methods",
+          "animal pose tracking two fish identity swaps confidence score validation trajectory robustness"
+        ],
+        "urls": [],
+        "source_ids": [],
+        "record_ids": [],
+        "operations": []
+      },
+      "top_level_analysis_plan": null,
+      "exploration": {
+        "missing_external_facts": [
+          "鱼类双体方法中相对方位、速度匹配、方向相关、追随及身份错误的具体操作化。",
+          "记录的物理尺度、帧率、实验任务、场景条件和追踪分数校准语义。"
+        ],
+        "unselected_definitions": [
+          "相对方位是以哪条鱼的朝向为基准，以及角度范围和前后侧分类边界。",
+          "方向相关或速度匹配使用的平滑、时间窗口和容许阈值。",
+          "追随是否定义为滞后转向响应、持续相对位置，或其他可复现判据。"
+        ],
+        "interface_gaps": [
+          "本轮未提供轨迹数组或记录 ID，无法请求或运行轨迹计算。"
+        ],
+        "next_action": "继续寻找可读的日期合规鱼类双体方法资料；在取得轨迹记录后，先以图像坐标和帧为单位计算相对距离及方向描述。",
+        "stalled_reason": "检索结果中与方法查询相关的鱼类候选无可读内容；可读的群体运动来源研究对象为潜水鸭，且本轮没有轨迹数组。",
+        "understanding_changed": true
+      },
+      "learning_change": "读到一篇2009年跨物种群体运动摘要：它以位置和速度建模个体，并用邻居空间分布及角度偏差描述潜水鸭群。解释后，这支持先区分轨迹几何描述与行为机制归因；没有证据把其判据当作鱼类双体方法。",
+      "memory_notes": [
+        {
+          "key": "trajectory_position_is_not_sensorimotor_state",
+          "mastery": "explained"
+        }
+      ],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/01_initial_1_learn_2/result.json",
+      "sha256": "5d82c95712c24a0326801c5669b44c34b383f51fe29c92f8adf51b0192c53873"
+    },
+    {
+      "stage": "01_initial_2",
+      "role": "nonequilibrium_physicist",
+      "summary": "提出一个可从现有坐标检验的路径级问题：在 R07 中，A、B 的相对距离是否随时间持续变化，且这种变化是否与此前的相对运动有关？这只涉及二维轨迹统计，不等同于鱼的行为阶段、感觉机制或因果互动。",
+      "personal_question": "在 R07 中，当前相对位置和相对位移之外，前 10 帧的平均相对位移是否为下一帧相对位移提供探索性预测信息？",
+      "shared_question_update": null,
+      "learning_request": {
+        "needed": true,
+        "gap": "需要可核验的非平衡路径记忆、状态依赖与预测性比较基础，尤其是有限时间序列中历史特征对后续转移的操作化，以及这类预测关联的解释边界。",
+        "why_now": "F2 只提供特定模型的摘要结论；当前问题要把理论动机转成坐标层面的操作性比较，需补足适用范围与方法依据。",
+        "queries": [
+          "截至 2009 年，非平衡随机过程中的历史依赖或记忆如何操作化，如何区分状态依赖与路径依赖？",
+          "动物群体或成对轨迹的状态转移分析中，如何比较只用当前状态与加入滞后历史变量的预测模型？",
+          "时间相关轨迹数据按时间留出评估的限制，以及滞后特征预测改善不能识别因果互动的经典例子或方法文献"
+        ],
+        "urls": [
+          "https://doi.org/10.1006/jtbi.2002.3065"
+        ],
+        "source_ids": [],
+        "record_ids": [
+          "R07"
+        ],
+        "operations": []
+      },
+      "top_level_analysis_plan": {
+        "kind": "analysis",
+        "question": "在 R07 中，当前相对位置与相对位移之外，前 10 帧平均相对位移能否改善下一帧相对位移的探索性预测？",
+        "record_id": "R07",
+        "variables": [
+          {
+            "name": "relative_position",
+            "expression": "positions[:,0,:]-positions[:,1,:]",
+            "meaning": "A 减 B 的二维相对坐标向量",
+            "units": "原生图像坐标单位"
+          },
+          {
+            "name": "separation",
+            "expression": "norm(relative_position,axis=-1)",
+            "meaning": "两标签坐标间欧氏距离",
+            "units": "原生图像坐标单位"
+          },
+          {
+            "name": "relative_step",
+            "expression": "diff(relative_position,1,axis=0)",
+            "meaning": "相邻帧 A 减 B 的相对位移向量",
+            "units": "原生图像坐标单位/帧"
+          },
+          {
+            "name": "history_step_mean",
+            "expression": "rolling(relative_step,10)",
+            "meaning": "截至当前帧的过去 10 个相对位移的逐坐标平均；首 9 行缺失",
+            "units": "原生图像坐标单位/帧"
+          },
+          {
+            "name": "target_next_step",
+            "expression": "shift(relative_step,-1)",
+            "meaning": "下一帧的相对位移向量",
+            "units": "原生图像坐标单位/帧"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "distance_summary",
+            "expression": "separation"
+          },
+          {
+            "name": "next_step_prediction",
+            "expression": "target_next_step"
+          }
+        ],
+        "groups": [
+          {
+            "name": "finite_aligned_rows",
+            "where": "isfinite(separation)&isfinite(target_next_step[:,0])&isfinite(target_next_step[:,1])&isfinite(history_step_mean[:,0])&isfinite(history_step_mean[:,1])",
+            "values": [
+              "separation",
+              "relative_step",
+              "history_step_mean",
+              "target_next_step"
+            ]
+          }
+        ],
+        "model": {
+          "target": "target_next_step",
+          "features": [
+            "relative_position",
+            "relative_step",
+            "history_step_mean"
+          ],
+          "train_fraction": 0.7
+        }
+      },
+      "exploration": {
+        "missing_external_facts": [
+          "R07 的实验任务、环境几何、光照和鱼的年龄/准备条件未知。",
+          "追踪标签的质量码语义及身份稳定性未知。",
+          "没有独立帧率或空间校准。"
+        ],
+        "unselected_definitions": [
+          "前 10 帧历史窗口是暂定研究者定义；可比较其他窗口长度。",
+          "相对位移使用逐帧差分；是否需要对坐标或位移平滑尚未决定。",
+          "若身份交换可能存在，当前 A 减 B 向量的连续性需要另行评估。"
+        ],
+        "interface_gaps": [
+          "尚未获得完整记录的计算结果；只有指定抽样窗口。",
+          "计划中的滚动均值与 shift 对齐结果尚未由控制器返回。"
+        ],
+        "next_action": "先请求路径记忆与时间序列比较基础知识，并执行 R07 全记录的操作性坐标分析。",
+        "stalled_reason": "目前不阻塞：可以明确问题并给出可执行定义；机制解释受缺失实验事实限制。",
+        "understanding_changed": true
+      },
+      "learning_change": null,
+      "memory_notes": [
+        {
+          "key": "trajectory_observation_limits",
+          "mastery": "used"
+        },
+        {
+          "key": "group_state_history_model",
+          "mastery": "explained"
+        }
+      ],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/01_initial_2/result.json",
+      "sha256": "ca1f30df180aab546080a94cfd11905250b352bc03c60b05d2cd9b48430edf13"
+    },
+    {
+      "stage": "01_initial_2_learn_0",
+      "role": "nonequilibrium_physicist",
+      "summary": "检索返回的材料没有提供可用的非平衡记忆或轨迹预测方法依据：返回的可读摘要与本问题无关，指定 DOI 也未读到内容。R07 尚未计算，因此目前不能判断前 10 帧平均相对位移是否提供预测信息。",
+      "personal_question": {
+        "base": {
+          "id": "personal:nonequilibrium_physicist",
+          "owner": "nonequilibrium_physicist",
+          "version": 1
+        },
+        "action": "retain",
+        "question": "在 R07 中，当前相对位置和相对位移之外，前 10 帧的平均相对位移是否为下一帧相对位移提供探索性预测信息？",
+        "reason": "本轮未得到足以改变问题的相关理论证据，且未计算 R07。",
+        "influenced_by": []
+      },
+      "shared_question_update": null,
+      "learning_request": {
+        "needed": true,
+        "gap": "需要可核验的非平衡路径依赖/状态依赖区分，以及有限轨迹中加入滞后变量的预测比较方法和因果解释边界。",
+        "why_now": "本轮检索只返回主题不相关的摘要，指定 DOI 未读到内容，无法为操作性比较提供依据；R07 预测计算也尚未发生。",
+        "queries": [
+          "非平衡随机过程路径依赖与状态依赖的可操作定义，尤其是条件于当前状态后历史是否仍提供信息",
+          "动物成对轨迹中当前状态模型与滞后历史模型的时间顺序预测比较方法",
+          "时间相关数据的时间留出预测评估，以及预测改进与因果互动识别的区别"
+        ],
+        "urls": [
+          "https://doi.org/10.1006/jtbi.2002.3065"
+        ],
+        "source_ids": [],
+        "record_ids": [
+          "R07"
+        ],
+        "operations": []
+      },
+      "top_level_analysis_plan": null,
+      "exploration": {
+        "missing_external_facts": [
+          "所请求的方法基础文献未从本轮返回资料中获得；任务条件、物理单位、帧率和追踪身份稳定性也未知。"
+        ],
+        "unselected_definitions": [
+          "尚未指定相对位移的方向约定、差分对齐方式、有效样本质量掩码，以及“前10帧平均”的确切索引范围。"
+        ],
+        "interface_gaps": [
+          "当前输入没有可计算数组内容；R07 仅有记录元数据，未返回计算结果。"
+        ],
+        "next_action": "请求 R07 计算：比较仅含当前相对位置和相对位移的基线，与再加入前10帧平均相对位移的模型，对下一帧相对位移进行按时间顺序留出评估；计算前需明确差分对齐和质量掩码。",
+        "stalled_reason": "理论检索返回内容不相关且记录计算未执行，因而不能对预测信息作经验判断。",
+        "understanding_changed": false
+      },
+      "learning_change": "未形成基于本轮返回资料的新学习。资料与请求主题不匹配，R07 也未进行计算。",
+      "memory_notes": [],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/01_initial_2_learn_0/result.json",
+      "sha256": "5ce7e6ed52476fa8619e2e42de28806b6e740d888cd111ba12a40fbc0bb8979e"
+    },
+    {
+      "stage": "01_initial_2_learn_1",
+      "role": "nonequilibrium_physicist",
+      "summary": "本轮实际返回的文献材料与问题无关，且 R07 尚无计算结果。因此没有关于路径依赖或预测改进的实证结论。可以把待检验问题操作化为：在相同的时间顺序留出区间上，比较仅含当前状态的模型与再加入前 10 帧平均相对位移的模型，对下一帧相对位移的预测误差；若后者误差更低，只说明这段历史在该定义下有额外预测信息，不足以识别因果互动。",
+      "personal_question": {
+        "base": {
+          "id": "personal:nonequilibrium_physicist",
+          "owner": "nonequilibrium_physicist",
+          "version": 1
+        },
+        "action": "retain",
+        "question": "在 R07 中，当前相对位置和相对位移之外，前 10 帧的平均相对位移是否为下一帧相对位移提供探索性预测信息？",
+        "reason": "本轮没有可用计算结果或相关文献，尚无理由改变原问题。",
+        "influenced_by": []
+      },
+      "shared_question_update": null,
+      "learning_request": {
+        "needed": true,
+        "gap": "需要可核验的非平衡过程历史依赖定义，以及时间顺序预测比较和因果解释边界的来源。",
+        "why_now": "本轮检索仅返回不相关摘要，指定 DOI 未读到内容，且 R07 尚未执行预测计算。",
+        "queries": [
+          "非平衡随机过程的路径依赖与状态依赖如何操作化，尤其是给定当前状态后历史是否仍提供信息",
+          "动物成对轨迹中当前状态模型与滞后历史模型的时间顺序预测比较方法",
+          "时间相关数据的时间留出评估中，预测提升与因果互动识别的区别"
+        ],
+        "urls": [
+          "https://doi.org/10.1006/jtbi.2002.3065"
+        ],
+        "source_ids": [],
+        "record_ids": [
+          "R07"
+        ],
+        "operations": []
+      },
+      "top_level_analysis_plan": null,
+      "exploration": {
+        "missing_external_facts": [
+          "路径依赖及状态依赖的可核验理论定义与适用范围。",
+          "任务与场景、帧率和物理尺度、追踪身份稳定性及 tracker 代码含义。"
+        ],
+        "unselected_definitions": [
+          "下一帧相对位移可定义为两对象位移之差；滞后特征可定义为此前 10 帧相对位移的平均值。需明确坐标符号约定、边界行排除与缺失质量码处理后再运行。"
+        ],
+        "interface_gaps": [
+          "当前输入未提供 R07 数组本体的计算结果；滞后变量模型与误差比较尚未执行。"
+        ],
+        "next_action": "请求执行 R07 的时间顺序预测比较：以当前相对位置和当前相对位移预测下一帧相对位移，再加入前 10 帧平均相对位移；保持相同有效行与留出区间。",
+        "stalled_reason": "本轮只有记录元数据，没有计算结果；检索材料不相关，无法建立来源支持的理论论证。",
+        "understanding_changed": false
+      },
+      "learning_change": "没有形成基于新读材料的知识变化。可用的操作性分析思路来自任务给定的计算接口，而非本轮检索所得知识：在相同时间留出段比较嵌套预测模型，并把改善限定为预测信息。",
+      "memory_notes": [],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/01_initial_2_learn_1/result.json",
+      "sha256": "280a5466190dec0fdf6f0e4a4cf7df6d31ec14ea3ac83d61769b1a102d87ca15"
+    },
+    {
+      "stage": "01_initial_2_learn_2",
+      "role": "nonequilibrium_physicist",
+      "summary": "本轮没有得到与非平衡轨迹历史依赖相关的可用文献，也没有对 R07 执行预测计算。现有材料支持提出可检验的预测比较，但不能据此判断历史是否有预测增益。",
+      "personal_question": {
+        "base": {
+          "id": "personal:nonequilibrium_physicist",
+          "owner": "nonequilibrium_physicist",
+          "version": 1
+        },
+        "action": "retain",
+        "question": "在 R07 中，当前相对位置和相对位移之外，前 10 帧的平均相对位移是否为下一帧相对位移提供探索性预测信息？",
+        "reason": "本轮没有相关来源或计算结果足以支持改变研究问题。",
+        "influenced_by": []
+      },
+      "shared_question_update": null,
+      "learning_request": {
+        "needed": true,
+        "gap": "需要可核验的历史依赖定义，以及时间顺序预测比较与因果解释边界的来源。",
+        "why_now": "本轮返回材料不相关，指定 DOI 未读到内容，且 R07 尚无预测计算结果。",
+        "queries": [
+          "非平衡随机过程如何定义路径依赖：给定当前状态后，历史是否仍包含关于下一状态的信息",
+          "动物成对轨迹中比较当前状态模型和滞后历史模型的时间顺序预测方法",
+          "时间相关数据中预测提升为何不能单独识别因果互动"
+        ],
+        "urls": [
+          "https://doi.org/10.1006/jtbi.2002.3065"
+        ],
+        "source_ids": [],
+        "record_ids": [
+          "R07"
+        ],
+        "operations": []
+      },
+      "top_level_analysis_plan": null,
+      "exploration": {
+        "missing_external_facts": [
+          "可核验的历史依赖操作定义与预测、因果解释边界来源。",
+          "R07 的任务、场景条件、物理尺度、帧率及追踪身份稳定性未知。"
+        ],
+        "unselected_definitions": [
+          "可将下一帧相对位移作为预测目标，并将前 10 帧平均相对位移作为历史特征；当前尚未实施或比较该定义。"
+        ],
+        "interface_gaps": [
+          "本阶段未返回已执行的 R07 分析结果。"
+        ],
+        "next_action": "执行 R07 的状态模型与加入滞后历史特征模型的时间顺序预测比较；继续检索可核验的基础来源。",
+        "stalled_reason": "返回的文献摘要与问题无关，且尚未计算 R07 的预测比较。",
+        "understanding_changed": false
+      },
+      "learning_change": "没有形成新的、由相关外部来源支持的学习。可操作的问题仍是：在控制当前相对位置与位移后，过去 10 帧的平均相对位移是否改善对下一帧相对位移的时间顺序预测。",
+      "memory_notes": [],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/01_initial_2_learn_2/result.json",
+      "sha256": "275ed8408d0820b067b62ea7cf01ce0ff8e200fd29a0b8c4da562fbd1cc2aec2"
+    },
+    {
+      "stage": "r1_exchange_0",
+      "role": "animal_behaviorist",
+      "summary": "把个人问题保留为近、远距离状态后的10帧距离变化比较，并推进一个重要条件：相同的距离缩小可由不同的单体运动组合产生，因此不能仅看距离差判断两条轨迹是否共同趋近。R07元数据显示坐标完整，但本轮没有实际计算结果；历史依赖检索也没有提供相关可用知识。",
+      "personal_question": {
+        "base": {
+          "id": "personal:animal_behaviorist",
+          "owner": "animal_behaviorist",
+          "version": 1
+        },
+        "action": "retain",
+        "question": "在每条记录内，A-B距离较近的时刻之后10帧，距离变化是否比距离较远的时刻更低？",
+        "reason": "同伴提出的相对运动描述提示应并列关注单体位移，但不改变原问题关于距离转移的核心；当前也没有结果支持改写。",
+        "influenced_by": [
+          {
+            "id": "personal:sensorimotor_biologist",
+            "owner": "sensorimotor_biologist",
+            "version": 1
+          },
+          {
+            "id": "personal:nonequilibrium_physicist",
+            "owner": "nonequilibrium_physicist",
+            "version": 1
+          }
+        ]
+      },
+      "shared_question_update": {
+        "base": null,
+        "action": "propose",
+        "question": "在R07中，记录内较近与较远的A-B距离状态之后10帧，距离变化分布是否不同？并列描述A、B各自位移，以区分距离转移与单体运动贡献。",
+        "reason": "该问题结合可执行的距离比较与同伴提出的相对运动描述，同时不把结果预先命名为追随、吸引或感觉引导。",
+        "influenced_by": [
+          {
+            "id": "personal:animal_behaviorist",
+            "owner": "animal_behaviorist",
+            "version": 1
+          },
+          {
+            "id": "personal:sensorimotor_biologist",
+            "owner": "sensorimotor_biologist",
+            "version": 1
+          },
+          {
+            "id": "personal:nonequilibrium_physicist",
+            "owner": "nonequilibrium_physicist",
+            "version": 1
+          }
+        ]
+      },
+      "learning_request": {
+        "needed": true,
+        "gap": "需要2010年前可读且相关的鱼类双体轨迹方法资料，说明邻近、趋近、追随等定义及其测量条件。",
+        "why_now": "现有跨物种鸭群摘要只能示范描述邻居几何，无法核验鱼类双体的操作标准；检索历史依赖的结果也不相关。",
+        "queries": [
+          "2010年前斑马鱼双体自由游动研究如何从质心轨迹定义成对距离或邻近状态？",
+          "2010年前鱼类双体行为研究如何操作化趋近、跟随及运动方向关联，并区分观察指标与因果机制？",
+          "两条动物轨迹的距离变化与各自位移如何共同报告，以避免将单体运动解释成双体互动？"
+        ],
+        "urls": [],
+        "source_ids": [],
+        "record_ids": [],
+        "operations": []
+      },
+      "top_level_analysis_plan": {
+        "kind": "analysis",
+        "question": "在R07中，较近与较远距离状态之后10帧的距离变化是否不同，同时描述两标签各自10帧位移大小？",
+        "record_id": "R07",
+        "start": 0,
+        "stop": 44999,
+        "variables": [
+          {
+            "name": "distance",
+            "expression": "norm(positions[:,0,:]-positions[:,1,:],axis=-1)",
+            "meaning": "A与B坐标间二维欧氏距离",
+            "units": "原生图像坐标单位"
+          },
+          {
+            "name": "change_10",
+            "expression": "shift(distance,-10)-distance",
+            "meaning": "10帧后距离减当前距离，有向距离变化",
+            "units": "原生图像坐标单位/10帧"
+          },
+          {
+            "name": "A_displacement_10",
+            "expression": "norm(shift(positions[:,0,:],-10)-positions[:,0,:],axis=-1)",
+            "meaning": "A在10帧间隔上的位移大小",
+            "units": "原生图像坐标单位/10帧"
+          },
+          {
+            "name": "B_displacement_10",
+            "expression": "norm(shift(positions[:,1,:],-10)-positions[:,1,:],axis=-1)",
+            "meaning": "B在10帧间隔上的位移大小",
+            "units": "原生图像坐标单位/10帧"
+          },
+          {
+            "name": "valid_pair",
+            "expression": "isfinite(distance)&isfinite(change_10)&isfinite(A_displacement_10)&isfinite(B_displacement_10)",
+            "meaning": "当前及10帧后两条坐标均可用于配对",
+            "units": "boolean"
+          },
+          {
+            "name": "near_threshold",
+            "expression": "quantile(distance,0.25)",
+            "meaning": "R07全记录距离第25分位数",
+            "units": "原生图像坐标单位"
+          },
+          {
+            "name": "far_threshold",
+            "expression": "quantile(distance,0.75)",
+            "meaning": "R07全记录距离第75分位数",
+            "units": "原生图像坐标单位"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "distance",
+            "expression": "distance"
+          },
+          {
+            "name": "future_distance_change",
+            "expression": "change_10"
+          },
+          {
+            "name": "individual_displacements",
+            "expression": "A_displacement_10"
+          }
+        ],
+        "groups": [
+          {
+            "name": "near",
+            "where": "valid_pair&(distance<=near_threshold)",
+            "values": [
+              "distance",
+              "change_10",
+              "A_displacement_10",
+              "B_displacement_10"
+            ]
+          },
+          {
+            "name": "far",
+            "where": "valid_pair&(distance>=far_threshold)",
+            "values": [
+              "distance",
+              "change_10",
+              "A_displacement_10",
+              "B_displacement_10"
+            ]
+          }
+        ]
+      },
+      "exploration": {
+        "missing_external_facts": [
+          "鱼类双体轨迹方法中邻近、趋近、追随和方向关联的日期合规操作化来源。",
+          "R07的具体实验任务、场景几何、帧率、物理尺度及追踪身份稳定性。"
+        ],
+        "unselected_definitions": [
+          "四分位近远分组与连续距离分析的优先级尚未比较；本轮选择四分位作为探索性首轮定义。",
+          "10帧窗口尚无生物时间标定，仅是帧索引上的操作选择。"
+        ],
+        "interface_gaps": [
+          "R07虽有元数据和数组路径记录，但尚无控制器计算返回；当前不能报告数值结果。"
+        ],
+        "next_action": "执行R07近远状态后的10帧距离变化分析，并并列返回A/B各自10帧位移；同时继续检索可读的鱼类双体操作化方法。",
+        "stalled_reason": "机制解释因缺少任务和独立标签而暂停；记录级坐标分析仍可继续。",
+        "understanding_changed": true
+      },
+      "learning_change": null,
+      "memory_notes": [
+        {
+          "key": "coordinates_do_not_identify_behavior",
+          "mastery": "used"
+        }
+      ],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/r1_exchange_0/result.json",
+      "sha256": "1cae4c6024fa7207ba416cf3b2c0e77ae5baaf6f5017e98d327c52f9f6376e8a"
+    },
+    {
+      "stage": "r1_exchange_0_learn_0",
+      "role": "animal_behaviorist",
+      "summary": "本轮返回的材料没有提供可读且符合日期限制的鱼类双体行为操作定义，也没有给出本轮新增的轨迹计算。可以确定的是，距离变化不能单独说明哪条轨迹在移动；若继续比较近、远状态，应同时报告两条轨迹各自的位移，并将结果限定为轨迹描述。",
+      "personal_question": {
+        "base": {
+          "id": "personal:animal_behaviorist",
+          "owner": "animal_behaviorist",
+          "version": 1
+        },
+        "action": "retain",
+        "question": "在每条记录内，A-B距离较近的时刻之后10帧，距离变化是否比距离较远的时刻更低？",
+        "reason": "本轮没有轨迹数组或计算结果，也没有获得足以改变该可计算问题的鱼类方法依据。",
+        "influenced_by": []
+      },
+      "shared_question_update": {
+        "base": {
+          "id": "shared:discussion",
+          "owner": "shared",
+          "version": 1
+        },
+        "action": "retain",
+        "question": "在R07中，记录内较近与较远的A-B距离状态之后10帧，距离变化分布是否不同？并列描述A、B各自位移，以区分距离转移与单体运动贡献。",
+        "reason": "该问题仍是清楚的描述性比较；本轮材料没有计算结果来支持修订。",
+        "influenced_by": []
+      },
+      "learning_request": {
+        "needed": true,
+        "gap": "需要可读且符合2010-01-01日期边界的鱼类双体轨迹方法来源，核验邻近、趋近、追随和方向关联的定义及测量条件。",
+        "why_now": "本轮返回内容均不相关，而现有轨迹问题仍可在获得数组后作描述性计算；方法依据缺口限制行为命名，不妨碍明确坐标指标。",
+        "queries": [
+          "2010年前斑马鱼双体自由游动研究如何从质心轨迹定义成对距离或邻近状态？",
+          "2010年前鱼类双体行为研究如何操作化趋近、跟随及运动方向关联，并区分观察指标与因果机制？",
+          "两条鱼的轨迹研究如何同时报告配对距离变化及各自位移？"
+        ],
+        "urls": [],
+        "source_ids": [],
+        "record_ids": [],
+        "operations": []
+      },
+      "top_level_analysis_plan": null,
+      "exploration": {
+        "missing_external_facts": [
+          "可读且日期合规的鱼类双体行为指标方法来源。",
+          "当前记录的具体实验任务和场景条件。"
+        ],
+        "unselected_definitions": [
+          "近、远距离分组阈值尚未在当前返回结果中实际采用；此前提议的记录内第25和第75分位数仍可作为探索性选择。"
+        ],
+        "interface_gaps": [
+          "本轮返回没有提供R07坐标数组或分析输出。"
+        ],
+        "next_action": "请求相关鱼类方法资料，并在获得R07数组后执行预先明确的近远距离转移比较，附报两标签位移。",
+        "stalled_reason": "文献检索返回内容不相关，且没有轨迹数组可计算；这限制方法论证和当前经验比较，不构成对任何假设的反证。",
+        "understanding_changed": false
+      },
+      "learning_change": "理解没有实质改变。检索返回的材料不相关，因而没有学到鱼类双体行为指标的外部操作标准；保留既有结论：距离转移不识别单体运动贡献或互动机制。",
+      "memory_notes": [],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/r1_exchange_0_learn_0/result.json",
+      "sha256": "befb403c7202abe9f85f1071b25c7f0159bec2147dce4ba2e4a8bd3cbd840a2d"
+    },
+    {
+      "stage": "r1_exchange_0_learn_1",
+      "role": "animal_behaviorist",
+      "summary": "本轮检索未找到符合日期边界且可读的鱼类双体轨迹方法来源，因此没有学到可用于判定邻近、趋近、追随或方向关联的文献定义。已筛选的测量背景仍支持继续提出不带行为命名的坐标比较；但本轮没有取得或计算轨迹数组，不能报告经验结果。",
+      "personal_question": {
+        "base": {
+          "id": "personal:animal_behaviorist",
+          "owner": "animal_behaviorist",
+          "version": 1
+        },
+        "action": "retain",
+        "question": "在每条记录内，A-B距离较近的时刻之后10帧，距离变化是否比距离较远的时刻更低？",
+        "reason": "本轮没有鱼类方法依据或轨迹计算结果，尚无理由改变原有可检验的距离比较问题。",
+        "influenced_by": []
+      },
+      "shared_question_update": {
+        "base": {
+          "id": "shared:discussion",
+          "owner": "shared",
+          "version": 1
+        },
+        "action": "retain",
+        "question": "在R07中，记录内较近与较远的A-B距离状态之后10帧，距离变化分布是否不同？并列描述A、B各自位移，以区分距离转移与单体运动贡献。",
+        "reason": "本轮来源与计算都没有补充足以修订共享问题的证据；该问题仍可作为明确的探索性坐标比较。",
+        "influenced_by": []
+      },
+      "learning_request": {
+        "needed": true,
+        "gap": "需要可读且符合2010-01-01排除边界的鱼类双体轨迹方法来源，以核验邻近、趋近、追随及方向关联的操作定义和测量条件。",
+        "why_now": "本轮返回来源均不相关，且没有R07数组可计算；外部方法依据缺口限制行为命名，但不妨碍随后开展明确的坐标描述。",
+        "queries": [
+          "2010年前斑马鱼双体自由游动研究如何从质心轨迹定义配对距离或邻近状态？",
+          "2010年前鱼类双体行为研究如何操作化趋近、跟随及运动方向关联，并区分观察指标与因果机制？",
+          "鱼类双体轨迹研究如何同时报告配对距离变化及各自位移？"
+        ],
+        "urls": [],
+        "source_ids": [],
+        "record_ids": [],
+        "operations": []
+      },
+      "top_level_analysis_plan": null,
+      "exploration": {
+        "missing_external_facts": [
+          "符合日期边界且可读的鱼类双体轨迹方法来源。",
+          "R07实验任务、场景条件、物理尺度、帧率及标签身份稳定性。"
+        ],
+        "unselected_definitions": [
+          "近、远分组阈值；既有候选方案是记录内第25和第75距离分位数。",
+          "有效坐标掩码及10帧后配对规则；本轮未取得数组，尚未落实。"
+        ],
+        "interface_gaps": [
+          "本轮材料未提供可用于计算的轨迹数组或已计算结果。"
+        ],
+        "next_action": "保留共享的R07近远状态比较问题；取得数组后先按明确掩码和滞后规则计算距离变化及两标签位移，同时继续寻找日期合规的方法来源。",
+        "stalled_reason": "已返回的可读来源与鱼类轨迹方法无关，且本轮没有记录数组；检索失败不构成行为定义不存在的证据。",
+        "understanding_changed": true
+      },
+      "learning_change": "没有新增关于鱼类邻近、趋近、追随或方向关联定义的来源知识。用现有筛选背景解释了一个坐标限制：距离变化不分解两标签各自的运动贡献。该解释来自已给出的研究记录与测量背景，不是本轮新文献提供的定义。",
+      "memory_notes": [
+        {
+          "key": "coordinates_do_not_identify_behavior",
+          "mastery": "used"
+        }
+      ],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/r1_exchange_0_learn_1/result.json",
+      "sha256": "3a823cec37e0b641cbe75432bedf07c179b51aaa0facd14eb4f66889a1931f5c"
+    },
+    {
+      "stage": "r1_exchange_1",
+      "role": "sensorimotor_biologist",
+      "summary": "把可观察的距离转移、各标签位移和坐标运动方向相似度区分开。建议先完成R07距离比较；任何方向相似度都只解释为质心坐标运动描述，不作为鱼体朝向或追随证据。",
+      "personal_question": {
+        "base": {
+          "id": "personal:sensorimotor_biologist",
+          "owner": "sensorimotor_biologist",
+          "version": 1
+        },
+        "action": "revise",
+        "question": "在R07中，两个追踪标签的相对距离、各自位移及坐标位移方向相似度如何随帧变化？这些坐标描述是否能区分距离转移与共同运动，而不将其命名为感觉引导行为？",
+        "reason": "同伴提出距离变化无法识别单体运动贡献；同时R07已有完整位置数组元数据。将问题收窄到R07并明确分开距离、个体位移和坐标方向相似度，使运动学问题更可执行。方向相似度仍只是候选描述量。",
+        "influenced_by": [
+          {
+            "id": "personal:animal_behaviorist",
+            "owner": "animal_behaviorist",
+            "version": 1
+          },
+          {
+            "id": "shared:discussion",
+            "owner": "shared",
+            "version": 1
+          }
+        ]
+      },
+      "shared_question_update": {
+        "base": {
+          "id": "shared:discussion",
+          "owner": "shared",
+          "version": 1
+        },
+        "action": "revise",
+        "question": "在R07中，记录内较近与较远的A-B距离状态之后10帧，距离变化分布是否不同？并列描述A、B各自位移；若计算方向相似度，将其限定为坐标位移方向描述，不解释为鱼体朝向或追随。",
+        "reason": "保留可执行的近远状态比较和单体位移并列报告，并明确方向相似度的可观察范围，避免将图像平面运动方向扩展成感觉运动状态。",
+        "influenced_by": [
+          {
+            "id": "shared:discussion",
+            "owner": "shared",
+            "version": 1
+          },
+          {
+            "id": "personal:sensorimotor_biologist",
+            "owner": "sensorimotor_biologist",
+            "version": 1
+          }
+        ]
+      },
+      "learning_request": {
+        "needed": true,
+        "gap": "仍缺少日期合规且可读的鱼类双体轨迹方法，尤其是方向相似度、短位移噪声处理和追随判据的验证方式。",
+        "why_now": "若R07分析扩展到方向相似度，需要知道鱼类研究中这些指标的具体操作范围；现有可读跨物种材料仅为潜水鸭群描述。",
+        "queries": [
+          "2010年以前鱼类双体轨迹研究如何定义坐标运动方向相关、相对方位和追随滞后？",
+          "鱼类轨迹研究如何处理低速或短位移样本中的方向角噪声？",
+          "二维质心轨迹何种额外证据可将坐标方向相关解释为鱼体朝向或感觉引导行为？"
+        ],
+        "urls": [],
+        "source_ids": [],
+        "record_ids": [],
+        "operations": []
+      },
+      "top_level_analysis_plan": {
+        "kind": "analysis",
+        "question": "在R07中比较记录内较近与较远距离状态之后10帧的距离变化，并描述A、B各自10帧位移大小。",
+        "record_id": "R07",
+        "start": 0,
+        "stop": 44999,
+        "variables": [
+          {
+            "name": "distance",
+            "expression": "norm(positions[:,0,:]-positions[:,1,:],axis=-1)",
+            "meaning": "A与B坐标间二维欧氏距离",
+            "units": "原生图像坐标单位"
+          },
+          {
+            "name": "change_10",
+            "expression": "shift(distance,-10)-distance",
+            "meaning": "10帧后距离减当前距离",
+            "units": "原生图像坐标单位/10帧"
+          },
+          {
+            "name": "A_displacement_10",
+            "expression": "norm(shift(positions[:,0,:],-10)-positions[:,0,:],axis=-1)",
+            "meaning": "A在10帧间隔上的位移大小",
+            "units": "原生图像坐标单位/10帧"
+          },
+          {
+            "name": "B_displacement_10",
+            "expression": "norm(shift(positions[:,1,:],-10)-positions[:,1,:],axis=-1)",
+            "meaning": "B在10帧间隔上的位移大小",
+            "units": "原生图像坐标单位/10帧"
+          },
+          {
+            "name": "valid_pair",
+            "expression": "isfinite(distance)&isfinite(change_10)&isfinite(A_displacement_10)&isfinite(B_displacement_10)",
+            "meaning": "当前与10帧后两标签坐标均有限",
+            "units": "boolean"
+          },
+          {
+            "name": "near_threshold",
+            "expression": "quantile(distance,0.25)",
+            "meaning": "R07全记录距离第25分位数",
+            "units": "原生图像坐标单位"
+          },
+          {
+            "name": "far_threshold",
+            "expression": "quantile(distance,0.75)",
+            "meaning": "R07全记录距离第75分位数",
+            "units": "原生图像坐标单位"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "distance",
+            "expression": "distance"
+          },
+          {
+            "name": "future_distance_change",
+            "expression": "change_10"
+          },
+          {
+            "name": "individual_displacements",
+            "expression": "A_displacement_10"
+          }
+        ],
+        "groups": [
+          {
+            "name": "near",
+            "where": "valid_pair&(distance<=near_threshold)",
+            "values": [
+              "distance",
+              "change_10",
+              "A_displacement_10",
+              "B_displacement_10"
+            ]
+          },
+          {
+            "name": "far",
+            "where": "valid_pair&(distance>=far_threshold)",
+            "values": [
+              "distance",
+              "change_10",
+              "A_displacement_10",
+              "B_displacement_10"
+            ]
+          }
+        ]
+      },
+      "exploration": {
+        "missing_external_facts": [
+          "R07的任务与场景条件、帧率、物理标定以及A/B身份稳定性未核实。",
+          "tracker输出的语义未记录，不能把它作为校准概率或质量阈值。"
+        ],
+        "unselected_definitions": [
+          "方向相似度可用相邻帧位移向量夹角余弦定义，但短位移阈值和平滑窗口尚未确定。",
+          "近远条件可用R07记录内距离第25和第75分位数定义；这只是探索性分组，不是生物学阈值。"
+        ],
+        "interface_gaps": [
+          "虽然R07元数据和数组路径已提供，本轮仍没有返回距离转移或单体位移的计算结果。"
+        ],
+        "next_action": "优先运行共享问题中的R07近远状态比较，并返回两组10帧有向距离变化及A、B各自10帧位移分布；方向相似度可作为次要描述，并报告其对低位移样本处理的敏感性。",
+        "stalled_reason": "坐标分析未因理论资料缺失而停滞；当前阻碍是尚无控制器计算结果。机制分支则受缺失的任务、姿态和身份信息限制。",
+        "understanding_changed": true
+      },
+      "learning_change": null,
+      "memory_notes": [],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/r1_exchange_1/result.json",
+      "sha256": "b78be526e80354338de4a64bddffeda0539123b56a9c0ce90ae515c3a2b5f335"
+    },
+    {
+      "stage": "r1_exchange_1_learn_0",
+      "role": "sensorimotor_biologist",
+      "summary": "本轮没有取得可读且日期合规的鱼类双体轨迹方法来源，因而没有增加关于方向相似度、短位移噪声或追随判据的文献知识。仍可把 R07 的坐标位移方向相似度作为独立的探索性描述量；它不能单独表示鱼体朝向、追随或感觉引导。",
+      "personal_question": {
+        "base": {
+          "id": "personal:sensorimotor_biologist",
+          "owner": "sensorimotor_biologist",
+          "version": 2
+        },
+        "action": "retain",
+        "question": "在R07中，两个追踪标签的相对距离、各自位移及坐标位移方向相似度如何随帧变化？这些坐标描述是否能区分距离转移与共同运动，而不将其命名为感觉引导行为？",
+        "reason": "本轮没有取得相关方法来源或轨迹数组，尚无理由更改既有个人问题；将方向相似度继续视为候选坐标描述量。",
+        "influenced_by": []
+      },
+      "shared_question_update": null,
+      "learning_request": {
+        "needed": true,
+        "gap": "日期合规、可读的鱼类双体轨迹方法，尤其是方向相关的操作定义、低速/短位移方向噪声处理，以及把轨迹相关验证为追随或感觉引导所需的额外测量或设计。",
+        "why_now": "R07 的坐标方向相似度可被定义为候选描述量，但目前缺少领域方法依据来选择有效位移阈值或解释范围。",
+        "queries": [
+          "2010年以前鱼类双体轨迹研究中坐标运动方向相关、相对方位和追随滞后的具体操作定义是什么？",
+          "鱼类轨迹分析如何处理低速或短位移导致的方向角误差，并如何选择阈值或做敏感性分析？",
+          "将二维质心轨迹方向相关解释为鱼体朝向、追随或感觉引导，需要哪些姿态测量、行为标签或实验操控？"
+        ],
+        "urls": [],
+        "source_ids": [],
+        "record_ids": [],
+        "operations": []
+      },
+      "top_level_analysis_plan": null,
+      "exploration": {
+        "missing_external_facts": [
+          "鱼类双体方向相关与追随的日期合规方法依据；短位移噪声处理依据。",
+          "R07 的帧率、物理尺度、实验任务和场景条件未核实。"
+        ],
+        "unselected_definitions": [
+          "方向相似度可取单位位移向量点积，但对零位移如何定义，以及最小位移阈值如何选，尚未决定。",
+          "近、远距离分位数条件及10帧滞后比较沿用共享问题中的候选定义，尚未取得计算结果。"
+        ],
+        "interface_gaps": [
+          "本轮输入没有提供可执行的 R07 数组，也没有可用的计算结果。"
+        ],
+        "next_action": "保留共享的近远距离转移问题；若取得数组，先计算有向距离变化及 A、B 个体位移，再单独评估方向相似度并报告位移阈值敏感性。",
+        "stalled_reason": "本轮检索返回内容与鱼类运动方法无关，且没有 R07 数组可实际计算。",
+        "understanding_changed": true
+      },
+      "learning_change": "本轮只把坐标位移方向相似度明确为一个可选、可计算的运动学定义，并区分它与鱼体朝向或追随判断；没有获得支持该定义为鱼类领域通行方法的来源。",
+      "memory_notes": [],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/r1_exchange_1_learn_0/result.json",
+      "sha256": "502ce511f075790e65a4366c4958f23bcf9532d340de9690d474c03def6c2e5f"
+    },
+    {
+      "stage": "r1_exchange_2",
+      "role": "nonequilibrium_physicist",
+      "summary": "保留我的个人问题：在R07中，控制当前相对位置和相对位移后，前10帧平均相对位移是否提供下一帧相对位移的探索性预测信息。现有材料没有计算结果或相关理论来源，不能判断有无预测增益。建议把它作为共享距离转移比较之后的独立分支，并明确历史特征与预测目标的帧索引对齐。",
+      "personal_question": {
+        "base": {
+          "id": "personal:nonequilibrium_physicist",
+          "owner": "nonequilibrium_physicist",
+          "version": 1
+        },
+        "action": "retain",
+        "question": "在 R07 中，当前相对位置和相对位移之外，前 10 帧的平均相对位移是否为下一帧相对位移提供探索性预测信息？",
+        "reason": "同伴讨论强化了将坐标描述与行为解释分开的做法，但没有新的计算或理论证据促使修改我的条件预测问题。",
+        "influenced_by": [
+          {
+            "id": "shared:discussion",
+            "owner": "shared",
+            "version": 2
+          },
+          {
+            "id": "personal:animal_behaviorist",
+            "owner": "animal_behaviorist",
+            "version": 1
+          },
+          {
+            "id": "personal:sensorimotor_biologist",
+            "owner": "sensorimotor_biologist",
+            "version": 2
+          }
+        ]
+      },
+      "shared_question_update": {
+        "base": {
+          "id": "shared:discussion",
+          "owner": "shared",
+          "version": 2
+        },
+        "action": "retain",
+        "question": "在R07中，记录内较近与较远的A-B距离状态之后10帧，距离变化分布是否不同？并列描述A、B各自位移；若计算方向相似度，将其限定为坐标位移方向描述，不解释为鱼体朝向或追随。",
+        "reason": "同伴已把共享问题界定为可执行的距离转移描述；我的条件历史预测问题可以作为独立后续分支，不需要改变共享问题文本。",
+        "influenced_by": [
+          {
+            "id": "personal:animal_behaviorist",
+            "owner": "animal_behaviorist",
+            "version": 1
+          },
+          {
+            "id": "personal:sensorimotor_biologist",
+            "owner": "sensorimotor_biologist",
+            "version": 2
+          }
+        ]
+      },
+      "learning_request": {
+        "needed": true,
+        "gap": "需要可核验的历史依赖或条件预测定义，以及时间序列预测改善与因果解释之间的边界资料。",
+        "why_now": "我的个人问题检验的是给定当前相对状态后历史变量是否仍有预测信息；此前返回的可读检索结果与此问题无关，F2摘要也不足以支持操作定义。",
+        "queries": [
+          "在随机过程或非平衡系统中，如何操作化检验给定当前状态后历史是否仍包含关于下一状态的预测信息？",
+          "有限时间序列中比较当前状态基线与滞后特征模型，怎样保证目标对齐和时间留出评估可比？",
+          "观察性轨迹中滞后变量提高预测准确度为何不足以识别因果互动？"
+        ],
+        "urls": [],
+        "source_ids": [],
+        "record_ids": [
+          "R07"
+        ],
+        "operations": []
+      },
+      "top_level_analysis_plan": {
+        "kind": "analysis",
+        "question": "在R07中，控制当前相对位置与相对位移后，前10帧平均相对位移是否改善对下一帧相对位移的时间顺序留出预测？",
+        "record_id": "R07",
+        "start": 0,
+        "stop": 44999,
+        "variables": [
+          {
+            "name": "relative_position",
+            "expression": "positions[:,0,:]-positions[:,1,:]",
+            "meaning": "A减B的二维相对坐标",
+            "units": "原生图像坐标单位"
+          },
+          {
+            "name": "relative_step",
+            "expression": "diff(relative_position,1,axis=0)",
+            "meaning": "相邻帧相对坐标变化；索引t对应从t-1到t的位移",
+            "units": "原生图像坐标单位/帧"
+          },
+          {
+            "name": "history_step_mean",
+            "expression": "rolling(relative_step,10)",
+            "meaning": "截至当前索引的过去10个相对位移的逐坐标均值；预测起点t时不含目标位移t+1",
+            "units": "原生图像坐标单位/帧"
+          },
+          {
+            "name": "target_next_step",
+            "expression": "shift(relative_step,-1)",
+            "meaning": "下一索引的相对位移，即相对坐标从t到t+1的变化",
+            "units": "原生图像坐标单位/帧"
+          },
+          {
+            "name": "valid_aligned",
+            "expression": "isfinite(relative_position[:,0])&isfinite(relative_position[:,1])&isfinite(relative_step[:,0])&isfinite(relative_step[:,1])&isfinite(history_step_mean[:,0])&isfinite(history_step_mean[:,1])&isfinite(target_next_step[:,0])&isfinite(target_next_step[:,1])",
+            "meaning": "位置、当前位移、历史均值和下一帧目标均为有限值的对齐行",
+            "units": "boolean"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "target_next_step",
+            "expression": "target_next_step"
+          },
+          {
+            "name": "history_step_mean",
+            "expression": "history_step_mean"
+          }
+        ],
+        "groups": [
+          {
+            "name": "aligned_finite_rows",
+            "where": "valid_aligned",
+            "values": [
+              "relative_position",
+              "relative_step",
+              "history_step_mean",
+              "target_next_step"
+            ]
+          }
+        ],
+        "model": {
+          "target": "target_next_step",
+          "features": [
+            "relative_position",
+            "relative_step",
+            "history_step_mean"
+          ],
+          "train_fraction": 0.7
+        }
+      },
+      "exploration": {
+        "missing_external_facts": [
+          "可核验的历史依赖操作定义及预测与因果解释边界资料。",
+          "R07的实验任务、场景条件、物理标定、帧率和A/B身份稳定性。"
+        ],
+        "unselected_definitions": [
+          "前10帧是帧索引上的研究者选择，不是已校准的生物时间窗口。",
+          "是否采用其他历史窗口或平滑定义尚未决定。"
+        ],
+        "interface_gaps": [
+          "尚无R07状态基线与历史扩展模型的同区间成对误差结果；单一模型拟合接口未必能直接提供该比较。"
+        ],
+        "next_action": "请求执行R07基线与扩展模型的时间顺序留出比较；要求两者使用同一有效行、目标对齐和留出区间，并返回误差差值。",
+        "stalled_reason": "实证判断等待模型比较结果；外部理论检索未返回相关可读来源，但这不妨碍提出坐标层检验。",
+        "understanding_changed": true
+      },
+      "learning_change": null,
+      "memory_notes": [],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/r1_exchange_2/result.json",
+      "sha256": "59dc28b94e44cfc4446abead79640523dc95db79303540faa4a5530da05eaba9"
+    },
+    {
+      "stage": "r1_exchange_2_learn_0",
+      "role": "nonequilibrium_physicist",
+      "summary": "本轮可读检索结果与历史依赖、时间留出预测或因果解释边界无关，因此没有获得可核验的外部方法依据。可用坐标仍允许定义并检验一个明确的预测比较，但尚无 R07 计算结果，不能判断历史特征是否增加预测信息。",
+      "personal_question": {
+        "base": {
+          "id": "personal:nonequilibrium_physicist",
+          "owner": "nonequilibrium_physicist",
+          "version": 1
+        },
+        "action": "retain",
+        "question": "在 R07 中，当前相对位置和相对位移之外，前 10 帧的平均相对位移是否为下一帧相对位移提供探索性预测信息？",
+        "reason": "检索返回的可读材料不相关，且没有 R07 计算结果；因此没有依据改写个人问题。",
+        "influenced_by": []
+      },
+      "shared_question_update": {
+        "base": {
+          "id": "shared:discussion",
+          "owner": "shared",
+          "version": 2
+        },
+        "action": "revise",
+        "question": "在 R07 中，当前相对位置和相对位移之外，前10帧平均相对位移是否能在相同有效样本与按时间留出的区间上改善下一帧相对位移预测？该比较只检验所选轨迹变量的预测增量，不解释为因果互动或鱼体朝向。",
+        "reason": "当前共享问题聚焦近远距离后的变化，与本研究者的问题不同；建议将共享讨论扩展到一个明确的历史预测比较，并标出解释边界。",
+        "influenced_by": [
+          {
+            "id": "personal:nonequilibrium_physicist",
+            "owner": "nonequilibrium_physicist",
+            "version": 1
+          },
+          {
+            "id": "shared:discussion",
+            "owner": "shared",
+            "version": 2
+          }
+        ]
+      },
+      "learning_request": {
+        "needed": true,
+        "gap": "仍缺可核验的历史依赖或条件预测定义，以及有限时间序列中公平比较当前状态基线和滞后特征模型的方法依据。",
+        "why_now": "本轮实际返回的可读材料均与问题无关，R07 的预测比较也尚未计算；这些缺口分别阻碍方法依据与经验判断。",
+        "queries": [
+          "conditional mutual information history predicts next state given present state stochastic process operational definition",
+          "time series forecasting compare nested lag feature model baseline chronological holdout common target alignment",
+          "Granger predictive causality versus causal interaction observational time series confounding common input",
+          "鱼类双体轨迹历史依赖 条件预测 时间留出 因果互动 观测数据 方法"
+        ],
+        "urls": [],
+        "source_ids": [],
+        "record_ids": [
+          "R07"
+        ],
+        "operations": [
+          {
+            "kind": "analysis",
+            "question": "在 R07 中，加入前10帧平均相对位移的模型是否改善下一帧相对位移的按时间留出预测？",
+            "record_id": "R07",
+            "variables": [
+              {
+                "name": "r",
+                "expression": "positions[:,1,:]-positions[:,0,:]",
+                "meaning": "B相对A的二维位置向量",
+                "units": "原生图像坐标"
+              },
+              {
+                "name": "dr",
+                "expression": "diff(r,axis=0)",
+                "meaning": "相邻帧相对位移",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "target",
+                "expression": "shift(dr,-1)",
+                "meaning": "下一帧的相对位移向量",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "history10",
+                "expression": "rolling(dr,10)",
+                "meaning": "截至当前帧的前10个相对位移均值；需确认控制器 rolling 对窗口端点的定义",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "valid",
+                "expression": "isfinite(r).all(axis=1) & isfinite(dr).all(axis=1) & isfinite(target).all(axis=1) & isfinite(history10).all(axis=1)",
+                "meaning": "两模型共用的有效样本掩码",
+                "units": "布尔值"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "target",
+                "expression": "target"
+              }
+            ],
+            "groups": [],
+            "model": {
+              "target": "target",
+              "features": [
+                "r",
+                "dr",
+                "history10"
+              ],
+              "train_fraction": 0.7
+            },
+            "start": 10
+          }
+        ]
+      },
+      "top_level_analysis_plan": null,
+      "exploration": {
+        "missing_external_facts": [
+          "历史依赖和条件预测比较的可核验方法依据。",
+          "R07 的物理尺度、帧率、实验任务、场景条件及追踪身份稳定性。"
+        ],
+        "unselected_definitions": [
+          "将条件预测信息定义为历史增强模型相对当前状态基线在共同时间留出样本上的预测误差变化；该定义尚待计算。"
+        ],
+        "interface_gaps": [
+          "分析计划接口要求单一模型输入，而公平的基线与历史增强模型比较需要两个模型在共同有效样本、同一目标及同一时间留出区间上的误差对照；请求控制器支持配对比较，或分别返回可严格对齐的两种模型结果。"
+        ],
+        "next_action": "请求 R07 的历史增强模型及相同样本与时间划分下的当前状态基线比较，同时继续检索合规的方法来源。",
+        "stalled_reason": "本轮检索未返回相关可读来源，且预测计算尚未执行。",
+        "understanding_changed": true
+      },
+      "learning_change": "明确了一个可由研究者选择的探索性定义：控制当前相对状态后，历史预测信息表现为历史增强模型在相同时间留出目标上的误差改善。该定义来自对现有问题的分析，不是本轮外部文献所教，也没有用于计算。",
+      "memory_notes": [
+        {
+          "key": "group_state_history_model",
+          "mastery": "explained"
+        }
+      ],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/r1_exchange_2_learn_0/result.json",
+      "sha256": "17a5511a8e208967bf06eadc716575c44d868059f786cfaf21b3fa4489228642"
+    },
+    {
+      "stage": "r1_evidence_verify",
+      "role": "internal_evidence_verifier",
+      "summary": "两条目标陈述的核心判断均有坐标测量上下文支持，但第一条把研究后果限定为轨迹转移关联，理由不足：机制无法识别并不排除有价值的操作性描述或条件比较。第二条关于本轮可读来源不支持鱼类指标定义的判断成立；但应明确这是本轮检索结果的范围性观察，不是这些指标不存在的证明。",
+      "personal_question": null,
+      "shared_question_update": null,
+      "learning_request": null,
+      "top_level_analysis_plan": null,
+      "exploration": null,
+      "learning_change": null,
+      "memory_notes": [],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/r1_evidence_verify/result.json",
+      "sha256": "6826b68183022055d2f74cdb12a5a000d79d0055c88f5d7c009917d7f1082662"
+    },
+    {
+      "stage": "r1_evidence_discuss_0",
+      "role": "animal_behaviorist",
+      "summary": "本轮核验修正了问题范围的推论：机制不可识别不意味着只能研究轨迹转移关联；明确操作定义的距离条件比较仍可开展。关于本轮可读来源没有提供鱼类指标定义的判断成立，但仅限于本轮返回材料。",
+      "personal_question": {
+        "base": {
+          "id": "personal:animal_behaviorist",
+          "owner": "animal_behaviorist",
+          "version": 1
+        },
+        "action": "retain",
+        "question": "在每条记录内，A-B距离较近的时刻之后10帧，距离变化是否比距离较远的时刻更低？",
+        "reason": "核验修正了我对可研究问题范围的推论，但没有改变近远距离比较本身。",
+        "influenced_by": []
+      },
+      "shared_question_update": null,
+      "learning_request": {
+        "needed": false,
+        "gap": "尚缺R07数组或近远距离比较的计算结果；当前没有因此提出外部知识请求。",
+        "why_now": "本次核验处理的是问题范围与来源适用性，没有提供可用数组来计算结果；指标阈值可由研究者选择并明确。",
+        "queries": [],
+        "urls": [],
+        "source_ids": [],
+        "record_ids": [],
+        "operations": []
+      },
+      "top_level_analysis_plan": null,
+      "exploration": {
+        "missing_external_facts": [
+          "鱼类轨迹互动指标的领域操作定义尚未由本轮返回的可读来源提供。",
+          "记录的身份稳定性、任务、场景条件、帧率和物理校准未知。"
+        ],
+        "unselected_definitions": [
+          "近、远距离阈值及是否采用每条记录内第25和第75分位数。",
+          "10帧滞后是否仍为目标窗口，以及缺失坐标和末端行的配对规则。"
+        ],
+        "interface_gaps": [
+          "本输入未提供R07数组或控制器分析执行结果，无法检验距离状态假设。"
+        ],
+        "next_action": "保留个人的近远距离条件比较问题；若获得数组，先固定操作定义和有效样本规则再计算。",
+        "stalled_reason": "经验比较受缺少数组和计算结果限制；外部方法来源缺失不妨碍选择并明确研究者定义。",
+        "understanding_changed": true
+      },
+      "learning_change": null,
+      "memory_notes": [
+        {
+          "key": "coordinates_do_not_identify_behavior",
+          "mastery": "used"
+        }
+      ],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/r1_evidence_discuss_0/result.json",
+      "sha256": "9e175e6a16808aff66760751a40c4e5d00fef486d4f40c75c1930c766306f8ed"
+    },
+    {
+      "stage": "r1_evidence_discuss_1",
+      "role": "sensorimotor_biologist",
+      "summary": "我接受核验报告的两项发现。二维坐标支持描述标签间距及其变化，但不能单独识别行为、感觉机制或因果互动；这一限制不要求把问题限定为轨迹转移关联，明确操作定义的距离状态比较仍可进行。关于本轮返回来源未提供鱼类轨迹指标定义的判断也成立，但仅适用于实际返回材料，不能据此断言相关文献不存在。",
+      "personal_question": {
+        "base": {
+          "id": "personal:sensorimotor_biologist",
+          "owner": "sensorimotor_biologist",
+          "version": 2
+        },
+        "action": "retain",
+        "question": "在R07中，两个追踪标签的相对距离、各自位移及坐标位移方向相似度如何随帧变化？这些坐标描述是否能区分距离转移与共同运动，而不将其命名为感觉引导行为？",
+        "reason": "核验修正了机制不可识别对问题范围的限制，但没有改变我对R07中分开描述距离、个体位移和坐标方向的个人问题。",
+        "influenced_by": []
+      },
+      "shared_question_update": null,
+      "learning_request": {
+        "needed": false,
+        "gap": "当前输入没有R07数组，也没有需要靠外部知识解决的新机制问题；近远阈值与方向有效性阈值可明确作为研究者定义。",
+        "why_now": "本轮任务是核验两项既有陈述，给定材料足以判定其推论范围与来源适用范围；外部检索未命中不是当前判断的关键缺口。",
+        "queries": [],
+        "urls": [],
+        "source_ids": [],
+        "record_ids": [],
+        "operations": []
+      },
+      "top_level_analysis_plan": null,
+      "exploration": {
+        "missing_external_facts": [
+          "本轮返回的可读来源没有给出鱼类双体轨迹指标的操作定义；记录身份稳定性、任务、帧率和物理校准也未知。"
+        ],
+        "unselected_definitions": [
+          "近、远条件是否按每条记录内第25和第75距离分位数定义。",
+          "是否保留10帧滞后，以及如何处理缺失坐标、记录末端和低速方向。"
+        ],
+        "interface_gaps": [
+          "输入没有R07数组或计算结果，不能检验近远状态比较或历史预测。"
+        ],
+        "next_action": "保留当前R07运动学问题；取得数组后先明确有效样本、配对和低速方向规则，再分别计算距离、个体位移及方向相似度。",
+        "stalled_reason": "经验结论受缺少数组限制；本轮核验本身已可完成，且外部方法来源未命中不妨碍提出透明的操作定义。",
+        "understanding_changed": true
+      },
+      "learning_change": null,
+      "memory_notes": [
+        {
+          "key": "trajectory_position_is_not_sensorimotor_state",
+          "mastery": "explained"
+        }
+      ],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/r1_evidence_discuss_1/result.json",
+      "sha256": "dfc8564f5640d23648bb2440280029d3f94790a12e2efe6a8cfc47882ee619b3"
+    },
+    {
+      "stage": "r1_evidence_discuss_2",
+      "role": "nonequilibrium_physicist",
+      "summary": "两项核验发现均成立：机制不可识别并不要求把研究限于轨迹转移关联；本轮返回来源未提供鱼类指标定义，只能作为对本轮材料的范围性观察。没有新证据改变我现有的历史预测问题或相关记忆。",
+      "personal_question": {
+        "base": {
+          "id": "personal:nonequilibrium_physicist",
+          "owner": "nonequilibrium_physicist",
+          "version": 1
+        },
+        "action": "retain",
+        "question": "在 R07 中，当前相对位置和相对位移之外，前 10 帧的平均相对位移是否为下一帧相对位移提供探索性预测信息？",
+        "reason": "核验修正的是机制不可识别与可研究问题范围之间的推论，没有改变我的历史预测问题。",
+        "influenced_by": []
+      },
+      "shared_question_update": null,
+      "learning_request": {
+        "needed": false,
+        "gap": "本轮核验无需新增外部知识；当前缺少的是R07数组或分析结果。",
+        "why_now": "核验报告足以处理两项发现的范围和来源适用性；数组缺失是分析接口问题，不是外部事实缺口。",
+        "queries": [],
+        "urls": [],
+        "source_ids": [],
+        "record_ids": [],
+        "operations": []
+      },
+      "top_level_analysis_plan": null,
+      "exploration": {
+        "missing_external_facts": [
+          "鱼类轨迹指标的领域操作定义未由本轮可读来源提供。",
+          "R07记录的身份稳定性、任务、帧率及物理校准未核实。"
+        ],
+        "unselected_definitions": [
+          "距离比较的近远阈值、滞后窗口及有效值配对规则尚未固定。"
+        ],
+        "interface_gaps": [
+          "本轮未提供R07数组或预测计算结果。"
+        ],
+        "next_action": "保留个人历史预测问题；取得数组后，使用相同有效行和时间留出区间比较模型。",
+        "stalled_reason": "当前无法检验经验预测增益，因为没有R07数组或计算结果。",
+        "understanding_changed": false
+      },
+      "learning_change": null,
+      "memory_notes": [],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/r1_evidence_discuss_2/result.json",
+      "sha256": "60e77482c31cbcbb8e04d14932224cabb0f20062bedb2503dca271ee6fbbf0fd"
+    },
+    {
+      "stage": "r1_return_0",
+      "role": "animal_behaviorist",
+      "summary": "保留个人的近远距离转移问题，并接受当前共享问题聚焦历史特征的预测增量。R07 有 44999 帧且位置无非有限值，但历史分析仍处于 pending_controller，没有预测结果。",
+      "personal_question": {
+        "base": {
+          "id": "personal:animal_behaviorist",
+          "owner": "animal_behaviorist",
+          "version": 1
+        },
+        "action": "retain",
+        "question": "在每条记录内，A-B距离较近的时刻之后10帧，距离变化是否比距离较远的时刻更低？",
+        "reason": "共享问题已转向历史特征预测，但不回答近远距离状态后的距离转移；目前没有计算结果促使我修改个人问题。",
+        "influenced_by": [
+          {
+            "id": "shared:discussion",
+            "owner": "shared",
+            "version": 3
+          },
+          {
+            "id": "personal:nonequilibrium_physicist",
+            "owner": "nonequilibrium_physicist",
+            "version": 1
+          },
+          {
+            "id": "personal:sensorimotor_biologist",
+            "owner": "sensorimotor_biologist",
+            "version": 2
+          }
+        ]
+      },
+      "shared_question_update": null,
+      "learning_request": {
+        "needed": false,
+        "gap": "本轮可依据已提供的测量元数据、来源摘要和控制器状态推进；鱼类双体方法文献缺口限制领域方法背书，但不妨碍保留明确标为研究者定义的问题。",
+        "why_now": "当前未完成项是计算接口和R07结果，而非必须先补充的外部事实；本轮没有需要继续检索的新问题。",
+        "queries": [],
+        "urls": [],
+        "source_ids": [],
+        "record_ids": [],
+        "operations": []
+      },
+      "top_level_analysis_plan": null,
+      "exploration": {
+        "missing_external_facts": [
+          "R07 的任务、场景、帧率、物理校准和A/B身份稳定性仍未知。",
+          "本轮可读来源没有提供鱼类双体指标的操作定义；这只限定当前来源的支持范围。"
+        ],
+        "unselected_definitions": [
+          "个人距离问题可沿用每条记录内第25与第75分位数定义近远条件，并比较10帧后的有向距离变化；尚无计算结果。",
+          "共享历史问题需比较当前状态基线与加入过去10帧平均相对位移的模型，并固定有效行和时间留出区间。"
+        ],
+        "interface_gaps": [
+          "历史模型请求因表达式语法不受执行接口支持而处于 pending_controller；尚无预测误差或基线比较结果。",
+          "近远距离比较也没有控制器计算结果。"
+        ],
+        "next_action": "维持个人距离转移问题与共享历史预测问题为两个独立分支；待接口返回可执行结果后分别判断，并区分坐标关联与行为机制。",
+        "stalled_reason": "经验判断受缺少计算结果限制；历史分支受执行接口限制，机制分支受任务、姿态和身份信息缺失限制。",
+        "understanding_changed": true
+      },
+      "learning_change": null,
+      "memory_notes": [
+        {
+          "key": "coordinates_do_not_identify_behavior",
+          "mastery": "used"
+        }
+      ],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/r1_return_0/result.json",
+      "sha256": "556ba61e0f3f483527063e51046b5c6aaece90bcd7d3f60e69f34ad156babe08"
+    },
+    {
+      "stage": "r1_return_1",
+      "role": "sensorimotor_biologist",
+      "summary": "接受核验结论：二维坐标可支持明确操作定义的距离、位移及坐标运动方向描述；机制解释受限，并不妨碍开展这些描述性比较。本轮补充的方向余弦公式是研究者可选定义，没有鱼类方法来源为其领域通行性背书。R07计算仍未完成：历史预测请求因接口不支持表达式调用而挂起，不能据此判断是否存在预测增益。",
+      "personal_question": {
+        "base": {
+          "id": "personal:sensorimotor_biologist",
+          "owner": "sensorimotor_biologist",
+          "version": 2
+        },
+        "action": "retain",
+        "question": "在R07中，两个追踪标签的相对距离、各自位移及坐标位移方向相似度如何随帧变化？这些坐标描述是否能区分距离转移与共同运动，而不将其命名为感觉引导行为？",
+        "reason": "本轮核验调整了问题范围的解释，但没有取得R07计算结果或新方法来源，故保留既有个人问题。",
+        "influenced_by": []
+      },
+      "shared_question_update": null,
+      "learning_request": {
+        "needed": false,
+        "gap": "本轮可以依据提供的来源摘要、测量上下文和接口状态讨论定义范围；领域鱼类方法来源仍不足，但不是保留透明坐标定义的前提。",
+        "why_now": "目前未决经验问题取决于R07计算接口，而非需要先补充的外部事实；本轮没有新增必须检索的知识问题。",
+        "queries": [],
+        "urls": [],
+        "source_ids": [],
+        "record_ids": [],
+        "operations": []
+      },
+      "top_level_analysis_plan": null,
+      "exploration": {
+        "missing_external_facts": [
+          "R07的实验任务、场景条件、姿态、帧率、物理校准及A/B身份稳定性未核实。",
+          "没有可读鱼类方法来源支持方向相似度的短位移阈值或将其解释为行为的判据。"
+        ],
+        "unselected_definitions": [
+          "近、远状态暂按记录内距离第25和第75分位数定义，10帧是帧索引上的操作窗口；两者都不是已验证的生物学阈值。",
+          "方向余弦遇到零位移时未定义；短位移的最小阈值及敏感性范围尚未选择。"
+        ],
+        "interface_gaps": [
+          "R07历史预测分析因表达式调用不受执行接口支持而处于pending_controller，未返回预测误差。",
+          "R07近远距离比较和方向相似度也没有计算结果。"
+        ],
+        "next_action": "保留距离转移、候选方向相似度和历史预测为不同分支；取得可执行的R07分析后，按预先声明的有效样本、时间对齐和短位移规则分别报告坐标结果。",
+        "stalled_reason": "经验判断等待R07计算结果；历史预测分支当前受执行接口限制，行为机制分支受实验任务、姿态及身份信息缺失限制。",
+        "understanding_changed": true
+      },
+      "learning_change": null,
+      "memory_notes": [
+        {
+          "key": "trajectory_position_is_not_sensorimotor_state",
+          "mastery": "used"
+        }
+      ],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/r1_return_1/result.json",
+      "sha256": "0347203c41a77a5c115c62c55d511324c5358b7c70034787efa5a36ee2de96d5"
+    },
+    {
+      "stage": "r1_return_2",
+      "role": "nonequilibrium_physicist",
+      "summary": "本轮没有 R07 的预测误差或轨迹计算结果；历史特征是否提供额外预测信息仍未决。可明确的操作定义是：比较只含当前相对位置和位移的基线，与加入此前 10 帧平均相对位移的模型，并让两者使用同一目标、有效样本和时间留出段。即使历史模型预测更好，结论也只适用于所选坐标、记录和模型设定，不能据此推断因果互动或集体记忆。",
+      "personal_question": {
+        "base": {
+          "id": "personal:nonequilibrium_physicist",
+          "owner": "nonequilibrium_physicist",
+          "version": 1
+        },
+        "action": "retain",
+        "question": "在 R07 中，当前相对位置和相对位移之外，前 10 帧的平均相对位移是否为下一帧相对位移提供探索性预测信息？",
+        "reason": "本轮核验澄清了问题范围，但未产生历史预测误差或新方法依据，故保留个人问题。",
+        "influenced_by": [
+          {
+            "id": "shared:discussion",
+            "owner": "shared",
+            "version": 3
+          },
+          {
+            "id": "personal:animal_behaviorist",
+            "owner": "animal_behaviorist",
+            "version": 1
+          },
+          {
+            "id": "personal:sensorimotor_biologist",
+            "owner": "sensorimotor_biologist",
+            "version": 2
+          }
+        ]
+      },
+      "shared_question_update": null,
+      "learning_request": {
+        "needed": true,
+        "gap": "缺少可核验的条件预测或历史依赖方法依据，特别是如何在给定当前状态后评估历史变量的增量预测信息，以及这种预测结果的因果解释边界。",
+        "why_now": "已有研究者定义，但先前返回的相关材料不足以为其方法选择背书；补充基础方法可约束后续解释，不影响当前保留可执行问题。",
+        "queries": [
+          "截至 2009 年，随机过程如何定义给定当前状态后历史对下一状态的增量预测信息？",
+          "有限时间序列如何公平比较当前状态基线与滞后特征模型，并确保目标索引、共同有效样本和时间留出区间一致？",
+          "观察性时间序列中的预测增益为何不能单独识别因果互动或排除共同驱动？"
+        ],
+        "urls": [],
+        "source_ids": [],
+        "record_ids": [
+          "R07"
+        ],
+        "operations": [
+          {
+            "kind": "analysis",
+            "question": "在 R07 中加入此前 10 帧平均相对位移后，是否改善下一帧相对位移的时间顺序留出预测？",
+            "record_id": "R07",
+            "start": 10,
+            "variables": [
+              {
+                "name": "r",
+                "expression": "positions[:,1,:]-positions[:,0,:]",
+                "meaning": "B 相对 A 的二维位置向量",
+                "units": "原生图像坐标"
+              },
+              {
+                "name": "dr",
+                "expression": "diff(r,axis=0)",
+                "meaning": "相邻帧相对位移",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "target",
+                "expression": "shift(dr,-1)",
+                "meaning": "下一帧相对位移",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "history10",
+                "expression": "rolling(dr,10)",
+                "meaning": "截至当前索引的过去 10 个相对位移均值；执行时核实窗口端点定义",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "valid",
+                "expression": "isfinite(r[:,0])&isfinite(r[:,1])&isfinite(dr[:,0])&isfinite(dr[:,1])&isfinite(target[:,0])&isfinite(target[:,1])&isfinite(history10[:,0])&isfinite(history10[:,1])",
+                "meaning": "基线与扩展模型共同使用的有限值行",
+                "units": "布尔值"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "target",
+                "expression": "target"
+              }
+            ],
+            "groups": [
+              {
+                "name": "共同有效行",
+                "where": "valid",
+                "values": [
+                  "r",
+                  "dr",
+                  "history10",
+                  "target"
+                ]
+              }
+            ],
+            "model": {
+              "target": "target",
+              "features": [
+                "r",
+                "dr",
+                "history10"
+              ],
+              "train_fraction": 0.7
+            }
+          }
+        ]
+      },
+      "top_level_analysis_plan": null,
+      "exploration": {
+        "missing_external_facts": [
+          "可核验的条件预测及预测结果因果解释边界方法资料。",
+          "R07 的任务、场景、帧率、物理校准与 A/B 身份稳定性未核实。"
+        ],
+        "unselected_definitions": [
+          "前 10 帧是帧索引上的研究者选择，不是已校准的生物时间窗口。",
+          "预测增益以共同留出行上的误差差异定义；误差度量尚未由可读领域方法资料支持。"
+        ],
+        "interface_gaps": [
+          "历史预测请求因表达式调用不受执行接口支持而挂起；当前没有基线与扩展模型的共同留出误差结果。",
+          "R07 的近远距离转移比较也尚无计算结果。"
+        ],
+        "next_action": "接口可用时，以相同有效行、目标对齐和时间划分执行基线与历史增强模型的配对比较；继续将距离转移作为独立分支。",
+        "stalled_reason": "历史预测的经验判断等待分析接口执行；机制解释另受任务、姿态和身份信息缺失限制。",
+        "understanding_changed": true
+      },
+      "learning_change": null,
+      "memory_notes": [
+        {
+          "key": "group_state_history_model",
+          "mastery": "used"
+        }
+      ],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/r1_return_2/result.json",
+      "sha256": "165363f3ea19fc90f06d27d8189352805d3defce56849d80c078e9852c37c255"
+    },
+    {
+      "stage": "r1_return_2_learn_0",
+      "role": "nonequilibrium_physicist",
+      "summary": "本轮实际返回的可读材料未提供条件历史预测、时间留出模型比较或因果识别方法依据；R07 的计算也因形状不匹配进入 pending_controller，没有预测结果。因此无法判断前10帧平均相对位移是否改善预测。",
+      "personal_question": {
+        "base": {
+          "id": "personal:nonequilibrium_physicist",
+          "owner": "nonequilibrium_physicist",
+          "version": 1
+        },
+        "action": "retain",
+        "question": "在 R07 中，当前相对位置和相对位移之外，前 10 帧的平均相对位移是否为下一帧相对位移提供探索性预测信息？",
+        "reason": "本轮未取得可用于修订问题的有效方法依据或预测结果，原问题仍可执行且保持未决。",
+        "influenced_by": []
+      },
+      "shared_question_update": {
+        "base": {
+          "id": "shared:discussion",
+          "owner": "shared",
+          "version": 3
+        },
+        "action": "retain",
+        "question": "在 R07 中，当前相对位置和相对位移之外，前10帧平均相对位移是否能在相同有效样本与按时间留出的区间上改善下一帧相对位移预测？该比较只检验所选轨迹变量的预测增量，不解释为因果互动或鱼体朝向。",
+        "reason": "本轮没有新的计算或方法证据改变共享问题；接口失败要求保留该可检验问题。",
+        "influenced_by": [
+          {
+            "id": "shared:discussion",
+            "owner": "shared",
+            "version": 3
+          }
+        ]
+      },
+      "learning_request": {
+        "needed": true,
+        "gap": "未获得可读且相关的方法依据；此前返回摘要与问题无关。",
+        "why_now": "需要在解释 R07 的模型比较前，厘清条件历史预测信息的含义、有限样本比较条件及其因果边界。",
+        "queries": [
+          "截至2009年的传递熵或条件互信息如何刻画给定当前状态后，历史变量对下一状态的增量预测信息？",
+          "有限时间序列中，如何使用相同目标索引、共同有效样本及按时间留出段比较嵌套预测模型？",
+          "观察性轨迹中的预测增益在何种条件下不能识别因果互动或排除共同驱动？"
+        ],
+        "urls": [],
+        "source_ids": [],
+        "record_ids": [
+          "R07"
+        ],
+        "operations": [
+          {
+            "kind": "analysis",
+            "question": "修正形状和索引对齐后，在 R07 中加入此前10帧平均相对位移是否改善下一帧相对位移的时间顺序留出预测？",
+            "record_id": "R07",
+            "start": 10,
+            "variables": [
+              {
+                "name": "r",
+                "expression": "positions[:,1,:]-positions[:,0,:]",
+                "meaning": "B相对A的二维位置向量",
+                "units": "原生图像坐标"
+              },
+              {
+                "name": "dr",
+                "expression": "diff(r,axis=0)",
+                "meaning": "相邻帧相对位移",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "target",
+                "expression": "shift(dr,-1)",
+                "meaning": "下一帧相对位移",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "history10",
+                "expression": "rolling(dr,10)",
+                "meaning": "当前索引及此前窗口定义待控制器核实的10帧平均相对位移",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "valid",
+                "expression": "isfinite(r[:,0])&isfinite(r[:,1])&isfinite(dr[:,0])&isfinite(dr[:,1])&isfinite(target[:,0])&isfinite(target[:,1])&isfinite(history10[:,0])&isfinite(history10[:,1])",
+                "meaning": "模型共有的有限值行；须保证各变量长度和索引相同",
+                "units": "布尔值"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "target",
+                "expression": "target"
+              }
+            ],
+            "groups": [
+              {
+                "name": "共同有效行",
+                "where": "valid",
+                "values": [
+                  "r",
+                  "dr",
+                  "history10",
+                  "target"
+                ]
+              }
+            ],
+            "model": {
+              "target": "target",
+              "features": [
+                "r",
+                "dr",
+                "history10"
+              ],
+              "train_fraction": 0.7
+            }
+          }
+        ]
+      },
+      "top_level_analysis_plan": null,
+      "exploration": {
+        "missing_external_facts": [
+          "可读的条件预测信息及时间序列比较方法来源。",
+          "R07 分析接口对向量窗口、广播和 rolling 端点的确切行为。"
+        ],
+        "unselected_definitions": [
+          "历史特征目前固定为前10帧平均相对位移；其他窗口或状态定义尚未比较。"
+        ],
+        "interface_gaps": [
+          "原计划因形状不匹配失败，错误涉及44989与44988长度；接口未确认变量对齐来源。"
+        ],
+        "next_action": "保留原预测问题，等待控制器核验表达式长度和窗口端点并重跑；另请求相关方法来源。",
+        "stalled_reason": "可读来源不相关，且执行器返回形状不匹配并转为 pending_controller。",
+        "understanding_changed": false
+      },
+      "learning_change": "没有实质方法学习变化。实际读取的摘要与所问方法无关；已解释的仅是研究者操作定义：同目标、共同样本与时间留出段上比较历史增强模型与当前状态基线。该定义尚未用于成功计算。",
+      "memory_notes": [],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/r1_return_2_learn_0/result.json",
+      "sha256": "557d3346ea038fed3b9df127aebb3937b18fced2b7809500d5df3822c3f0c084"
+    },
+    {
+      "stage": "04_fresh_continuation",
+      "role": "nonequilibrium_physicist",
+      "summary": "沿用个人问题：在 R07 中，当前相对位置和相对位移之外，前 10 帧的平均相对位移是否为下一帧相对位移提供探索性预测信息。\n当前输入没有可调用的控制器请求接口；此前历史预测分析因形状不匹配挂起，没有生成预测误差。",
+      "personal_question": {
+        "base": {
+          "id": "personal:nonequilibrium_physicist",
+          "owner": "nonequilibrium_physicist",
+          "version": 1
+        },
+        "action": "retain",
+        "question": "在 R07 中，当前相对位置和相对位移之外，前 10 帧的平均相对位移是否为下一帧相对位移提供探索性预测信息？",
+        "reason": "现有记录保留了该问题，且尚无预测结果；接口挂起不足以改变问题本身。",
+        "influenced_by": []
+      },
+      "shared_question_update": {
+        "base": {
+          "id": "shared:discussion",
+          "owner": "shared",
+          "version": 3
+        },
+        "action": "retain",
+        "question": "在 R07 中，当前相对位置和相对位移之外，前10帧平均相对位移是否能在相同有效样本与按时间留出的区间上改善下一帧相对位移预测？该比较只检验所选轨迹变量的预测增量，不解释为因果互动或鱼体朝向。",
+        "reason": "该共享问题已明确预测目标和解释边界；仍缺计算结果，当前没有足够依据修改它。",
+        "influenced_by": []
+      },
+      "learning_request": {
+        "needed": false,
+        "gap": "本轮可用接口缺失，且没有执行结果；并非因缺少领域文献而阻止当前定义。",
+        "why_now": "已有具体的操作定义和前次接口挂起记录；先需解决表达与计算接口能力，之后再判断是否需要外部方法依据。",
+        "queries": [],
+        "urls": [],
+        "source_ids": [],
+        "record_ids": [
+          "R07"
+        ],
+        "operations": []
+      },
+      "top_level_analysis_plan": {
+        "kind": "analysis",
+        "question": "在 R07 中，前 10 帧平均相对位移是否改善对下一帧相对位移的预测？",
+        "record_id": "R07",
+        "variables": [
+          {
+            "name": "r",
+            "expression": "positions[:,1,:]-positions[:,0,:]",
+            "meaning": "B 相对 A 的位置向量",
+            "units": "native image coordinate unit"
+          },
+          {
+            "name": "v",
+            "expression": "diff(r,1,axis=0)",
+            "meaning": "逐帧相对位移",
+            "units": "native image coordinate unit/frame"
+          },
+          {
+            "name": "history10",
+            "expression": "rolling(v,10)",
+            "meaning": "截至当前行、含当前行在内的 10 个相对位移均值",
+            "units": "native image coordinate unit/frame"
+          },
+          {
+            "name": "target",
+            "expression": "shift(v,-1)",
+            "meaning": "下一帧相对位移；需确认接口 shift 的符号约定，定义要求为 v[t+1]",
+            "units": "native image coordinate unit/frame"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "model_error_comparison",
+            "expression": "同一时间留出区间、同一有效样本上的基线与历史增强模型预测误差比较"
+          }
+        ],
+        "groups": [],
+        "model": {
+          "target": "target",
+          "features": [
+            "r",
+            "v",
+            "history10"
+          ],
+          "train_fraction": 0.8
+        }
+      },
+      "exploration": {
+        "missing_external_facts": [
+          "R07 的物理标定、帧率、任务与身份稳定性未知；这些限制物理解释，不妨碍原生坐标预测问题。"
+        ],
+        "unselected_definitions": [
+          "目标对齐需明确为 v[t+1]；控制器的 shift 符号约定待核实。",
+          "分析计划的模型字段目前仅表达扩展模型；需由控制器能力支持基线与扩展模型在同一留出段比较。"
+        ],
+        "interface_gaps": [
+          "当前没有可调用的控制器工具；上次分析因形状不匹配挂起。"
+        ],
+        "next_action": "向控制器提交兼容表达式的 custom 或 analysis 请求，先确认数组形状、滞后对齐及共同有效样本；目前无法实际发出该请求。",
+        "stalled_reason": "执行接口在当前会话不可用，且上次请求因形状不匹配未执行。",
+        "understanding_changed": true
+      },
+      "learning_change": null,
+      "memory_notes": [],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/04_fresh_continuation/result.json",
+      "sha256": "1e97ffad634d8275855fe53827da56686cbda8f744b086b3ff4a324d3c0204c3"
+    },
+    {
+      "stage": "05_candidates",
+      "role": "discussion_recorder",
+      "summary": "讨论形成了两个尚待计算的R07坐标分析问题，并保留一个次要运动学描述候选。核验修正了问题范围：机制解释受限，不妨碍开展明确操作定义的描述性比较。",
+      "personal_question": null,
+      "shared_question_update": null,
+      "learning_request": null,
+      "top_level_analysis_plan": null,
+      "exploration": null,
+      "learning_change": null,
+      "memory_notes": [],
+      "result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/05_candidates/result.json",
+      "sha256": "a0c2c4a6c46e888a4771a9cc0637674feb5112d19b62da14cca2a2f89c63d81f"
+    }
+  ],
+  "requests": [
+    {
+      "boundary": "01_initial_2_learn_0",
+      "source_count": 8,
+      "source_ids": [
+        "Kfcf508e6a76bb0f4",
+        "Ka87f19b59cd350d0",
+        "K51247831ec573f29",
+        "K388753dd07bb2e43",
+        "Kbec4d0c0681aa017",
+        "K6ebd0741dfcecb9f",
+        "Kf65b09652dc24e30",
+        "K8a448a864438d803"
+      ],
+      "operations_requested": 0,
+      "computed": [],
+      "knowledge_status": "read_content_returned"
+    },
+    {
+      "boundary": "01_initial_1_learn_2",
+      "source_count": 8,
+      "source_ids": [
+        "Ka07776fcbc68a5bd",
+        "K7f402d28a9ddd743",
+        "K2501fde652988334",
+        "K25dc59d526b1cacb",
+        "Kef977f03b90d0ca9",
+        "Ka8827d8549fe85b3",
+        "Kec456dbe654430b3",
+        "K81bc76b066dbb2f1"
+      ],
+      "operations_requested": 0,
+      "computed": [],
+      "knowledge_status": "read_content_returned"
+    },
+    {
+      "boundary": "r1_exchange_2_continuation_request",
+      "source_count": 13,
+      "source_ids": [
+        "Ka714de5acee2a56a",
+        "K886f8a25c2c80917",
+        "K70e2c39209dc19e5",
+        "Kd7fa59d204bbf5ce",
+        "K54a098e496a0b662",
+        "K772e71ff470362e0",
+        "K8a10fc31e129a044",
+        "Kd8d0e4931772355b",
+        "Kbec4d0c0681aa017",
+        "Kfcf508e6a76bb0f4",
+        "Kf65b09652dc24e30",
+        "K51247831ec573f29",
+        "K90156a91a17bd2c8"
+      ],
+      "operations_requested": 1,
+      "computed": [
+        {
+          "request": {
+            "kind": "analysis",
+            "question": "在 R07 中，加入前10帧平均相对位移的模型是否改善下一帧相对位移的按时间留出预测？",
+            "record_id": "R07",
+            "variables": [
+              {
+                "name": "r",
+                "expression": "positions[:,1,:]-positions[:,0,:]",
+                "meaning": "B相对A的二维位置向量",
+                "units": "原生图像坐标"
+              },
+              {
+                "name": "dr",
+                "expression": "diff(r,axis=0)",
+                "meaning": "相邻帧相对位移",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "target",
+                "expression": "shift(dr,-1)",
+                "meaning": "下一帧的相对位移向量",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "history10",
+                "expression": "rolling(dr,10)",
+                "meaning": "截至当前帧的前10个相对位移均值；需确认控制器 rolling 对窗口端点的定义",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "valid",
+                "expression": "isfinite(r).all(axis=1) & isfinite(dr).all(axis=1) & isfinite(target).all(axis=1) & isfinite(history10).all(axis=1)",
+                "meaning": "两模型共用的有效样本掩码",
+                "units": "布尔值"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "target",
+                "expression": "target"
+              }
+            ],
+            "groups": [],
+            "model": {
+              "target": "target",
+              "features": [
+                "r",
+                "dr",
+                "history10"
+              ],
+              "train_fraction": 0.7
+            },
+            "start": 10
+          },
+          "executed_plan": {
+            "kind": "analysis",
+            "question": "在 R07 中，加入前10帧平均相对位移的模型是否改善下一帧相对位移的按时间留出预测？",
+            "record_id": "R07",
+            "variables": [
+              {
+                "name": "r",
+                "expression": "positions[:,1,:]-positions[:,0,:]",
+                "meaning": "B相对A的二维位置向量",
+                "units": "原生图像坐标"
+              },
+              {
+                "name": "dr",
+                "expression": "diff(r,axis=0)",
+                "meaning": "相邻帧相对位移",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "target",
+                "expression": "shift(dr,-1)",
+                "meaning": "下一帧的相对位移向量",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "history10",
+                "expression": "rolling(dr,10)",
+                "meaning": "截至当前帧的前10个相对位移均值；需确认控制器 rolling 对窗口端点的定义",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "valid",
+                "expression": "isfinite(r).all(axis=1) & isfinite(dr).all(axis=1) & isfinite(target).all(axis=1) & isfinite(history10).all(axis=1)",
+                "meaning": "两模型共用的有效样本掩码",
+                "units": "布尔值"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "target",
+                "expression": "target"
+              }
+            ],
+            "groups": [],
+            "model": {
+              "target": "target",
+              "features": [
+                "r",
+                "dr",
+                "history10"
+              ],
+              "train_fraction": 0.7
+            },
+            "start": 10
+          },
+          "result": {
+            "status": "pending_controller",
+            "capability_task": {
+              "request": {
+                "kind": "analysis",
+                "question": "在 R07 中，加入前10帧平均相对位移的模型是否改善下一帧相对位移的按时间留出预测？",
+                "record_id": "R07",
+                "variables": [
+                  {
+                    "name": "r",
+                    "expression": "positions[:,1,:]-positions[:,0,:]",
+                    "meaning": "B相对A的二维位置向量",
+                    "units": "原生图像坐标"
+                  },
+                  {
+                    "name": "dr",
+                    "expression": "diff(r,axis=0)",
+                    "meaning": "相邻帧相对位移",
+                    "units": "原生图像坐标/帧"
+                  },
+                  {
+                    "name": "target",
+                    "expression": "shift(dr,-1)",
+                    "meaning": "下一帧的相对位移向量",
+                    "units": "原生图像坐标/帧"
+                  },
+                  {
+                    "name": "history10",
+                    "expression": "rolling(dr,10)",
+                    "meaning": "截至当前帧的前10个相对位移均值；需确认控制器 rolling 对窗口端点的定义",
+                    "units": "原生图像坐标/帧"
+                  },
+                  {
+                    "name": "valid",
+                    "expression": "isfinite(r).all(axis=1) & isfinite(dr).all(axis=1) & isfinite(target).all(axis=1) & isfinite(history10).all(axis=1)",
+                    "meaning": "两模型共用的有效样本掩码",
+                    "units": "布尔值"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "name": "target",
+                    "expression": "target"
+                  }
+                ],
+                "groups": [],
+                "model": {
+                  "target": "target",
+                  "features": [
+                    "r",
+                    "dr",
+                    "history10"
+                  ],
+                  "train_fraction": 0.7
+                },
+                "start": 10
+              },
+              "reason": "Unsupported expression syntax: Call",
+              "status": "pending_controller",
+              "scientific_disposition": "Interface gap; the research question remains open.",
+              "execution_error": "ValueError: 当前执行接口不可用：工具环境拒绝运行命令（`code-mode host is disabled`），因此无法检查 `rolling` 窗口端点定义、验证表达式语法或将计划提交给控制器。原始分析请求仍待执行；不能据此判断模型是否改善预测。"
+            }
+          },
+          "executor_sha256": "32e81e66d65aabdb4d8e82b4a275939fe3eeb0a693bf8f26ee5acc52a7472e08",
+          "artifacts": [
+            "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/services/analysis/r1_exchange_2_continuation_request_op0/request.json",
+            "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/services/analysis/r1_exchange_2_continuation_request_op0/controller_task.json",
+            "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/services/analysis/r1_exchange_2_continuation_request_op0/executor.py"
+          ]
+        }
+      ],
+      "knowledge_status": "read_content_returned"
+    },
+    {
+      "boundary": "01_initial_0_learn_2",
+      "source_count": 1,
+      "source_ids": [
+        "Kf65b09652dc24e30"
+      ],
+      "operations_requested": 0,
+      "computed": [],
+      "knowledge_status": "read_content_returned"
+    },
+    {
+      "boundary": "01_initial_0_continuation_request",
+      "source_count": 1,
+      "source_ids": [
+        "Kf65b09652dc24e30"
+      ],
+      "operations_requested": 0,
+      "computed": [],
+      "knowledge_status": "read_content_returned"
+    },
+    {
+      "boundary": "01_initial_2_learn_1",
+      "source_count": 12,
+      "source_ids": [
+        "K51247831ec573f29",
+        "Ka87f19b59cd350d0",
+        "Kc37476a8d2f87191",
+        "Kcb9ac058ec32cae4",
+        "Ka1b479261cd01d74",
+        "Kfcf508e6a76bb0f4",
+        "K8a448a864438d803",
+        "Kbc0d84efa201d19f",
+        "K062cee380f98282d",
+        "Kfcaed331b19227a4",
+        "Kcd1be8ebeddf942f",
+        "K84d6eaacb1e3298b"
+      ],
+      "operations_requested": 0,
+      "computed": [],
+      "knowledge_status": "read_content_returned"
+    },
+    {
+      "boundary": "r1_exchange_0_continuation_request",
+      "source_count": 6,
+      "source_ids": [
+        "Kf65b09652dc24e30",
+        "Kfcf508e6a76bb0f4",
+        "K254a2995f3d43757",
+        "Kbec4d0c0681aa017",
+        "K51247831ec573f29",
+        "K15f04c8c71c6f386"
+      ],
+      "operations_requested": 0,
+      "computed": [],
+      "knowledge_status": "read_content_returned"
+    },
+    {
+      "boundary": "r1_exchange_2_learn_0",
+      "source_count": 10,
+      "source_ids": [
+        "K51247831ec573f29",
+        "Ka87f19b59cd350d0",
+        "K07afa924b8ef6cbd",
+        "K388753dd07bb2e43",
+        "K9638a2453cdcc99c",
+        "Kc37476a8d2f87191",
+        "Kf65b09652dc24e30",
+        "Kbec4d0c0681aa017",
+        "Kfcf508e6a76bb0f4",
+        "K8a448a864438d803"
+      ],
+      "operations_requested": 0,
+      "computed": [],
+      "knowledge_status": "read_content_returned"
+    },
+    {
+      "boundary": "01_initial_2_continuation_request",
+      "source_count": 10,
+      "source_ids": [
+        "K51247831ec573f29",
+        "Ka87f19b59cd350d0",
+        "Ka854a533ed927eea",
+        "Kc37476a8d2f87191",
+        "Kcb9ac058ec32cae4",
+        "Kfcf508e6a76bb0f4",
+        "K8a448a864438d803",
+        "Kbc0d84efa201d19f",
+        "Kefea3f48135899fd",
+        "K2e319dd40c555331"
+      ],
+      "operations_requested": 0,
+      "computed": [],
+      "knowledge_status": "read_content_returned"
+    },
+    {
+      "boundary": "r1_return_2_learn_0",
+      "source_count": 10,
+      "source_ids": [
+        "Ka4b734226ca9feb1",
+        "K8f4cd9a1a807a4d0",
+        "K262a9b0956d6ba51",
+        "Kfcf508e6a76bb0f4",
+        "Ka87f19b59cd350d0",
+        "Kc37476a8d2f87191",
+        "K51247831ec573f29",
+        "Kf65b09652dc24e30",
+        "K4f1d02b39e712031",
+        "K543e1087c1622e2c"
+      ],
+      "operations_requested": 1,
+      "computed": [
+        {
+          "request": {
+            "kind": "analysis",
+            "question": "在 R07 中加入此前 10 帧平均相对位移后，是否改善下一帧相对位移的时间顺序留出预测？",
+            "record_id": "R07",
+            "start": 10,
+            "variables": [
+              {
+                "name": "r",
+                "expression": "positions[:,1,:]-positions[:,0,:]",
+                "meaning": "B 相对 A 的二维位置向量",
+                "units": "原生图像坐标"
+              },
+              {
+                "name": "dr",
+                "expression": "diff(r,axis=0)",
+                "meaning": "相邻帧相对位移",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "target",
+                "expression": "shift(dr,-1)",
+                "meaning": "下一帧相对位移",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "history10",
+                "expression": "rolling(dr,10)",
+                "meaning": "截至当前索引的过去 10 个相对位移均值；执行时核实窗口端点定义",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "valid",
+                "expression": "isfinite(r[:,0])&isfinite(r[:,1])&isfinite(dr[:,0])&isfinite(dr[:,1])&isfinite(target[:,0])&isfinite(target[:,1])&isfinite(history10[:,0])&isfinite(history10[:,1])",
+                "meaning": "基线与扩展模型共同使用的有限值行",
+                "units": "布尔值"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "target",
+                "expression": "target"
+              }
+            ],
+            "groups": [
+              {
+                "name": "共同有效行",
+                "where": "valid",
+                "values": [
+                  "r",
+                  "dr",
+                  "history10",
+                  "target"
+                ]
+              }
+            ],
+            "model": {
+              "target": "target",
+              "features": [
+                "r",
+                "dr",
+                "history10"
+              ],
+              "train_fraction": 0.7
+            }
+          },
+          "executed_plan": {
+            "kind": "analysis",
+            "question": "在 R07 中加入此前 10 帧平均相对位移后，是否改善下一帧相对位移的时间顺序留出预测？",
+            "record_id": "R07",
+            "start": 10,
+            "variables": [
+              {
+                "name": "r",
+                "expression": "positions[:,1,:]-positions[:,0,:]",
+                "meaning": "B 相对 A 的二维位置向量",
+                "units": "原生图像坐标"
+              },
+              {
+                "name": "dr",
+                "expression": "diff(r,axis=0)",
+                "meaning": "相邻帧相对位移",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "target",
+                "expression": "shift(dr,-1)",
+                "meaning": "下一帧相对位移",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "history10",
+                "expression": "rolling(dr,10)",
+                "meaning": "截至当前索引的过去 10 个相对位移均值；执行时核实窗口端点定义",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "valid",
+                "expression": "isfinite(r[:,0])&isfinite(r[:,1])&isfinite(dr[:,0])&isfinite(dr[:,1])&isfinite(target[:,0])&isfinite(target[:,1])&isfinite(history10[:,0])&isfinite(history10[:,1])",
+                "meaning": "基线与扩展模型共同使用的有限值行",
+                "units": "布尔值"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "target",
+                "expression": "target"
+              }
+            ],
+            "groups": [
+              {
+                "name": "共同有效行",
+                "where": "valid",
+                "values": [
+                  "r",
+                  "dr",
+                  "history10",
+                  "target"
+                ]
+              }
+            ],
+            "model": {
+              "target": "target",
+              "features": [
+                "r",
+                "dr",
+                "history10"
+              ],
+              "train_fraction": 0.7
+            }
+          },
+          "result": {
+            "status": "pending_controller",
+            "capability_task": {
+              "request": {
+                "kind": "analysis",
+                "question": "在 R07 中加入此前 10 帧平均相对位移后，是否改善下一帧相对位移的时间顺序留出预测？",
+                "record_id": "R07",
+                "start": 10,
+                "variables": [
+                  {
+                    "name": "r",
+                    "expression": "positions[:,1,:]-positions[:,0,:]",
+                    "meaning": "B 相对 A 的二维位置向量",
+                    "units": "原生图像坐标"
+                  },
+                  {
+                    "name": "dr",
+                    "expression": "diff(r,axis=0)",
+                    "meaning": "相邻帧相对位移",
+                    "units": "原生图像坐标/帧"
+                  },
+                  {
+                    "name": "target",
+                    "expression": "shift(dr,-1)",
+                    "meaning": "下一帧相对位移",
+                    "units": "原生图像坐标/帧"
+                  },
+                  {
+                    "name": "history10",
+                    "expression": "rolling(dr,10)",
+                    "meaning": "截至当前索引的过去 10 个相对位移均值；执行时核实窗口端点定义",
+                    "units": "原生图像坐标/帧"
+                  },
+                  {
+                    "name": "valid",
+                    "expression": "isfinite(r[:,0])&isfinite(r[:,1])&isfinite(dr[:,0])&isfinite(dr[:,1])&isfinite(target[:,0])&isfinite(target[:,1])&isfinite(history10[:,0])&isfinite(history10[:,1])",
+                    "meaning": "基线与扩展模型共同使用的有限值行",
+                    "units": "布尔值"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "name": "target",
+                    "expression": "target"
+                  }
+                ],
+                "groups": [
+                  {
+                    "name": "共同有效行",
+                    "where": "valid",
+                    "values": [
+                      "r",
+                      "dr",
+                      "history10",
+                      "target"
+                    ]
+                  }
+                ],
+                "model": {
+                  "target": "target",
+                  "features": [
+                    "r",
+                    "dr",
+                    "history10"
+                  ],
+                  "train_fraction": 0.7
+                }
+              },
+              "reason": "shape mismatch: objects cannot be broadcast to a single shape.  Mismatch is between arg 0 with shape (44989,) and arg 1 with shape (44988,).",
+              "status": "pending_controller",
+              "scientific_disposition": "Interface gap; the research question remains open.",
+              "execution_error": "ValueError: 当前接口无法读取工作区或检查分析执行器，因此不能确认 `rolling` 的窗口端点定义，也无法验证错误是否由输出/分组对齐造成。研究问题仍开放；请控制器检查 R07 的帧数与各表达式形状，并核实 `rolling(dr,10)` 的端点定义后再执行原计划。"
+            }
+          },
+          "executor_sha256": "32e81e66d65aabdb4d8e82b4a275939fe3eeb0a693bf8f26ee5acc52a7472e08",
+          "artifacts": [
+            "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/services/analysis/r1_return_2_learn_0_op0/request.json",
+            "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/services/analysis/r1_return_2_learn_0_op0/controller_task.json",
+            "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/services/analysis/r1_return_2_learn_0_op0/executor.py"
+          ]
+        }
+      ],
+      "knowledge_status": "read_content_returned"
+    },
+    {
+      "boundary": "r1_exchange_0_learn_0",
+      "source_count": 5,
+      "source_ids": [
+        "Kf65b09652dc24e30",
+        "Kfcf508e6a76bb0f4",
+        "Ka87f19b59cd350d0",
+        "K51247831ec573f29",
+        "K07297db7d8b6c18c"
+      ],
+      "operations_requested": 0,
+      "computed": [],
+      "knowledge_status": "read_content_returned"
+    },
+    {
+      "boundary": "r1_return_2_continuation_request",
+      "source_count": 9,
+      "source_ids": [
+        "K23fa0956201ec58e",
+        "Kfcf508e6a76bb0f4",
+        "Ka87f19b59cd350d0",
+        "K21d7acaf8071b1b4",
+        "Kf5f35679ff96583f",
+        "K543e1087c1622e2c",
+        "K51247831ec573f29",
+        "Kf65b09652dc24e30",
+        "K90156a91a17bd2c8"
+      ],
+      "operations_requested": 1,
+      "computed": [
+        {
+          "request": {
+            "kind": "analysis",
+            "question": "修正形状和索引对齐后，在 R07 中加入此前10帧平均相对位移是否改善下一帧相对位移的时间顺序留出预测？",
+            "record_id": "R07",
+            "start": 10,
+            "variables": [
+              {
+                "name": "r",
+                "expression": "positions[:,1,:]-positions[:,0,:]",
+                "meaning": "B相对A的二维位置向量",
+                "units": "原生图像坐标"
+              },
+              {
+                "name": "dr",
+                "expression": "diff(r,axis=0)",
+                "meaning": "相邻帧相对位移",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "target",
+                "expression": "shift(dr,-1)",
+                "meaning": "下一帧相对位移",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "history10",
+                "expression": "rolling(dr,10)",
+                "meaning": "当前索引及此前窗口定义待控制器核实的10帧平均相对位移",
+                "units": "原生图像坐标/帧"
+              },
+              {
+                "name": "valid",
+                "expression": "isfinite(r[:,0])&isfinite(r[:,1])&isfinite(dr[:,0])&isfinite(dr[:,1])&isfinite(target[:,0])&isfinite(target[:,1])&isfinite(history10[:,0])&isfinite(history10[:,1])",
+                "meaning": "模型共有的有限值行；须保证各变量长度和索引相同",
+                "units": "布尔值"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "target",
+                "expression": "target"
+              }
+            ],
+            "groups": [
+              {
+                "name": "共同有效行",
+                "where": "valid",
+                "values": [
+                  "r",
+                  "dr",
+                  "history10",
+                  "target"
+                ]
+              }
+            ],
+            "model": {
+              "target": "target",
+              "features": [
+                "r",
+                "dr",
+                "history10"
+              ],
+              "train_fraction": 0.7
+            }
+          },
+          "executed_plan": {
+            "kind": "analysis",
+            "question": "修正形状和索引对齐后，在 R07 中加入此前10帧平均相对位移是否改善下一帧相对位移的时间顺序留出预测？",
+            "record_id": "R07",
+            "start": 10,
+            "variables": [
+              {
+                "name": "r",
+                "expression": "positions[:,1,:]-positions[:,0,:]",
+                "meaning": "B相对A的二维位置向量",
+                "units": "原生图像坐标"
+              },
+              {
+                "name": "dr",
+                "expression": "diff(r,axis=0)",
+                "meaning": "相邻帧相对位移；索引 t 表示 r[t+1]-r[t]，长度比 r 少1"
+              },
+              {
+                "name": "target",
+                "expression": "shift(dr,-1)",
+                "meaning": "下一帧相对位移；索引 t 对应 dr[t+1]，末行填充 NaN"
+              },
+              {
+                "name": "history10",
+                "expression": "rolling(dr,10)",
+                "meaning": "以当前索引为窗口末端、包含当前及此前9个 dr 值的10帧尾随平均；前9行填充 NaN"
+              },
+              {
+                "name": "valid",
+                "expression": "isfinite(r[10:-1,0])&isfinite(r[10:-1,1])&isfinite(dr[10:-1,0])&isfinite(dr[10:-1,1])&isfinite(target[10:-1,0])&isfinite(target[10:-1,1])&isfinite(history10[10:-1,0])&isfinite(history10[10:-1,1])",
+                "meaning": "将长度对齐至 target 的有效行掩码；排除开头窗口不足行和末尾无下一步目标行。由于 r 比其他变量多一行，从索引10开始切片时仅取到倒数第二个 r 行。",
+                "units": "布尔值"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "target",
+                "expression": "target[10:-1]"
+              }
+            ],
+            "groups": [
+              {
+                "name": "共同有效行",
+                "where": "valid",
+                "values": [
+                  "r[10:-1]",
+                  "dr[10:-1]",
+                  "history10[10:-1]",
+                  "target[10:-1]"
+                ]
+              }
+            ],
+            "model": {
+              "target": "target",
+              "features": [
+                "r",
+                "dr",
+                "history10"
+              ],
+              "train_fraction": 0.7
+            }
+          },
+          "result": {
+            "status": "pending_controller",
+            "capability_task": {
+              "request": {
+                "kind": "analysis",
+                "question": "修正形状和索引对齐后，在 R07 中加入此前10帧平均相对位移是否改善下一帧相对位移的时间顺序留出预测？",
+                "record_id": "R07",
+                "start": 10,
+                "variables": [
+                  {
+                    "name": "r",
+                    "expression": "positions[:,1,:]-positions[:,0,:]",
+                    "meaning": "B相对A的二维位置向量",
+                    "units": "原生图像坐标"
+                  },
+                  {
+                    "name": "dr",
+                    "expression": "diff(r,axis=0)",
+                    "meaning": "相邻帧相对位移",
+                    "units": "原生图像坐标/帧"
+                  },
+                  {
+                    "name": "target",
+                    "expression": "shift(dr,-1)",
+                    "meaning": "下一帧相对位移",
+                    "units": "原生图像坐标/帧"
+                  },
+                  {
+                    "name": "history10",
+                    "expression": "rolling(dr,10)",
+                    "meaning": "当前索引及此前窗口定义待控制器核实的10帧平均相对位移",
+                    "units": "原生图像坐标/帧"
+                  },
+                  {
+                    "name": "valid",
+                    "expression": "isfinite(r[:,0])&isfinite(r[:,1])&isfinite(dr[:,0])&isfinite(dr[:,1])&isfinite(target[:,0])&isfinite(target[:,1])&isfinite(history10[:,0])&isfinite(history10[:,1])",
+                    "meaning": "模型共有的有限值行；须保证各变量长度和索引相同",
+                    "units": "布尔值"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "name": "target",
+                    "expression": "target"
+                  }
+                ],
+                "groups": [
+                  {
+                    "name": "共同有效行",
+                    "where": "valid",
+                    "values": [
+                      "r",
+                      "dr",
+                      "history10",
+                      "target"
+                    ]
+                  }
+                ],
+                "model": {
+                  "target": "target",
+                  "features": [
+                    "r",
+                    "dr",
+                    "history10"
+                  ],
+                  "train_fraction": 0.7
+                }
+              },
+              "reason": "shape mismatch: objects cannot be broadcast to a single shape.  Mismatch is between arg 0 with shape (44989,) and arg 1 with shape (44988,).",
+              "status": "pending_controller",
+              "scientific_disposition": "Interface gap; the research question remains open.",
+              "execution_error": "ValueError: Define variable meaning and units"
+            }
+          },
+          "executor_sha256": "32e81e66d65aabdb4d8e82b4a275939fe3eeb0a693bf8f26ee5acc52a7472e08",
+          "artifacts": [
+            "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/services/analysis/r1_return_2_continuation_request_op0/request.json",
+            "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/services/analysis/r1_return_2_continuation_request_op0/controller_task.json",
+            "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/services/analysis/r1_return_2_continuation_request_op0/controller_plan.json",
+            "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/services/analysis/r1_return_2_continuation_request_op0/executor.py"
+          ]
+        }
+      ],
+      "knowledge_status": "read_content_returned"
+    },
+    {
+      "boundary": "r1_exchange_1_continuation_request",
+      "source_count": 3,
+      "source_ids": [
+        "Kf65b09652dc24e30",
+        "K51247831ec573f29",
+        "Kfcf508e6a76bb0f4"
+      ],
+      "operations_requested": 0,
+      "computed": [],
+      "knowledge_status": "read_content_returned"
+    },
+    {
+      "boundary": "r1_exchange_1_learn_0",
+      "source_count": 3,
+      "source_ids": [
+        "Kf65b09652dc24e30",
+        "Kfcf508e6a76bb0f4",
+        "K51247831ec573f29"
+      ],
+      "operations_requested": 0,
+      "computed": [],
+      "knowledge_status": "read_content_returned"
+    },
+    {
+      "boundary": "r1_exchange_0_learn_1",
+      "source_count": 6,
+      "source_ids": [
+        "Kf65b09652dc24e30",
+        "Kfcf508e6a76bb0f4",
+        "K51247831ec573f29",
+        "K254a2995f3d43757",
+        "Kbec4d0c0681aa017",
+        "Kbc0d84efa201d19f"
+      ],
+      "operations_requested": 0,
+      "computed": [],
+      "knowledge_status": "read_content_returned"
+    },
+    {
+      "boundary": "01_initial_1_learn_0",
+      "source_count": 10,
+      "source_ids": [
+        "K51247831ec573f29",
+        "Kbec4d0c0681aa017",
+        "Kfcf508e6a76bb0f4",
+        "K90156a91a17bd2c8",
+        "Kf65b09652dc24e30",
+        "K4f1d02b39e712031",
+        "Kcb9ac058ec32cae4",
+        "Ka87f19b59cd350d0",
+        "Kc37476a8d2f87191",
+        "Ke85409b76af85cf6"
+      ],
+      "operations_requested": 0,
+      "computed": [],
+      "knowledge_status": "read_content_returned"
+    },
+    {
+      "boundary": "01_initial_2_learn_2",
+      "source_count": 11,
+      "source_ids": [
+        "K51247831ec573f29",
+        "Ka87f19b59cd350d0",
+        "Kc37476a8d2f87191",
+        "Kcb9ac058ec32cae4",
+        "Ka1b479261cd01d74",
+        "Kfcf508e6a76bb0f4",
+        "K8a448a864438d803",
+        "Kbc0d84efa201d19f",
+        "K2fdde4ce9b23ceeb",
+        "K4f1d02b39e712031",
+        "K6d1029ef28269daf"
+      ],
+      "operations_requested": 0,
+      "computed": [],
+      "knowledge_status": "read_content_returned"
+    },
+    {
+      "boundary": "01_initial_1_continuation_request",
+      "source_count": 8,
+      "source_ids": [
+        "Ka8827d8549fe85b3",
+        "Ka07776fcbc68a5bd",
+        "K7f402d28a9ddd743",
+        "K2501fde652988334",
+        "K25dc59d526b1cacb",
+        "Kef977f03b90d0ca9",
+        "Kec456dbe654430b3",
+        "K81bc76b066dbb2f1"
+      ],
+      "operations_requested": 0,
+      "computed": [],
+      "knowledge_status": "read_content_returned"
+    },
+    {
+      "boundary": "01_initial_0_learn_1",
+      "source_count": 2,
+      "source_ids": [
+        "K6ebd0741dfcecb9f",
+        "Kf65b09652dc24e30"
+      ],
+      "operations_requested": 0,
+      "computed": [],
+      "knowledge_status": "read_content_returned"
+    },
+    {
+      "boundary": "01_initial_0_learn_0",
+      "source_count": 7,
+      "source_ids": [
+        "Ka87f19b59cd350d0",
+        "Kfcf508e6a76bb0f4",
+        "K4a3567d50a6d4383",
+        "K90156a91a17bd2c8",
+        "K51247831ec573f29",
+        "Kc37476a8d2f87191",
+        "Kf65b09652dc24e30"
+      ],
+      "operations_requested": 0,
+      "computed": [],
+      "knowledge_status": "read_content_returned"
+    },
+    {
+      "boundary": "01_initial_1_learn_1",
+      "source_count": 16,
+      "source_ids": [
+        "Ka714de5acee2a56a",
+        "K87ee2bdf72f46b2b",
+        "K760644a48522c807",
+        "Kda140e110ac81048",
+        "Kdc393ebfd355b572",
+        "Kea07f63079fa4a35",
+        "Kb9f4d02a13a4b554",
+        "Ka63ba34f1e3c27fc",
+        "Kef9021175dbe8d14",
+        "K093f80e72a2c36ae",
+        "K25300ff6b0c6128f",
+        "K1fe0fba1f915baf7",
+        "Kaca39aea42a4a8ae",
+        "K7f402d28a9ddd743",
+        "Kf9c4e96f6d321756",
+        "K7d81fed56b546b73"
+      ],
+      "operations_requested": 0,
+      "computed": [],
+      "knowledge_status": "read_content_returned"
+    }
+  ],
+  "sources": [
+    {
+      "id": "Kfcf508e6a76bb0f4",
+      "date": "2003-09-01",
+      "title": "时尚报刊、广告与当代中国消费意识形态",
+      "doi": "https://doi.org/10.14793/cs_etd.14",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Ka87f19b59cd350d0",
+      "date": "2006-06-01",
+      "title": "翻译、意识形态与话语 : 中国1895-1911 年文学翻译研究",
+      "doi": "https://doi.org/10.14793/tran_etd.6",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K51247831ec573f29",
+      "date": "2006-12-13",
+      "title": "翻译操控论：从严复和鲁迅的翻译理论相关的例句实践看意识形态作用",
+      "doi": "https://doi.org/10.14793/tran_etd.7",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K388753dd07bb2e43",
+      "date": "2008-10-01",
+      "title": "新一代互联网体系结构理论研究进展",
+      "doi": "https://doi.org/10.1360/zf2008-38-10-1540",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Kbec4d0c0681aa017",
+      "date": "1997-01-01",
+      "title": "Geo-spatial/temporal Analysis in Geo-processing",
+      "doi": "https://doi.org/10.11834/jrs.19970301",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K6ebd0741dfcecb9f",
+      "date": "2003-01-01",
+      "title": "Integrative Eco-management for Resource, Environment and Industrial Transformation",
+      "doi": "https://openalex.org/W2366027210",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Kf65b09652dc24e30",
+      "date": "2009-01-01",
+      "title": "Dolmetschen und Übersetzen im Wirtschaftsbereich. Teil 2",
+      "doi": "https://doi.org/10.17875/gup2009-455",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K8a448a864438d803",
+      "date": "2009-10-01",
+      "title": "岁差对亚洲夏季风气候变化影响研究进展",
+      "doi": "https://doi.org/10.1360/csb2009-54-20-3097",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Ka07776fcbc68a5bd",
+      "date": "1992-03-24",
+      "title": "Directional Trajectory Control by Employing Statistics and Probability Methods",
+      "doi": "https://doi.org/10.2118/22384-ms",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K7f402d28a9ddd743",
+      "date": "2009-01-01",
+      "title": "Modeling collective motion in animal groups : from mathematical analysis to field data",
+      "doi": "https://doi.org/10.14288/1.0067464",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K2501fde652988334",
+      "date": "2009-01-01",
+      "title": "Simulation, modelling, and control of a near-surface underwater vehicle",
+      "doi": "https://doi.org/10.14288/1.0080953",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K25dc59d526b1cacb",
+      "date": "2007-05-10",
+      "title": "Neuromechanics: an integrative approach for understanding motor control",
+      "doi": "https://doi.org/10.1093/icb/icm024",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Kef977f03b90d0ca9",
+      "date": "2006-05-08",
+      "title": "Jack Kerouac's spontaneous prose: a performance genealogy of the fiction",
+      "doi": "https://doi.org/10.31390/gradschool_dissertations.3772",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Ka8827d8549fe85b3",
+      "date": "2005-07-01",
+      "title": "Optimising two-dye microarray designs for estimating associations with a quantitative trait.",
+      "doi": "https://doi.org/10.1016/j.jbiotec.2005.02.016",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Kec456dbe654430b3",
+      "date": "2009-01-01",
+      "title": "Aspects of the ecology of macaroni penguins (Eudyptes chrysolophus) around South Georgia",
+      "doi": "https://doi.org/10.25560/5667",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K81bc76b066dbb2f1",
+      "date": "2008-12-01",
+      "title": "Bioinformatics and statistical genomics",
+      "doi": "https://doi.org/10.1007/s11568-009-9081-x",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Ka714de5acee2a56a",
+      "date": "2009-04-01",
+      "title": "Abstracts of the Society of General Internal Medicine 32nd Annual Meeting. Miami Beach, Florida, USA. May 13 -16, 2009.",
+      "doi": "https://doi.org/10.1007/s11606-009-0963-3",
+      "access": "article_body_excerpt_up_to_50000_chars"
+    },
+    {
+      "id": "K886f8a25c2c80917",
+      "date": "1998-01-01",
+      "title": "Stochastic resonance",
+      "doi": "https://doi.org/10.1103/revmodphys.70.223",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K70e2c39209dc19e5",
+      "date": "2008-02-01",
+      "title": "A METHOD FOR INFERRING HIERARCHICAL DYNAMICS IN STOCHASTIC PROCESSES",
+      "doi": "https://doi.org/10.1142/s0219525908001507",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Kd7fa59d204bbf5ce",
+      "date": "2007-11-20",
+      "title": "Quantitative Evaluation of UML State Machines Using Stochastic Petri Nets",
+      "doi": "https://doi.org/10.14279/depositonce-1705",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K54a098e496a0b662",
+      "date": "2007-02-16",
+      "title": "Challenges in the analysis of mass-throughput data: a technical commentary from the statistical machine learning perspective.",
+      "doi": "https://europepmc.org/article/MED/19458765",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K772e71ff470362e0",
+      "date": "2009-12-10",
+      "title": "Causal time series analysis of functional magnetic resonance imaging data",
+      "doi": "https://openalex.org/W2118010729",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K8a10fc31e129a044",
+      "date": "2008-01-01",
+      "title": "Causal Inference from Statistical Data",
+      "doi": "https://doi.org/10.5445/ir/1000007981",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Kd8d0e4931772355b",
+      "date": "2007-01-01",
+      "title": "Bayesian network modeling of neural systems with functional MR images",
+      "doi": "https://doi.org/10.32657/10356/2585",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K90156a91a17bd2c8",
+      "date": "2008-01-01",
+      "title": "Chinese Neutrosophy and Taoist Natural Philosophy",
+      "doi": "https://openalex.org/W84622410",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Kc37476a8d2f87191",
+      "date": "2003-09-01",
+      "title": "意识形态、诗学与文学翻译选择规范 : 20 世纪50－80 年代中国的（后）现代主义文学翻译研究",
+      "doi": "https://doi.org/10.14793/tran_etd.9",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Kcb9ac058ec32cae4",
+      "date": "2008-01-01",
+      "title": "翻译研究的对话性路径 : 巴赫金思想与翻译研究",
+      "doi": "https://doi.org/10.14793/tran_etd.2",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Ka1b479261cd01d74",
+      "date": "2009-01-16",
+      "title": "《超越民族：殖民主义与青岛的抵抗（1897-1914）》 (‘Negotiating the Nation: Colonialism and Resistance in Qingdao, 1897-1914’)",
+      "doi": "https://doi.org/10.5130/pc.v1i1.992",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Kbc0d84efa201d19f",
+      "date": "2000-01-01",
+      "title": "Industrial Ecology and Transition to Eco-industry",
+      "doi": "https://openalex.org/W2349674237",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K062cee380f98282d",
+      "date": "2005-04-01",
+      "title": "一种基于相似度聚类方法的指纹识别算法",
+      "doi": "https://doi.org/10.1360/zf2005-35-2-186",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Kfcaed331b19227a4",
+      "date": "2003-04-20",
+      "title": "基于“源-汇”生态过程的景观格局识别方法——景观空间负荷对比指数",
+      "doi": "https://openalex.org/W1498038082",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Kcd1be8ebeddf942f",
+      "date": "2006-07-01",
+      "title": "利用亚细胞位置特异的基因功能模块与表达调控网络识别疾病特征基因",
+      "doi": "https://doi.org/10.1360/csb2006-51-13-1545",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K84d6eaacb1e3298b",
+      "date": "2009-11-13",
+      "title": "Web Service QoS Prediction Approach",
+      "doi": "https://doi.org/10.3724/sp.j.1001.2009.03375",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K254a2995f3d43757",
+      "date": "2001-01-01",
+      "title": "Entomological Radar: from Research to Practice",
+      "doi": "https://doi.org/10.11834/jrs.20010312",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K15f04c8c71c6f386",
+      "date": "2007-01-01",
+      "title": "Progress of Ship Detection Technology and System Based on Remote Sensing Technology in European Union",
+      "doi": "https://doi.org/10.11834/jrs.20070476",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K07afa924b8ef6cbd",
+      "date": "2007-02-01",
+      "title": "信息安全综述",
+      "doi": "https://doi.org/10.1360/zf2007-37-1-129",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K9638a2453cdcc99c",
+      "date": "2008-06-01",
+      "title": "面向网构软件的环境驱动模型与支撑技术研究",
+      "doi": "https://doi.org/10.1360/zf2008-38-6-864",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Ka854a533ed927eea",
+      "date": "2008-10-01",
+      "title": "概率和噪声环境下基于主动探针的Internet服务故障管理",
+      "doi": "https://doi.org/10.1360/zf2008-38-10-1733",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Kefea3f48135899fd",
+      "date": "2008-01-01",
+      "title": "结合已有知识体系的酒精中毒相关的SNP 单体型及其相关基因挖掘",
+      "doi": "https://doi.org/10.1360/zc2008-38-10-938",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K2e319dd40c555331",
+      "date": "2008-10-01",
+      "title": "一种基于局部推测的BGP协议并行技术",
+      "doi": "https://doi.org/10.1360/zf2008-38-10-1663",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Ka4b734226ca9feb1",
+      "date": "2009-01-16",
+      "title": "《上海早期股票市场的殖民主义、民族主义和中国文化问题》 ('Questiopns of Colonialism, Nationalism, and the Early Shanghai Stockmarket’",
+      "doi": "https://doi.org/10.5130/pc.v1i1.986",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K8f4cd9a1a807a4d0",
+      "date": "2009-01-01",
+      "title": "Stress of hydraulic engineering on fisheries in the lower reaches of the Yangtze River and compensation",
+      "doi": "https://doi.org/10.18307/2009.0102",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K262a9b0956d6ba51",
+      "date": "2009-08-14",
+      "title": "Combining phylogenetic information: concept, methodology, and challenges",
+      "doi": "https://doi.org/10.3724/sp.j.1005.2009.00689",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K4f1d02b39e712031",
+      "date": "2006-10-03",
+      "title": "互文性与翻译",
+      "doi": "https://doi.org/10.14793/chi_etd.24",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K543e1087c1622e2c",
+      "date": "2008-01-01",
+      "title": "福利国家转变的数量维度 : 21个OECD国家的宏观统计改革轨迹 (1980-2001年)",
+      "doi": "https://openalex.org/W297779009",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K07297db7d8b6c18c",
+      "date": "2007-03-31",
+      "title": "一位文化越境者的“亞洲”言説 ―評張競書評集《閲讀亞洲》",
+      "doi": "https://doi.org/10.34443/00000047",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K23fa0956201ec58e",
+      "date": "2006-02-01",
+      "title": "高分子体系的自洽场理论方法及其应用",
+      "doi": "https://doi.org/10.1360/zb2006-36-1-1",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K21d7acaf8071b1b4",
+      "date": "2009-01-01",
+      "title": "遥感科学与技术中的一些前沿问题",
+      "doi": "https://doi.org/10.11834/jrs.20090101",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Kf5f35679ff96583f",
+      "date": "2006-10-01",
+      "title": "基于应用语义的网构软件松弛事务模型研究",
+      "doi": "https://doi.org/10.1360/zf2006-36-10-1170",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Ke85409b76af85cf6",
+      "date": "1990-12-01",
+      "title": "简化Navier-Stokes方程的一般理论",
+      "doi": "https://doi.org/10.1360/za1990-20-12-1272",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K2fdde4ce9b23ceeb",
+      "date": "2009-09-01",
+      "title": "中国微重力流体科学的空间实验研究",
+      "doi": "https://doi.org/10.1360/csb2009-54-18-2615",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K6d1029ef28269daf",
+      "date": "2004-01-01",
+      "title": "志贺菌福氏2a入侵上皮细胞诱导表达的毒力相关基因筛选与鉴定",
+      "doi": "https://doi.org/10.1360/zc2004-34-3-216",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K4a3567d50a6d4383",
+      "date": "2009-09-01",
+      "title": "计算热辐射学的进展",
+      "doi": "https://doi.org/10.1360/csb2009-54-18-2627",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K87ee2bdf72f46b2b",
+      "date": "1975-10-01",
+      "title": "Correlation of Selected Serum Constituents: 1. Inter-Individual Variation and Analytical Error",
+      "doi": "https://doi.org/10.1093/clinchem/21.11.1592",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K760644a48522c807",
+      "date": "1987-09-01",
+      "title": "A model for directional and distance hearing in swimbladder-bearing fish based on the displacement orbits of the hair cells",
+      "doi": "https://doi.org/10.1121/1.395280",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Kda140e110ac81048",
+      "date": "2007-01-01",
+      "title": "Assembly of sensory-motor connectivity in the spinal cord of mice",
+      "doi": "https://doi.org/10.5451/unibas-004355201",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Kdc393ebfd355b572",
+      "date": "2006-01-01",
+      "title": "Characterization of semaphorin 6A during development of the embryonic chicken spinal cord",
+      "doi": "https://doi.org/10.5167/uzh-163435",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Kea07f63079fa4a35",
+      "date": "1996-05-01",
+      "title": "Pigment Patterns of Larval Salamanders (Ambystomatidae, Salamandridae): The Role of the Lateral Line Sensory System and the Evolution of Pattern-Forming Mechanisms",
+      "doi": "https://doi.org/10.1006/dbio.1996.0114",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Kb9f4d02a13a4b554",
+      "date": "2002-05-28",
+      "title": "Oscillatory Sequences of Firing in the Locust Olfactory System: Mechanisms and Functional Significance",
+      "doi": "https://doi.org/10.7907/qze9-sz72",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Ka63ba34f1e3c27fc",
+      "date": "2008-12-31",
+      "title": "Robustness and Sensitivity Analysis of Risk Measurement Procedures",
+      "doi": "https://doi.org/10.2139/ssrn.1086698",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Kef9021175dbe8d14",
+      "date": "2008-01-01",
+      "title": "Automated tracking and collective behaviour in locusts and humans",
+      "doi": "https://doi.org/10.5287/ora-gw8xppmkg",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K093f80e72a2c36ae",
+      "date": "2005-01-01",
+      "title": "Gene Expression Analysis Reveals Novel Functions of Vitamin D and Glucocorticoids",
+      "doi": "https://openalex.org/W2748832828",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K25300ff6b0c6128f",
+      "date": "1993-03-01",
+      "title": "Statistical Inference",
+      "doi": "https://doi.org/10.1201/9781003456285",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K1fe0fba1f915baf7",
+      "date": "2007-08-31",
+      "title": "The Diploid Genome Sequence of an Individual Human",
+      "doi": "https://doi.org/10.1371/journal.pbio.0050254",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Kaca39aea42a4a8ae",
+      "date": "2003-02-01",
+      "title": "Statistical Challenges in Functional Genomics",
+      "doi": "https://doi.org/10.1214/ss/1056397486",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "Kf9c4e96f6d321756",
+      "date": "2009-01-01",
+      "title": "Argo Project: Machine vision based motion capture for tracking the trajectory of the pose of a mobile rigid body",
+      "doi": "https://doi.org/10.14288/1.0080905",
+      "access": "indexed_abstract_only"
+    },
+    {
+      "id": "K7d81fed56b546b73",
+      "date": "2008-08-28",
+      "title": "Nonlinear Muscles, Passive Viscoelasticity and Body Taper Conspire To Create Neuromechanical Phase Lags in Anguilliform Swimmers",
+      "doi": "https://doi.org/10.1371/journal.pcbi.1000157",
+      "access": "indexed_abstract_only"
+    }
+  ]
+}

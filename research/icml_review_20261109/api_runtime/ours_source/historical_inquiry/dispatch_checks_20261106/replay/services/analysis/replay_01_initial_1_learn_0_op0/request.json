@@ -1,0 +1,58 @@
+{
+  "kind": "analysis",
+  "question": "描述 R07 全记录内 A/B 的相对距离与逐帧位移大小；不作行为分类。",
+  "record_id": "R07",
+  "start": 1,
+  "stop": 44999,
+  "variables": [
+    {
+      "name": "relative_position",
+      "expression": "positions[:,0,:] - positions[:,1,:]",
+      "meaning": "A 相对 B 的二维位置向量",
+      "units": "原生图像坐标单位"
+    },
+    {
+      "name": "distance",
+      "expression": "norm(relative_position,axis=-1)",
+      "meaning": "A 与 B 的欧氏距离",
+      "units": "原生图像坐标单位"
+    },
+    {
+      "name": "A_step",
+      "expression": "norm(diff(positions[:,0,:],axis=0),axis=-1)",
+      "meaning": "A 相邻帧位移大小",
+      "units": "原生图像坐标单位/帧"
+    },
+    {
+      "name": "B_step",
+      "expression": "norm(diff(positions[:,1,:],axis=0),axis=-1)",
+      "meaning": "B 相邻帧位移大小",
+      "units": "原生图像坐标单位/帧"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "distance",
+      "expression": "distance"
+    },
+    {
+      "name": "A_step",
+      "expression": "A_step"
+    },
+    {
+      "name": "B_step",
+      "expression": "B_step"
+    }
+  ],
+  "groups": [
+    {
+      "name": "all_frames",
+      "where": "isfinite(distance)",
+      "values": [
+        "distance",
+        "A_step",
+        "B_step"
+      ]
+    }
+  ]
+}

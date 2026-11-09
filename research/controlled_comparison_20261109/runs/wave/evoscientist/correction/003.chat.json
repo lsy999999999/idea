@@ -1,0 +1,39 @@
+{
+  "id": "resp_06eaa92587c98d9f016af0ab78a7b487d1ae2889e65dd1d457",
+  "object": "chat.completion",
+  "created": 1794157435,
+  "model": "gpt-6-luna",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_cade6ee2e49948c38e3d360e7b066249",
+            "type": "function",
+            "function": {
+              "name": "execute",
+              "arguments": "{\"command\":\"python -c \\\"import pandas as p; d=p.read_csv('/measurements.csv'); print(len(d),d.time_s.diff().dropna().describe().to_string(), 'zero widths', (d.correlation_width==0).sum(), 'nonfinite inverse', (~p.Series(d.inverse_correlation_length_normalized).map(lambda x: p.notna(x) and abs(x)!=float('inf'))).sum())\\\"\"}"
+            }
+          }
+        ]
+      },
+      "finish_reason": "tool_calls"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 19357,
+    "completion_tokens": 102,
+    "total_tokens": 19459,
+    "prompt_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 14720,
+      "cache_write_tokens_details": null
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    }
+  }
+}

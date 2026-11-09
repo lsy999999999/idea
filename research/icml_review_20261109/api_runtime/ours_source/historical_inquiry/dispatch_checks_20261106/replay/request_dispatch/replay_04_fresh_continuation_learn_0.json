@@ -1,0 +1,67 @@
+{
+  "source_stage": "replay_04_fresh_continuation",
+  "source_result_object_sha256": "3ee2d2c7e503a403dda378311a35fbefbba21e0f3bbbd863777597b8782c134d",
+  "request": {
+    "needed": true,
+    "queries": [],
+    "urls": [],
+    "operations": [
+      {
+        "kind": "analysis",
+        "question": "在 R07 中，前 10 帧平均相对位移是否改善对下一帧相对位移的预测？",
+        "record_id": "R07",
+        "variables": [
+          {
+            "name": "r",
+            "expression": "positions[:,1,:]-positions[:,0,:]",
+            "meaning": "B 相对 A 的位置向量",
+            "units": "native image coordinate unit"
+          },
+          {
+            "name": "v",
+            "expression": "diff(r,1,axis=0)",
+            "meaning": "逐帧相对位移",
+            "units": "native image coordinate unit/frame"
+          },
+          {
+            "name": "history10",
+            "expression": "rolling(v,10)",
+            "meaning": "截至当前行、含当前行在内的 10 个相对位移均值",
+            "units": "native image coordinate unit/frame"
+          },
+          {
+            "name": "target",
+            "expression": "shift(v,-1)",
+            "meaning": "下一帧相对位移；需确认接口 shift 的符号约定，定义要求为 v[t+1]",
+            "units": "native image coordinate unit/frame"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "model_error_comparison",
+            "expression": "同一时间留出区间、同一有效样本上的基线与历史增强模型预测误差比较"
+          }
+        ],
+        "groups": [],
+        "model": {
+          "target": "target",
+          "features": [
+            "r",
+            "v",
+            "history10"
+          ],
+          "train_fraction": 0.8
+        }
+      }
+    ]
+  },
+  "knowledge_requested": false,
+  "routes": [
+    {
+      "field": "analysis_plan",
+      "index": 0,
+      "operation_index": 0,
+      "deduplicated": false
+    }
+  ]
+}

@@ -1,0 +1,174 @@
+{
+  "case": "optical",
+  "source": {
+    "title": "Degree-of-polarization modulation for high-dimensional optical computing",
+    "journal": "Nature",
+    "published": "2026-08-12",
+    "doi": "10.1038/s41586-026-10891-z",
+    "repository": "https://zenodo.org/records/20775840",
+    "files": [
+      "Figure2/Fig2a.mat",
+      "Figure2/Fig2b.mat"
+    ]
+  },
+  "data_dictionary": {
+    "scan": "Two different source scans; do not pool them as independent repeats.",
+    "dphi": "Phase-distribution spread control, exported in Fig2a. Unit convention requires source verification.",
+    "mean_phase": "Mean-phase control, exported in Fig2b, range 0 to 2pi.",
+    "DOP": "Source-export degree of polarization. Fig2a uses approximately 0-100 scale; Fig2b approximately 0-1. Preserve units per scan; do not combine raw scales.",
+    "S1/S2/S3": "Exported normalized polarization-direction components. Their squared norm should be inspected rather than assumed equal to the exported DOP."
+  },
+  "rows": 302,
+  "statistics": {
+    "dphi": {
+      "n": 102,
+      "min": 0.0,
+      "max": 0.5050000000000003,
+      "mean": 0.2525000000000001
+    },
+    "DOP": {
+      "n": 302,
+      "min": 0.6969392550000001,
+      "max": 93.139824,
+      "mean": 19.835836730452538
+    },
+    "S1": {
+      "n": 302,
+      "min": -0.9145613174158018,
+      "max": 0.8667067186353989,
+      "mean": 0.021601982294003574
+    },
+    "S2": {
+      "n": 302,
+      "min": -0.624171731610925,
+      "max": 0.6596299670792776,
+      "mean": 0.04424361624446888
+    },
+    "S3": {
+      "n": 302,
+      "min": -0.9210320760853088,
+      "max": 0.999356739723518,
+      "mean": 0.2731718502280629
+    },
+    "mean_phase": {
+      "n": 200,
+      "min": 0.0,
+      "max": 6.283185307179586,
+      "mean": 3.141592653589793
+    }
+  },
+  "preview": [
+    {
+      "dphi": 0.0,
+      "DOP": 93.139824,
+      "S1": 0.0266768974263289,
+      "S2": 0.0904556652152477,
+      "S3": 0.995542027234643,
+      "scan": "spread",
+      "mean_phase": NaN
+    },
+    {
+      "dphi": 0.13500000000000004,
+      "DOP": 81.22475666666668,
+      "S1": 0.0332872124063272,
+      "S2": 0.0360823778113844,
+      "S3": 0.998793039666925,
+      "scan": "spread",
+      "mean_phase": NaN
+    },
+    {
+      "dphi": 0.27000000000000013,
+      "DOP": 56.20188599999999,
+      "S1": 0.0385011284133245,
+      "S2": 0.141342386457727,
+      "S3": 0.989210505647654,
+      "scan": "spread",
+      "mean_phase": NaN
+    },
+    {
+      "dphi": 0.41000000000000025,
+      "DOP": 31.001004333333334,
+      "S1": 0.0659066296868944,
+      "S2": 0.0964375957074724,
+      "S3": 0.993147116494311,
+      "scan": "spread",
+      "mean_phase": NaN
+    },
+    {
+      "dphi": NaN,
+      "DOP": 0.7753992,
+      "S1": 0.6147996963283668,
+      "S2": 0.6538490269204854,
+      "S3": 0.4410173477833979,
+      "scan": "mean_phase",
+      "mean_phase": 0.2210165685942568
+    },
+    {
+      "dphi": NaN,
+      "DOP": 0.822448405,
+      "S1": 0.8574318227386268,
+      "S2": 0.38017385015886074,
+      "S3": -0.34680164860687224,
+      "scan": "mean_phase",
+      "mean_phase": 1.0735090474578188
+    },
+    {
+      "dphi": NaN,
+      "DOP": 0.787132115,
+      "S1": 0.6139125800008035,
+      "S2": -0.009068329948985484,
+      "S3": -0.7893194741907164,
+      "scan": "mean_phase",
+      "mean_phase": 1.957575321834846
+    },
+    {
+      "dphi": NaN,
+      "DOP": 0.8427613900000002,
+      "S1": 0.016982038798103026,
+      "S2": -0.42962551483549394,
+      "S3": -0.9028469706302319,
+      "scan": "mean_phase",
+      "mean_phase": 2.810067800698408
+    },
+    {
+      "dphi": NaN,
+      "DOP": 0.80507366,
+      "S1": -0.612621571984825,
+      "S2": -0.5872783336565545,
+      "S3": -0.5289587003215568,
+      "scan": "mean_phase",
+      "mean_phase": 3.66256027956197
+    },
+    {
+      "dphi": NaN,
+      "DOP": 0.78688193,
+      "S1": -0.9061455867173149,
+      "S2": -0.2792955555365603,
+      "S3": 0.31762685458867446,
+      "scan": "mean_phase",
+      "mean_phase": 4.546626553938997
+    },
+    {
+      "dphi": NaN,
+      "DOP": 0.72556984,
+      "S1": -0.4334832324130062,
+      "S2": 0.2738209229203421,
+      "S3": 0.8585529788912355,
+      "scan": "mean_phase",
+      "mean_phase": 5.399119032802559
+    },
+    {
+      "dphi": NaN,
+      "DOP": 0.7301895649999999,
+      "S1": 0.3510189584311359,
+      "S2": 0.6284449571068913,
+      "S3": 0.6941461789930579,
+      "scan": "mean_phase",
+      "mean_phase": 6.283185307179586
+    }
+  ],
+  "additional_context": "The source study programs optical polarization statistics using spatial light modulators. We use two calibration/source scans, 102 and 200 rows. These are measurements supplied with the paper; no independent repeats or raw acquisition uncertainty are supplied in this subset.",
+  "task": "Propose substantive follow-up scientific questions and explanatory hypotheses from the supplied actual source data. Distinguish published claims, observed measurements, and your new conditional proposals. Develop consequences and alternatives; do not require a completed proof or experiment. Do not claim independent rediscovery: the source study identity is visible.",
+  "data_file": "measurements.csv",
+  "retrieval_policy": "Use the same supplied source corpus for this controlled comparison; no external browsing. Data and source excerpts are shared with every system."
+}

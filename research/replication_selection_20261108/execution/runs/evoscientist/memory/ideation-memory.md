@@ -1,0 +1,4 @@
+# Ideation Memory
+
+## Reusable lesson: impedance-based battery SOH ideas
+When supplied abstracts show both EIS sensitivity to temperature/SOC and links between impedance features and multiple degradation mechanisms, frame an early research question around separating reversible operating-condition effects from persistent aging signal. Compare condition-normalized interpretable features with raw and aggregate-feature baselines under cell/trajectory-held-out conditions; random spectrum-level splits risk leakage. Treat degradation-mode inference as an independently validated, potentially non-identifiable secondary output, not as a synonym for SOH. Abstract-only evidence supports a candidate hypothesis, not a novelty claim or a performance guarantee; explicitly record that full-text verification and controlled experiments remain necessary.

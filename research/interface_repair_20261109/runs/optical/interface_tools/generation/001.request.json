@@ -1,0 +1,227 @@
+{
+  "requested_model": "gpt-6-luna",
+  "reasoning_effort": "low",
+  "api_style": "responses",
+  "payload": {
+    "model": "gpt-6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You have real read_document/read_documents, analyze_csv and search_sources tools. Use read_documents to batch several needed pages in one call, avoiding repeated model round-trips. Use the supplied stage-scoped catalog; do not read arbitrary paths or earlier runs. The source paper identity is visible. You may use disciplinary reasoning and clearly labelled conditional hypotheses; lack of an external citation does not prohibit a derivation. Use search_sources for actual missing public knowledge; returned access depth is explicit, not proof of relevance. analyze_csv reads every selected row, not the 12-row preview. Submit using submit_result; validators return actionable errors in this same conversation. Every result requires summary (nonempty string) and artifacts, evidence, claims, limitations, next_actions (arrays, empty allowed), plus stage-specific fields. For development_step focus/uptake source, use an exact S-number from source_bindings and a verbatim quote from that document. For learning_request, context_ref=\"development_step\" may replace duplicate gap/why_now strings; this references your own gap/reason, never changes its content. For sources[].local_path use the returned D-document ID to avoid copying long paths; it resolves to the exact registered file. source_use covers exactly broker_reply_source_ids, not the whole source catalog or new searches in this turn. Cite newly read tool sources in evidence/memory_notes with actual paths/URLs. Keep result text concise; use 0-1 useful memory notes unless multiple are necessary. Preserve branches and open issues. files is an object of relative artifact paths to complete text content; every declared artifact must exist or be provided in files. If artifacts is empty, your exact summary is saved automatically as an artifact; do not repeat the entire JSON as prose. Start with input_refs and inline bodies, not the entire provenance catalog. When reading a needed document, request the relevant JSON pointer or a useful page (up to 12000 characters); avoid repeated tiny probes. For review, source_stage must match the stage containing the exact quote; note_keys are actual memory_notes keys (often empty), not JSON field names. If an input body is omitted or represented by $document, read it by ID. No scientific text was summarized; originals and before-inputs remain readable. Online retrieval is enabled.\nTest the transport. First use read_documents to read BOTH supplied inputs in one batch (even if inlined, this checks batching). Then use analyze_csv on scan=mean_phase to compute mean(S1**2+S2**2+S3**2) and mean(DOP). Submit a concise result with summary string, artifacts/evidence/claims/limitations/next_actions arrays and metrics {total_rows,selected_rows,norm_squared_mean,dop_mean}. Cite tool record paths in evidence. No search needed."
+      },
+      {
+        "role": "user",
+        "content": "{\"format\":\"lossless-document-references-v1\",\"instructions\":\"Each document body occurs once. $document refers to the catalog. Use read_document for omitted bodies or exact original quotes; it is not a summary. Only these stage-scoped documents are readable.\",\"input_refs\":[\"D144e8c4810c66f1e177d\",\"Dec8aeb948f800b099716\"],\"documents\":[{\"ref\":\"D144e8c4810c66f1e177d\",\"sha256\":\"144e8c4810c66f1e177d314c4e29de0ffc90e05484cec488826865071914bf18\",\"paths\":[\"/Applications/ideas/research/interface_repair_20261109/tool_verification/task.json\"]},{\"ref\":\"Dec8aeb948f800b099716\",\"sha256\":\"ec8aeb948f800b09971671102185621d8ca1080c46e53b44d4db0ba00807775d\",\"paths\":[\"/Applications/ideas/research/interface_repair_20261109/cases/optical/source_manifest.json\"]}],\"inline\":[{\"ref\":\"D144e8c4810c66f1e177d\",\"content\":{\"purpose\":\"Interface verification, not scientific discovery\",\"dataset\":\"measurements\",\"measurements\":\"Use DOP and S1/S2/S3 from actual CSV; report full and selected row counts.\"}},{\"ref\":\"Dec8aeb948f800b099716\",\"content\":{\"normalized_sha256\":\"a5a301fc89d6a71010b845198aed9711bf9c8aebe0dbb6c8021dc32f7fb437c0\",\"source\":{\"title\":\"Degree-of-polarization modulation for high-dimensional optical computing\",\"journal\":\"Nature\",\"published\":\"2026-08-12\",\"doi\":\"10.1038/s41586-026-10891-z\",\"repository\":\"https://zenodo.org/records/20775840\",\"files\":[\"Figure2/Fig2a.mat\",\"Figure2/Fig2b.mat\"]},\"preparation\":\"Deterministic normalization and descriptive statistics; no model-generated hypotheses. Public figure source data, not full acquisition streams.\"}}],\"source_bindings\":{},\"broker_reply_source_ids\":[],\"datasets\":[{\"id\":\"measurements\",\"sha256\":\"a5a301fc89d6a71010b845198aed9711bf9c8aebe0dbb6c8021dc32f7fb437c0\",\"rows\":302,\"columns\":[\"dphi\",\"DOP\",\"S1\",\"S2\",\"S3\",\"scan\",\"mean_phase\"],\"access\":\"full_csv_via_analyze_csv\"}]}"
+      }
+    ],
+    "max_tokens": 4200,
+    "parallel_tool_calls": false,
+    "tools": [
+      {
+        "type": "function",
+        "function": {
+          "name": "read_document",
+          "description": "Read a supplied immutable document, including omitted context. JSON pointer selects a section; pagination never silently truncates. raw=true returns original text for quotations.",
+          "strict": true,
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "ref": {
+                "type": "string"
+              },
+              "pointer": {
+                "type": "string"
+              },
+              "offset": {
+                "type": "integer"
+              },
+              "limit": {
+                "type": "integer"
+              },
+              "raw": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "ref",
+              "pointer",
+              "offset",
+              "limit",
+              "raw"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "read_documents",
+          "description": "Read several needed documents in one call to avoid repeated model round-trips. Each page has explicit next_offset and SHA. Total requested characters must be at most 24000.",
+          "strict": true,
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "requests": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ref": {
+                      "type": "string"
+                    },
+                    "pointer": {
+                      "type": "string"
+                    },
+                    "offset": {
+                      "type": "integer"
+                    },
+                    "limit": {
+                      "type": "integer"
+                    },
+                    "raw": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "ref",
+                    "pointer",
+                    "offset",
+                    "limit",
+                    "raw"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "requests"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "analyze_csv",
+          "description": "Compute on the ENTIRE registered CSV (not preview rows). Numeric column names are arrays. scan selections use group_column/group_value. Define variables in order and output safe array expressions. Functions: abs,sqrt,sin,cos,mean,sum,std,min,max,median,quantile,isfinite,where,clip,diff(axis=0),norm(axis=-1),shift,rolling. No Python execution or file access.",
+          "strict": true,
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "dataset": {
+                "type": "string"
+              },
+              "group_column": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "group_value": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "variables": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "expression": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "expression"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "outputs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "expression": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "expression"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "dataset",
+              "group_column",
+              "group_value",
+              "variables",
+              "outputs"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "search_sources",
+          "description": "Search actual public scientific indexes, save eligible readable sources and return IDs, access depth and excerpts. Search success is not evidence of relevance or understanding.",
+          "strict": true,
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "queries": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "queries"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "submit_result",
+          "description": "Submit the complete stage result as an object. Local validators return precise repair instructions before any question or memory state is committed.",
+          "strict": false,
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "result": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            },
+            "required": [
+              "result"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    ]
+  },
+  "estimated_input_tokens": 2463,
+  "input_estimator": "o200k_base + 10% + 256; actual usage settles ledger",
+  "max_output_tokens": 4200
+}

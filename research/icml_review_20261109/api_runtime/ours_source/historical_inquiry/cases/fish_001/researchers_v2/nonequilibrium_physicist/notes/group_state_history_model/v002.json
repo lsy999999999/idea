@@ -1,0 +1,36 @@
+{
+  "key": "group_state_history_model",
+  "title": "群体状态与历史依赖",
+  "kind": "correction",
+  "mastery": "explained",
+  "understanding": "历史依赖可在指定状态表示和预测目标下操作化为增量预测表现：比较只用当前相对位置与相对位移的基线，和加入此前10帧平均相对位移的模型。若历史模型在同一时间留出样本上误差更低，可称该历史特征在此设定下有额外预测信息；不能由此推出因果互动或集体记忆。",
+  "conditions": "这是针对 R07 的研究者定义，尚未计算；需固定目标对齐、有效样本和时间留出区间。二维图像坐标不能直接代表物理速度，实验任务与追踪身份稳定性未知。",
+  "example": "对每个 t，以 r[t]=B[t]-A[t] 表示相对位置，以 Δr[t+1] 为预测目标；比较输入当前 r[t]、Δr[t] 的基线与另加入 mean(Δr[t-9:t]) 的模型。该例是分析定义，不是已运行结果。",
+  "open_questions": [
+    "R07 上历史增强模型是否改善留出预测未知。",
+    "其他滞后窗口或替代状态表示是否会改变结论未知。",
+    "我不能从当前材料说明该预测比较如何识别因果互动；现有来源未回答此问题。"
+  ],
+  "tags": [
+    "history dependence",
+    "prediction",
+    "time series",
+    "历史依赖",
+    "预测",
+    "时间序列"
+  ],
+  "sources": [
+    "measurements.json",
+    "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_001/stages/r1_evidence_verify/result.json",
+    "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_001/stages/r2_evidence_verify/result.json"
+  ],
+  "revision_reason": "修正此前只把历史模型比较当作待检验提议的表述，补充可操作的预测增益定义及其非因果解释边界；本轮检索没有提供该定义的外部依据。",
+  "version": 2,
+  "researcher": "nonequilibrium_physicist",
+  "source_task": "fish_001/inquiry_v2_live_20261106_002",
+  "source_stage": "r1_exchange_2_learn_0",
+  "source_result": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/runs/inquiry_v2_live_20261106_002/stages/r1_exchange_2_learn_0/result.json",
+  "source_sha256": "17a5511a8e208967bf06eadc716575c44d868059f786cfaf21b3fa4489228642",
+  "supersedes": "/Applications/ideas/1103_boundary_discovery/historical_inquiry/cases/fish_001/researchers_v2/nonequilibrium_physicist/notes/group_state_history_model/v001.json",
+  "saved_at": "2026-11-05T17:22:46.833108+00:00"
+}

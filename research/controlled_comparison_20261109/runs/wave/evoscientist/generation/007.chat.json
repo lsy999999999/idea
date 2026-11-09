@@ -1,0 +1,39 @@
+{
+  "id": "resp_0003484042b310a9016af0a7fa3d3c87d2912fe45e3667de53",
+  "object": "chat.completion",
+  "created": 1794156542,
+  "model": "gpt-6-luna",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_2865ef22d3394778a9533958d8ed89ce",
+            "type": "function",
+            "function": {
+              "name": "execute",
+              "arguments": "{\"command\":\"python -c 'import pandas as pd; d=pd.read_csv(\\\"measurements.csv\\\"); print(d.shape); print(d.isna().sum().to_dict()); print(\\\"zero widths\\\",(d.correlation_width==0).sum(),\\\"monotonic t\\\",d.time_s.is_monotonic_increasing,\\\"dt\\\",d.time_s.diff().dropna().round(8).value_counts().head().to_dict()); print(d.describe().to_string()); print(\\\"corr\\\",d[[\\\"correlation_width\\\",\\\"mean_shear_magnitude\\\"]].corr().iloc[0,1]); d[\\\"bin\\\"]=(d.time_s//1).astype(int); print(d.groupby(\\\"bin\\\")[[\\\"correlation_width\\\",\\\"width_ste_export\\\",\\\"mean_shear_magnitude\\\"]].agg([\\\"mean\\\",\\\"median\\\",\\\"min\\\",\\\"max\\\"]).round(3).to_string())'\"}"
+            }
+          }
+        ]
+      },
+      "finish_reason": "tool_calls"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 23581,
+    "completion_tokens": 194,
+    "total_tokens": 23775,
+    "prompt_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 14848,
+      "cache_write_tokens_details": null
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    }
+  }
+}

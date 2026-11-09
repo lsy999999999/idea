@@ -1,0 +1,30 @@
+{
+  "id": "resp_01997b1e6fafeee8016af0aa32aa9087d296a61ee20776191f",
+  "object": "chat.completion",
+  "created": 1794157128,
+  "model": "gpt-6-luna",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "The audit will read the supplied measurements and derive the sampling interval from the observed time values, retaining the data dictionary’s seconds unit. It will distinguish temporal sample count from independent physical realizations. For the source normalization, doubling width halves `width[1] / width`; it does not double it. Finite-record log-log slopes will be reported only as descriptive fits over explicit time windows, not as evidence of a universal asymptotic exponent. The output records a judgment, corrected values, and hypothesis implications for each memo item in `audit.json`. The script also prints the key calculated evidence.\n\n```python\nimport json\nfrom pathlib import Path\n\nimport numpy as np\nimport pandas as pd\nfrom scipy.stats import linregress\n\ndf = pd.read_csv(\"measurements.csv\")\n\n\ndef find_column(*names):\n    for name in names:\n        if name in df.columns:\n            return name\n    raise KeyError(f\"Expected one of {names}; found {list(df.columns)}\")\n\n\ntime_col = find_column(\"time_s\", \"time\")\nwidth_col = find_column(\"correlation_width\", \"width\", \"fwhm\")\n\ntime = pd.to_numeric(df[time_col], errors=\"coerce\").to_numpy()\nwidth = pd.to_numeric(df[width_col], errors=\"coerce\").to_numpy()\nvalid = np.isfinite(time) & np.isfinite(width)\ntime, width = time[valid], width[valid]\norder = np.argsort(time)\ntime, width = time[order], width[order]\n\ngaps = np.diff(time)\ngaps = gaps[np.isfinite(gaps) & (gaps > 0)]\ndt = float(np.median(gaps)) if len(gaps) else None\nfrequency = 1.0 / dt if dt else None\n\nfit_results = []\nfor lo, hi in [(0.1, 2.0), (0.5, 3.0), (1.0, 5.0), (2.0, 7.0)]:\n    mask = (time >= lo) & (time <= hi) & (width > 0)\n    if mask.sum() >= 3:\n        fit = linregress(np.log(time[mask]), np.log(width[mask]))\n        fit_results.append({\n            \"time_window_s\": [lo, hi],\n            \"n_samples\": int(mask.sum()),\n            \"log_log_slope\": float(fit.slope),\n            \"r_squared\": float(fit.rvalue ** 2),\n        })\n\naudit = {\n    \"data_file\": \"measurements.csv\",\n    \"items\": [\n        {\n            \"id\": \"W1\",\n            \"judgment\": \"Incorrect\",\n            \"corrected_values\": {\n                \"time_unit\": \"seconds, as specified by the supplied data dictionary\",\n                \"sample_count\": int(len(time)),\n                \"median_sample_interval_s\": dt,\n                \"estimated_sampling_frequency_hz\": frequency,\n                \"elapsed_span_s\": float(time[-1] - time[0]) if len(time) else None,\n            },\n            \"implication\": \"The measurements indicate approximately 300 samples/s, not 300000 Hz; the stated milliseconds unit is incorrect.\",\n        },\n        {\n            \"id\": \"W2\",\n            \"judgment\": \"Incorrect\",\n            \"corrected_values\": {\n                \"source_definition\": \"width[1] / width\",\n                \"inverse_ratio_when_width_doubles\": 0.5,\n                \"effect\": \"doubling width halves the normalized inverse correlation length\",\n            },\n            \"implication\": \"The normalization is reciprocal in width and is not a fitted scaling exponent.\",\n        },\n        {\n            \"id\": \"W3\",\n            \"judgment\": \"Correct\",\n            \"corrected_values\": {\n                \"temporal_samples\": int(len(time)),\n                \"independent_physical_realizations_established\": False,\n            },\n            \"implication\": \"Treat these as temporally ordered measurements; the export does not establish independent runs or realizations.\",\n        },\n        {\n            \"id\": \"W4\",\n            \"judgment\": \"Unsupported / not identifiable from this record\",\n            \"corrected_values\": {\n                \"finite_record_log_log_fits\": fit_results,\n                \"universal_asymptotic_exponent_established\": False,\n            },\n            \"implication\": \"Window-specific slopes may motivate tests, but universality requires evidence across system sizes and preparations, which this record does not provide.\",\n        },\n    ],\n}\n\nPath(\"audit.json\").write_text(json.dumps(audit, indent=2, allow_nan=False) + \"\\n\")\nprint(json.dumps({\n    \"sample_count\": int(len(time)),\n    \"median_interval_s\": dt,\n    \"estimated_frequency_hz\": frequency,\n    \"inverse_normalization_ratio_after_width_doubles\": 0.5,\n    \"finite_record_fit_sensitivity\": fit_results,\n    \"audit_file\": \"audit.json\",\n}, indent=2, allow_nan=False))\n```",
+        "tool_calls": null
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 7887,
+    "completion_tokens": 1184,
+    "total_tokens": 9071,
+    "prompt_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0,
+      "cache_write_tokens_details": null
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 155
+    }
+  }
+}

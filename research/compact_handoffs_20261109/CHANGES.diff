@@ -1,0 +1,561 @@
+--- /Applications/ideas/research/controlled_comparison_20261109/runtime/run_ours.py (before)
++++ /Applications/ideas/research/controlled_comparison_20261109/runtime/run_ours.py
+@@ -8,6 +8,7 @@
+ from openai import OpenAI
+ from research_context import ContextStore, dumps
+ from research_tools import ResearchTools, function
++from submission_repair import apply_edits, save_draft, load_draft, repair_context
+ 
+ ROOT=Path(__file__).resolve().parents[1]
+ PROJECT=Path(__file__).resolve().parent/'ours_source'
+@@ -15,15 +16,22 @@
+ import learning_lab as lab
+ from learning_memory import Memory, validate_notes
+ from discover import read, write
+-from learning_support import QuestionState, HypothesisState, validate_uptake, audit_review, material_coverage, service_request, validate_memory_use
++from learning_support import QuestionState, HypothesisState, validate_uptake, audit_review, material_coverage, service_request, validate_memory_use, expand_review_packet
+ from hypothesis_cycle import validate_step, anchored, texts
+ from analysis_executor import expression
+ from knowledge_broker import KnowledgeBroker, SourcePolicy
+ from case_access import locked_policy, assert_measurements, screen_document
+ 
+-VERSION='tool-transport-v6-historical-lock'
+-SUBMIT=function('submit_result','Submit the complete stage result as an object. Local validators return precise repair instructions before any question or memory state is committed.',
++VERSION='tool-transport-v7-delta-review'
++SUBMIT=function('submit_result','Submit a stage result once. If validation fails it is saved as a draft; use patch_result to change only affected fields.',
+                 {'result':{'type':'object','additionalProperties':True}},strict=False)
++
++
++PATCH=function('patch_result','Repair the latest saved draft using only changed fields. Unmentioned content is preserved. No state is committed until all validation passes.',
++    {'draft_ref':{'type':'string'},'edits':{'type':'array','minItems':1,'maxItems':24,
++     'items':{'type':'object','properties':{'op':{'type':'string','enum':['set','remove']},
++     'path':{'type':'string','description':'Non-root JSON pointer, e.g. /summary or /claims/0/text'},
++     'value':{}},'required':['op','path'],'additionalProperties':False}}},strict=False)
+ 
+ 
+ class GenerationFrozen(Exception):
+@@ -210,7 +218,7 @@
+                 KnowledgeBroker.verify_identity(source)
+             material_coverage(result)
+         if sid=='04_internal_review':
+-            review=read(self.run/'internal_review/inputs.json');errors=[]
++            review=expand_review_packet(read(self.run/'internal_review/inputs.json'));errors=[]
+             for f in result.get('findings',[]):
+                 stage=f.get('source_stage');source=review['sources'].get(stage)
+                 if source is None:errors.append('Unknown source_stage '+str(stage));continue
+@@ -266,11 +274,11 @@
+         workspace=run/'stages'/sid/'api_v2/workspace';workspace.mkdir(parents=True,exist_ok=True)
+         result_path=workspace/'result.json'
+         sources=[{'path':str(p),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in inputs]
+-        fingerprint=hashlib.sha256(dumps({'version':VERSION,'role':role,'prompt':prompt,'sources':sources,'knowledge':self.knowledge,'config':{k:self.cfg.get(k) for k in ['model','api_style','base_url','reasoning_effort','preserve_reasoning_items','continuation_mode']},'transport_code':{name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest() for name in ['run_ours.py','research_context.py','research_tools.py','model_gateway.py']}}).encode()).hexdigest()
++        fingerprint=hashlib.sha256(dumps({'version':VERSION,'role':role,'prompt':prompt,'sources':sources,'knowledge':self.knowledge,'config':{k:self.cfg.get(k) for k in ['model','api_style','base_url','reasoning_effort','preserve_reasoning_items','continuation_mode']},'transport_code':{name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest() for name in ['run_ours.py','research_context.py','research_tools.py','submission_repair.py','model_gateway.py']}}).encode()).hexdigest()
+         contract=workspace/'TRANSPORT.json'
+         if contract.exists() and read(contract)['fingerprint']!=fingerprint:raise ValueError('Stage transport inputs changed; use a new run')
+         if result_path.exists():return result_path,read(result_path)
+-        store=ContextStore(workspace/'documents',admission_guard=self.admit_document);top=store.prepare(inputs)
++        store=ContextStore(workspace/'documents',admission_guard=self.admit_document,review_indexes=[run/'internal_review/inputs.json']);top=store.prepare(inputs)
+         context={}
+         for p in inputs:
+             if p.parent==run/'researcher_context':context=read(p)
+@@ -285,44 +293,71 @@
+         common=('Use only the tools exposed for this stage. Use read_documents to batch several needed pages in one call, avoiding repeated model round-trips. Use the supplied stage-scoped catalog; do not read arbitrary paths or earlier runs. '
+                 'The originating study and its explanations are hidden. Retrieval is mechanically restricted to independently dated earlier sources; original-study versions/mirrors and unknown dates are blocked. You may use disciplinary reasoning and clearly labelled conditional hypotheses; lack of an external citation does not prohibit a derivation. '
+                 'Use search_sources for actual missing public knowledge; returned access depth is explicit, not proof of relevance. analyze_csv reads every selected row, not the 12-row preview. '
+-                'Submit using submit_result; validators return actionable errors in this same conversation. Every result requires summary (nonempty string) and artifacts, evidence, claims, limitations, next_actions (arrays, empty allowed), plus stage-specific fields. '
++                'Submit once using submit_result; if validation fails, the draft is saved locally. Use patch_result with the latest draft_ref and only changed fields; do not regenerate unchanged text. Original submissions remain archived. Every result requires summary (nonempty string) and artifacts, evidence, claims, limitations, next_actions (arrays, empty allowed), plus stage-specific fields. '
+                 'For development_step focus/uptake source, use an exact S-number from source_bindings and a verbatim quote from that document. '
+                 'For a JSON source, quote the exact string VALUE, without adding its field name. Alternatively supply quote_pointer (JSON pointer to a string) and omit quote; the exact selected string will be resolved and logged. '
+                 'For learning_request, context_ref="development_step" may replace duplicate gap/why_now strings; this references your own gap/reason, never changes its content. '
+                 'For sources[].local_path use the returned D-document ID to avoid copying long paths; it resolves to the exact registered file. '
+                 'source_use covers exactly broker_reply_source_ids, not the whole source catalog or new searches in this turn. Cite newly read tool sources in evidence/memory_notes with actual paths/URLs. '
+                 'Keep result text concise; use 0-1 useful memory notes unless multiple are necessary. Preserve branches and open issues. files is an object of relative artifact paths to complete text content; every declared artifact must exist or be provided in files. If artifacts is empty, your exact summary is saved automatically as an artifact; do not repeat the entire JSON as prose. '
+-                'Start with input_refs and inline bodies, not the entire provenance catalog. When reading a needed document, request the relevant JSON pointer or a useful page (up to 12000 characters); avoid repeated tiny probes. For review, source_stage must match the stage containing the exact quote; note_keys are actual memory_notes keys (often empty), not JSON field names. '
++                'For review-index-v2, start with the stage directory and read relevant result/before-input sections by document ID. Summaries are incomplete navigation excerpts, not evidence. Start with input_refs and inline bodies, not the entire provenance catalog. When reading a needed document, request the relevant JSON pointer or a useful page (up to 12000 characters); avoid repeated tiny probes. For review, source_stage must match the stage containing the exact quote; note_keys are actual memory_notes keys (often empty), not JSON field names. '
+                 'If an input body is omitted or represented by $document, read it by ID. No scientific text was summarized; originals and before-inputs remain readable. '\
+                 +('Online retrieval is enabled.' if self.knowledge=='online' else 'Online retrieval is disabled by explicit --knowledge closed; data/document tools remain available.'))
+         if memory_probe:common+=' This is a memory-only continuation: no external search or CSV tool is available.'
+         initial=[{'role':'system','content':common+'\n'+prompt},{'role':'user','content':dumps(packet)}]
++        initial_path=workspace/'INITIAL_MESSAGES.json'
++        if initial_path.exists():
++            if read(contract).get('initial_sha256') != hashlib.sha256(initial_path.read_bytes()).hexdigest():
++                raise ValueError('Saved initial messages changed')
++            initial=read(initial_path)
++        else:
++            write(initial_path,initial)
+         original_chars=sum(len(p.read_text()) for p in inputs)
+         write(contract,{'version':VERSION,'fingerprint':fingerprint,'original_input_characters':original_chars,'packed_input_characters':len(dumps(packet)),
+-                        'documents':len(store.documents),'lossless':True,'knowledge':self.knowledge,'source_bindings':bindings})
++                        'documents':len(store.documents),'initial_sha256':hashlib.sha256(initial_path.read_bytes()).hexdigest(),'lossless':True,'knowledge':self.knowledge,'source_bindings':bindings})
+         session_path=workspace/'SESSION.json'
+         if session_path.exists() and read(session_path)['messages'][:2]!=initial:
+             raise ValueError('Historical session inputs changed; use a clean run')
+-        session=read(session_path) if session_path.exists() else {'messages':initial,'turns':0,'invalid_submissions':0}
++        session=read(session_path) if session_path.exists() else {'messages':json.loads(dumps(initial)),'turns':0,'invalid_submissions':0}
+         messages=session['messages']
+         # Resume after the last complete tool result; all local tools are content-addressed.
+         while session['turns']<18:
+             if messages[-1]['role']=='assistant' and messages[-1].get('tool_calls'):
+                 message=messages[-1]
+             else:
+-                message=self.model(messages,[*tools.definitions,SUBMIT])
++                wire_messages = session.get('repair_context', []) + messages[session['repair_start']:] if 'repair_start' in session else messages
++                write(workspace/'MODEL_INPUT_LATEST.json', {'messages':wire_messages,'history_messages':len(messages)})
++                available = [*tools.definitions, PATCH if session.get('pending_draft') else SUBMIT]
++                message=self.model(wire_messages,available)
+                 # Chat endpoints need standard assistant fields; Responses-only state is kept explicitly.
+                 message={k:v for k,v in message.items() if k in ['role','content','tool_calls','provider_response_items','reasoning_content']}
+                 messages.append(message);session['turns']+=1;write(session_path,session)
+             calls=message.get('tool_calls') or []
+             if not calls:
+-                messages.append({'role':'user','content':'Use submit_result with the complete JSON object; a prose answer is not a saved stage result.'});write(session_path,session);continue
++                messages.append({'role':'user','content':'Use patch_result for the saved draft.' if session.get('pending_draft') else 'Use submit_result to save the stage result.'});write(session_path,session);continue
+             for call in calls:
+                 name=call['function']['name'];call_id=call['id']
+                 try:
+                     args=json.loads(call['function']['arguments'])
+-                    if name=='submit_result':
+-                        candidate=self.normalize(args['result'],bindings,store)
++                    if name in {'submit_result','patch_result'}:
++                        call_hash=hashlib.sha256(dumps({'name':name,'args':args}).encode()).hexdigest()
++                        prepared=session.get('prepared_submission',{})
++                        if prepared.get('call_id') == call_id:
++                            if prepared.get('call_sha256') != call_hash:
++                                raise ValueError('Submission call ID reused with different arguments')
++                            draft=load_draft(store,session.get('pending_draft'),prepared['draft_ref'])
++                        elif name == 'patch_result':
++                            draft = load_draft(store, session.get('pending_draft'), args['draft_ref'])
++                            draft = apply_edits(draft, args['edits'])
++                        else:
++                            if session.get('pending_draft'):
++                                raise ValueError('A draft is already saved; use patch_result with changed fields only')
++                            draft = args['result']
++                        session['pending_draft'] = save_draft(workspace, store, draft)
++                        session['prepared_submission']={'call_id':call_id,'call_sha256':call_hash,
++                                                        'draft_ref':session['pending_draft']['ref']}
++                        write(session_path,session)
++                        candidate=self.normalize(draft,bindings,store)
+                         self.validate(candidate,sid,role,context,inputs)
+                         self.validate_artifacts(candidate,workspace)
+                         for filename,body in candidate.pop('files',{}).items():
+@@ -335,12 +370,17 @@
+                         return result_path,candidate
+                     response=tools.call(name,args,call_id)
+                 except Exception as exc:
+-                    response={'status':'validation_error' if name=='submit_result' else 'tool_error','error_type':type(exc).__name__,'message':str(exc)}
+-                    if name=='submit_result':
++                    response={'status':'validation_error' if name in {'submit_result','patch_result'} else 'tool_error','error_type':type(exc).__name__,'message':str(exc)}
++                    if name in {'submit_result','patch_result'}:
+                         session['invalid_submissions']+=1
+                         response.update(allowed_source_keys=list(bindings),broker_reply_source_ids=expected_sources,
+-                                        advice='Correct the reported contract issue; do not invent scientific evidence. Use S-number bindings and preserve all actual state refs.')
++                                        draft=session.get('pending_draft'),
++                                        advice='Use patch_result with the latest draft ref and only affected fields. Read a draft section if needed. Do not invent evidence or replace unchanged scientific content.')
+                 messages.append({'role':'tool','tool_call_id':call_id,'content':dumps(response)})
++                if name in {'submit_result','patch_result'} and session.get('pending_draft'):
++                    # Full original messages are retained; the next model call uses a small repair view.
++                    session['repair_start'] = len(messages)
++                    session['repair_context'] = repair_context(initial,store,session['pending_draft'],response)
+                 write(session_path,session)
+                 if session['invalid_submissions']>=4:raise ValueError('Stage submission recovery limit reached: '+str(response))
+         raise ValueError('Stage tool/model turn limit reached without a valid submitted result')
+--- /Applications/ideas/research/controlled_comparison_20261109/runtime/research_context.py (before)
++++ /Applications/ideas/research/controlled_comparison_20261109/runtime/research_context.py
+@@ -10,8 +10,9 @@
+ 
+ 
+ class ContextStore:
+-    def __init__(self, directory, admission_guard=None):
++    def __init__(self, directory, admission_guard=None, review_indexes=()):
+         self.admission_guard=admission_guard
++        self.review_indexes={str(Path(p).resolve()) for p in review_indexes}
+         self.directory = Path(directory)
+         self.directory.mkdir(parents=True, exist_ok=True)
+         self.documents = {}
+@@ -55,11 +56,32 @@
+         path = Path(path).resolve()
+         return self.add(str(path), path.read_text())
+ 
+-    def _project(self, value):
++    def _project(self, value, allow_review_refs=False):
+         if isinstance(value, list):
+             return [self._project(v) for v in value]
+         if not isinstance(value, dict):
+             return value
++        if value.get('format') == 'review-index-v2':
++            if not allow_review_refs:
++                raise ValueError('Only controller-designated review indexes may register file references')
++            mapping = {}
++            for key, entry in value['documents'].items():
++                path = Path(entry['path'])
++                if self.admission_guard:
++                    self.admission_guard(str(path.resolve()), '')
++                if hashlib.sha256(path.read_bytes()).hexdigest() != entry['sha256']:
++                    raise ValueError('Review source changed: ' + key)
++                mapping[key] = self.add_file(path)
++            def refs(item):
++                if isinstance(item, list):
++                    return [refs(x) for x in item]
++                if isinstance(item, dict):
++                    if '$document' in item:
++                        return {'$document': mapping[item['$document']]}
++                    return {k: refs(v) for k, v in item.items()}
++                return item
++            return {'format': value['format'], 'sources': refs(value['sources']),
++                    'scope': value['scope']}
+         # Exact before-input/file snapshots, including the review's nested history.
+         if isinstance(value.get('path'), str) and isinstance(value.get('text'), str):
+             if value.get('sha256') and hashlib.sha256(value['text'].encode()).hexdigest() != value['sha256']:
+@@ -90,7 +112,8 @@
+                     parsed = json.loads(text)
+                 except json.JSONDecodeError:
+                     parsed = text
+-                self.projections[ref] = self._project(parsed)
++                trusted = any(str(Path(p).resolve()) in self.review_indexes for p in self.documents[ref]['paths'])
++                self.projections[ref] = self._project(parsed, allow_review_refs=trusted)
+         self.save()
+         return list(dict.fromkeys(top))
+ 
+@@ -113,11 +136,17 @@
+         if pointer:
+             if not pointer.startswith('/'):
+                 raise ValueError('Use a JSON pointer starting with /')
+-            obj = json.loads(source)
++            if raw:
++                obj = json.loads(source)
++            else:
++                # Select from the projected index so nested pointers retain readable D IDs.
++                obj = self.projections.get(ref)
++                if obj is None:
++                    obj = self._project(json.loads(source))
+             for token in pointer[1:].split('/'):
+                 token = token.replace('~1', '/').replace('~0', '~')
+                 obj = obj[int(token)] if isinstance(obj, list) else obj[token]
+-            text = dumps(self._project(obj)) if not raw else dumps(obj)
++            text = dumps(obj)
+         elif raw:
+             text = source
+         else:
+@@ -134,7 +163,7 @@
+         if self.admission_guard:
+             for doc in self.documents.values():
+                 for path in doc['paths']:self.admission_guard(path,doc['text'])
+-        catalog = [{k: v for k, v in self.documents[r].items() if k != 'text'} for r in self.documents]
++        catalog = self.catalog()
+         inline = []
+         # State/role contracts first; large review histories remain addressable by ID.
+         order = sorted(top, key=lambda r: 0 if any('/researcher_context/' in p for p in self.documents[r]['paths']) else 1)
+@@ -142,7 +171,7 @@
+         # Review targets are needed immediately; avoid one model round-trip per small result.
+         for ref in list(order):
+             body=self.projections[ref]
+-            if isinstance(body,dict) and isinstance(body.get('sources'),dict):
++            if isinstance(body,dict) and body.get('format') != 'review-index-v2' and isinstance(body.get('sources'),dict):
+                 for source in body['sources'].values():
+                     if isinstance(source,dict) and isinstance(source.get('result'),dict):
+                         target=source['result'].get('$document')
+@@ -153,9 +182,27 @@
+             if size <= remaining:
+                 inline.append({'ref': ref, 'content': value})
+                 remaining -= size
+-        return {'format': 'lossless-document-references-v1', 'instructions':
++        return {'format': 'lossless-document-references-v2', 'instructions':
+                 'Each document body occurs once. $document refers to the catalog. Use read_document for omitted bodies or exact original quotes; it is not a summary. Only these stage-scoped documents are readable.',
+                 'input_refs': top, 'documents': catalog, 'inline': inline}
++
++    def catalog(self):
++        """Short navigation entries; full paths and hashes stay in the local manifest."""
++        rows = []
++        for ref, doc in self.documents.items():
++            row = {'ref': ref, 'label': '/'.join(Path(doc['paths'][0]).parts[-3:]),
++                   'characters': len(doc['text'])}
++            try:
++                value = json.loads(doc['text'])
++                if isinstance(value, dict):
++                    keys = list(value)
++                    row['sections'] = keys[:16]
++                    if len(keys) > 16:
++                        row['more_sections'] = len(keys) - 16
++            except (ValueError, TypeError):
++                pass
++            rows.append(row)
++        return rows
+ 
+     def source_bindings(self, context):
+         cycle = context.get('development_cycle', {})
+--- /Applications/ideas/research/controlled_comparison_20261109/runtime/test_research_interface.py (before)
++++ /Applications/ideas/research/controlled_comparison_20261109/runtime/test_research_interface.py
+@@ -120,13 +120,18 @@
+    source=root/'input.json';source.write_text('{"task":"Compute actual CSV means and save a result"}')
+    turns=[]
+    result={'summary':'Read all 302 rows.','artifacts':[],'evidence':[],'claims':[],'limitations':[],'next_actions':[]}
+-   replies=[('analyze_csv',{'dataset':'measurements','group_column':None,'group_value':None,'variables':[],'outputs':[{'name':'count','expression':'sum(isfinite(DOP))'}]}),('submit_result',{'result':{**result,'summary':[]}}),('submit_result',{'result':result})]
++   replies=[('analyze_csv',{'dataset':'measurements','group_column':None,'group_value':None,'variables':[],'outputs':[{'name':'count','expression':'sum(isfinite(DOP))'}]}),('submit_result',{'result':{**result,'summary':[]}})]
+    def create(**kw):
+     turns.append(kw)
+     if len(turns)==3:
+      self.assertIn('summary must be',kw['messages'][-1]['content'])
+      self.assertFalse((root/'project/runs/api_v2_optical_generation/stages/test/api_v2/workspace/result.json').exists())
+-    name,args=replies[len(turns)-1];message={'role':'assistant','tool_calls':[{'id':'call'+str(len(turns)),'type':'function','function':{'name':name,'arguments':json.dumps(args)}}]}
++     repair=json.loads(kw['messages'][-1]['content'])
++     self.assertEqual({t['function']['name'] for t in kw['tools']}&{'submit_result','patch_result'},{'patch_result'})
++     self.assertFalse(any(m.get('tool_calls') for m in kw['messages']))
++     name,args='patch_result',{'draft_ref':repair['draft']['ref'],'edits':[{'op':'set','path':'/summary','value':result['summary']}]}
++    else:name,args=replies[len(turns)-1]
++    message={'role':'assistant','tool_calls':[{'id':'call'+str(len(turns)),'type':'function','function':{'name':name,'arguments':json.dumps(args)}}]}
+     return SimpleNamespace(choices=[SimpleNamespace(finish_reason='tool_calls',message=SimpleNamespace(model_dump=lambda **kw:message))])
+    api=SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)))
+    with patch.object(runner,'PROJECT',root/'project'):
+--- /Users/LSY/.codex/worktrees/a57d/ideas/1103_boundary_discovery/src/learning_support.py (before)
++++ /Users/LSY/.codex/worktrees/a57d/ideas/1103_boundary_discovery/src/learning_support.py
+@@ -35,6 +35,8 @@
+ """
+ 
+ REVIEW_PROTOCOL = """
++The review-index-v2 packet is a short index. Use its document identifiers (or registered paths
++for a file-based executor) to read needed original sections. Excerpts only aid navigation.
+ Inspect the supplied researcher outputs and worked-example artifacts. Check specific arithmetic,
+ entity/index meaning, contradictions and mistaken attribution; do not judge novelty, feasibility,
+ unproved hypotheses, or require experiments. Missing proof is not an error. Quote exact source text.
+@@ -161,20 +163,59 @@
+ 
+ 
+ def review_packet(stage_results, before_inputs=None):
+-    sources = {}
++    """An index of immutable versions, never recursively embedded research history."""
++    import hashlib
++    documents, sources = {}, {}
++    def register(path):
++        path = Path(path).absolute()
++        sha = digest(path)
++        ref = 'R' + hashlib.sha256((str(path)+'\0'+sha).encode()).hexdigest()[:20]
++        documents[ref] = {'path': str(path), 'sha256': sha,
++                          'characters': len(path.read_text(errors='replace'))}
++        return ref
+     for stage, (owner, path) in stage_results.items():
+         path = Path(path)
+-        files = [path, *sorted(path.parent.glob('*.md'))]
+-        sources[stage] = {'owner': owner, 'result': read(path), 'path': str(path),
+-                          'files': [{'path': str(p), 'sha256': digest(p),
+-                                     'text': p.read_text(errors='replace')} for p in files]}
+-        sources[stage]['before_inputs'] = [
+-            {'path': str(p), 'sha256': digest(p), 'text': Path(p).read_text(errors='replace')}
+-            for p in (before_inputs or {}).get(stage, [])]
+-    return {'sources': sources, 'scope': 'Actual supplied inputs and outputs; availability is not proof of mastery; final evaluation excluded.'}
++        result = read(path)
++        summary = result.get('summary', '')
++        sources[stage] = {'owner': owner, 'result': {'$document': register(path)},
++            'summary_excerpt': summary[:240] if isinstance(summary, str) else '',
++            'excerpt_is_complete': isinstance(summary, str) and len(summary) <= 240,
++            'note_keys': [n['key'] for n in result.get('memory_notes', [])],
++            'files': [{'$document': register(p)} for p in [path, *sorted(path.parent.glob('*.md'))]],
++            'before_inputs': [{'$document': register(p)} for p in (before_inputs or {}).get(stage, [])]}
++    return {'format': 'review-index-v2', 'documents': documents, 'sources': sources,
++            'scope': 'Index only. Read referenced original sections before judging. Summary excerpts are navigation, not complete evidence; final evaluation excluded.'}
++
++
++def expand_review_packet(packet):
++    """Resolve and verify on the controller side; expanded text is not sent to models."""
++    if packet.get('format') != 'review-index-v2':
++        return packet  # Frozen legacy packets remain readable.
++    from copy import deepcopy
++    expanded = deepcopy(packet)
++    expanded['format'] = 'review-expanded-v2'
++    cache = {}
++    def document(item):
++        ref = item['$document']
++        if ref not in cache:
++            entry = packet['documents'][ref]
++            path = Path(entry['path'])
++            if digest(path) != entry['sha256']:
++                raise ValueError('Review source changed: '+ref)
++            cache[ref] = {**entry, 'text': path.read_text(errors='replace')}
++        return cache[ref]
++    for source in expanded['sources'].values():
++        original = document(source['result'])
++        source['path'] = original['path']
++        source['result'] = json.loads(original['text'])
++        source['files'] = [document(item) for item in source['files']]
++        source['before_inputs'] = [document(item) for item in source['before_inputs']]
++    return expanded
+ 
+ 
+ def audit_review(result, packet):
++    packet_hash = object_hash(packet)
++    packet = expand_review_packet(packet)
+     findings = result.get('findings')
+     if not isinstance(findings, list):
+         raise ValueError('Internal review requires findings array')
+@@ -199,7 +240,7 @@
+                      'verification_level': 'recomputed_expression_only' if checked and checked['status']=='executed' else 'quote_provenance_only',
+                      'owner': source['owner'], 'recomputation': checked,
+                      'source_notes': {k:source_notes[k] for k in f['note_keys']}})
+-    return {'findings': rows, 'source_packet_sha256': object_hash(packet),
++    return {'findings': rows, 'source_packet_sha256': packet_hash,
+             'scope': 'Specific process errors; not hypothesis acceptance or novelty evaluation.'}
+ 
+ 
+--- /Users/LSY/.codex/worktrees/a57d/ideas/1103_boundary_discovery/src/portfolio_contracts.py (before)
++++ /Users/LSY/.codex/worktrees/a57d/ideas/1103_boundary_discovery/src/portfolio_contracts.py
+@@ -224,6 +224,8 @@
+ 
+ 
+ def validate_progress(result, packet):
++    from learning_support import expand_review_packet
++    packet = expand_review_packet(packet)
+     sources = packet['sources']
+     changes = result.get('changes')
+     if not isinstance(changes, list) or {c.get('stage') for c in changes} != set(sources):
+--- /Users/LSY/.codex/worktrees/a57d/ideas/1103_boundary_discovery/src/learning_lab.py (before)
++++ /Users/LSY/.codex/worktrees/a57d/ideas/1103_boundary_discovery/src/learning_lab.py
+@@ -101,7 +101,7 @@
+     settings = {"development_periods": getattr(args, 'development_periods', 0),
+                 "development_slots": getattr(args, 'development_slots', 2),
+                 "development_budget": getattr(args, 'development_budget', 23),
+-                "protocol": "learning-inquiry-v4", "continuation_mode":continuation_mode, "researchers": CASES[case],
++                "protocol": "learning-inquiry-v5-compact-review", "continuation_mode":continuation_mode, "researchers": CASES[case],
+                 "knowledge_policy": knowledge_policy,
+                 "memory_root": str(memory.root.resolve()),
+                 "source_hashes": {str(p.relative_to(PROJECT)): digest(p) for p in source_paths},
+--- /Users/LSY/.codex/worktrees/a57d/ideas/1103_boundary_discovery/tests/test_reviewer_integrity.py (before)
++++ /Users/LSY/.codex/worktrees/a57d/ideas/1103_boundary_discovery/tests/test_reviewer_integrity.py
+@@ -2,7 +2,7 @@
+ import copy,json,sys,tempfile,unittest
+ from pathlib import Path
+ sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'src'))
+-from learning_support import audit_review,review_packet,validate_uptake,validate_memory_use,HypothesisState
++from learning_support import audit_review,review_packet,expand_review_packet,validate_uptake,validate_memory_use,HypothesisState
+ from learning_memory import digest
+ from discover import write
+ 
+@@ -36,7 +36,9 @@
+    with self.assertRaises(ValueError):validate_memory_use({'memory_use':[{**use,**change}]},packet)
+  def test_long_review_sources_are_not_truncated_while_claiming_full_hash(self):
+   p=self.root/'result.json';write(p,{'summary':'x'*100001+'TAIL_MARKER'})
+-  row=review_packet({'long':('A',p)})['sources']['long']['files'][0]
++  packet=review_packet({'long':('A',p)})
++  self.assertNotIn('TAIL_MARKER', json.dumps(packet))
++  row=expand_review_packet(packet)['sources']['long']['files'][0]
+   self.assertIn('TAIL_MARKER',row['text']);self.assertEqual(row['text'],p.read_text());self.assertEqual(row['sha256'],digest(p))
+ 
+ class DependencyIntegrityTests(unittest.TestCase):
+--- /Applications/ideas/research/controlled_comparison_20261109/runtime/ours_source/src/learning_support.py (before)
++++ /Applications/ideas/research/controlled_comparison_20261109/runtime/ours_source/src/learning_support.py
+@@ -35,6 +35,8 @@
+ """
+ 
+ REVIEW_PROTOCOL = """
++The review-index-v2 packet is a short index. Use its document identifiers (or registered paths
++for a file-based executor) to read needed original sections. Excerpts only aid navigation.
+ Inspect the supplied researcher outputs and worked-example artifacts. Check specific arithmetic,
+ entity/index meaning, contradictions and mistaken attribution; do not judge novelty, feasibility,
+ unproved hypotheses, or require experiments. Missing proof is not an error. Quote exact source text.
+@@ -161,20 +163,59 @@
+ 
+ 
+ def review_packet(stage_results, before_inputs=None):
+-    sources = {}
++    """An index of immutable versions, never recursively embedded research history."""
++    import hashlib
++    documents, sources = {}, {}
++    def register(path):
++        path = Path(path).absolute()
++        sha = digest(path)
++        ref = 'R' + hashlib.sha256((str(path)+'\0'+sha).encode()).hexdigest()[:20]
++        documents[ref] = {'path': str(path), 'sha256': sha,
++                          'characters': len(path.read_text(errors='replace'))}
++        return ref
+     for stage, (owner, path) in stage_results.items():
+         path = Path(path)
+-        files = [path, *sorted(path.parent.glob('*.md'))]
+-        sources[stage] = {'owner': owner, 'result': read(path), 'path': str(path),
+-                          'files': [{'path': str(p), 'sha256': digest(p),
+-                                     'text': p.read_text(errors='replace')} for p in files]}
+-        sources[stage]['before_inputs'] = [
+-            {'path': str(p), 'sha256': digest(p), 'text': Path(p).read_text(errors='replace')}
+-            for p in (before_inputs or {}).get(stage, [])]
+-    return {'sources': sources, 'scope': 'Actual supplied inputs and outputs; availability is not proof of mastery; final evaluation excluded.'}
++        result = read(path)
++        summary = result.get('summary', '')
++        sources[stage] = {'owner': owner, 'result': {'$document': register(path)},
++            'summary_excerpt': summary[:240] if isinstance(summary, str) else '',
++            'excerpt_is_complete': isinstance(summary, str) and len(summary) <= 240,
++            'note_keys': [n['key'] for n in result.get('memory_notes', [])],
++            'files': [{'$document': register(p)} for p in [path, *sorted(path.parent.glob('*.md'))]],
++            'before_inputs': [{'$document': register(p)} for p in (before_inputs or {}).get(stage, [])]}
++    return {'format': 'review-index-v2', 'documents': documents, 'sources': sources,
++            'scope': 'Index only. Read referenced original sections before judging. Summary excerpts are navigation, not complete evidence; final evaluation excluded.'}
++
++
++def expand_review_packet(packet):
++    """Resolve and verify on the controller side; expanded text is not sent to models."""
++    if packet.get('format') != 'review-index-v2':
++        return packet  # Frozen legacy packets remain readable.
++    from copy import deepcopy
++    expanded = deepcopy(packet)
++    expanded['format'] = 'review-expanded-v2'
++    cache = {}
++    def document(item):
++        ref = item['$document']
++        if ref not in cache:
++            entry = packet['documents'][ref]
++            path = Path(entry['path'])
++            if digest(path) != entry['sha256']:
++                raise ValueError('Review source changed: '+ref)
++            cache[ref] = {**entry, 'text': path.read_text(errors='replace')}
++        return cache[ref]
++    for source in expanded['sources'].values():
++        original = document(source['result'])
++        source['path'] = original['path']
++        source['result'] = json.loads(original['text'])
++        source['files'] = [document(item) for item in source['files']]
++        source['before_inputs'] = [document(item) for item in source['before_inputs']]
++    return expanded
+ 
+ 
+ def audit_review(result, packet):
++    packet_hash = object_hash(packet)
++    packet = expand_review_packet(packet)
+     findings = result.get('findings')
+     if not isinstance(findings, list):
+         raise ValueError('Internal review requires findings array')
+@@ -199,7 +240,7 @@
+                      'verification_level': 'recomputed_expression_only' if checked and checked['status']=='executed' else 'quote_provenance_only',
+                      'owner': source['owner'], 'recomputation': checked,
+                      'source_notes': {k:source_notes[k] for k in f['note_keys']}})
+-    return {'findings': rows, 'source_packet_sha256': object_hash(packet),
++    return {'findings': rows, 'source_packet_sha256': packet_hash,
+             'scope': 'Specific process errors; not hypothesis acceptance or novelty evaluation.'}
+ 
+ 
+--- /Applications/ideas/research/controlled_comparison_20261109/runtime/ours_source/src/portfolio_contracts.py (before)
++++ /Applications/ideas/research/controlled_comparison_20261109/runtime/ours_source/src/portfolio_contracts.py
+@@ -224,6 +224,8 @@
+ 
+ 
+ def validate_progress(result, packet):
++    from learning_support import expand_review_packet
++    packet = expand_review_packet(packet)
+     sources = packet['sources']
+     changes = result.get('changes')
+     if not isinstance(changes, list) or {c.get('stage') for c in changes} != set(sources):
+--- /Applications/ideas/research/controlled_comparison_20261109/runtime/ours_source/src/learning_lab.py (before)
++++ /Applications/ideas/research/controlled_comparison_20261109/runtime/ours_source/src/learning_lab.py
+@@ -101,7 +101,7 @@
+     settings = {"development_periods": getattr(args, 'development_periods', 0),
+                 "development_slots": getattr(args, 'development_slots', 2),
+                 "development_budget": getattr(args, 'development_budget', 23),
+-                "protocol": "learning-inquiry-v4", "continuation_mode":continuation_mode, "researchers": CASES[case],
++                "protocol": "learning-inquiry-v5-compact-review", "continuation_mode":continuation_mode, "researchers": CASES[case],
+                 "knowledge_policy": knowledge_policy,
+                 "memory_root": str(memory.root.resolve()),
+                 "source_hashes": {str(p.relative_to(PROJECT)): digest(p) for p in source_paths},
+--- /Users/LSY/.codex/worktrees/a57d/ideas/1103_boundary_discovery/AGENTS.md (before)
++++ /Users/LSY/.codex/worktrees/a57d/ideas/1103_boundary_discovery/AGENTS.md
+@@ -14,6 +14,7 @@
+ - Notes require a complete `source-closure-v2` dependency audit before persistence and at retrieval; preserve inherited correction-report provenance. Post-freeze evaluation uses `final_evaluation.py` with the shared claim-centric-v2 checker and independent retrieval, separate from generation knowledge limits.
+ 
+ ## Current idea-first task (2026-11-04)
++- 2026-11-09 compact handoffs: new general runs use learning-inquiry-v5-compact-review. Review packets index immutable originals once; read relevant sections by document ID/path. The API transport saves rejected drafts and accepts field patches, retaining original scientific content and an audit history. Use new run IDs; old runs keep archived code. See docs/COMPACT_HANDOFFS_CN.md.
+ - 2026-11-09 reviewer audit: NEW general runs use learning-inquiry-v4. Default continuation retains full research context; memory_only_probe is an optional input ablation, not the default workflow. Preserve conditional hypotheses under disputed review; track declared premise dependencies without automatically rejecting branches. See docs/ICML_FLOW_AUDIT_20261109_CN.md.
+ - Earlier 2026-11-09 implementation: `learning-inquiry-v3` introduced the content-linked cycle in `src/hypothesis_cycle.py`; `src/research_portfolio.py` shares the same contract. See `docs/HYPOTHESIS_CONTENT_CYCLE_CN.md`. Ground learning in a specific conceptual gap, retain its request/response linkage, engage concrete peer contributions, and preserve unchanged/unresolved outcomes. Self-reported no-change reminders never reject/rank hypotheses. Old frozen runs must use their archived sources; use a new run ID for this revision.
+ - 2026-11-06 general-entry repair: `src/learning_lab.py` now uses `learning-inquiry-v2` for NEW runs, with shared question/hypothesis state, controller retrieval with bounded retries, worked-calculation service, internal review and author uptake, and terminal frozen evaluation. Do not resume historical runs using changed code. See `wine_flow_fixes_20261106/REVIEW_AND_FIXES_CN.md`.
