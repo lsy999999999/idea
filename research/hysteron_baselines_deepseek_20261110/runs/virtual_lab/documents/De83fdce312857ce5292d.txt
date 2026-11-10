@@ -1,0 +1,65 @@
+{
+  "name": "analyze_csv",
+  "args": {
+    "dataset": "measurements",
+    "group_column": "configuration_id",
+    "group_value": "pair_B",
+    "variables": [
+      {
+        "name": "g",
+        "expression": "drive_gamma_cm"
+      },
+      {
+        "name": "r",
+        "expression": "rotor_i"
+      },
+      {
+        "name": "o",
+        "expression": "other_state"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "m_r1_om1",
+        "expression": "mean(where((r==1)*(o==-1),g,nan))"
+      },
+      {
+        "name": "h_r1_om1",
+        "expression": "(max(where((r==1)*(o==-1),g,nan))-min(where((r==1)*(o==-1),g,nan)))/2"
+      },
+      {
+        "name": "m_r1_op1",
+        "expression": "mean(where((r==1)*(o==1),g,nan))"
+      },
+      {
+        "name": "h_r1_op1",
+        "expression": "(max(where((r==1)*(o==1),g,nan))-min(where((r==1)*(o==1),g,nan)))/2"
+      },
+      {
+        "name": "m_r2_om1",
+        "expression": "mean(where((r==2)*(o==-1),g,nan))"
+      },
+      {
+        "name": "h_r2_om1",
+        "expression": "(max(where((r==2)*(o==-1),g,nan))-min(where((r==2)*(o==-1),g,nan)))/2"
+      },
+      {
+        "name": "m_r2_op1",
+        "expression": "mean(where((r==2)*(o==1),g,nan))"
+      },
+      {
+        "name": "h_r2_op1",
+        "expression": "(max(where((r==2)*(o==1),g,nan))-min(where((r==2)*(o==1),g,nan)))/2"
+      }
+    ]
+  },
+  "call_id": "call_04_8Tu76Uw9il8ogcHoq6sM0048",
+  "seconds": 0.0008654999546706676,
+  "registered_paths": [],
+  "result": {
+    "status": "error",
+    "error_type": "ValueError",
+    "message": "Unsupported expression syntax: Name"
+  },
+  "policy_fingerprint": "1e4f5dcbb6b1c6873b226ff66dc837a3f5d0ea528bce61489f59a4cc965b7607"
+}

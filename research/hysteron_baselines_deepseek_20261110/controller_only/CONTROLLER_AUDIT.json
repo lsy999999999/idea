@@ -1,0 +1,38 @@
+{
+  "scope": "Controller arithmetic/logical audit of frozen hypotheses; original independent judgments retained. No feedback to generation.",
+  "checks": [
+    {
+      "system": "evoscientist",
+      "hypothesis_id": "H3",
+      "coherence_status": "obvious_error",
+      "reason": "H3把切换事件的最大gamma=5.9 cm写成当前驱动振幅，并由八个状态/驱动值重复定义period-1。这两步均不可由导出表推出。数据协议明确没有反转行，禁止以事件极值代替反转幅值；事件1-8的非零驱动增量符号为 +、-、-、+、-，至少包含三次反转，不能把这个状态块直接等同于通常一次上扫/下扫的驱动周期。矩形hysteron网络本身仍是条件模型，但period-1证据与5.9 cm振幅预测的论证有明确逻辑错误。",
+      "evidence": [
+        "cases/hysteron/dossier.json#/protocol/events",
+        "cases/hysteron/measurements.csv record_id108-123",
+        "runs/evoscientist/FINAL.json H3",
+        "controller_only/server_node_verification/EXECUTION.json"
+      ]
+    },
+    {
+      "system": "researchagent",
+      "hypothesis_id": "H1",
+      "coherence_status": "obvious_error",
+      "reason": "窗口中心/半宽分解本身成立，但假设列表写“两阈值同号时 h 是代数半宽而非物理窗口”有明确坐标逻辑错误。只要 gamma_up>gamma_down，区间 [gamma_down,gamma_up] 仍是物理迟滞窗口，与阈值是否跨过坐标零点无关。pair_B 转子2、other=-1 的阈值为 2.1 与24.9 cm，物理窗口宽22.8 cm，半宽11.4 cm。可保留 B/G 分解，应删除该同号例外。独立终评原给no_obvious_error，原判保留。",
+      "evidence": [
+        "runs/researchagent/FINAL.json H1 assumptions",
+        "cases/hysteron/measurements.csv record_id104,106"
+      ]
+    },
+    {
+      "system": "researchagent",
+      "hypothesis_id": "H3",
+      "coherence_status": "unclear",
+      "reason": "独立终评把“约7个独立转变”直接判为计数错误，判据偏强：八行状态内确有7个相邻转变，跨第8→9行后才出现第8种有向转变；但8种转变不等于8个独立约束，候选未定义“独立”。应明确使用全部8种观测转变，并说明约束的依赖性，当前不能仅凭边数给出数学错误结论。其弱可辨识性方向可保留。另需把非翻转者的有向阈值裕量不等式写清，gamma不在阈值区间内本身不保证其尚未越阈。",
+      "evidence": [
+        "runs/researchagent/FINAL.json H3",
+        "cases/hysteron/measurements.csv record_id108-123",
+        "runs/researchagent_evaluation/CHECKS.json H3"
+      ]
+    }
+  ]
+}

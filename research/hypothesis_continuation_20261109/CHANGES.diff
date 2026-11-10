@@ -1,0 +1,137 @@
+--- parent/run_ours.py
++++ continuation/run_ours.py
+@@ -20,7 +20,7 @@
+ from hypothesis_cycle import validate_step, anchored, texts
+ from analysis_executor import expression
+ from knowledge_broker import KnowledgeBroker, SourcePolicy
+-from case_access import locked_policy, assert_measurements, screen_document
++from case_access import locked_policy, assert_measurements, screen_document, actor_brief
+ 
+ VERSION='tool-transport-v7-delta-review'
+ SUBMIT=function('submit_result','Submit a stage result once. If validation fails it is saved as a draft; use patch_result to change only affected fields.',
+@@ -41,7 +41,7 @@
+ class PublicFetcher:
+     """Only broker-owned public indexes. No arbitrary URLs, credentials or private hosts."""
+     hosts={'www.ebi.ac.uk','api.crossref.org','api.openalex.org'}
+-    def __init__(self,path,limit=40):
++    def __init__(self,path,limit=240):
+         self.path=Path(path);self.limit=limit
+     def __call__(self,url):
+         parsed=urlparse(url)
+@@ -77,7 +77,7 @@
+         self.out=self.root/'runs'/case/'ours'/phase
+         self.out.mkdir(parents=True,exist_ok=True)
+         if (self.out/'FINAL_FREEZE.json').exists():raise ValueError('Frozen run; create a clean replay folder')
+-        self.run=PROJECT/'runs'/('api_v2_'+case+'_'+phase)
++        self.run=PROJECT/'runs'/('hypothesis_continuation_'+case+'_'+phase)
+         # Memory initializes its directory; keep it outside the native controller's new run.
+         self.memory=Memory(PROJECT/'api_researchers'/case/phase)
+         self.domains=[('domain_scientist','光学偏振与光计算' if case=='optical' else '主动机械超材料与非平衡动力学'),('theory_scientist','统计物理、随机过程与可辨识性')]
+@@ -213,6 +213,11 @@
+             if missing:raise ValueError('Missing source files: '+dumps(missing)+'; use an exact D-document ID returned by search_sources as local_path')
+             for row in result['sources']:
+                 source=read(Path(row['local_path']))
++                if Path(row['local_path']).resolve() == (self.run/'allowed/measurements_brief.json').resolve():
++                    expected=actor_brief(self.case,read(lab.LAB/'scenarios'/(self.case+'.md')))
++                    assert_measurements(self.case,self.root/'cases'/self.case/'measurements.csv')
++                    if source != expected:raise ValueError('Registered measurement brief content changed')
++                    continue
+                 reason=self.source_policy.rejection(source)
+                 if reason:raise ValueError('Material source violates the historical boundary: '+reason)
+                 KnowledgeBroker.verify_identity(source)
+@@ -258,7 +263,7 @@
+         for attempt in range(3):
+             try:
+                 reply=self.api.chat.completions.create(model=self.cfg['model'],messages=messages,tools=tools,
+-                    parallel_tool_calls=False,max_tokens=4200)
++                    parallel_tool_calls=False,max_tokens=12000)
+                 choice=reply.choices[0]
+                 if choice.finish_reason=='length':raise ValueError('Model response truncated; no partial result accepted')
+                 return choice.message.model_dump(exclude_none=True)
+@@ -273,6 +278,24 @@
+         if sid=='07_check':raise GenerationFrozen()
+         workspace=run/'stages'/sid/'api_v2/workspace';workspace.mkdir(parents=True,exist_ok=True)
+         result_path=workspace/'result.json'
++        if sid=='01_materials' and not result_path.exists():
++            # Explicit continuation, not a new scientific answer from the controller.
++            draft=read(PROJECT/'inherited/original_material_draft.json')
++            store=ContextStore(workspace/'documents',admission_guard=self.admit_document)
++            store.prepare(inputs)
++            bindings=[]
++            for row in draft['sources']:
++                previous=row['local_path']
++                target=(run/'allowed/measurements_brief.json') if row['id']=='B1' else PROJECT/'inherited/accepted'/Path(previous).name
++                store.add_file(target);row['local_path']=str(target)
++                bindings.append({'from':previous,'to':str(target)})
++            store.save()
++            self.validate(draft,sid,role,{},inputs);self.validate_artifacts(draft,workspace)
++            for filename,body in draft.pop('files',{}).items():(workspace/filename).write_text(body)
++            write(workspace/'INHERITANCE.json',{'source':str(PROJECT/'inherited/original_material_draft.json'),'locator_rebindings':bindings,'scientific_content_changed':False})
++            write(result_path,draft)
++            return result_path,draft
++
+         sources=[{'path':str(p),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in inputs]
+         fingerprint=hashlib.sha256(dumps({'version':VERSION,'role':role,'prompt':prompt,'sources':sources,'knowledge':self.knowledge,'config':{k:self.cfg.get(k) for k in ['model','api_style','base_url','reasoning_effort','preserve_reasoning_items','continuation_mode']},'transport_code':{name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest() for name in ['run_ours.py','research_context.py','research_tools.py','submission_repair.py','model_gateway.py']}}).encode()).hexdigest()
+         contract=workspace/'TRANSPORT.json'
+@@ -321,7 +344,7 @@
+         session=read(session_path) if session_path.exists() else {'messages':json.loads(dumps(initial)),'turns':0,'invalid_submissions':0}
+         messages=session['messages']
+         # Resume after the last complete tool result; all local tools are content-addressed.
+-        while session['turns']<18:
++        while session['turns']<72:
+             if messages[-1]['role']=='assistant' and messages[-1].get('tool_calls'):
+                 message=messages[-1]
+             else:
+@@ -382,7 +405,7 @@
+                     session['repair_start'] = len(messages)
+                     session['repair_context'] = repair_context(initial,store,session['pending_draft'],response)
+                 write(session_path,session)
+-                if session['invalid_submissions']>=4:raise ValueError('Stage submission recovery limit reached: '+str(response))
++                if session['invalid_submissions']>=20:raise ValueError('Stage submission recovery limit reached: '+str(response))
+         raise ValueError('Stage tool/model turn limit reached without a valid submitted result')
+ 
+     def generation(self):
+--- parent/model_gateway.py
++++ continuation/model_gateway.py
+@@ -18,7 +18,7 @@
+     return int(len(encoding.encode(json.dumps(payload,ensure_ascii=False)))*1.1)+256
+ 
+ def transport_identity():
+-    fields={k:CFG.get(k) for k in ['model','api_style','reasoning_effort','base_url','credential_source','api_key_env','preserve_reasoning_items','chat_reasoning_parameter']}
++    fields={k:CFG.get(k) for k in ['model','api_style','reasoning_effort','base_url','credential_source','api_key_env','preserve_reasoning_items','chat_reasoning_parameter','thinking_enabled','credential_file']}
+     fields['historical_boundaries']={case:locked_policy(case) for case in CASE_RULES}
+     if CFG.get('credential_source')=='existing_codex_config':
+         config=tomllib.loads(Path('/Users/LSY/.codex/config.toml').read_text())
+@@ -26,6 +26,12 @@
+     return hashlib.sha256(json.dumps(fields,sort_keys=True).encode()).hexdigest()
+ 
+ def client():
++    if CFG.get('credential_source')=='private_file':
++        if CFG.get('base_url')!='https://api.deepseek.com':
++            raise ValueError('Private DeepSeek credential is restricted to the official endpoint')
++        key_path=Path(CFG['credential_file'])
++        if key_path.stat().st_mode & 0o077:raise ValueError('Credential file must be owner-only')
++        return OpenAI(api_key=key_path.read_text().strip(),base_url=CFG['base_url'],timeout=180,max_retries=0)
+     if CFG['credential_source']=='existing_codex_config':
+         c=tomllib.loads(Path('/Users/LSY/.codex/config.toml').read_text())
+         a=json.loads(Path('/Users/LSY/.codex/auth.json').read_text())
+@@ -111,6 +117,8 @@
+                 kwargs['messages']=[{k:v for k,v in m.items() if k!='provider_response_items'} for m in kwargs['messages']]
+                 if CFG.get('reasoning_effort') and CFG.get('chat_reasoning_parameter'):
+                     kwargs[CFG['chat_reasoning_parameter']]=CFG['reasoning_effort']
++                if CFG.get('thinking_enabled') is not None:
++                    kwargs['extra_body']={'thinking':{'type':'enabled' if CFG['thinking_enabled'] else 'disabled'}}
+                 r=api.chat.completions.create(model=CFG['model'],max_tokens=maxout,**kwargs);raw=r.model_dump();response=raw
+             prefix.with_suffix('.response.json').write_text(json.dumps(raw,ensure_ascii=False,indent=2))
+             prefix.with_suffix('.chat.json').write_text(json.dumps(response,ensure_ascii=False,indent=2))
+--- parent/research_tools.py
++++ continuation/research_tools.py
+@@ -38,7 +38,7 @@
+ 
+ 
+ class ResearchTools:
+-    def __init__(self, store, workspace, datasets, broker=None, expression=None, max_calls=16, max_searches=2, source_policy=None):
++    def __init__(self, store, workspace, datasets, broker=None, expression=None, max_calls=64, max_searches=4, source_policy=None):
+         self.store, self.workspace = store, Path(workspace)
+         self.directory = self.workspace/'tools'; self.directory.mkdir(parents=True, exist_ok=True)
+         self.datasets = {name: Path(p).resolve() for name,p in datasets.items()}

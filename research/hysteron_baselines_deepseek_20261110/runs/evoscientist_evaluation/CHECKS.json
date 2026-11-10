@@ -1,0 +1,64 @@
+{
+  "checks": [
+    {
+      "hypothesis_id": "H1",
+      "prior_work_status": "no_close_work_found",
+      "prior_work_reason": "本次限定检索（机械双稳、耦合力臂、硬止挡切换）未发现同时研究两转子硬止挡、耦合力臂 ell_i 与阈值过零的同一问题。最接近的 K1b86 是弹性杆端接单自由度双稳 snap-through 单元的波传播/受迫响应；Kfa08 是周期机械超材料的多稳与历史依赖。二者均未给出 H1 的力矩平衡、ell_i=0 零依赖或阈值-力臂斜率符号，故只能判为无近邻，不能判 already_done。",
+      "sources": [
+        {
+          "source_id": "K1b86cf6d21efb7c8",
+          "quote": "Wave propagation characteristics of an elastic bar coupled at one end with a single degree of freedom, bi-stable, essentially nonlinear snap-through element are considered.",
+          "relation": "最接近的机械双稳耦合工作；问题为杆中波传播，非双转子硬止挡阈值与耦合力臂阈值模型。"
+        },
+        {
+          "source_id": "Kfa08b7d4c8525804",
+          "quote": "We show how such systems exhibit non-Abelian and history-dependent responses, as their state can depend on the order in which external manipulations were applied.",
+          "relation": "相邻的机械多稳/历史依赖主题；不涉及 H1 的力矩过零阈值或 ell_i=0 零依赖检验。"
+        }
+      ],
+      "coherence_status": "obvious_error",
+      "coherence_reason": "量纲本身一致：k_d L(gamma cosθ-L sinθ-delta_d) 与 k_c ell_i(ell_i sinθ_i-ell_j sinθ_j-delta_c) 均为 N·cm 量级。但代数求解有符号错误。由 H1 自己写的力矩平衡解出应为 gamma*_i=[k_d L^2 sinθ_i + k_d L delta_d - k_c ell_i^2 sinθ_i + k_c ell_i ell_j sinθ_j + k_c ell_i delta_c]/(k_d L cosθ_i)，即耦合项为 -k_c ell_i(ell_i sinθ_i-ell_j sinθ_j)+C；H1 写成 +k_c ell_i(ell_i sinθ_i-ell_j sinθ_j)+C，符号相反。于是正确导数应为 d gamma*/d ell_i=(k_c/k_d)(ell_j sinθ_j-2 ell_i sinθ_i)/(L cosθ_i)，而 H1 给出相反号。因此“斜率正负由 2 ell_i sinθ_i 与 ell_j sinθ_j 相对大小决定”的方向被反转；ell_i=0 时耦合项消失的结论不受影响。C 未定义但可并入常数，非致命；实测斜率量级不能抵消该符号错误。",
+      "substantive_content": "H1 有可检验的零依赖与斜率符号预测：pair_A 在 mount_l_cm=0 时四组阈值重合，且斜率量级与 k_c/k_d=0.07/0.19 的估算大致同量级。但核心 gamma* 解及其导数存在耦合项符号反转，故按现式给出的斜率符号预测不可靠；它仍可保留为“符号待修正”的条件性力臂模型，不能按当前方程直接判别。"
+    },
+    {
+      "hypothesis_id": "H2",
+      "prior_work_status": "no_close_work_found",
+      "prior_work_reason": "限定检索未发现“交叉耦合使固定转子力臂 ell_j 变号、从而移动双转子 up/down 阈值窗口”的前作。K1b86 为单 snap-through 单元与弹性杆耦合；Kfa08 为机械超材料的多稳与顺序依赖响应；二者均不涉及 crossed/parallel 连接下 ell_j 符号与 pair_A/pair_B 阈值差的比较。因此本次有界检索无近邻工作。",
+      "sources": [
+        {
+          "source_id": "K1b86cf6d21efb7c8",
+          "quote": "Wave propagation characteristics of an elastic bar coupled at one end with a single degree of freedom, bi-stable, essentially nonlinear snap-through element are considered.",
+          "relation": "相邻的双稳机械耦合，但不含交叉连接、力臂符号翻转或双转子阈值窗口。"
+        },
+        {
+          "source_id": "Kfa08b7d4c8525804",
+          "quote": "We show how such systems exhibit non-Abelian and history-dependent responses, as their state can depend on the order in which external manipulations were applied.",
+          "relation": "相邻的机械多稳/历史依赖，不涉及 H2 的 crossed-parallel 阈值差。"
+        }
+      ],
+      "coherence_status": "obvious_error",
+      "coherence_reason": "在 H1 写出的 gamma 表达式下，代入 ell_j→-ell_j 得 Delta gamma*(crossed-parallel)≈2 k_c ell_i ell_j sinθ_j/(k_d L cosθ_i)，代 k_c=k_d=0.19、ell_i=ell_j=4.7、L=6.3、θ_j≈18-39° 可复算约 2-5 cm，文中“约 4.6 cm”本身不算离谱。但有三处显然错误：(1) H1 的 gamma 耦合项符号已反，正确力矩平衡下该 Delta 应带负号；(2) 该 Delta 定义在相同 ell_i,ell_j 的 crossed-parallel 对比，H2 却把 pair_B（ell=4.7）与 pair_A 的 ell=0 值 3.5/0.1 相比，21.4 cm 并不是该公式估计的量；同 ell=4.731 时，pair_A rotor2 up/other=-1=4.9，差为 20.0；down/other=-1=2.7，差为 2.1-2.7=-0.6；(3) 表中 pair_A 在 ell=0 已有 down=+0.1、在 ell=4.731 有 +2.7，故“pair_A 中不存在正 down 阈值”与数据不符。",
+      "substantive_content": "H2 的定性想法是 H1 的几何变体：交叉连接把固定转子力臂符号翻转，可能移动 threshold window。但定量上它自认 4.6 cm 远小于 21.4 cm，且 21.4 cm 的比较基线错误（用 ell=0 而非同 ell=4.7），正 down 阈值描述也与 pair_A 的 4.731 行冲突。它可保留为符号层面的条件假设，但当前支持论证有显然逻辑/数据错误。"
+    },
+    {
+      "hypothesis_id": "H3",
+      "prior_work_status": "no_close_work_found",
+      "prior_work_reason": "限定检索未发现将四转子硬止挡装置建模为矩形 hysteron 网络、并用重复事件序列判 period-1 的同一工作。Kfa08 讨论周期机械超材料的多稳、非阿贝尔与历史依赖响应；K5f 讨论生化双稳开关；二者均非本装置的矩形 hysteron 网络与事件级 period-1 判据。因此本次有界检索无近邻工作。",
+      "sources": [
+        {
+          "source_id": "Kfa08b7d4c8525804",
+          "quote": "We show how such systems exhibit non-Abelian and history-dependent responses, as their state can depend on the order in which external manipulations were applied.",
+          "relation": "相邻的机械多稳/历史依赖主题；不是矩形 hysteron 四转子网络，也不是事件序列 period-1 判据。"
+        },
+        {
+          "source_id": "K5f59125668b80efa",
+          "quote": "The biochemical network involving CaMKII and its regulating protein signaling cascade has been hypothesized to durably maintain the evoked synaptic state in the form of a bistable switch.",
+          "relation": "相邻的双稳开关模型；为生化突触、非机械四转子 hysteron 网络。"
+        }
+      ],
+      "coherence_status": "no_obvious_error",
+      "coherence_reason": "逐项核对 record_id 108-123：事件 1-8 与 9-16 的 state_string 八对完全相同，drive_gamma_cm 对应为 4.5、5.8、5.8、-4.3、-5.1、-5.1、5.9、-3.3，因此“重复闭合”的描述在算术上成立。规则 gamma>gamma_up→+1、gamma<gamma_down→-1、否则保持，状态矢量维度一致，无算术或量纲错误。“相同 drive 视为未分辨级联”只是额外解释性假设，不是由数据必然推出；“略降振幅破坏 period-1”是条件预测，不是已证结论。事件 7→8 需至少一次反转的推断成立，反转位置未知的限定也正确。",
+      "substantive_content": "H3 的 rectangular hysteron 规则与 16 个有序事件逐项重复的观测一致，能解释事件 1-8 与 9-16 的 period-1 重复；事件 2/3、5/6 同 drive 可被解释为未分辨级联，但这不是唯一解释。具体连接图、驱动反转位置和“同 drive 即未分辨”均属假设；事件重复是较强的描述性证据，但不是唯一机制。"
+    }
+  ]
+}

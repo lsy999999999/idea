@@ -1,0 +1,49 @@
+{
+  "name": "analyze_csv",
+  "args": {
+    "dataset": "measurements",
+    "group_column": "spring_id",
+    "group_value": "S046",
+    "variables": [
+      {
+        "name": "x",
+        "expression": "x_m"
+      },
+      {
+        "name": "f",
+        "expression": "force_N"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "k_mean",
+        "expression": "mean(diff(force_N)/diff(x_m))"
+      },
+      {
+        "name": "k_load",
+        "expression": "mean(where(diff(x_m)>0,diff(force_N)/diff(x_m),nan))"
+      },
+      {
+        "name": "k_unload",
+        "expression": "mean(where(diff(x_m)<0,diff(force_N)/diff(x_m),nan))"
+      },
+      {
+        "name": "secant",
+        "expression": "(max(force_N)-min(force_N))/(max(x_m)-min(x_m))"
+      },
+      {
+        "name": "fric_halfgap_N",
+        "expression": "abs(mean(where(diff(x_m)>0,force_N-45.9*x_m,nan))-mean(where(diff(x_m)<0,force_N-45.9*x_m,nan)))/2"
+      }
+    ]
+  },
+  "call_id": "call_00_wXumA2QdWu5nZsnkqB1n9678",
+  "seconds": 0.0043268329463899136,
+  "registered_paths": [],
+  "result": {
+    "status": "error",
+    "error_type": "ValueError",
+    "message": "Unsupported expression syntax: Name"
+  },
+  "policy_fingerprint": "1e4f5dcbb6b1c6873b226ff66dc837a3f5d0ea528bce61489f59a4cc965b7607"
+}

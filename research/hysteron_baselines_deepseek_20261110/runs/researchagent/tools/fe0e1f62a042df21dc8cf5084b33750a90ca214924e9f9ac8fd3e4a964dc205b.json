@@ -1,0 +1,86 @@
+{
+  "name": "analyze_csv",
+  "args": {
+    "dataset": "measurements",
+    "group_column": "spring_id",
+    "group_value": "S007",
+    "variables": [
+      {
+        "name": "x",
+        "expression": "x_m"
+      },
+      {
+        "name": "f",
+        "expression": "force_N"
+      },
+      {
+        "name": "n",
+        "expression": "isfinite(x_m)"
+      },
+      {
+        "name": "x2",
+        "expression": "x_m*x_m"
+      },
+      {
+        "name": "xf",
+        "expression": "x_m*force_N"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "n",
+        "expression": "sum(n)"
+      },
+      {
+        "name": "slope",
+        "expression": "(mean(xf)-mean(x)*mean(f))/(mean(x2)-mean(x)*mean(x))"
+      },
+      {
+        "name": "intercept",
+        "expression": "mean(f)-((mean(xf)-mean(x)*mean(f))/(mean(x2)-mean(x)*mean(x)))*mean(x)"
+      },
+      {
+        "name": "max_abs_resid",
+        "expression": "max(abs(f-(mean(f)-((mean(xf)-mean(x)*mean(f))/(mean(x2)-mean(x)*mean(x)))*mean(x))-((mean(xf)-mean(x)*mean(f))/(mean(x2)-mean(x)*mean(x)))*x))"
+      }
+    ]
+  },
+  "call_id": "call_02_HgNIO8NpCFnQJdEZlang8758",
+  "seconds": 0.0030395002104341984,
+  "registered_paths": [],
+  "result": {
+    "status": "executed",
+    "dataset": "measurements",
+    "sha256": "5e40502610e3904c627ab6b4cda5b65f4cf9185ed5190459d6b909313619504e",
+    "total_rows": 123,
+    "selected_rows": 25,
+    "selection": {
+      "column": "spring_id",
+      "value": "S007"
+    },
+    "outputs": {
+      "n": {
+        "shape": [],
+        "value": 25,
+        "nonfinite_count": 0
+      },
+      "slope": {
+        "shape": [],
+        "value": 6.959797525722672,
+        "nonfinite_count": 0
+      },
+      "intercept": {
+        "shape": [],
+        "value": -0.18578040007349106,
+        "nonfinite_count": 0
+      },
+      "max_abs_resid": {
+        "shape": [],
+        "value": 0.00401862812346887,
+        "nonfinite_count": 0
+      }
+    },
+    "scope": "Executed researcher-authored expressions on registered measurements; not validation of causal interpretation."
+  },
+  "policy_fingerprint": "1e4f5dcbb6b1c6873b226ff66dc837a3f5d0ea528bce61489f59a4cc965b7607"
+}

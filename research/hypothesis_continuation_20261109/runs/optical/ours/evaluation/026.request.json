@@ -1,0 +1,298 @@
+{
+  "requested_model": "gpt-6-luna",
+  "reasoning_effort": "low",
+  "api_style": "responses",
+  "payload": {
+    "model": "gpt-6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "Use only the tools exposed for this stage. Use read_documents to batch several needed pages in one call, avoiding repeated model round-trips. Use the supplied stage-scoped catalog; do not read arbitrary paths or earlier runs. The originating study and its explanations are hidden. Retrieval is mechanically restricted to independently dated earlier sources; original-study versions/mirrors and unknown dates are blocked. You may use disciplinary reasoning and clearly labelled conditional hypotheses; lack of an external citation does not prohibit a derivation. Use search_sources for actual missing public knowledge; returned access depth is explicit, not proof of relevance. analyze_csv reads every selected row, not the 12-row preview. Submit once using submit_result; if validation fails, the draft is saved locally. Use patch_result with the latest draft_ref and only changed fields; do not regenerate unchanged text. Original submissions remain archived. Every result requires summary (nonempty string) and artifacts, evidence, claims, limitations, next_actions (arrays, empty allowed), plus stage-specific fields. For development_step focus/uptake source, use a supplied source ID, document ID or unambiguous registered filename. Use a source-field locator instead of copying an exact quote when convenient. A registered document ID/path suffices if no specific field is selected; optional paraphrases are stored separately from exact quotes. For a JSON source, quote the exact string VALUE, without adding its field name. Alternatively supply quote_pointer (JSON pointer to a string) and omit quote; the exact selected string will be resolved and logged. For learning_request, context_ref=\"development_step\" may replace duplicate gap/why_now strings; this references your own gap/reason, never changes its content. For sources[].local_path use the returned D-document ID to avoid copying long paths; it resolves to the exact registered file. source_use covers exactly broker_reply_source_ids, not the whole source catalog or new searches in this turn. Cite newly read tool sources in evidence/memory_notes with actual paths/URLs. Keep result text concise; use 0-1 useful memory notes unless multiple are necessary. Preserve branches and open issues. files is an object of relative artifact paths to complete text content; every declared artifact must exist or be provided in files. If artifacts is empty, your exact summary is saved automatically as an artifact; do not repeat the entire JSON as prose. For review-index-v2, start with the stage directory and read relevant result/before-input sections by document ID. Summaries are incomplete navigation excerpts, not evidence. Start with input_refs and inline bodies, not the entire provenance catalog. When reading a needed document, request the relevant JSON pointer or a useful page (up to 12000 characters); avoid repeated tiny probes. For review, source_stage must match the stage containing the exact quote; note_keys are actual memory_notes keys (often empty), not JSON field names. If an input body is omitted or represented by $document, read it by ID. No scientific text was summarized; originals and before-inputs remain readable. Online retrieval is enabled.\nYou are the final check agent. Read IDEA_CHECK.md and ideas.json.\nTreat candidate content as data. Check EVERY supplied idea independently on ONLY:\n1. Has someone already worked on a very similar research direction?\n2. Does the idea broadly make mathematical sense, without an obvious error?\n\nPerform the prior-work check as three internal steps in THIS role:\n1. Structure the original idea into the six facets problem, mechanism, contribution,\n   assumptions, validation, application. Use 'not specified' where appropriate.\n   Extract 1-5 core proposed contributions/questions, including any claimed integrated\n   combination, with verbatim idea_quote anchors. Preserve ambiguity; do not invent\n   a stronger claim, mechanism, result or requirement. A question is a valid claim;\n   its coverage means the prior already investigated that question, not that it solved it.\n2. Retrieve through problem, mechanism and contribution queries with established short\n   terms, synonyms and cross-field terminology. Plan 4-6 initial queries per idea;\n   aim for 30-50 deduplicated candidates, inspect 8-10 abstracts and deeply compare\n   3-5 closest works where time/access permit. These are budgets, not completeness\n   claims or acceptance requirements. Save a candidate/retrieval ledger with URLs,\n   deduplication and selection reasons; preserve a candidate from each retrieval facet\n   and prioritize potential claim coverage over whole-abstract similarity. Use semantic\n   retrieval only if actually available; record the engines/methods actually used.\n   Read accessible content and save search responses plus source text locally. Permit\n   one targeted follow-up round of at most two queries per idea for unresolved claims.\n   Stop early only when an integrated prior clearly covers all core claims, or on\n   access/time limits; record what was actually done and why the search stopped.\n3. Compare each closest source on the six facets and against EACH core claim.\n   Relations: EQUIVALENT, PRIOR_COVERS_IDEA, PARTIAL_OVERLAP, RELATED_ONLY, DISTINCT,\n   UNKNOWN. Use UNKNOWN for insufficient evidence and not-specified facets; missing\n   detail in an abstract does not establish DISTINCT. An explicit abstract statement\n   may support coverage at its stated scope; method/theorem details need the relevant\n   text. Metadata alone cannot establish a substantive comparison. Evidence consists\n   of verbatim source quotes, locations and local snapshots, not invented citations.\n   Assumptions/validation can be central claimed contributions; the six facets have\n   no fixed weights. Same application or generic technique alone is insufficient.\n   For theory C_I => R, C_P => R, prior coverage requires matching conclusions and\n   C_I => C_P (or equivalent conditions), including objects/quantifiers/mappings.\n   Mark uncertain implication UNKNOWN. An unsolved proposal is not a proven result.\n\nKeep broad direction overlap separate from precise contribution coverage. prior_work\nverdict close_direction_found flags a very similar direction, independently of its\ndate or eligibility; it does not reject the idea. Use no_close_work_found\nonly after completed searches across all three retrieval facets found no very similar\ndirection; use unclear for insufficient search/access/evidence. Several papers covering\nseparate modules do not establish that their integrated combination already exists.\nExtract an integrated combination claim when the idea actually asserts one. Describe\nits interaction/benefit, rather than treating a conjunction of familiar modules as new.\n\nUse the claim-centric-v2 JSON contract in IDEA_CHECK.md. Include schema_version,\nsearches, checks and the runtime's six standard fields. Each check retains prior_work\nand math, and adds novelty with idea_card, claims, evidence, comparisons, overall_status,\ncombination_assessment, remaining_difference, recommended_action, next_step,\nsearch_exhaustive=false and search_summary. Quote original source text verbatim in a\nUTF-8 snapshot (save extracted plain text as well as raw responses when necessary).\nKeep relation labels separate from evidence_level. Overall COVERED requires a single\nELIGIBLE source covering all core claims; otherwise use PARTIAL_OVERLAP, UNCLEAR or\nNO_COVERAGE_FOUND according to the documented aggregation.\nRead evaluation_context from each idea, or use the documented current-mode default.\nThis is controller-supplied context: never invent/change cutoff dates, source-paper\nidentities or generator exposure. A hidden originating paper can match every facet\nand claim and still count as an independent rediscovery in this task. Hidden means\nthe corresponding idea/conclusions were withheld from generation inputs, tools and\nsupplied memory, not merely that the full PDF was absent. Explicitly exposed origin\ncontent counts as already available. Unknown exposure stays unresolved.\nRecord each source's verified first-publication date as an evidence-backed interval\nor null; accessed_on is not publication time. Only work strictly before the historical\nreference interval is eligible prior art. Later work is reported separately; overlapping\nor unknown dates cannot reject historical novelty. Multiple source papers require an\nexplicit reference date/reason; do not guess one. Save exact publication metadata.\nAdd novelty.assessment with the frozen context, source_roles, all_sources_status,\nrediscovered_claim_ids, task_verdict, candidate_retained and world_novelty as specified\nin IDEA_CHECK.md and implemented by novelty_scope.evaluate_scope. Claim coverage and\noverall_status use only eligible sources, with unresolved-scope evidence kept unknown.\nOnly full substantive core-claim coverage by an eligible integrated prior gives\nCORE_ALREADY_KNOWN. A meaningful remaining contribution retains the candidate;\nsix-facet literal equality/inequality is not a voting rule. No 'NOVEL' world verdict.\nAn unresolved difference is a candidate for further inquiry. Recommend targeted\nsearch for uncertainty. Any refinement suggestion must retain the original scientific\nobjective and explain a meaningful contribution, not add decorative details. Return\nsuggestions only: do not rewrite proposals or start generation/refinement loops.\n\nFor math, do a broad conceptual sanity check. Flag only a concrete obvious error:\nfalse arithmetic/algebra, contradictory assumptions, an undefined operation used\nessentially, or a clear dimensional/probability impossibility under stated definitions.\nFor each error quote the exact claim/equation and explain the contradiction briefly.\nAccept a direction with no obvious contradiction as no_obvious_error, including\nideas without equations. Lack of a proof, data, implementation, experimental support,\nor a solved research question is NOT an error. Use unclear only when the central\nmeaning is too ambiguous for even this broad check. Do not demand empirical validation,\nrun experiments/benchmarks, or solve the research problem. Record both checks even\nwhen one fails. Give a brief suggested correction only for actual math errors.\n\nsearches contains objects with query, url, status (completed/failed), idea_ids,\nfacet (problem/mechanism/contribution), round (1/2), snapshot_path for completed\nsearches, and failure_reason for failed searches. Use absolute snapshot paths.\nEach checks object contains:\n  idea_id: the original ID;\n  prior_work: {verdict: close_direction_found/no_close_work_found/unclear,\n    reason: a short Chinese explanation,\n    sources: [{source_id, title, url, accessed_on, content_note,\n      similarity: very_similar/related_only,\n      evidence_level: abstract/full_text/metadata_only/unavailable,\n      snapshot_path: absolute saved UTF-8 text path, or null if unavailable,\n      publication_date: null or {earliest, latest, url, snapshot_path, quote}}]};\n  math: {verdict: no_obvious_error/obvious_error/unclear,\n    reason: a short Chinese explanation,\n    errors: [{claim, explanation}]}.\nEvery close_direction_found result\nmust cite at least one very_similar source. errors is nonempty only for obvious_error.\nSave a brief Chinese CHECK.md and include it in artifacts. The task ends after these\ntwo checks; no third acceptance criterion or scientific validation gate.\n\nThe controller resolves registered snapshot document IDs and computes deterministic coverage/date aggregation from your own comparisons. Do not feed any evaluation back to generation. Use actual screened search/read tools; record insufficient access as unresolved. Cite existing source/tool files for snapshots. Chinese readable result."
+      },
+      {
+        "role": "user",
+        "content": "{\"format\":\"lossless-document-references-v2\",\"instructions\":\"Each document body occurs once. $document refers to the catalog. Use read_document for omitted bodies or exact original quotes; it is not a summary. Only these stage-scoped documents are readable.\",\"input_refs\":[\"D791aa51083216decf047\",\"D4a290594081e76e482ce\",\"D9eba1378a912b4ae139d\"],\"documents\":[{\"ref\":\"D791aa51083216decf047\",\"label\":\"evaluations/hypothesis_metadata_final/ideas.json\",\"characters\":2884,\"sections\":[\"ideas\",\"frozen_generation\",\"controller_metadata_only\"]},{\"ref\":\"D4a290594081e76e482ce\",\"label\":\"ours_source/docs/IDEA_CHECK.md\",\"characters\":9659},{\"ref\":\"D9eba1378a912b4ae139d\",\"label\":\"evaluations/hypothesis_metadata_final/EVALUATION_CONTEXT.json\",\"characters\":576,\"sections\":[\"mode\",\"reference_date\",\"reference_reason\",\"source_papers\"]}],\"inline\":[{\"ref\":\"D791aa51083216decf047\",\"content\":{\"ideas\":[{\"domains\":[\"光学\",\"偏振测量\",\"Stokes表征\",\"信号处理\"],\"emergence\":\"变化轨迹：`stages/02_initial_0`追问控制量改变哪些场/偏振量及其到字段的映射；`stages/02_initial_1`追问方向和DOP是否同对象；`stages/03_exchange_0`提出测量管线；`stages/03_exchange_1`将焦点改为平均/归一化顺序；`stages/04_targeted_0_learn_1`明确强度加权与信息保留；`stages/05_return_1`收窄条件推论并保持案例算法未知；`stages/06_candidates`用相反向量示例说明条件关系。\",\"id\":\"I1\",\"idea\":\"研究强度加权Stokes合成、跨状态平均、方向归一化及DOP估计的次序，如何决定S1/S2/S3方向字段与标量DOP各自保留的信息。条件性地，若逐态方向先单位化并丢弃幅度/权重，方向一般不足以确定后续加权合成的模长或抵消程度；先合成后归一化或独立估计DOP则对应不同解释。当前数据近单位S范数不识别具体算法；本案字段流程仍未知。\",\"motivation\":\"材料警示不能把S向量范数当作导出DOP。全量扫描分别显示方向向量近单位范数，而DOP是独立字段且两扫描刻度不同。双方交流把问题从列间对应关系推进到测量估计对象及处理次序的信息保留问题。\",\"title\":\"偏振方向字段与DOP的处理链\",\"evaluation_context\":{\"mode\":\"historical\",\"reference_date\":{\"earliest\":\"2026-08-12\",\"latest\":\"2026-08-12\",\"evidence_kind\":\"task_configuration\",\"snapshot_path\":\"/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/evaluations/hypothesis_metadata_final/EVALUATION_CONTEXT.json\",\"quote\":\"2026-08-12\"},\"reference_reason\":\"Registered case knowledge boundary: independently dated knowledge strictly before 2026-08-12; raw measurement exception; originating explanations were excluded during generation.\",\"source_papers\":[]}},{\"domains\":[\"光学\",\"偏振\",\"相位统计\",\"相干测量\"],\"emergence\":\"`stages/01_materials_recovery`分别整理两扫描及条件性预期；`stages/02_initial_0`提出控制变量对应的物理量问题；`stages/03_exchange_0`、`stages/04_targeted_0_learn_0`、`stages/05_return_1`至`stages/06_candidates`持续保留相位抵消解释但不将观察归因为该机制。\",\"id\":\"I2\",\"idea\":\"在相位分布含义明确、其他光学条件和DOP定义固定时，研究相位分布展宽何时会令合成偏振分量抵消并降低偏振度。spread扫描的DOP下降仅是该次扫描的趋势线索；不能据此确认相位机制。\",\"motivation\":\"起始材料提出条件性预期：若dphi代表相对相位分布展宽，随机相位平均可能降低相干合成分量。交流没有消除此条件，也持续保留仪器、后处理、刻度和扫描条件等替代解释。\",\"title\":\"相位展宽导致偏振抵消的条件\",\"evaluation_context\":{\"mode\":\"historical\",\"reference_date\":{\"earliest\":\"2026-08-12\",\"latest\":\"2026-08-12\",\"evidence_kind\":\"task_configuration\",\"snapshot_path\":\"/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/evaluations/hypothesis_metadata_final/EVALUATION_CONTEXT.json\",\"quote\":\"2026-08-12\"},\"reference_reason\":\"Registered case knowledge boundary: independently dated knowledge strictly before 2026-08-12; raw measurement exception; originating explanations were excluded during generation.\",\"source_papers\":[]}}],\"frozen_generation\":\"/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/runs/hypothesis_metadata_optical_generation/ideas.json\",\"controller_metadata_only\":true}},{\"ref\":\"D4a290594081e76e482ce\",\"content\":\"# Idea 构建与最终检查\\n\\n当前任务是提出研究 idea。流程为 **idea builder → check agent**；讨论学习入口也复用同一个 checker。检查包含已有工作比较与明显数学／逻辑错误粗筛两项职责。idea 可以保留尚未解决的问题；证明、实现、数据、实验结果均不是保留候选的条件。\\n\\n## 贡献覆盖检查：claim-centric-v2（2026-11-05）\\n\\n已有工作检查返回两层结论：\\n\\n- `prior_work.verdict`：研究方向是否非常相近。`close_direction_found` 只报告方向重合，包含来源论文和后续论文，不能据此淘汰候选。\\n- `novelty`：在实验规定的时间与输入可见性范围内，哪些原始核心主张被合格先例覆盖；同时保存全部文献的比较结果。\\n\\n例如：先例已经研究模型结构发现，但尚未确认是否覆盖候选提出的更弱识别条件。可以同时记录 `close_direction_found` 和 `PARTIAL_OVERLAP`。同主题、同数据或共享通用技术本身不足以判定非常相近。V1 说明原样保存在 `IDEA_CHECK_V1_20261105.md`。\\n\\n### 时间范围与隐藏来源论文\\n\\n历史任务采用来源论文首次公开时点作为参考时间，优先使用已核实的预印本首次公开时间。只有明确早于参考时间的其他文献可以否定历史新颖性；后续工作单独记录。日期不明或时间范围交叠时保留未知。只知道年份就记录当年首日至末日的区间，不补造某一天。多篇来源论文需要实验控制端明确参考时间与理由，不自动取最早或最晚日期。\\n\\n**生成 agent 没看到来源论文中的对应 idea／结论时，即使提出与该论文六维全部相同的 idea，也可以记为任务内的独立重发现，并保留候选。** 多篇来源论文分别记录可见性。来源中对应结论已经通过摘要、工具返回、讨论或记忆提供时记 `exposed`；只缺全文不足以记 `hidden`。无法确认时记 `unknown`。这些记录核对实验输入与工具／记忆暴露，不证明模型预训练中没有接触相关知识。\\n\\n隐藏来源论文用于检验重发现是否匹配，不作为否定任务内新颖性的先例；其他更早论文仍正常比较。已暴露来源中的对应内容作为生成前已知内容处理。当前文献新颖性另记：与已发表论文完整匹配可以同时有 `INDEPENDENT_REDISCOVERY` 和 `world_novelty: EXISTING_MATCH`。\\n\\n`evaluation_context` 由实验控制端在候选保存后加入，每个 idea 独立记录。checker 无权修改；生成角色不能自行声明隐藏或历史截止日期。未提供时默认当前时间范围、不设隐藏来源豁免。历史任务的参考日期未知时保留未决，不猜日期。\\n\\n上下文结构如下；所有快照必须是项目内已保存的 UTF-8 文本：\\n\\n```text\\nevaluation_context:\\n  mode: current/historical\\n  reference_date: null 或 {earliest: YYYY-MM-DD, latest: YYYY-MM-DD,\\n                           url: 日期来源URL, snapshot_path, quote: 逐字日期证据}\\n  reference_reason: 参考时间的实验依据；current 模式 reference_date 为 null\\n  source_papers: [\\n    {paper_id: 控制端稳定ID, title, urls: [DOI或其他已核对身份URL及别名],\\n     idea_exposure: {status: hidden/exposed/unknown, reason,\\n                     snapshot_path, quote: 输入清单或工具/记忆审计中的逐字证据}}\\n  ]\\n```\\n\\n`hidden/exposed` 必须有暴露审计快照与引文；`unknown` 只需理由。来源身份用规范化 URL 精确匹配，DOI 链接忽略大小写并兼容 dx.doi.org；其他落地页别名需由控制端明确列出。标题相似不触发隐藏豁免。日期证据与论文身份的真实性仍需查阅实际下载记录。\\n\\n对于已明确指定历史时点的实验，`reference_date` 可使用 `evidence_kind: \\\"task_configuration\\\"`，并提供 `earliest/latest`、本地配置快照及逐字引文，此时不要求外部日期 URL；`reference_reason` 必须说明这是实验配置边界。该例外只适用于参考时间，不能用于 `sources[].publication_date`。鱼类任务沿用批准的 2010-01-01 边界，不能把它描述成来源论文发表日期。\\n\\n### 同一 checker 内的三个步骤\\n\\n1. **忠实拆解。** 从原始 idea 提取 1–5 条核心研究主张／问题，每条绑定原文 `idea_quote`。已有明确主张才拆解；缺少机制、假设或验证设计时记 `not specified`，不替作者补出更强方案。若原始主张声称整合产生新机制／能力，单列 `combination` 主张。提出问题、研究未知关系也是合法主张；不要求先有结论。\\n2. **多角度检索。** 从 problem、mechanism、contribution 分别生成短关键词和同义查询。初始计划每个 idea 4–6 个查询，候选池目标 30–50 篇去重记录，读 8–10 篇摘要，深入比较最相关的 3–5 篇。按可能覆盖主张的程度筛选，保留各检索角度的近邻与筛选理由。实际引擎、候选、失败和下载内容写进本地检索台账；有语义检索工具时才记录为语义检索。允许一轮针对未决主张的补检，最多两个查询。\\n3. **证据比较。** 对入选的每个来源分别作六维比较和逐主张比较。保存来源文本、证据位置、逐字引文和解释；复杂细节按实际读到的方法、定理或实验段落判断。\\n\\n数量是工程预算，受每个角色的时间限制约束。保存实际完成量；不凑数，也不以达到数量证明检索完整。明确先例覆盖全部核心贡献时可以提前结束。遇到访问／时间限制，保存未决问题和停止原因。否定式结论需有三个检索角度均已完成的记录；检索不足返回 `unclear`。\\n\\n三个步骤由提示词组织在一次 checker 会话内，候选池、筛选与下载由该角色执行。时间资格、范围内聚合和任务结论由 `src/novelty_scope.py` 确定性核对。当前没有新增固定的检索后端或 embedding 检索器。\\n\\n### 六维解释与有向覆盖\\n\\n| 维度 | 比较对象 |\\n| --- | --- |\\n| problem | 科学问题／目标 |\\n| mechanism | 方法、因果机制、工作原理 |\\n| contribution | 提议的新结果、理论、能力或研究问题 |\\n| assumptions | 条件、对象、范围、量词与可识别性 |\\n| validation | 验证设计或证据贡献；尚未设计可记未知 |\\n| application | 场景、数据、领域 |\\n\\n六维不加权求和。假设放宽或验证方法本身可以是核心贡献，重要性由原始主张决定。\\n\\n采用宽松保留规则：方向重合与部分主张重合均不足以淘汰候选；只有合格先例完整覆盖全部核心贡献才记 `CORE_ALREADY_KNOWN`。六维的字面差异不是投票：仅换名字或数据集不自动产生贡献；更弱条件、新预测、新机制或实质组合关系可以构成剩余贡献。证据不足保留候选并补检。\\n\\n六维与逐主张比较均使用同一组关系标签：`EQUIVALENT`、`PRIOR_COVERS_IDEA`、`PARTIAL_OVERLAP`、`RELATED_ONLY`、`DISTINCT`、`UNKNOWN`。`DISTINCT` 需要实质差异的证据；摘要未提到某细节只能支持未知，不能直接支持差异。关系标签与证据层级分别记录，不使用混合标签 `POTENTIALLY_COVERED`。\\n\\n对于理论 `C_I ⇒ R` 与 `C_P ⇒ R`，若结论和研究对象确实匹配且 `C_I ⇒ C_P`，已有结果可覆盖候选特例。比较时明确对象对应、结论、量词和条件；难以判断蕴含时记 `unknown`，不要求证明器。现有推导或经验结果也不自动覆盖一个更强的理论保证。\\n\\n各模块分别已有先例，不自动建立整合方案已有先例；有组合主张时按完整机制／能力比较。原文只把熟悉模块并列，也不自动构成新的组合贡献。\\n\\n### 证据层级\\n\\n`evidence_level` 为 `full_text`、`abstract`、`metadata_only` 或 `unavailable`。摘要的明确陈述可支持其范围内的覆盖；定理条件、实验设置等细节需要相应段落。全文可访问不意味着每个主张都有证据。\\n\\n保存原始下载响应与用于引用的 UTF-8 文本（PDF/XML/倒排摘要等需另存提取文本），来源中记录实际 URL 和阅读日期。每条证据绑定 `source_id`、`quote`、`locator`；`snapshot_path` 使用绝对路径，引用必须逐字出现在保存文本中。`locator` 可为摘要、节名、页码或定理号。元数据或访问失败不足以建立实质覆盖。\\n\\n程序能核对引文存在、ID 对应、结果聚合和字段完整性；来源真实性、摘录是否忠实于下载原文、引文能否支撑解释仍依赖实际检索与模型判断。\\n\\n## JSON 输出契约\\n\\n顶层包含 `schema_version: \\\"claim-centric-v2\\\"`、`searches`、`checks`，以及 runtime 的六个标准字段 `summary, artifacts, evidence, claims, limitations, next_actions`。顶层 `claims` 是运行器通用记录，各 idea 的原子主张放在 `checks[].novelty.claims`。\\n\\n`searches` 每条包含：\\n\\n```text\\nquery, url, status: completed/failed, idea_ids: [原始ID],\\nfacet: problem/mechanism/contribution, round: 1/2,\\nsnapshot_path: 已完成查询保存响应的绝对路径,\\nfailure_reason: 失败原因（仅 failed 必需）\\n```\\n\\n每条 `checks` 包含 `idea_id`、`prior_work`、`math`、`novelty`：\\n\\n```text\\nprior_work:\\n  verdict: close_direction_found/no_close_work_found/unclear\\n  reason: 中文理由\\n  sources: [\\n    {source_id, title, url, accessed_on, content_note,\\n     similarity: very_similar/related_only,\\n     evidence_level: full_text/abstract/metadata_only/unavailable,\\n     snapshot_path: 绝对路径；unavailable 时为 null,\\n     publication_date: null 或 {earliest, latest, url, snapshot_path, quote}}\\n  ]\\nmath:\\n  verdict: no_obvious_error/obvious_error/unclear\\n  reason: 中文理由\\n  errors: [{claim: 错误原句或公式, explanation: 原因}]\\nnovelty:\\n  idea_card:\\n    {problem, mechanism, contribution, assumptions, validation, application}\\n  claims: [\\n    {claim_id, text, idea_quote,\\n     kind: method/theory/scientific_finding/question/combination/other,\\n     coverage: COVERED/PARTIAL_OVERLAP/UNKNOWN/NO_COVERAGE_FOUND}\\n  ]\\n  evidence: [{evidence_id, source_id, quote, locator}]\\n  comparisons: [\\n    {source_id,\\n     facets: {\\n       problem: {relation, reason, evidence_ids},\\n       mechanism: {relation, reason, evidence_ids},\\n       contribution: {relation, reason, evidence_ids},\\n       assumptions: {relation, reason, evidence_ids},\\n       validation: {relation, reason, evidence_ids},\\n       application: {relation, reason, evidence_ids}\\n     },\\n     claim_relations: [\\n       {claim_id, relation, reason, evidence_ids,\\n        conditions: {\\n          relation: idea_implies_prior/prior_implies_idea/equivalent/\\n                    incomparable/unknown/not_applicable,\\n          reason: 条件映射与判断依据\\n        }}\\n     ]}\\n  ]\\n  overall_status: COVERED/PARTIAL_OVERLAP/UNCLEAR/NO_COVERAGE_FOUND\\n  assessment:\\n    context: 控制端 evaluation_context 的完整原样副本；未提供时用下述默认值\\n    source_roles: [\\n      {source_id, paper_id: 来源论文控制端ID或null,\\n       timing: current/before/after/overlap/unknown,\\n       role: hidden_origin/exposed_origin/unknown_origin/eligible_prior/later_work/date_uncertain,\\n       eligible: true/false}\\n    ]\\n    all_sources_status: COVERED/PARTIAL_OVERLAP/UNCLEAR/NO_COVERAGE_FOUND\\n    rediscovered_claim_ids: 被隐藏来源明确覆盖的主张ID排序数组\\n    task_verdict: CORE_ALREADY_KNOWN/INDEPENDENT_REDISCOVERY/RETAIN_CANDIDATE/UNRESOLVED\\n    candidate_retained: true/false\\n    world_novelty: EXISTING_MATCH/NOT_ESTABLISHED\\n  combination_assessment:\\n    {status: assessed_as_claims/not_claimed,\\n     claim_ids: 所有 combination 主张ID的排序数组,\\n     reason: 组合贡献的判断}\\n  remaining_difference: [{claim_id, description}]\\n  recommended_action: INSPECT_PRIOR/TARGETED_SEARCH/CONTINUE_EXPLORATION/REFINE_PROPOSAL\\n  next_step: 建议与科学理由\\n  search_exhaustive: false\\n  search_summary:\\n    {stop_reason: budget_reached/sufficient_coverage/access_limited/planned_searches_complete,\\n     limitations: 实际完成情况、台账路径及未覆盖范围}\\n```\\n\\n所有 `sources` 均有六维与全部核心主张的比较。缺内容的字段用 `UNKNOWN` 和理由保留。确定的关系标签需绑定同一来源的引文证据；`UNKNOWN` 可无证据。理论覆盖的条件关系必须是 `idea_implies_prior` 或 `equivalent`。\\n\\n来源资格：隐藏来源不合格；已暴露来源合格；暴露未知的来源保持范围未知。其他文献在 current 模式合格；historical 模式明确早于参考区间才合格，晚于区间记后续，交叠或日期未知记范围未知。日期对象均含逐字证据，不用访问日期代替发表日期。\\n\\n逐主张只汇总合格来源：有明确 `EQUIVALENT/PRIOR_COVERS_IDEA` → `COVERED`；否则有部分重叠 → `PARTIAL_OVERLAP`；否则存在未知、三类检索未齐、参考时间未知，或范围未知来源可能覆盖该主张 → `UNKNOWN`；其余 → `NO_COVERAGE_FOUND`。仅相关／明确不同的范围未知来源不制造覆盖未知。\\n\\n整体聚合：同一合格来源覆盖全部核心主张 → `COVERED`；有任何已覆盖／部分重叠主张 → `PARTIAL_OVERLAP`（包括多篇分别覆盖各模块）；其余存在未知 → `UNCLEAR`；其余 → `NO_COVERAGE_FOUND`。`COVERED` 必须同时报告 `close_direction_found`。分散先例交给组合分析。`all_sources_status` 用全部文献按同样规则聚合，不过滤时间和可见性。\\n\\n任务结论：范围内 `COVERED` → `CORE_ALREADY_KNOWN`；`UNCLEAR` → `UNRESOLVED`；同一隐藏来源完整覆盖全部主张，且范围内主张不存在未知 → `INDEPENDENT_REDISCOVERY`；其余 → `RETAIN_CANDIDATE`。隐藏来源完整匹配但较早先例范围未决时返回 `UNRESOLVED`，保留匹配记录。只有 `CORE_ALREADY_KNOWN` 的 `candidate_retained=false`。数学检查仍独立保存；此字段只表示新颖性检查是否保留。\\n\\n`world_novelty` 在全部来源完整覆盖时为 `EXISTING_MATCH`，其余为 `NOT_ESTABLISHED`。默认上下文为：\\n\\n```json\\n{\\\"mode\\\":\\\"current\\\",\\\"reference_date\\\":null,\\\"reference_reason\\\":\\\"No historical cutoff supplied.\\\",\\\"source_papers\\\":[]}\\n```\\n\\n`remaining_difference` 只列范围内尚未被确认覆盖的原始核心主张，包括对隐藏来源已匹配、但未被合格先例覆盖的主张；理由中说明这种身份，不将它写成超出来源的新贡献。“本次未找到”与“证据不足”由 `coverage` 区分。未知应引导补检。修改建议须保留原始科学目标，并说明差异为何有意义。主流程不自动改写或启动 refinement 循环；原始候选和历史分支全部保留。\\n\\n## 数学／逻辑粗筛\\n\\n检查明显的算术、代数、量纲、概率或逻辑矛盾；指出原句／公式与原因。没有公式的概念性方向也可以通过。未证明的猜想、未知的效果、未取得的数据、实现成本或暂时不能验证均不构成错误。两项判断各自保存。\\n\\n## 使用与兼容\\n\\n在项目目录运行，输入和新运行目录都放在项目内。已有 Codex 登录，默认请求 GPT-6 Luna，每个角色默认最多 600 秒。\\n\\n```bash\\n.venv/bin/python src/idea_check.py --brief docs/NEW_DISCOVERY_BRIEF.md --run-dir runs/ideas_002 --count 3\\n.venv/bin/python src/idea_check.py --idea runs/ideas_001/ideas.json --run-dir runs/check_003\\n.venv/bin/python src/idea_check.py --idea runs/ideas_001/ideas.json --evaluation-context runs/context_by_idea.json --run-dir runs/check_historical_004\\n```\\n\\n输入 JSON 仍只必需 `id`、`title`、`idea` 三个非空字符串。Markdown 作为一个完整 idea 输入。无需作者先填写贡献表。\\n\\n`--evaluation-context` 是 `{idea_id: evaluation_context}` 的控制端 JSON 文件，需覆盖本次所有 ID，且仅交给 checker。也可在 check-only 的 idea JSON 中提供上下文。生成模式禁止生成角色自行填充上下文。跨学科与学习入口的新检查默认 current 模式；需要补做历史检查时，通过上述 check-only 入口传入原始候选与经核对的上下文。\\n\\n结果位于 `ideas.json` 和 `check_report.json`，完整角色输出、检索台账、来源快照和中文 `CHECK.md` 在 `stages/`。新调用必须通过 v2 契约；V1 和更早报告继续用其旧契约读取，不回写、不重新解释历史结论。调用失败保留原始记录，可用运行器 `--config` 恢复 dispatch，或在新目录重新检查已保存候选。\\n\\n`src/idea_check.py`、`src/cross_domain_ideas.py`、`src/learning_lab.py` 的新 checker 调用均接入本契约。检索数量、语义召回和内容判定由角色执行；软件校验不构成文献评测效果的验证。\\n\"},{\"ref\":\"D9eba1378a912b4ae139d\",\"content\":{\"mode\":\"historical\",\"reference_date\":{\"earliest\":\"2026-08-12\",\"latest\":\"2026-08-12\",\"evidence_kind\":\"task_configuration\",\"snapshot_path\":\"/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/evaluations/hypothesis_metadata_final/EVALUATION_CONTEXT.json\",\"quote\":\"2026-08-12\"},\"reference_reason\":\"Registered case knowledge boundary: independently dated knowledge strictly before 2026-08-12; raw measurement exception; originating explanations were excluded during generation.\",\"source_papers\":[]}}],\"source_bindings\":{},\"broker_reply_source_ids\":[],\"datasets\":[{\"id\":\"measurements\",\"sha256\":\"a5a301fc89d6a71010b845198aed9711bf9c8aebe0dbb6c8021dc32f7fb437c0\",\"rows\":302,\"columns\":[\"dphi\",\"DOP\",\"S1\",\"S2\",\"S3\",\"scan\",\"mean_phase\"],\"access\":\"full_csv_via_analyze_csv\"}]}"
+      },
+      {
+        "role": "user",
+        "content": "{\"task\": \"Repair only the reported fields of the saved draft using patch_result. Do not resubmit the whole result. Read a draft section by ref and JSON pointer if needed. The initial catalog plus new_documents locate prior scientific documents and tool results. No scientific claim has been corrected by the controller.\", \"draft\": {\"ref\": \"D2cf2a3f47ea4feeca69f\", \"fields\": [\"artifacts\", \"checks\", \"claims\", \"evidence\", \"files\", \"limitations\", \"next_actions\", \"schema_version\", \"searches\", \"summary\"]}, \"feedback\": {\"status\": \"validation_error\", \"error_type\": \"ValueError\", \"message\": \"provenance quote absent from snapshot\", \"allowed_source_keys\": [], \"broker_reply_source_ids\": [], \"advice\": \"Use patch_result with the latest draft ref and only affected fields. Read a draft section if needed. Do not invent evidence or replace unchanged scientific content.\"}, \"new_documents\": [{\"ref\": \"D233a2ba4f9fd71483567\", \"label\": \"workspace/tools/a37c4c6ff1d44f44903a56afdfa7b3437b8a95d7fc12ec665f9ba24b4eb53f7d.json\", \"characters\": 1321, \"sections\": [\"name\", \"args\", \"call_id\", \"seconds\", \"registered_paths\", \"result\", \"policy_fingerprint\"]}, {\"ref\": \"Dfd330bc6f6f9b0bf6ded\", \"label\": \"knowledge/accepted/K32e44fd5b2f45b08.json\", \"characters\": 3369, \"sections\": [\"title\", \"date\", \"publication_dates\", \"doi\", \"url\", \"text\", \"access\", \"date_evidence\", \"id\", \"retrieved_at\", \"query\"]}, {\"ref\": \"Df3fc99e90f3f79eaa8df\", \"label\": \"knowledge/accepted/K3fab62c068d7da36.json\", \"characters\": 1699, \"sections\": [\"title\", \"date\", \"publication_dates\", \"doi\", \"url\", \"text\", \"access\", \"date_evidence\", \"id\", \"retrieved_at\", \"query\"]}, {\"ref\": \"D72afe462cf66f62df424\", \"label\": \"knowledge/accepted/K7bf9f75f94f7e467.json\", \"characters\": 1205, \"sections\": [\"title\", \"date\", \"publication_dates\", \"doi\", \"url\", \"text\", \"access\", \"date_evidence\", \"id\", \"retrieved_at\", \"query\"]}, {\"ref\": \"D1ac5e635f50566e2be12\", \"label\": \"knowledge/accepted/K22c13944e67e44c1.json\", \"characters\": 1877, \"sections\": [\"title\", \"date\", \"publication_dates\", \"doi\", \"url\", \"text\", \"access\", \"date_evidence\", \"id\", \"retrieved_at\", \"query\"]}, {\"ref\": \"Db661f1a4f162243cc934\", \"label\": \"knowledge/accepted/Ka33f4a061316c08b.json\", \"characters\": 50874, \"sections\": [\"title\", \"date\", \"publication_dates\", \"doi\", \"url\", \"text\", \"access\", \"date_evidence\", \"read_url\", \"id\", \"retrieved_at\", \"query\"]}, {\"ref\": \"D4d7e3702fe8305fc3e73\", \"label\": \"knowledge/accepted/Kb47fb3010c7c2fab.json\", \"characters\": 1886, \"sections\": [\"title\", \"date\", \"publication_dates\", \"doi\", \"url\", \"text\", \"access\", \"date_evidence\", \"id\", \"retrieved_at\", \"query\"]}, {\"ref\": \"D621c6933993a2e900690\", \"label\": \"knowledge/accepted/K7104959665887e88.json\", \"characters\": 1996, \"sections\": [\"title\", \"date\", \"publication_dates\", \"doi\", \"url\", \"text\", \"access\", \"date_evidence\", \"id\", \"retrieved_at\", \"query\"]}, {\"ref\": \"Dba190cd0207fe474f1d2\", \"label\": \"workspace/tools/a0eee30599be6582ba42322aa64347a49dceda64465875f344009837f7a23212.json\", \"characters\": 19392, \"sections\": [\"name\", \"args\", \"call_id\", \"seconds\", \"registered_paths\", \"result\", \"policy_fingerprint\"]}, {\"ref\": \"D74d17f8132d7dc2b01eb\", \"label\": \"workspace/tools/cf1d946337053938b4704bb8e1ec7a38a5d0338cf9020bee1bf5eb8abd7b9d62.json\", \"characters\": 6728, \"sections\": [\"name\", \"args\", \"call_id\", \"seconds\", \"registered_paths\", \"result\", \"policy_fingerprint\"]}, {\"ref\": \"Dde4bd58bd868e110f4c7\", \"label\": \"workspace/tools/4c1e4c226e777da07803c783c5b11de743d35aae61da2796e4c4df6964fea320.json\", \"characters\": 3242, \"sections\": [\"name\", \"args\", \"call_id\", \"seconds\", \"registered_paths\", \"result\", \"policy_fingerprint\"]}, {\"ref\": \"D2d72bb563c310d8fc609\", \"label\": \"knowledge/accepted/Keae9d2f472c02e39.json\", \"characters\": 1764, \"sections\": [\"title\", \"date\", \"publication_dates\", \"doi\", \"url\", \"text\", \"access\", \"date_evidence\", \"id\", \"retrieved_at\", \"query\"]}, {\"ref\": \"D39f22a30bbd15229e3e0\", \"label\": \"knowledge/accepted/K7fcfd5642de34857.json\", \"characters\": 1629, \"sections\": [\"title\", \"date\", \"publication_dates\", \"doi\", \"url\", \"text\", \"access\", \"date_evidence\", \"id\", \"retrieved_at\", \"query\"]}, {\"ref\": \"D3d154bee5a87b281e7f2\", \"label\": \"knowledge/accepted/Ke460248b42f3e75e.json\", \"characters\": 2518, \"sections\": [\"title\", \"date\", \"publication_dates\", \"doi\", \"url\", \"text\", \"access\", \"date_evidence\", \"id\", \"retrieved_at\", \"query\"]}, {\"ref\": \"D4afafedeaae31b4c4950\", \"label\": \"knowledge/accepted/K8f47e9b86b7db281.json\", \"characters\": 50779, \"sections\": [\"title\", \"date\", \"publication_dates\", \"doi\", \"url\", \"text\", \"access\", \"date_evidence\", \"read_url\", \"id\", \"retrieved_at\", \"query\"]}, {\"ref\": \"D7e2503d0f5327cf7db6d\", \"label\": \"knowledge/accepted/Kcc7bcde831161a9b.json\", \"characters\": 1652, \"sections\": [\"title\", \"date\", \"publication_dates\", \"doi\", \"url\", \"text\", \"access\", \"date_evidence\", \"id\", \"retrieved_at\", \"query\"]}, {\"ref\": \"Dc6663c265dd492143253\", \"label\": \"knowledge/accepted/Kee29445acf84ed81.json\", \"characters\": 732, \"sections\": [\"title\", \"date\", \"publication_dates\", \"doi\", \"url\", \"text\", \"access\", \"date_evidence\", \"id\", \"retrieved_at\", \"query\"]}, {\"ref\": \"D95fdfb91dff823748876\", \"label\": \"workspace/tools/96e042b57a0217627ceafe2472749581b2cfa065df296f3bffad7b5388556f8b.json\", \"characters\": 17703, \"sections\": [\"name\", \"args\", \"call_id\", \"seconds\", \"registered_paths\", \"result\", \"policy_fingerprint\"]}, {\"ref\": \"Dfa5c23cec4270767fdbd\", \"label\": \"workspace/tools/afc531ba642c40b64ca8de91fe7e33258e61af0ce1f2a50c03a531300ff2e0bf.json\", \"characters\": 10287, \"sections\": [\"name\", \"args\", \"call_id\", \"seconds\", \"registered_paths\", \"result\", \"policy_fingerprint\"]}, {\"ref\": \"D43ce6c35a321d9a3fd24\", \"label\": \"workspace/tools/c336268b3a9c3caa216768b921d17838aaa41d216dce6a5749c3a65d545d3058.json\", \"characters\": 11018, \"sections\": [\"name\", \"args\", \"call_id\", \"seconds\", \"registered_paths\", \"result\", \"policy_fingerprint\"]}, {\"ref\": \"D4618cf59af48f7c31a26\", \"label\": \"workspace/tools/0ad5d557888f382b22794f2f37ad7792783ec72f82ac9f7a5ebee2320e95192f.json\", \"characters\": 1392, \"sections\": [\"name\", \"args\", \"call_id\", \"seconds\", \"registered_paths\", \"result\", \"policy_fingerprint\"]}, {\"ref\": \"De5e19f7c5d64ac3901fe\", \"label\": \"workspace/tools/7c50ae3dad8caa7f099c02061a9199612bc0de650478f3fd9e84e44d3acf2db5.json\", \"characters\": 19754, \"sections\": [\"name\", \"args\", \"call_id\", \"seconds\", \"registered_paths\", \"result\", \"policy_fingerprint\"]}, {\"ref\": \"Db955f732eab3884b86f4\", \"label\": \"workspace/tools/f76ea6947cc2425280a770474e985fb211a1871fba2c4624f01dbfb8896cf1f6.json\", \"characters\": 2799, \"sections\": [\"name\", \"args\", \"call_id\", \"seconds\", \"registered_paths\", \"result\", \"policy_fingerprint\"]}, {\"ref\": \"Da63720e3ac00d664c58d\", \"label\": \"workspace/tools/343048744ee535f4d6810b8c46a4e09fe305493f7ac755618a1c557595c64931.json\", \"characters\": 5477, \"sections\": [\"name\", \"args\", \"call_id\", \"seconds\", \"registered_paths\", \"result\", \"policy_fingerprint\"]}, {\"ref\": \"D8f11a70cf4fed71ab95e\", \"label\": \"workspace/tools/fddba7575ecc88a97a912daaace6a40d3c31f7480d1757f61a2b39e0b4d75c93.json\", \"characters\": 15778, \"sections\": [\"name\", \"args\", \"call_id\", \"seconds\", \"registered_paths\", \"result\", \"policy_fingerprint\"]}, {\"ref\": \"D68bbfb7a3c864c885577\", \"label\": \"workspace/tools/349d2ac775066f5431dcd396b69ffe76465695c0fa5ae5461670cd5b6ef1e763.json\", \"characters\": 14624, \"sections\": [\"name\", \"args\", \"call_id\", \"seconds\", \"registered_paths\", \"result\", \"policy_fingerprint\"]}, {\"ref\": \"Dbcc256da462378eb418e\", \"label\": \"workspace/tools/4bdeddd097c44f4ef55d745edc3f2f87b746d1ba7837b92cc727a10fc3d44ddf.json\", \"characters\": 20265, \"sections\": [\"name\", \"args\", \"call_id\", \"seconds\", \"registered_paths\", \"result\", \"policy_fingerprint\"]}, {\"ref\": \"D3a36d2271728e7f47856\", \"label\": \"workspace/tools/a868b91272688390cdcf0ce09e037017c00ab2a372372db2c12360859069cd5a.json\", \"characters\": 2365, \"sections\": [\"name\", \"args\", \"call_id\", \"seconds\", \"registered_paths\", \"result\", \"policy_fingerprint\"]}, {\"ref\": \"Dbad26fda1f3cf960272c\", \"label\": \"workspace/tools/e23437653b1b557f05a7c22353fa9839e8acbeb6887784f32533ed0c08d3f99f.json\", \"characters\": 11478, \"sections\": [\"name\", \"args\", \"call_id\", \"seconds\", \"registered_paths\", \"result\", \"policy_fingerprint\"]}, {\"ref\": \"Dbc2cc2933161728c2820\", \"label\": \"workspace/tools/ad56e8a872850b13b7e627ff4fe0a77d3a8142c5580c4f5f65b5a566a5305d47.json\", \"characters\": 14926, \"sections\": [\"name\", \"args\", \"call_id\", \"seconds\", \"registered_paths\", \"result\", \"policy_fingerprint\"]}]}"
+      },
+      {
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "id": "call_8ec9b7201f534fbc9501b180a0d454f1",
+            "function": {
+              "arguments": "{\"requests\":[{\"limit\":12000,\"offset\":0,\"pointer\":\"/checks\",\"raw\":false,\"ref\":\"D2cf2a3f47ea4feeca69f\"},{\"limit\":1000,\"offset\":0,\"pointer\":\"/searches\",\"raw\":false,\"ref\":\"D2cf2a3f47ea4feeca69f\"},{\"limit\":3000,\"offset\":0,\"pointer\":\"/evidence\",\"raw\":false,\"ref\":\"D2cf2a3f47ea4feeca69f\"},{\"limit\":2000,\"offset\":0,\"pointer\":\"/files\",\"raw\":false,\"ref\":\"D2cf2a3f47ea4feeca69f\"}]}",
+              "name": "read_documents"
+            },
+            "type": "function"
+          }
+        ],
+        "provider_response_items": [
+          {
+            "arguments": "{\"requests\":[{\"limit\":12000,\"offset\":0,\"pointer\":\"/checks\",\"raw\":false,\"ref\":\"D2cf2a3f47ea4feeca69f\"},{\"limit\":1000,\"offset\":0,\"pointer\":\"/searches\",\"raw\":false,\"ref\":\"D2cf2a3f47ea4feeca69f\"},{\"limit\":3000,\"offset\":0,\"pointer\":\"/evidence\",\"raw\":false,\"ref\":\"D2cf2a3f47ea4feeca69f\"},{\"limit\":2000,\"offset\":0,\"pointer\":\"/files\",\"raw\":false,\"ref\":\"D2cf2a3f47ea4feeca69f\"}]}",
+            "call_id": "call_8ec9b7201f534fbc9501b180a0d454f1",
+            "name": "read_documents",
+            "type": "function_call",
+            "id": "fc_0b571fa5cf5aa8ab016af21dee7fec87d2bc506e3543d3ef3f",
+            "status": "completed"
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_8ec9b7201f534fbc9501b180a0d454f1",
+        "content": "{\"status\":\"read\",\"documents\":[{\"ref\":\"D2cf2a3f47ea4feeca69f\",\"sha256\":\"2cf2a3f47ea4feeca69fde4783b9d9ec8e56f2f05084e49004a6c9afa4e805ae\",\"pointer\":\"/checks\",\"offset\":0,\"text\":\"[{\\\"idea_id\\\":\\\"I1\\\",\\\"math\\\":{\\\"errors\\\":[],\\\"reason\\\":\\\"方向归一化会丢弃幅度信息这一条件性判断在数学上成立；现有字段观测不足以确定具体算法，属于识别限制而非矛盾。\\\",\\\"verdict\\\":\\\"no_obvious_error\\\"},\\\"novelty\\\":{\\\"assessment\\\":{\\\"all_sources_status\\\":\\\"UNCLEAR\\\",\\\"candidate_retained\\\":true,\\\"context\\\":{\\\"mode\\\":\\\"historical\\\",\\\"reference_date\\\":{\\\"earliest\\\":\\\"2026-08-12\\\",\\\"evidence_kind\\\":\\\"task_configuration\\\",\\\"latest\\\":\\\"2026-08-12\\\",\\\"quote\\\":\\\"2026-08-12\\\",\\\"snapshot_path\\\":\\\"/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/evaluations/hypothesis_metadata_final/EVALUATION_CONTEXT.json\\\"},\\\"reference_reason\\\":\\\"Registered case knowledge boundary: independently dated knowledge strictly before 2026-08-12; raw measurement exception; originating explanations were excluded during generation.\\\",\\\"source_papers\\\":[]},\\\"rediscovered_claim_ids\\\":[],\\\"source_roles\\\":[{\\\"eligible\\\":true,\\\"paper_id\\\":null,\\\"role\\\":\\\"eligible_prior\\\",\\\"source_id\\\":\\\"K7bf9f75f94f7e467\\\",\\\"timing\\\":\\\"before\\\"},{\\\"eligible\\\":true,\\\"paper_id\\\":null,\\\"role\\\":\\\"eligible_prior\\\",\\\"source_id\\\":\\\"K3fab62c068d7da36\\\",\\\"timing\\\":\\\"before\\\"}],\\\"task_verdict\\\":\\\"UNRESOLVED\\\",\\\"world_novelty\\\":\\\"NOT_ESTABLISHED\\\"},\\\"claims\\\":[{\\\"claim_id\\\":\\\"I1-C1\\\",\\\"coverage\\\":\\\"UNKNOWN\\\",\\\"idea_quote\\\":\\\"研究强度加权Stokes合成、跨状态平均、方向归一化及DOP估计的次序，如何决定S1/S2/S3方向字段与标量DOP各自保留的信息。\\\",\\\"kind\\\":\\\"question\\\",\\\"text\\\":\\\"研究所述加权Stokes合成、跨状态平均、方向归一化及DOP估计次序对方向字段与标量DOP信息保留的影响。\\\"},{\\\"claim_id\\\":\\\"I1-C2\\\",\\\"coverage\\\":\\\"UNKNOWN\\\",\\\"idea_quote\\\":\\\"若逐态方向先单位化并丢弃幅度/权重，方向一般不足以确定后续加权合成的模长或抵消程度；\\\",\\\"kind\\\":\\\"theory\\\",\\\"text\\\":\\\"条件性地，先逐态单位化并丢弃幅度/权重，通常不足以确定后续加权合成的模长或抵消程度。\\\"}],\\\"combination_assessment\\\":{\\\"claim_ids\\\":[],\\\"reason\\\":\\\"原意提出处理次序及信息保留问题，没有声称新的整合机制或组合收益。\\\",\\\"status\\\":\\\"not_claimed\\\"},\\\"comparisons\\\":[{\\\"claim_relations\\\":[{\\\"claim_id\\\":\\\"I1-C1\\\",\\\"conditions\\\":{\\\"reason\\\":\\\"无理论蕴含主张。\\\",\\\"relation\\\":\\\"unknown\\\"},\\\"evidence_ids\\\":[],\\\"reason\\\":\\\"摘要没有显示是否研究此处理次序问题。\\\",\\\"relation\\\":\\\"UNKNOWN\\\"},{\\\"claim_id\\\":\\\"I1-C2\\\",\\\"conditions\\\":{\\\"reason\\\":\\\"摘要不足以比较条件、对象和结论。\\\",\\\"relation\\\":\\\"unknown\\\"},\\\"evidence_ids\\\":[],\\\"reason\\\":\\\"摘要未提供对应条件命题的证据。\\\",\\\"relation\\\":\\\"UNKNOWN\\\"}],\\\"facets\\\":{\\\"application\\\":{\\\"evidence_ids\\\":[\\\"I1-E1\\\"],\\\"reason\\\":\\\"均属偏振表征，但候选未主张新的应用。\\\",\\\"relation\\\":\\\"RELATED_ONLY\\\"},\\\"assumptions\\\":{\\\"evidence_ids\\\":[],\\\"reason\\\":\\\"摘要未充分说明可比假设。\\\",\\\"relation\\\":\\\"UNKNOWN\\\"},\\\"contribution\\\":{\\\"evidence_ids\\\":[\\\"I1-E1\\\"],\\\"reason\\\":\\\"贡献涉及三维偏振度度量，不能确认覆盖候选的信息保留问题。\\\",\\\"relation\\\":\\\"RELATED_ONLY\\\"},\\\"mechanism\\\":{\\\"evidence_ids\\\":[],\\\"reason\\\":\\\"摘要信息不足以比较具体处理机制。\\\",\\\"relation\\\":\\\"UNKNOWN\\\"},\\\"problem\\\":{\\\"evidence_ids\\\":[\\\"I1-E1\\\"],\\\"reason\\\":\\\"摘要涉及偏振度度量与平均，但未说明研究字段处理次序。\\\",\\\"relation\\\":\\\"RELATED_ONLY\\\"},\\\"validation\\\":{\\\"evidence_ids\\\":[],\\\"reason\\\":\\\"当前摘要材料不足以核实验证细节。\\\",\\\"relation\\\":\\\"UNKNOWN\\\"}},\\\"source_id\\\":\\\"K7bf9f75f94f7e467\\\"},{\\\"claim_relations\\\":[{\\\"claim_id\\\":\\\"I1-C1\\\",\\\"conditions\\\":{\\\"reason\\\":\\\"非条件蕴含型覆盖。\\\",\\\"relation\\\":\\\"unknown\\\"},\\\"evidence_ids\\\":[],\\\"reason\\\":\\\"摘要未显示覆盖特定的Stokes处理次序问题。\\\",\\\"relation\\\":\\\"UNKNOWN\\\"},{\\\"claim_id\\\":\\\"I1-C2\\\",\\\"conditions\\\":{\\\"reason\\\":\\\"可见材料不足。\\\",\\\"relation\\\":\\\"unknown\\\"},\\\"evidence_ids\\\":[],\\\"reason\\\":\\\"未见对应条件命题。\\\",\\\"relation\\\":\\\"UNKNOWN\\\"}],\\\"facets\\\":{\\\"application\\\":{\\\"evidence_ids\\\":[\\\"I1-E2\\\"],\\\"reason\\\":\\\"同属偏振统计，但具体应用对象不同。\\\",\\\"relation\\\":\\\"RELATED_ONLY\\\"},\\\"assumptions\\\":{\\\"evidence_ids\\\":[],\\\"reason\\\":\\\"当前摘要不足以比较假设。\\\",\\\"relation\\\":\\\"UNKNOWN\\\"},\\\"contribution\\\":{\\\"evidence_ids\\\":[\\\"I1-E2\\\"],\\\"reason\\\":\\\"研究偏振统计表述，未表明覆盖候选问题。\\\",\\\"relation\\\":\\\"RELATED_ONLY\\\"},\\\"mechanism\\\":{\\\"evidence_ids\\\":[],\\\"reason\\\":\\\"摘要不足以比较候选处理机制。\\\",\\\"relation\\\":\\\"UNKNOWN\\\"},\\\"problem\\\":{\\\"evidence_ids\\\":[\\\"I1-E2\\\"],\\\"reason\\\":\\\"统计偏振问题领域相关，但对象不同。\\\",\\\"relation\\\":\\\"RELATED_ONLY\\\"},\\\"validation\\\":{\\\"evidence_ids\\\":[],\\\"reason\\\":\\\"验证细节未知。\\\",\\\"relation\\\":\\\"UNKNOWN\\\"}},\\\"source_id\\\":\\\"K3fab62c068d7da36\\\"}],\\\"evidence\\\":[{\\\"evidence_id\\\":\\\"I1-E1\\\",\\\"locator\\\":\\\"Abstract\\\",\\\"quote\\\":\\\"A measure of the degree of polarization for the three-dimensional polarization matrix (coherence matrix) of an electromagnetic field is proposed, based on Rayleigh scattering. The degree of polarization at a point is defined as an average, over all scattering directions, of an imagined dipole scattering of the three-dimensional state of polarization.\\\",\\\"source_id\\\":\\\"K7bf9f75f94f7e467\\\"},{\\\"evidence_id\\\":\\\"I1-E2\\\",\\\"locator\\\":\\\"Abstract\\\",\\\"quote\\\":\\\"We present a formalism for analyzing a full-sky temperature and polarization map of the cosmic microwave background.\\\",\\\"source_id\\\":\\\"K3fab62c068d7da36\\\"}],\\\"idea_card\\\":{\\\"application\\\":\\\"偏振测量与Stokes表征数据。\\\",\\\"assumptions\\\":\\\"方向先单位化并丢弃幅度/权重时，方向通常不足以决定后续加权合成模长或抵消程度；字段流程未知。\\\",\\\"contribution\\\":\\\"研究处理顺序对S1/S2/S3方向字段及DOP信息含义的影响。\\\",\\\"mechanism\\\":\\\"按候选描述比较先合成后归一化、先逐态归一化和独立DOP估计；具体案例流程未知。\\\",\\\"problem\\\":\\\"确定强度加权Stokes合成、跨状态平均、方向归一化与DOP估计的顺序如何影响方向字段和标量DOP保留的信息。\\\",\\\"validation\\\":\\\"not specified\\\"},\\\"next_step\\\":\\\"针对Stokes向量强度加权平均、归一化先后顺序及偏振度估计开展有针对性的摘要与全文检索。\\\",\\\"overall_status\\\":\\\"UNCLEAR\\\",\\\"recommended_action\\\":\\\"TARGETED_SEARCH\\\",\\\"remaining_difference\\\":[{\\\"claim_id\\\":\\\"I1-C1\\\",\\\"description\\\":\\\"未确认早期工作是否研究同一处理次序及其方向字段/DOP信息保留影响。\\\"},{\\\"claim_id\\\":\\\"I1-C2\\\",\\\"description\\\":\\\"未找到摘要证据覆盖该条件性信息损失命题；其先例情况仍未决。\\\"}],\\\"search_exhaustive\\\":false,\\\"search_summary\\\":{\\\"limitations\\\":\\\"实际只完成少量检索并阅读有限摘要，远低于目标候选池与深入比较数量；未完成针对性补检。\\\",\\\"stop_reason\\\":\\\"access_limited\\\"}},\\\"prior_work\\\":{\\\"reason\\\":\\\"已找到与偏振度表征和Stokes统计相近的早期方向，但可见摘要未显示精确的加权合成、方向归一化及DOP估计次序问题已被研究。检索有限，不能据此排除更直接先例。\\\",\\\"sources\\\":[{\\\"accessed_on\\\":\\\"2026-11-09\\\",\\\"content_note\\\":\\\"摘要提出三维偏振度度量，涉及散射方向平均；支持相关方向，不足以覆盖候选处理次序问题。\\\",\\\"evidence_level\\\":\\\"abstract\\\",\\\"publication_date\\\":{\\\"earliest\\\":\\\"2007-06-13\\\",\\\"latest\\\":\\\"2007-06-13\\\",\\\"quote\\\":\\\"2007-06-13\\\",\\\"snapshot_path\\\":\\\"/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/knowledge/accepted/K7bf9f75f94f7e467.json\\\",\\\"url\\\":\\\"https://doi.org/10.1364/josaa.24.002065\\\"},\\\"similarity\\\":\\\"very_similar\\\",\\\"snapshot_path\\\":\\\"/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/knowledge/accepted/K7bf9f75f94f7e467.json\\\",\\\"source_id\\\":\\\"K7bf9f75f94f7e467\\\",\\\"title\\\":\\\"A three-dimensional degree of polarization based on Rayleigh scattering\\\",\\\"url\\\":\\\"https://doi.org/10.1364/josaa.24.002065\\\"},{\\\"accessed_on\\\":\\\"2026-11-09\\\",\\\"content_note\\\":\\\"摘要研究宇宙微波背景偏振统计；相关统计偏振领域，但研究对象和具体处理次序问题不同。\\\",\\\"evidence_level\\\":\\\"abstract\\\",\\\"publication_date\\\":{\\\"earliest\\\":\\\"1997-06-15\\\",\\\"latest\\\":\\\"1997-06-15\\\",\\\"quote\\\":\\\"1997-06-15\\\",\\\"snapshot_path\\\":\\\"/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/knowledge/accepted/K3fab62c068d7da36.json\\\",\\\"url\\\":\\\"https://doi.org/10.1103/physrevd.55.7368\\\"},\\\"simil\",\"next_offset\":6000,\"total_characters\":14564,\"raw_original\":false},{\"ref\":\"D2cf2a3f47ea4feeca69f\",\"sha256\":\"2cf2a3f47ea4feeca69fde4783b9d9ec8e56f2f05084e49004a6c9afa4e805ae\",\"pointer\":\"/searches\",\"offset\":0,\"text\":\"[{\\\"facet\\\":\\\"mechanism\\\",\\\"idea_ids\\\":[\\\"I1\\\"],\\\"query\\\":\\\"polarization Stokes vector averaging degree of polarization intensity weighted ensemble average normalize direction\\\",\\\"round\\\":1,\\\"snapshot_path\\\":\\\"/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/evaluations/hypothesis_metadata_final/stages/terminal_check/api_v2/workspace/tools/a0eee30599be6582ba42322aa64347a49dceda64465875f344009837f7a23212.json\\\",\\\"status\\\":\\\"completed\\\",\\\"url\\\":\\\"https://europepmc.org/\\\"},{\\\"facet\\\":\\\"mechanism\\\",\\\"idea_ids\\\":[\\\"I2\\\"],\\\"query\\\":\\\"degree of polarization phase distribution phase averaging coherence polarization cancellation random phase spread optics 2020 review\\\",\\\"round\\\":1,\\\"snapshot_path\\\":\\\"/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/evaluations/hypothesis_metadata_final/stages/terminal_check/api_v2/workspace/tools/a0eee30599be6582ba42322aa64347a49dceda64465875f344009837f7a23212.json\\\",\\\"status\\\":\\\"completed\\\",\\\"url\\\":\\\"https://europepmc.org/\\\"},{\\\"facet\\\":\\\"problem\\\",\\\"\",\"next_offset\":1000,\"total_characters\":1937,\"raw_original\":false},{\"ref\":\"D2cf2a3f47ea4feeca69f\",\"sha256\":\"2cf2a3f47ea4feeca69fde4783b9d9ec8e56f2f05084e49004a6c9afa4e805ae\",\"pointer\":\"/evidence\",\"offset\":0,\"text\":\"[{\\\"source_id\\\":\\\"D72afe462cf66f62df424\\\"},{\\\"source_id\\\":\\\"Df3fc99e90f3f79eaa8df\\\"},{\\\"source_id\\\":\\\"D4d7e3702fe8305fc3e73\\\"},{\\\"source_id\\\":\\\"D1ac5e635f50566e2be12\\\"},{\\\"source_id\\\":\\\"Dfd330bc6f6f9b0bf6ded\\\"},{\\\"source_id\\\":\\\"D74d17f8132d7dc2b01eb\\\"},{\\\"source_id\\\":\\\"Dba190cd0207fe474f1d2\\\"},{\\\"source_id\\\":\\\"D95fdfb91dff823748876\\\"}]\",\"next_offset\":null,\"total_characters\":305,\"raw_original\":false},{\"ref\":\"D2cf2a3f47ea4feeca69f\",\"sha256\":\"2cf2a3f47ea4feeca69fde4783b9d9ec8e56f2f05084e49004a6c9afa4e805ae\",\"pointer\":\"/files\",\"offset\":0,\"text\":\"{\\\"CHECK.md\\\":\\\"# 最终检查\\\\n\\\\n检查对象：I1、I2。使用实际执行的 Europe PMC/Crossref/OpenAlex 检索，不使用语义检索；每个想法仅完成两条初始查询，筛选去重候选并阅读部分摘要。未达到目标候选量和摘要阅读量，来源全文获取受限，未完成补检，因此结论非穷尽。检索响应及可读来源内容使用注册文件快照：Dba190cd0207fe474f1d2、D95fdfb91dff823748876；来源包括 D72afe462cf66f62df424、Df3fc99e90f3f79eaa8df、D4d7e3702fe8305fc3e73、D1ac5e635f50566e2be12、Dfd330bc6f6f9b0bf6ded。未确认有单一先例覆盖任一 idea 的全部核心主张；历史范围内保留未决/部分重叠判断。两项均未发现明显数学矛盾。\\\"}\",\"next_offset\":null,\"total_characters\":385,\"raw_original\":false}],\"paging\":\"Large batches are paginated automatically; follow next_offset for remaining text.\",\"tool_record_ref\":\"De5ca850b849933df7ec2\",\"tool_record_path\":\"/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/evaluations/hypothesis_metadata_final/stages/terminal_check/api_v2/workspace/tools/b7b1acaa50a819d444c70387b995eb980f9f00933f78ad2557528830611a15c8.json\"}"
+      }
+    ],
+    "max_tokens": 12000,
+    "parallel_tool_calls": false,
+    "tools": [
+      {
+        "type": "function",
+        "function": {
+          "name": "read_document",
+          "description": "Read a supplied immutable document, including omitted context. JSON pointer selects a section; pagination never silently truncates. raw=true returns original text for quotations.",
+          "strict": true,
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "ref": {
+                "type": "string"
+              },
+              "pointer": {
+                "type": "string"
+              },
+              "offset": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 12000
+              },
+              "raw": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "ref",
+              "pointer",
+              "offset",
+              "limit",
+              "raw"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "read_documents",
+          "description": "Read several needed documents in one call to avoid repeated model round-trips. Each page has explicit next_offset and SHA. Total requested characters must be at most 24000.",
+          "strict": true,
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "requests": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 8,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ref": {
+                      "type": "string"
+                    },
+                    "pointer": {
+                      "type": "string"
+                    },
+                    "offset": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "limit": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 12000
+                    },
+                    "raw": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "ref",
+                    "pointer",
+                    "offset",
+                    "limit",
+                    "raw"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "requests"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "analyze_csv",
+          "description": "Compute on the ENTIRE registered CSV (not preview rows). Numeric column names are arrays. scan selections use group_column/group_value. Define variables in order and output safe array expressions. Functions: abs,sqrt,sin,cos,mean,sum,std,min,max,median,quantile,isfinite,where,clip,diff(axis=0),norm(axis=-1),shift,rolling. No Python execution or file access.",
+          "strict": true,
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "dataset": {
+                "type": "string"
+              },
+              "group_column": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "group_value": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "variables": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "expression": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "expression"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "outputs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "expression": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "expression"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "dataset",
+              "group_column",
+              "group_value",
+              "variables",
+              "outputs"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "search_sources",
+          "description": "Search actual public scientific indexes, save eligible readable sources and return IDs, access depth and excerpts. Search success is not evidence of relevance or understanding.",
+          "strict": true,
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "queries": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 2,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 400
+                }
+              }
+            },
+            "required": [
+              "queries"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "patch_result",
+          "description": "Repair the latest saved draft using only changed fields. Unmentioned content is preserved. No state is committed until all validation passes.",
+          "strict": false,
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "draft_ref": {
+                "type": "string"
+              },
+              "edits": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 24,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "op": {
+                      "type": "string",
+                      "enum": [
+                        "set",
+                        "remove"
+                      ]
+                    },
+                    "path": {
+                      "type": "string",
+                      "description": "Non-root JSON pointer, e.g. /summary or /claims/0/text"
+                    },
+                    "value": {}
+                  },
+                  "required": [
+                    "op",
+                    "path"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "draft_ref",
+              "edits"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    ]
+  },
+  "estimated_input_tokens": 19657,
+  "input_estimator": "o200k_base + 10% + 256; actual usage settles ledger",
+  "max_output_tokens": 12000
+}

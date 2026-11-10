@@ -1,0 +1,73 @@
+{
+  "name": "analyze_csv",
+  "args": {
+    "dataset": "measurements",
+    "group_column": "spring_id",
+    "group_value": "S046",
+    "variables": [
+      {
+        "name": "x",
+        "expression": "x_m"
+      },
+      {
+        "name": "f",
+        "expression": "force_N"
+      },
+      {
+        "name": "mx",
+        "expression": "mean(x_m)"
+      },
+      {
+        "name": "mf",
+        "expression": "mean(force_N)"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "slope",
+        "expression": "(mean(x_m*force_N)-mean(x_m)*mean(force_N))/(mean(x_m*x_m)-mean(x_m)*mean(x_m))"
+      },
+      {
+        "name": "intercept",
+        "expression": "mean(force_N)-((mean(x_m*force_N)-mean(x_m)*mean(force_N))/(mean(x_m*x_m)-mean(x_m)*mean(x_m)))*mean(x_m)"
+      },
+      {
+        "name": "max_abs_resid",
+        "expression": "max(abs(force_N-(mean(force_N)-((mean(x_m*force_N)-mean(x_m)*mean(force_N))/(mean(x_m*x_m)-mean(x_m)*mean(x_m)))*mean(x_m))-((mean(x_m*force_N)-mean(x_m)*mean(force_N))/(mean(x_m*x_m)-mean(x_m)*mean(x_m)))*x_m))"
+      }
+    ]
+  },
+  "call_id": "call_00_crBVgX9JrdK32vAHmn4B8999",
+  "seconds": 0.009174291975796223,
+  "registered_paths": [],
+  "result": {
+    "status": "executed",
+    "dataset": "measurements",
+    "sha256": "5e40502610e3904c627ab6b4cda5b65f4cf9185ed5190459d6b909313619504e",
+    "total_rows": 123,
+    "selected_rows": 29,
+    "selection": {
+      "column": "spring_id",
+      "value": "S046"
+    },
+    "outputs": {
+      "slope": {
+        "shape": [],
+        "value": 45.85329350291625,
+        "nonfinite_count": 0
+      },
+      "intercept": {
+        "shape": [],
+        "value": -1.7855388280120437,
+        "nonfinite_count": 0
+      },
+      "max_abs_resid": {
+        "shape": [],
+        "value": 0.057778253234833876,
+        "nonfinite_count": 0
+      }
+    },
+    "scope": "Executed researcher-authored expressions on registered measurements; not validation of causal interpretation."
+  },
+  "policy_fingerprint": "1e4f5dcbb6b1c6873b226ff66dc837a3f5d0ea528bce61489f59a4cc965b7607"
+}

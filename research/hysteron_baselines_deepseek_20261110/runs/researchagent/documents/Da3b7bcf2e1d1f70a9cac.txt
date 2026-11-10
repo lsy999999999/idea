@@ -1,0 +1,61 @@
+{
+  "name": "analyze_csv",
+  "args": {
+    "dataset": "measurements",
+    "group_column": "configuration_id",
+    "group_value": "pair_A",
+    "variables": [
+      {
+        "name": "u1m0",
+        "expression": "where((rotor_i==1)&(mount_l_cm==0)&(other_state==-1)&(direction==\"up\"),drive_gamma_cm,0)"
+      },
+      {
+        "name": "c1m0",
+        "expression": "where((rotor_i==1)&(mount_l_cm==0)&(other_state==-1)&(direction==\"up\"),1.0,0)"
+      },
+      {
+        "name": "d1m0",
+        "expression": "where((rotor_i==1)&(mount_l_cm==0)&(other_state==-1)&(direction==\"down\"),drive_gamma_cm,0)"
+      },
+      {
+        "name": "e1m0",
+        "expression": "where((rotor_i==1)&(mount_l_cm==0)&(other_state==-1)&(direction==\"down\"),1.0,0)"
+      },
+      {
+        "name": "u1p0",
+        "expression": "where((rotor_i==1)&(mount_l_cm==0)&(other_state==1)&(direction==\"up\"),drive_gamma_cm,0)"
+      },
+      {
+        "name": "c1p0",
+        "expression": "where((rotor_i==1)&(mount_l_cm==0)&(other_state==1)&(direction==\"up\"),1.0,0)"
+      },
+      {
+        "name": "d1p0",
+        "expression": "where((rotor_i==1)&(mount_l_cm==0)&(other_state==1)&(direction==\"down\"),drive_gamma_cm,0)"
+      },
+      {
+        "name": "e1p0",
+        "expression": "where((rotor_i==1)&(mount_l_cm==0)&(other_state==1)&(direction==\"down\"),1.0,0)"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "r1_l0_shift",
+        "expression": "((sum(u1p0)/sum(c1p0)-sum(u1m0)/sum(c1m0))+(sum(d1p0)/sum(e1p0)-sum(d1m0)/sum(e1m0)))/2"
+      },
+      {
+        "name": "r1_l0_halfwidth",
+        "expression": "(sum(u1m0)/sum(c1m0)-sum(d1m0)/sum(e1m0))/2"
+      }
+    ]
+  },
+  "call_id": "call_00_NUocemAvU4GwfPPrgy889543",
+  "seconds": 0.00790829211473465,
+  "registered_paths": [],
+  "result": {
+    "status": "error",
+    "error_type": "ValueError",
+    "message": "Unsupported expression syntax: Name"
+  },
+  "policy_fingerprint": "1e4f5dcbb6b1c6873b226ff66dc837a3f5d0ea528bce61489f59a4cc965b7607"
+}

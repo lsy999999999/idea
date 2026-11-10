@@ -1,0 +1,85 @@
+{
+  "name": "analyze_csv",
+  "args": {
+    "dataset": "measurements",
+    "group_column": "record_type",
+    "group_value": "calibration",
+    "variables": [
+      {
+        "name": "m46",
+        "expression": "where(spring_id==\"S046\",1,0)"
+      },
+      {
+        "name": "m19",
+        "expression": "where(spring_id==\"S019\",1,0)"
+      },
+      {
+        "name": "m07",
+        "expression": "where(spring_id==\"S007\",1,0)"
+      },
+      {
+        "name": "x46",
+        "expression": "where(spring_id==\"S046\",x_m,0)"
+      },
+      {
+        "name": "f46",
+        "expression": "where(spring_id==\"S046\",force_N,0)"
+      },
+      {
+        "name": "x19",
+        "expression": "where(spring_id==\"S019\",x_m,0)"
+      },
+      {
+        "name": "f19",
+        "expression": "where(spring_id==\"S019\",force_N,0)"
+      },
+      {
+        "name": "x07",
+        "expression": "where(spring_id==\"S007\",x_m,0)"
+      },
+      {
+        "name": "f07",
+        "expression": "where(spring_id==\"S007\",force_N,0)"
+      },
+      {
+        "name": "n46",
+        "expression": "sum(m46)"
+      },
+      {
+        "name": "n19",
+        "expression": "sum(m19)"
+      },
+      {
+        "name": "n07",
+        "expression": "sum(m07)"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "slope46",
+        "expression": "(sum(x46*f46)-sum(x46)*sum(f46)/n46)/(sum(x46*x46)-sum(x46)*sum(x46)/n46)"
+      },
+      {
+        "name": "slope19",
+        "expression": "(sum(x19*f19)-sum(x19)*sum(f19)/n19)/(sum(x19*x19)-sum(x19)*sum(x19)/n19)"
+      },
+      {
+        "name": "slope07",
+        "expression": "(sum(x07*f07)-sum(x07)*sum(f07)/n07)/(sum(x07*x07)-sum(x07)*sum(x07)/n07)"
+      },
+      {
+        "name": "n",
+        "expression": "n46+n19+n07"
+      }
+    ]
+  },
+  "call_id": "call_00_4QBA063GOgTbrTrIpNFd6789",
+  "seconds": 0.010092916898429394,
+  "registered_paths": [],
+  "result": {
+    "status": "error",
+    "error_type": "ValueError",
+    "message": "Unsupported expression syntax: Name"
+  },
+  "policy_fingerprint": "1e4f5dcbb6b1c6873b226ff66dc837a3f5d0ea528bce61489f59a4cc965b7607"
+}

@@ -1,0 +1,49 @@
+{
+  "checks": [
+    {
+      "hypothesis_id": "H1",
+      "prior_work_status": "unclear",
+      "prior_work_reason": "最接近的 supplied source 只讨论磁性交换偏置导致滞回环横移及矫顽场变化；H1 的对象是机械转子阈值窗，并把邻态耦合操作化为 c/h 的 B/G 分解。概念相近，但问题、机制和可观测量不同；本次有界检索未返回机械 hysteron 窗口分解的直接先例，故不能判 already_done，只能记为 unclear。",
+      "sources": [
+        {
+          "source_id": "K74eaf4bbd313bd93",
+          "quote": "One notable manifestation of the exchange interaction is the exchange bias effect, which can be observed as a horizontal shift in the magnetic hysteresis loop when a magnetic material is cooled in the presence of a magnetic field.",
+          "relation": "类比而非同一工作：已有研究把耦合滞后环描述为横向偏置，并进一步参数化矫顽场变化；H1 则把机械开关窗口分解为中心移动 B 与半宽变化 G。机制与系统不同，不能据此判为已复现。"
+        }
+      ],
+      "coherence_status": "no_obvious_error",
+      "coherence_reason": "逐步核验：c=(gamma_up+gamma_down)/2、h=(gamma_up-gamma_down)/2 与 pair_A 表相符，例如 rotor 1、other_state=-1、l=0 得 c=0.1、h=7.2 cm；rotor 2、other_state=+1、l=4.731 得 c=-0.6、h=1.1 cm。B/G 均为两态 c/h 之差，量纲同为 cm，未发现方程级错误。保留项：pair_B 的 G=0.3 cm 若按独立阈值误差作朴素传播约为 0.1 cm，则它是约 3 倍而非“低于分辨率”；这是统计功效和措辞问题，不构成本假设的明显数学错误。",
+      "substantive_content": "实测关系：pair_A 在固定 l 下 c 随 other_state 明显移动，而 h 基本不变；B 随 l 增至约 1.2 cm（rotor 1）和 4.4 cm（rotor 2）。pair_B 单点给出大 B（约 11.1、5.5 cm）和近零 G（约 -0.1、0.3 cm）。模型假设是局部线性化：邻态作用可分解为平移窗口的可加偏置与改变窗宽的微分增益。可检验含义是：新几何中若固定 l 下 only c 移动、h 在预注册边界内不变，则支持 bias-only 的弱版本；若 G 随 l 系统性超过传播误差，则需增益/刚度项。当前数据不能确定物理机制，pair_B 单点尤其低功效。"
+    },
+    {
+      "hypothesis_id": "H2",
+      "prior_work_status": "unclear",
+      "prior_work_reason": "supplied source 中有双轴滞回模型把强度/刚度耦合与循环退化作为有效参数，和 q 改变 K_eff 的概念方向相近；但对象是钢筋混凝土构件、机制是唯象本构，不是杠杆臂/转子阈值窗，未直接支持 already_done。",
+      "sources": [
+        {
+          "source_id": "K3a31c9f9b0951f7e",
+          "quote": "Coupling of strengths in terms of stress resultants is implemented for arbitrary degree of interaction, also different between principal directions. Coupling of cyclic deterioration of stiffness and strength is incorporated consistently with phenomenological application of the model at the element scale.",
+          "relation": "已有耦合滞后模型将刚度/强度耦合作为有效参数，与 H2 用 q 改变 K_eff 的概念相近；但该文是构件双轴滞回的本构建模，H2 是机械杠杆臂耦合转子的阈值窗机制，问题与机制不同，只能作为弱先例。"
+        }
+      ],
+      "coherence_status": "obvious_error",
+      "coherence_reason": "由 0=k_d L(gamma-rho)-K_eff theta+sum sigma b+tau_stop，c/h 的约化式必须保留驱动杠杆 k_d L。现写 c≈rho+sum sigma b/K_eff 与 h≈tau_s/K_eff 量纲不一致：K_eff 是力矩/角度，b、tau_s 是力矩，比值是角度，而 gamma、c、h 的单位是 cm。固定 theta 时偏置项应给 Δc≈-b/(k_d L) 量级；固定止挡角差时窗宽应随 K_eff Δθ/(k_d L) 变，而不是 tau_s/K_eff 的倒数关系。故约化公式有明确的量纲和函数形式错误；b+q theta 的机制本身可在修正后保留，但现式不能按原样用于拟合或预测。",
+      "substantive_content": "实测关系：pair_A 的 h 随 l 单调减小（rotor 1 约 7.2→4.6 cm，rotor 2 约 1.7→1.1 cm），方向上可与“杠杆臂改变有效刚度”相容；但同一 l 下 G≈0，说明现有平行表白看不到邻态微分增益 q 的版本，l 效应更像 sigma 对称的共同模。模型假设是 b_ij(l)+q_ij(l)theta_i 进入准静态力矩平衡，q 通过 K_eff 改变阈值窗宽；平行耦合预期 q≠0，交叉耦合预期近 pure bias。预测是：新平行床扫 l 应见 h(l) 系统变化；交叉床扫 l 若仅 c 变则支持 crossed bias-only，若 h 随 l 变则否定该纯加性版本。pair_B 只有单点，不能检验 l 扫描，因此该机制仍未验证。"
+    },
+    {
+      "hypothesis_id": "H3",
+      "prior_work_status": "unclear",
+      "prior_work_reason": "supplied source 有从级联/时间信号识别切换网络拓扑的可辨识性结果；H3 则没有时间戳，用区间/序约束枚举图与反转协议等价类。问题方向相近，但数据约束和机制不同，检索不足以判 already_done。",
+      "sources": [
+        {
+          "source_id": "Kd91b1dbba0f199e7",
+          "quote": "Conditions under which the proposed switched model is identifiable are established. Leveraging the edge sparsity inherent to social networks, a recursive ℓ1-norm regularized least-squares estimator is put forth to jointly track the states and network topologies.",
+          "relation": "该文关心从可观测量识别切换网络拓扑，与 H3 的弱可辨识性/等价类问题方向相近；但它依赖级联时间信号和稀疏估计，H3 明确无时间戳且只保留区间序约束，故不是同一工作。"
+        }
+      ],
+      "coherence_status": "obvious_error",
+      "coherence_reason": "事件计数有具体错误：第 1–8 行与第 9–16 行逐行相同，把第 8 行到下一周期第 9 行也算作一次转变，则一个完整周期有 8 个有向转变（1→2、2→3、…、8→9），不是“约 7 个独立转变”。这一步会改变区间/序约束的条数。其余关键约束（gamma=5.8 与 -5.1 的相邻并列、反转位置不能由事件极值推断、16 行不足以唯一识别 6 边图）与数据相容；计数应改为 8，弱可辨识结论本身不受影响。",
+      "substantive_content": "实测关系：network_C 的 8 状态循环在第 9–16 事件精确重复，实际是一个周期 8 个转变；若干转变共享 gamma=5.8 cm 与 -5.1 cm，事件极值不能当作反转位置。模型假设是：每次事件要求翻转转子阈值区间包含观测 gamma，非翻转转子尚未越过阈值；并列仅限同一单调段内相邻事件，并枚举六条边×四种状态的图，反转幅度作为松弛变量。可检验含义：补测各转子在各邻态、两个方向下的释放阈值，并做单边刚度替换/附着偏移，应使等价类收缩；若收缩后仍无图通过，只应报告最小 pairwise kernel 类被新约束拒绝，而不是证明更一般的机制。当前“约 7 个独立转变”应校正为 8 个。"
+    }
+  ]
+}

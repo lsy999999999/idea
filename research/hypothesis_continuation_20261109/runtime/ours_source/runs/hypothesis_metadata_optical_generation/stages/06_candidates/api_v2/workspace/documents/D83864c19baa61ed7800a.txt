@@ -1,0 +1,210 @@
+{
+  "artifacts": [
+    "RETURN.md"
+  ],
+  "branches": [
+    {
+      "hypothesis": "条件性地，丢弃尺度/权重会使方向集合不足以确定加权合成的长度或抵消程度；DOP若独立导出，不自动等于丢失的量。",
+      "key": "conditional_preaggregation_unitization",
+      "owner": "shared",
+      "question": "若各态先单位化且丢弃长度/强度权重，方向字段是否不足以重建后续加权合成的偏振程度？",
+      "status": "保留；本案顺序未知。"
+    },
+    {
+      "hypothesis": "此分支下方向表示合成结果的方向，方向本身仍不编码其长度；先逐态单位化的信息损失论证不适用。",
+      "key": "postaggregation_normalization",
+      "owner": "shared",
+      "question": "若先加权合成Stokes量再归一化，方向字段与DOP分别表示什么？",
+      "status": "保留；本案顺序未知。"
+    },
+    {
+      "hypothesis": "若二者来自独立估计链，DOP变化可与近单位方向列并存，而不必是方向字段丢失的模长。",
+      "key": "independent_estimation",
+      "owner": "shared",
+      "question": "方向列与DOP是否由不同估计器或测量阶段产生？",
+      "status": "保留；估计器定义缺失。"
+    },
+    {
+      "hypothesis": "若dphi确表示相位分布变宽且其他条件和DOP定义固定，偏振分量抵消是候选解释。",
+      "key": "phase_spread_cancellation",
+      "owner": "shared",
+      "question": "在何种条件下相位分布展宽导致合成偏振分量抵消并降低DOP？",
+      "status": "未决；不将观测趋势归因于该机制。"
+    }
+  ],
+  "changed_because": "针对两位研究者的实际学习变化，将共同对象表述为信号到估计字段的测量表示链；接受“近单位范数是数值特征，不足以识别处理操作”的收窄。服务材料没有回答Stokes加权合成与归一化次序，因此共享问题版本3保持不变。",
+  "claims": [
+    "条件性推论：若逐态单位化先于聚合且随后丢弃长度/权重，则只剩方向不足以一般地重建加权Stokes合成的模长或抵消程度。",
+    "本案是否采用该处理顺序、DOP是否对应同一估计链的长度，均未知。",
+    "相位展宽导致偏振抵消仍是有条件的候选解释，不能由目前导出字段单独确认。"
+  ],
+  "development_step": {
+    "action": "hold",
+    "expected_change": null,
+    "focus": {
+      "quote": "Exported normalized polarization-direction components. Their squared norm should be inspected rather than assumed equal to the exported DOP.",
+      "source": "/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/runs/hypothesis_metadata_optical_generation/allowed/measurements_brief.json"
+    },
+    "gap": "即使方向列被称为归一化分量，仍不清楚尺度/强度权重在跨状态合成前还是后丢弃；该先后决定方向能否约束合成后的偏振程度。已有学习材料未提供本案的字段算法或所需经典合成定义。",
+    "outcome": {
+      "kind": "unchanged",
+      "remaining_gap": "本案S1/S2/S3与DOP的计算定义、强度权重及跨状态平均/归一化顺序仍未知。",
+      "statement": "维持条件性分支：先逐态单位化并丢弃尺度/权重，可能使方向不足以重建后续加权合成的长度；若先合成再归一化或DOP由独立估计器导出，则解释不同。现有学习没有确定本案属于哪种流程。"
+    },
+    "reason": "两位研究者的学习都保留该缺口，所读摘要和服务返回没有回答本案测量映射；继续从近单位范数猜处理顺序不会澄清估计对象。",
+    "uptake": [
+      {
+        "consequence": "若方向在聚合前生成且尺度/权重随后被丢弃，则方向不足以一般地重建加权合成结果；本案是否如此未知。",
+        "effect": "extend",
+        "quote": "条件性解释：导出的S1/S2/S3或许是经单位范数归一化的方向变量，因此其范数近1并非独立的偏振度观测；若成立，DOP与方向需视作不同表示，不能由方向范数反推DOP。",
+        "reason": "保留同伴的条件性分离解释，并强调近单位范数本身不能识别生成算法。",
+        "source": "/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/runs/hypothesis_metadata_optical_generation/stages/02_initial_1/api_v2/workspace/result.json"
+      },
+      {
+        "consequence": "若DOP由独立估计链产生，它可以与近单位方向列并存，但不自动等于方向处理时丢失的尺度。",
+        "effect": "extend",
+        "quote": null,
+        "reason": "该学习输出将缺口具体化为估计对象及加权、平均、归一化的操作顺序；它没有确认本案所用流程。",
+        "source": "/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/runs/hypothesis_metadata_optical_generation/stages/04_targeted_1_learn_0/api_v2/workspace/result.json",
+        "author_excerpt": "brief把S1/S2/S3称为导出的归一化方向分量，但未定义归一化前的对象、是否先跨状态平均、是否保留强度权重，以及DOP是由哪个估计量产生。",
+        "locator_scope": "registered_document"
+      },
+      {
+        "consequence": null,
+        "effect": "unresolved",
+        "quote": null,
+        "reason": "针对经典Stokes加权合成/归一化关系的服务请求没有给出足以解决此概念缺口的可读定义；返回内容不构成本案映射证据。",
+        "source": "/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/runs/hypothesis_metadata_optical_generation/services/replies/04_targeted_0_continuation_request.json"
+      }
+    ]
+  },
+  "evidence": [
+    {
+      "note": "案例brief明确区分两种source scan，要求不可合并，并称S1/S2/S3为导出的归一化偏振方向分量；DOP刻度随扫描而异。",
+      "source": "Dbf1a9ec6f2767c45ac42"
+    },
+    {
+      "note": "theory_scientist的交流输出将近单位范数与其生成机制区分，并保留不同的估计链分支。",
+      "source": "D2e62730671fe83834b52"
+    },
+    {
+      "note": "domain_scientist的学习输出保留运算次序假设，明确所读摘要没有解决字段映射。",
+      "source": "D664907127649543c46fb"
+    },
+    {
+      "note": "针对学习缺口的服务返回包含无关主题和摘要级内容，未给出所请求的经典Stokes加权合成定义；另见检索失败记录。",
+      "source": "D26381850894c4bd9e87d"
+    }
+  ],
+  "limitations": [
+    "没有本案字段公式、强度权重、测量估计器、平均顺序或DOP尺度定义。",
+    "已读外部内容主要是摘要，服务检索未填补请求的经典合成关系；下载/检索成功不等于相关理解。",
+    "两条扫描是不同来源扫描，不应合并成重复测量；spread与mean-phase的DOP原始尺度不同。",
+    "仍不能说明实际光场中被控制的量，也不能从现有材料区分物理变化、仪器/处理效应或导出刻度影响。"
+  ],
+  "memory_notes": [],
+  "memory_use": [],
+  "next_actions": [
+    "查找本案字段生成说明或原始测量方法，逐项确认S分量、DOP、强度权重及平均/归一化步骤。",
+    "在定义可得之前保持三个映射分支及相位抵消解释为条件假设；不要把近单位范数写成算法证据。"
+  ],
+  "personal_question_update": {
+    "action": "retain",
+    "base": {
+      "id": "personal:domain_scientist",
+      "owner": "domain_scientist",
+      "version": 1
+    },
+    "influenced_by": [
+      {
+        "id": "personal:theory_scientist",
+        "owner": "theory_scientist",
+        "version": 2
+      }
+    ],
+    "question": "在这组光学偏振扫描里，控制相位展宽或平均相位时，究竟是哪些场/偏振量被改变，以及何种测量处理把这些变化映射成DOP与S1/S2/S3？",
+    "reason": "两位研究者的学习没有说明本案底层场量或字段生成过程；原问题仍覆盖未决的物理量与测量映射。"
+  },
+  "shared_object": [
+    "光学信号到S1/S2/S3方向字段与导出DOP的测量表示链：哪些估计对象、权重、平均及归一化步骤生成这些字段。",
+    "保持spread与mean-phase扫描分开；不把跨扫描DOP数值合并比较。"
+  ],
+  "shared_question_update": {
+    "action": "retain",
+    "base": {
+      "id": "shared:discussion",
+      "owner": "shared",
+      "version": 3
+    },
+    "influenced_by": [
+      {
+        "id": "shared:discussion",
+        "owner": "shared",
+        "version": 3
+      },
+      {
+        "id": "personal:theory_scientist",
+        "owner": "theory_scientist",
+        "version": 2
+      },
+      {
+        "id": "personal:domain_scientist",
+        "owner": "domain_scientist",
+        "version": 1
+      }
+    ],
+    "question": "在两条偏振扫描中，底层信号或偏振状态如何经强度加权Stokes合成、平均、估计和归一化映射为S1/S2/S3方向字段与DOP？尤其当方向字段近单位范数而spread扫描DOP下降时，哪些信息关系取决于合成与归一化的次序，哪些仍需本案字段定义及测量不确定度确认？",
+    "reason": "两位研究者同意处理顺序和字段生成定义仍是核心缺口；服务检索未提供足以改变该问题的概念定义，因此维持版本3。"
+  },
+  "source_use": [
+    {
+      "source_id": "K0d48ccb4f24c52e2",
+      "relation": "not_read",
+      "reason": "此来源未读取或在本轮讨论论证中使用。"
+    },
+    {
+      "source_id": "K1d67fcd6c9bf2559",
+      "relation": "not_read",
+      "reason": "此来源未读取或在本轮讨论论证中使用。"
+    },
+    {
+      "source_id": "K2c7b4dadfda640b3",
+      "relation": "not_read",
+      "reason": "此来源未读取或在本轮讨论论证中使用。"
+    },
+    {
+      "source_id": "Ka8977aba5e79f24f",
+      "relation": "not_read",
+      "reason": "此来源未读取或在本轮讨论论证中使用。"
+    }
+  ],
+  "summary": "共同讨论将焦点从“单位范数是否等于DOP”转向“导出方向列与DOP分别保留何种估计信息，以及平均、加权和归一化发生的顺序”。两位研究者均保留条件性信息丢失解释，且都指出现有学习材料没有确定本案处理链；共享问题维持版本3。",
+  "verification_responses": [],
+  "transport_bindings": [
+    {
+      "field": "development source",
+      "from": "S1",
+      "to": "/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/runs/hypothesis_metadata_optical_generation/allowed/measurements_brief.json"
+    },
+    {
+      "field": "development source",
+      "from": "S12",
+      "to": "/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/runs/hypothesis_metadata_optical_generation/stages/02_initial_1/api_v2/workspace/result.json"
+    },
+    {
+      "field": "development source",
+      "from": "S18",
+      "to": "/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/runs/hypothesis_metadata_optical_generation/stages/04_targeted_1_learn_0/api_v2/workspace/result.json"
+    },
+    {
+      "field": "development source",
+      "rule": "Keep author paraphrase separately; use exact registered source identity for provenance",
+      "source": "/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/runs/hypothesis_metadata_optical_generation/stages/04_targeted_1_learn_0/api_v2/workspace/result.json"
+    },
+    {
+      "field": "development source",
+      "from": "S17",
+      "to": "/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/runs/hypothesis_metadata_optical_generation/services/replies/04_targeted_0_continuation_request.json"
+    }
+  ]
+}

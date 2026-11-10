@@ -1,0 +1,41 @@
+{
+  "name": "analyze_csv",
+  "args": {
+    "dataset": "measurements",
+    "group_column": "spring_id",
+    "group_value": "S019",
+    "variables": [
+      {
+        "name": "x",
+        "expression": "x_m"
+      },
+      {
+        "name": "f",
+        "expression": "force_N"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "n",
+        "expression": "len(x)"
+      },
+      {
+        "name": "slope",
+        "expression": "(sum(x*f)-len(x)*mean(x)*mean(f))/(sum(x*x)-len(x)*mean(x)*mean(x))"
+      },
+      {
+        "name": "max_abs_resid",
+        "expression": "max(abs(f-(mean(f)-mean(x)*((sum(x*f)-len(x)*mean(x)*mean(f))/(sum(x*x)-len(x)*mean(x)*mean(x)))+((sum(x*f)-len(x)*mean(x)*mean(f))/(sum(x*x)-len(x)*mean(x)*mean(x)))*x)))"
+      }
+    ]
+  },
+  "call_id": "call_01_UWjuIupf2ZY9WVMB2vEg9311",
+  "seconds": 0.0008622501045465469,
+  "registered_paths": [],
+  "result": {
+    "status": "error",
+    "error_type": "ValueError",
+    "message": "Unsupported expression syntax: Call"
+  },
+  "policy_fingerprint": "1e4f5dcbb6b1c6873b226ff66dc837a3f5d0ea528bce61489f59a4cc965b7607"
+}

@@ -1,0 +1,681 @@
+{
+  "artifacts": [
+    "RETURN.md"
+  ],
+  "branches": [
+    {
+      "assumption": "位置判据 T_d+T_c=0 不含 k_d；可见性由 κ=(k_cℓ²)/(k_dL²cos²θ) 给出，而 κ 就是已测环宽收缩 1−w 的同一条无量纲群；κ→1 时支合并、单元退化为单值单调元素。",
+      "key": "unilateral_stop_state",
+      "open": "c 的比例是否随止挡跨度变；摩擦是否在 κ→1 前阻止合并；表内 k_d、L 是否恒定（unknown）。",
+      "owner": "domain_scientist",
+      "status": "developing (v4)"
+    },
+    {
+      "assumption": "b 与 1−w 仍是同一耦合力矩函数的两类矩，但不能写成统一 ℓ²：ℓ 1.577→3.154 段幂次 1.58（比 ℓ² 低 25%），仅 3.154→4.731 段给 1.90；等量平移也只是近似（ℓ=1.577 处 up/down 平移差 0.2 cm）。",
+      "key": "coupling_torque_moments",
+      "open": "幂律偏离是几何因子还是小角模型失效；换线序是否同时改 |b|。",
+      "owner": "domain_scientist",
+      "status": "developing (v3, corrected)"
+    },
+    {
+      "assumption": "记忆对象是反转点序列的擦除（LIFO），±1 只是字母表；撤回『停在带内仍保留一个无事件的反转值』——支合并后 γ→θ 单值，往返重描同一路径，不写入反转点。",
+      "key": "rpm_as_order_invariance",
+      "open": "仅凭 ±1 事件表如何把『阈值超出幅值窗口』与『环路已关闭』分开（宽度列可分开：关闭时 up−down 宽为 0）。",
+      "owner": "domain_scientist",
+      "status": "developing (v3, corrected)"
+    },
+    {
+      "assumption": "κ→1 把一个单元从迟滞字母表删除，因而经过它的受挫回路少一条迟滞边（奇偶可被抹平）；κ≲1 的窄环单元则最易被邻态同 γ 带走。κ 跨 1 时对 R 轴（更安全）与 P 轴（更乱）作用方向相反。",
+      "key": "degeneracy_heals_frustration",
+      "open": "退化单元作为对邻居的确定性场能否替代迟滞元素参与 pathway 结构；雪崩判据里的 gap 是否就是环宽；多单元同时近简并时删除谁依赖扫描路径吗。",
+      "owner": "domain_scientist",
+      "status": "developing (new)"
+    },
+    {
+      "assumption": "并联→b<0、交叉→b>0 由线序奇偶决定；前提已被 coupling_torque_moments v3 吸收。",
+      "key": "wiring_parity_sign",
+      "owner": "domain_scientist",
+      "reason": "停用而非否证：其判别性预言（换线序 b→−b 而幅度近似不变）仍保存在 card 中；若真测到换线序同时改 |b|，再恢复以分开责任。",
+      "status": "parked（维持）"
+    },
+    {
+      "assumption": "network_C 中 s3 的『该翻未翻』可由阈值被推出幅值窗口，也可由该单元 κ>1 环路关闭；两者在同一事件表上不可分。",
+      "key": "silent_cell_vs_threshold_shift",
+      "owner": "domain_scientist",
+      "reason": "network_C 没有夹紧表、没有反转行、没有时间戳，故本支保留为未解，不强行归因。",
+      "status": "unfinished alternative"
+    }
+  ],
+  "changed_because": "peer 的 04_targeted_1_learn_1 把『记忆类别』拆成 R/P 两轴，并明确『符号是标签』只对 R 轴成立；这让我原先『可见性判据缺少 |K_neg|、因而不可算』的缺口改换问法：不要独立求负刚度，而是问台面上哪个已测量是同一刚度比的读数。答案落在环宽列（1−w），于是 κ 既解释了宽度收缩，也给出沉默单元的极限。同时 peer 的 case 服务回答（表内驱动弹簧是否恒定 = unknown）与褶皱板『随相互作用强度分级』的已发表摘要，分别限制了我的归一化前提、支持了 P 轴分级读法。",
+  "claims": [
+    {
+      "basis": "measurements.csv 全表复算",
+      "claim": "pair_A 转子1 环宽 14.4/13.6/12.0/9.2 cm，转子2 为 3.4/3.2/2.8/2.2 cm；对应 1−w 两列分别为 0/0.056/0.167/0.361 与 0/0.059/0.176/0.353。",
+      "status": "observed_recomputed"
+    },
+    {
+      "basis": "力矩比量纲分析 + pair_A 三点",
+      "claim": "1−w 与 1/Ω 是同一个无量纲群 κ=(k_cℓ²)/(k_dL²cos²θ) 的读数，1−w≈cκ（c≈0.8–1.1，θ≈20°、2 弹簧、k_d=0.19、k_c=0.07）。",
+      "status": "conditional_derivation_and_estimate"
+    },
+    {
+      "basis": "支合并的极限论证；无直接测量",
+      "claim": "κ→1 时单元退化为单值单调元素（环路关闭），因此沉默单元在 ±1 表上表现为『该翻未翻』但不写入隐藏反转，也不单独破坏 R 轴。",
+      "status": "hypothesis"
+    },
+    {
+      "basis": "κ 的外推；依赖 k_d、L 恒定与小角假设",
+      "claim": "预测（未测）：换 S007 驱动弹簧使 ℓ=4.731 单元 κ≈1.3，跳变关闭而释放 γ 几乎不动；现装弹簧下 κ=1 约在 ℓ≈6.9 cm，接近几何上限 7.6 cm。",
+      "status": "hypothesis_conditional"
+    },
+    {
+      "basis": "事件表；无 γ 反转行与时间戳",
+      "claim": "network_C 第 9–16 与第 1–8 事件逐项相同，支持该幅值下事件串周期为 1；s3 的『该翻未翻』在现有表中不能区分『阈值被推出窗口』与『环路关闭』。",
+      "status": "observed_plus_unresolved"
+    }
+  ],
+  "dependency_responses": [],
+  "development_step": {
+    "accounted_services": [
+      "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/services/replies/04_targeted_0_continuation_request.json",
+      "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/services/replies/04_targeted_1_continuation_request.json"
+    ],
+    "action": "derive",
+    "expected_change": "把『可见性判据缺一个未知负刚度』改述为『宽度列就是该刚度比的读数』；条件性地给出 κ=1 的位置（ℓ≈6.9 cm，几何上限 7.6 cm）与换软驱动弹簧（S007）使 ℓ=4.731 单元 κ≈1.3、跳变关闭而释放 γ 不动的预言；并把沉默单元定性为『删除迟滞元素』而非『隐藏反转』。",
+    "focus": {
+      "quote": "Calibration sample nominal stiffness S046=0.46, S019=0.19, S007=0.07 N/cm; samples are not exact identities of every installed spring.",
+      "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/allowed/measurements_brief.json"
+    },
+    "gap": "上轮可见性判据 Ω=k_dL²cos²θ/|K_neg| 的困难在于 |K_neg| 无法由夹紧表定值，于是判据在只有阈值表时不可算、也不可反驳。本轮要补的具体连接是：Ω 与已测的环宽收缩 1−w 是否为同一个无量纲比？若是，则『沉默单元』不是需要新机制解释的第三态，而是宽度列走到 0 的极限；若否，则 κ 与环宽是两个独立旋钮，沉默必须另找读数。",
+    "outcome": {
+      "kind": "relation",
+      "remaining_gap": "比例 c 无独立定标（θ≈20°、2 根耦合弹簧、k_d、L 恒定的前提都未记录）；摩擦与有限止挡刚度是否会在 κ→1 前把支合并变成率相关粘滑；κ→1 的单元作为对邻居的确定性场还能否参与雪崩/路径结构（这决定『删除元素』对 P 轴的确切后果）。",
+      "statement": "得到一条条件性关系：可见性判据 Ω 中的未知负刚度可被台面已测的环宽替换——1−w 与 1/Ω 都是 κ=(k_cℓ²)/(k_dL²cos²θ) 的读数（1−w≈cκ，c≈0.8–1.1；pair_A 三点 κ=0.052/0.209/0.470 对 1−w=0.056/0.167/0.361）。由此 κ=1（支合并、单元退化为单调元素）是宽度列的端点，而不是新的记忆轴；两个转子本征宽度差 4.2 倍（14.4 vs 3.4 cm）却共用 1−w 到 2%，支持『这是刚度比而不是单转子属性』。"
+    },
+    "reason": "两条力矩比在量纲上只能组成同一个群 κ=(耦合力矩曲率)/(驱动扭转刚度)=2k_cℓ²/(k_dL²cos²θ)，而 1−w（止挡方向矩差/驱动灵敏度）与 1/Ω 都是它的单调函数。做一步显式估值就能检验：pair_A 三个安装距离上 κ=0.052/0.209/0.470，与实测 1−w=0.056/0.167/0.361 逐点同序、量级相符。这让 Ω 从不可算变成可由宽度列读出，并让『沉默』成为可算的极限点。",
+    "uptake": [
+      {
+        "consequence": "条件性：pair_A 三个记录单元 κ=0.05–0.47 都远未合并，故该表上看到的雪崩/同 γ 双翻应归因于幅值窗口与耦合比，而不是支合并；要看到『该翻未翻』由合并造成，需要 κ≳1（换更软驱动弹簧或把 ℓ 推到 ~7 cm）。",
+        "effect": "extend",
+        "quote": "pair_A/pair_B 在 R 轴同类、P 轴异类",
+        "reason": "peer 的两轴拆分给 κ 一个位置：κ 是宽度坐标，属 P 轴，R 轴不受它影响。我的关系补充了『为什么』——κ→1 是把单元推出迟滞域（单值、无反转点），删除元素不会生成多周期，因此沉默只能表现为 P 轴退化。这同时回答了共享问题 (e)：近阈值连续支不是第三轴，而是 P 轴宽度坐标的端点。",
+        "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/04_targeted_1_learn_1/api_v2/workspace/result.json"
+      },
+      {
+        "consequence": "条件性：1−w 与 κ 的 0.77–1.07 比例只在同表同 k_d 下有意义；若曾换弹簧，则该比例是混合值，沉默点位置应按每段的 k_d 重算（S046=0.46 使 κ 减半、S007=0.07 使 κ×2.7）。",
+        "effect": "challenge",
+        "quote": "pair_A 与 pair_B 的 threshold 表是否使用同一根驱动弹簧（k≈0.19 N/cm）、其自由长度与 L=6.3 cm 的安装距离是否在整个表内不变？",
+        "reason": "该问题状态为 unknown：我无法确认整张表共用同一 k_d 与 L=6.3 cm。κ 的归一化恰好除以 k_d L²，因此跨装置（pair_A vs pair_B）比较 κ 不成立；即便在 pair_A 内，『只有 ℓ 在变』也只是未验证的前提。这不否证 κ 关系，但把它降为单表内的条件性读数。",
+        "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/services/replies/04_targeted_0_continuation_request.json"
+      },
+      {
+        "consequence": "条件性：若把 pair_A 的 ℓ 继续增大，应先出现通路不嵌套（P 轴升级），再在 κ→1 处环路整体消失（单元退出字母表），两件事在事件表上可能都表现为『顺序改变』，须靠宽度列区分。",
+        "effect": "extend",
+        "quote": "as function of increasing interaction strength, we observe Preisach pathways, expected in systems of independently switching hysterons",
+        "reason": "（褶皱板，摘要级）它把『相互作用强度』当作沿通路结构的连续坐标，正与 κ 一致：κ 增大的方向既缩环宽也推近合并，因此 P 轴分级（Preisach→scrambled→accumulator）可由 κ 而不是由 |b|/gap 单点来读；但该文没有给出 κ 对应的量，故只是结构类比。",
+        "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/services/replies/04_targeted_1_continuation_request.json"
+      }
+    ]
+  },
+  "evidence": [
+    {
+      "note": "pair_A threshold 行 68–99（读出环宽 14.4/13.6/12.0/9.2 与 3.4/3.2/2.8/2.2 cm）；apparatus 给出 k_d=0.19、k_c=0.07、L=6.3、pair_A 为并联耦合；network_C 16 事件第 9–16 与 1–8 逐项相同。",
+      "ref": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/allowed/measurements_brief.json"
+    },
+    {
+      "note": "analyze_csv 复算（全 123 行，pair_A 32 行）：1−w=0/0.0556/0.1667/0.3611（转子1），0/0.0588/0.1765/0.3529（转子2）。",
+      "ref": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/05_return_0/api_v2/workspace/tools/de317b47ad7a131bb3ec6ccc8fa60f6be3b1fb0cd41556a02d51cf5f9eb9f856.json"
+    },
+    {
+      "note": "内部评审 F1–F6；本结果逐条答复并据 F4/F1 改写 coupling_torque_moments。",
+      "ref": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/internal_review/report.json"
+    },
+    {
+      "note": "peer（theory_scientist）两轴 R/P 的拆分与其 network_C 读法。",
+      "ref": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/04_targeted_1_learn_1/api_v2/workspace/result.json"
+    },
+    {
+      "note": "我的延续服务：knowledge_status=unresolved；case fact『表内是否同一驱动弹簧/同一 L』= unknown。",
+      "ref": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/services/replies/04_targeted_0_continuation_request.json"
+    },
+    {
+      "note": "peer 延续服务：返回褶皱板（PNAS 2111436118）与串联系（PNAS 2308414121）摘要，均摘要级。",
+      "ref": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/services/replies/04_targeted_1_continuation_request.json"
+    },
+    {
+      "note": "阅读深度：索引摘要（经服务回复文本）；『随相互作用强度 Preisach→scrambled→accumulator』。",
+      "ref": "https://doi.org/10.1073/pnas.2111436118"
+    },
+    {
+      "note": "阅读深度：索引摘要；play/stop/Preisach 同族、连续输出、历史由过去反转点序列描述。",
+      "ref": "https://doi.org/10.3390/ma16062422"
+    }
+  ],
+  "hypothesis_updates": [
+    {
+      "assumption": "修订：释放的位置判据仍是 T_d(γ,θ)+T_c(θ,σ)=0（不含 k_d），但可见性不再需要独立的 |K_neg|：它由无量纲比 κ=(k_cℓ²)/(k_dL²cos²θ) 给出，而 κ 正是已测环宽收缩 1−w 的同一条群（1−w≈cκ，c≈0.8–1.1）。因此 Ω=1/κ 的物理内容与『环宽→0』是同一件事：κ→1 时约束支与释放支合并，该单元退化为 γ 的单值单调函数（无跳变、环路关闭）。",
+      "base_version": 3,
+      "conceptual_move": "把上版『需要一个未知负刚度 |K_neg|』换成『台面上已测的环宽就是该刚度比的读数』，使判据在只有夹紧表时可算，并把『沉默单元』从新状态降为 κ→1 的极限。",
+      "depends_on": [],
+      "implications": [
+        "条件性：换更软的驱动弹簧（标定样 S007=0.07 vs 现用 0.19，κ 放大约 2.7 倍）应使 pair_A ℓ=4.731 单元 κ≈1.3>1：跳变关闭、环路消失，而释放 γ 几乎不动（位置判据不含 k_d）。这是同一台面上可读的判别。",
+        "学习性算例（假设、未测）：κ=1 对应 ℓ≈6.9 cm（几何上限 w/2=7.6 cm），故用现装弹簧把 ℓ 推到极限也才刚接近合并；在 ℓ=4.731 处 κ=0.47，远未合并——记录到的三组阈值都应带可测跳变，与记录一致。",
+        "条件性：阈值列对 κ 只有二阶依赖（位置判据不含 k_d），宽度列才是一阶读数；用阈值平移量去推 κ 会低估约 2–3 倍。",
+        "条件性：κ→1 是把一个迟滞元素从字母表删除，而非写入一段不可见历史，故它单独不可能破坏返回性（R 轴）。"
+      ],
+      "influenced_by": [
+        {
+          "key": "pathway_vs_return_two_axes",
+          "owner": "theory_scientist",
+          "version": 1
+        },
+        {
+          "key": "threshold_coordinate_factorization",
+          "owner": "theory_scientist",
+          "version": 5
+        }
+      ],
+      "key": "unilateral_stop_state",
+      "motivation": "pair_A 实测 1−w=0/0.056/0.167/0.361（转子2 同列 0/0.059/0.176/0.353）与由 k_d=0.19 N/cm、k_c=0.07 N/cm、L=6.3 cm、ℓ=1.577/3.154/4.731 cm、θ≈20° 估得 κ=0.052/0.209/0.470 逐点同序且相差 ≤25%；两者都由同一力矩比给出，故不是巧合而是同一条无量纲群。",
+      "open_questions": [
+        "比例 c≈0.8–1.1 是否随止挡跨度（36.6°/9.8° 对 18.3°/38.8°）或耦合弹簧数目变？",
+        "摩擦与有限止挡刚度是否会在 κ→1 前把支合并变成率相关的粘滑，从而破坏准静态前提？",
+        "表内 k_d 与 L 是否恒定（隔离服务对『是否同一驱动弹簧』答 unknown）；若不恒定，κ 的归一失去共同基准？",
+        "κ>1 时连续支真的单值，还是出现新的多值区间（二阶失稳/折返）？"
+      ],
+      "reason": "本轮首次让 Ω 在只有实测宽度时可算，并给出一个不换几何只换弹簧的判别；但 c 的比例、θ/弹簧数假设、k_d 恒定性都未定，故保留 developing。",
+      "status": "developing"
+    },
+    {
+      "assumption": "修正：b（邻态方向的差）与 1−w（止挡方向的差）仍是同一耦合力矩函数的两类矩，但公共标度不能写成统一 ℓ²：1−w 在 ℓ 1.577→3.154 只增 ×3.0（幂 1.58，比 ℓ² 低 25%），只有 3.154→4.731 段给 1.90、2b₂ 比给 2.17–2.21。其真正的公共内容是同一个无量纲群 κ∝k_cℓ²/(k_dL²)；幂律偏离是几何因子（止挡角、弹簧静长）在力臂变小时的表现。等量平移也只是近似：ℓ=1.577 处 up 与 down 的平移量差 0.2 cm。",
+      "base_version": 2,
+      "conceptual_move": "把『同标度 ∝ ℓ²』弱化为『同群 κ 加上一个未定的几何因子』，并把符号来源（并联/交叉）与标度来源分开保留。",
+      "depends_on": [],
+      "implications": [
+        "条件性：固定几何只换并联/交叉，应得 b→−b 而 (|b|,1−w) 近似不变；现有 pair 数据因 ℓ 与静长同时不同不能配对检验。",
+        "条件性：用 1−w 去估 κ 时，小 ℓ 端偏差 25%，故 κ 的三点校准应只当量级；要定幂次需要更多 ℓ 点或独立改变 k_c。",
+        "条件性：network_C 的 Δβ_3>0 单凭符号不能归因于钢丝单侧边；判别量是 Δα_3≠Δβ_3，且阈值需高于读数不确定度（≈0.2 cm）。",
+        "条件性：若换线序同时改变 |b|，则『符号』与『幅度』的分离被削弱，幂律偏离就不能只归给几何因子。"
+      ],
+      "influenced_by": [
+        {
+          "key": "threshold_coordinate_factorization",
+          "owner": "theory_scientist",
+          "version": 5
+        }
+      ],
+      "key": "coupling_torque_moments",
+      "motivation": "内部评审 F4 复算指出小 ℓ 端幂次 1.58 而非 1.8；F1 指出等量平移的容差应是 0.2 cm 而非 0.1 cm。读表事实仍是 pair_A 四组 Δα=Δβ（同向平移）与 pair_B 的 +0.2/+0.6 cm 偏差。",
+      "open_questions": [
+        "幂 1.58 是小角/力臂模型失效，还是耦合弹簧静长在 ℓ 变小时进入强非线性？",
+        "同一几何换线序的实验不存在，能否用 pair_A 的 Δα−Δβ=0 与 pair_B 的 0.2/0.6 cm 做弱检验？",
+        "释放处弹簧处于压缩（R<ℓ0）时力矩符号翻转，两类矩的分解如何分情形重写？"
+      ],
+      "reason": "按评审 F4/F1 修正了标度断言与容差，并把 b 与 1−w 的公共内容改述为 κ；幅度分解的证据强度不变，故仍 developing。",
+      "status": "developing"
+    },
+    {
+      "assumption": "修正：RPM 的记忆对象是反转点序列的擦除（LIFO），±1 只是输出字母表——这条保留；但撤回上版推论『停在带内会保留一个没有事件对应的反转值』。κ→1 时两支合并，γ→θ 对该单元单值，往返重描同一路径，不写入任何反转点；字母表丢掉的只是连续幅度，不是隐藏历史。",
+      "base_version": 2,
+      "conceptual_move": "把『字母表之外的隐藏反转』改为『字母表之外的连续幅度』，从而把 ±1 编码问题与记忆结构问题彻底分开。",
+      "depends_on": [],
+      "implications": [
+        "条件性：沉默单元（κ≥1）在事件表上表现为『该翻未翻』，但不改变 LIFO 栈，故不能作为 R 轴受损的证据。",
+        "条件性：真正会在字母表外留下东西的是幅度连续化（play 型连续输出），已发表同族结果表明它保持同余与擦除；故 ±1 与连续不应被读成两个记忆类别。",
+        "条件性：network_C 第 9–16 与第 1–8 逐项相同，只支持该幅值下事件串周期为 1；若其中某单元 κ>1，事件周期的 1 也不等于 γ 映射的周期，须有 γ 记录才能对齐。"
+      ],
+      "influenced_by": [
+        {
+          "key": "pathway_vs_return_two_axes",
+          "owner": "theory_scientist",
+          "version": 1
+        }
+      ],
+      "key": "rpm_as_order_invariance",
+      "motivation": "把 Ω 改写成 κ 后可以看到：所谓『带内停留』的极限是环路整体关闭（单值），而不是两个分支配一个幽灵反转点；同时 play/stop 同族（连续输出、共有同余与擦除）说明连续幅度本身不改变记忆类别。",
+      "open_questions": [
+        "仅凭 ±1 事件表如何把『阈值被推出幅值窗口』与『环路已关闭』分开（宽度列：关闭时 up−down 宽为 0；平移时宽度近似不变）？",
+        "若某次扫描中单元在 κ≈1 附近，迟滞与连续两种描述是否给出不同的事件串长度？",
+        "反转过冲/摩擦是否会让『重描同一路径』不严格成立，从而留下弱反转点？"
+      ],
+      "reason": "上版把『停在带内』当成保留了反转值的路径；κ 的极限分析表明那不是隐藏记忆而是元素退化。这是对我自己上一版推论的实质修正。",
+      "status": "developing"
+    },
+    {
+      "assumption": "条件性猜想：把某单元推到 κ→1（支合并）会把它从迟滞字母表删除，于是任何经过它的受挫回路在『迟滞元素图』上少一条边，受挫奇偶可因此被抹平；反过来 κ 略小于 1 的窄环单元最容易被邻态在同 γ 带走（雪崩），是 P 轴最不稳的一档。故 κ 跨 1 时对 R 轴（更安全）与 P 轴（更乱）作用方向相反。",
+      "base_version": 0,
+      "conceptual_move": "把『近阈值』从『跳变小』改述为『元素退出字母表的临界点』，并把它接到挫折奇偶上：κ 不是标量记忆刻度，而是改变图结构的旋钮。",
+      "depends_on": [
+        {
+          "key": "unilateral_stop_state",
+          "owner": "domain_scientist",
+          "version": 3
+        }
+      ],
+      "implications": [
+        "条件性：记忆风险随耦合增强不是单调的——只在 κ 跨 1 的邻域改变图结构；因此『更强相互作用＝更差记忆』在本装置上应被替换为『κ 跨 1 前后是两种图』。",
+        "条件性：窄环（κ≈0.9）单元会把雪崩量 2|b|/gap 推到最大（gap 是环宽），故 pair_A 在 ℓ≈6 cm 附近应出现同 γ 双翻，而 κ>1 处应完全无事件——两种『无事件』的对照。",
+        "条件性：退化单元仍随 γ 连续变化，作为对邻居的确定性场（而非迟滞元素）可以移动阈值但不能储存历史，故它不会单独产生多周期。"
+      ],
+      "influenced_by": [
+        {
+          "key": "gauge_frustration_memory_class",
+          "owner": "theory_scientist",
+          "version": 2
+        },
+        {
+          "key": "latch_as_threshold_inequality",
+          "owner": "theory_scientist",
+          "version": 2
+        }
+      ],
+      "key": "degeneracy_heals_frustration",
+      "motivation": "peer 的两轴判据说 R 破坏需挫折（必要）＋耦合空间开区域＋幅值窗口；而 κ 提供一个把单个元素推出迟滞域的连续旋钮，且 pair_A 的 κ 范围 0.05–0.47 正好从宽环走到窄环、接近但未跨过 1。",
+      "open_questions": [
+        "退化单元作为确定性场能否替代迟滞元素参与 pathway 结构（P 轴的 pathway 是否仍良定义）？",
+        "雪崩判据里的 gap 究竟是不是环宽（若 gap→0 则 2|b|/gap→∞，判据爆掉）？",
+        "多单元同时近简并时，被删除的元素集合依赖扫描路径吗？"
+      ],
+      "reason": "这是本轮由 κ 与 peer 挫折判据相接得到的新连接，尚无可判数据；保留以便与『纯宽度收缩』解释分开。",
+      "status": "developing"
+    },
+    {
+      "assumption": "耦合边对邻居态的方向偏好由共享节点的接线奇偶性决定：两根耦合弹簧并联（同向）时两转子同向占据为低能组合，b<0（铁磁型）；交叉（跨接）时反向占据为低能组合，b>0（反铁磁型）。判别依据是线序这一离散装配事实，不是刚度或长度。幅度一半（幂律与 κ 群）由 coupling_torque_moments 承担，本支只承担符号一半。",
+      "base_version": 2,
+      "conceptual_move": "把「铁磁/反铁磁」这一 Ising 语言落到连接图上，使符号在装配层面有成因，并给出「换线序不改幅度」的操作；幅度侧改写后，本支自觉收缩为只保留符号侧。",
+      "depends_on": [
+        {
+          "key": "coupling_torque_moments",
+          "owner": "domain_scientist",
+          "version": 2
+        }
+      ],
+      "implications": [
+        "条件性：交叉边在驱动下可产生无外驱动的邻态跟随（同 γ 双翻的对称版本），不需要非互易元件；并联边给同向锁存。",
+        "条件性：若 network_C 的 1–3 边是交叉装配，Δβ_3>0 无需钢丝；若是并联，则 Δβ_3>0 指向单侧边或非可加求和。",
+        "条件性：符号结构（peer 用来判 l-RPM 类别）因此可由装配图预读，而不必从阈值表反推。",
+        "条件性（v3 前提维护）：换线序应得 b→−b 而 |b| 与 1−w 近似不变；若真测到 |b| 同时改变，则本支与 coupling_torque_moments v3 的『符号/幅度分离』一并被削弱，届时需恢复本支把两处责任分开。"
+      ],
+      "influenced_by": [
+        {
+          "key": "threshold_coordinate_factorization",
+          "owner": "theory_scientist",
+          "version": 5
+        }
+      ],
+      "key": "wiring_parity_sign",
+      "motivation": "pair_A=parallel,b<0 与 pair_B=crossed,b>0 的事实配对；已发表 S 形双屈曲实验给出同一原型：同向屈曲使中间连接区曲率与弹性能很高，因此一个单元跳变可无外驱动带动另一单元反向跳。",
+      "open_questions": [
+        "并联/交叉是否也改变 |b| 量级（力臂不同），从而破坏「只翻符号」的简洁性？",
+        "大止挡跨度 73° 下共享节点能量论证（小曲率前提）是否仍给纯反向偏好？",
+        "network_C 各边奇偶性无记录（case 询问返回 unknown），该支在网络上暂不可判？"
+      ],
+      "reason": "停用理由未变（前提被 coupling_torque_moments 吸收），本轮仅把 depends_on 从该支 v2 更新到 v3 并注明幅度侧归属，属前提维护；判别性预言（换线序 b→−b 而 (|b|,1−w) 近似不变）仍保存在本卡中。",
+      "status": "parked"
+    }
+  ],
+  "learning_request": {
+    "case_questions": [],
+    "gap": "缺少两件事的已发表依据：分支合并（折叠）前后跳变幅度的普适标度（是否 ∝√(κ−1)），以及 play/stop 型算子在环宽趋于 0 时的擦除性质形式条件。",
+    "needed": false,
+    "operations": [],
+    "queries": [],
+    "record_ids": [],
+    "source_ids": [],
+    "urls": [],
+    "why_now": "比例 c 与『κ>1 后是否单值』都影响沉默单元的可判性；但本轮先用现有表把这层关系定到量级，暂不需要新检索。",
+    "context_ref": "development_step"
+  },
+  "limitations": [
+    "表内 k_d 与 L 是否恒定，隔离服务答 unknown；κ 的跨装置比较与『只有 ℓ 在变』的前提未被证实。",
+    "κ 的估值用 θ≈20°、2 根耦合弹簧、小角与线性化；c 的比例没有独立定标，只是同表三点的一致性（0.77–1.07）。",
+    "pair_A/pair_B/network_C 是不同装置，参数不可共享；network_C 无夹紧表、无反转行、无时间戳，沉默单元无法直接判。",
+    "已发表依据多为摘要级（褶皱板、串联系、play/stop 综述、MEMS 浅拱），不是全文；不能当作机制证明。",
+    "我此前把等量平移容差写成 ±0.1 cm（review F1）与把 network_C 环宽与 pair_A ℓ≈3 对比（F3）均属错误，已撤回。"
+  ],
+  "memory_notes": [
+    {
+      "conditions": "要求邻居确实被固定在止挡、阈值对 γ 在 ±0.1 cm 分辨率内可线性化、夹紧态是自由装置的合法摘要；大止挡跨度（36.6°/73°）时小角论证仅到数量级。",
+      "example": "pair_A：转子1 环宽 14.4/13.6/12.0/9.2 cm ⇒ 1−w=0/0.056/0.167/0.361；转子2 环宽 3.4/3.2/2.8/2.2 ⇒ 0/0.059/0.176/0.353（两转子本征宽度差 4.2 倍却共用 1−w 到 2%）。2b₂=0/−0.4/−1.8/−4.4，比值 4.4/1.8=2.44 对 (4.731/3.154)²=2.25。",
+      "key": "coupling_torque_moments",
+      "kind": "correction",
+      "mastery": "used",
+      "open_questions": [
+        "幂 1.58 是几何因子（弹簧静长/止挡角）还是小角模型失效？",
+        "若释放处弹簧处于压缩（R<ℓ0），两类矩的分解如何分情形重写？",
+        "同一几何换线序是否也改变 |b|（现有 pair 数据不能配对检验）？"
+      ],
+      "revision_reason": "内部评审 F4（小 ℓ 端幂次 1.58，非 1.8–2.2）与 F1（等量平移容差应 0.2 cm）要求修正标度与容差断言；同时把公共内容改述为 κ，依据 …/hypothesis_development_hysteron_generation/internal_review/report.json。",
+      "sources": [
+        "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/allowed/measurements_brief.json",
+        "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/internal_review/report.json",
+        "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/05_return_0/api_v2/workspace/tools/de317b47ad7a131bb3ec6ccc8fa60f6be3b1fb0cd41556a02d51cf5f9eb9f856.json"
+      ],
+      "tags": [
+        "Preisach hysteron",
+        "coupling torque",
+        "loop width",
+        "stiffness ratio",
+        "磁滞子",
+        "耦合力矩",
+        "环宽",
+        "刚度比",
+        "correction"
+      ],
+      "title": "b 与 1−w 是同一耦合力矩函数的两类矩；其公共内容是 κ 而非固定 ℓ²（修正）",
+      "understanding": "夹紧测量里邻居固定在止挡，耦合力矩与 γ 无关，阈值移动 δγ=−δT_c/(∂T_d/∂γ)。b（up/down 对邻态的等量平移）是 T_c 关于邻态的差除以驱动灵敏度；1−w（宽度收缩）是 T_c 在两止挡处的差除以驱动灵敏度。二者因此都由『耦合力矩 × 力臂 / 驱动扭转刚度』给出，公共内容是无量纲群 κ∝k_cℓ²/(k_dL²)，不是一条固定的 ℓ² 幂律：小 ℓ 端实测幂次 1.58（比 ℓ² 低 25%），只有 3.154→4.731 段给 1.90。等量平移也只是近似（ℓ=1.577 处 up/down 平移差 0.2 cm）。修正依据：internal_review/report.json F4、F1。"
+    },
+    {
+      "conditions": "准静态；小角近似；同一台面内 k_d 与 L 恒定（隔离服务对『表内是否同一驱动弹簧』答 unknown，故跨装置不可比）；θ 取释放角量级（本估用 ≈20°）、耦合弹簧数按 pair_A 的 2 根计。",
+      "example": "学习性算例（假设、未测）：pair_A k_d=0.19 N/cm、k_c=0.07 N/cm、L=6.3 cm、k_dL²cos²θ≈6.66 N·cm/rad；κ(ℓ)=2k_cℓ²/6.66=0.052/0.209/0.470（ℓ=1.577/3.154/4.731），实测 1−w=0.056/0.167/0.361，比例 1.07/0.80/0.77。κ=1 对应 ℓ≈6.9 cm（几何上限 w/2=7.6 cm）；若换 S007（0.07 N/cm）驱动弹簧，ℓ=4.731 单元 κ≈1.3 ⇒ 预测跳变关闭而释放 γ 几乎不动。",
+      "key": "drive_stiffness_visibility_group",
+      "kind": "hypothesis",
+      "mastery": "explained",
+      "open_questions": [
+        "比例 c 是否随止挡跨度或弹簧数变？",
+        "摩擦与有限止挡刚度是否会在 κ→1 前阻止支合并（粘滑、率相关）？",
+        "κ>1 后连续支真的单值，还是出现新的折返？"
+      ],
+      "sources": [
+        "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/allowed/measurements_brief.json",
+        "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/05_return_0/api_v2/workspace/tools/de317b47ad7a131bb3ec6ccc8fa60f6be3b1fb0cd41556a02d51cf5f9eb9f856.json"
+      ],
+      "tags": [
+        "snap-through",
+        "effective stiffness",
+        "drive stiffness",
+        "loop width",
+        "silence band",
+        "跳变",
+        "有效刚度",
+        "驱动刚度",
+        "环宽",
+        "支合并"
+      ],
+      "title": "可见性/环宽的无量纲群 κ=(k_cℓ²)/(k_dL²cos²θ)：κ→1 处支合并",
+      "understanding": "释放位置由 T_d+T_c=0 给出，几乎不含驱动刚度；而『有没有跳变、跳多小』由耦合刚度与驱动扭转刚度的比决定，即 κ=(k_cℓ²)/(k_dL²cos²θ)=1/Ω。夹紧表里的一阶读数是环宽收缩 1−w≈cκ（c≈0.8–1.1），不是阈值平移（后者对 κ 只有二阶依赖）。κ→1 时两支合并，单元变成 γ 的单值单调函数：环路关闭、无可测跳变，也不写入反转点——这是删除一个迟滞元素，而不是隐藏一段记忆。"
+    }
+  ],
+  "memory_use": [
+    {
+      "key": "coupling_torque_moments",
+      "scope_check": "仅取『单调增长＋同随 k_c/k_d』与量级，不取固定 ℓ² 幂（小 ℓ 端偏低 25%）；不跨 pair_A/pair_B 比较。",
+      "source_task": "04_targeted_0_learn_0",
+      "used_for": "把夹紧表的宽度列读成无量纲比 κ 的一阶读数，并据此外推沉默单元位置；同时按评审修正其幂律与容差。"
+    },
+    {
+      "key": "hysteron_threshold_factorization",
+      "scope_check": "其『w(L) 两转子共用 ≤1%』只在 other_state=−1 列成立（+1 列 ℓ=3.154 差 ≈5%），故我只在同列内比较。",
+      "source_task": "02_initial_1_learn_0",
+      "used_for": "把中心列/平移列与宽度列分开的读表框架，用它把 1−w 与 b 区分开。"
+    }
+  ],
+  "next_actions": [
+    "把三列读表规则（中心列=阈值平移、宽度列=κ、周期列=R 轴）写成可用于未来 network_C 夹紧数据的一页规则表。",
+    "就 S046/S007 驱动弹簧下的 κ 移动做一张学习性预测表（阈值列不变、宽度列按 1/k_d 移动），标注为假设。",
+    "与 peer 澄清雪崩判据中 gap 的定义（是否就是环宽），因为 gap→0 时 2|b|/gap 会发散，这直接影响『窄环最乱』的表述。",
+    "不再重复询问 pair_A 表内驱动弹簧恒定性（已答 unknown）；改为在设计新的对照时把 k_d 作为显式变量。"
+  ],
+  "personal_question_update": {
+    "action": "revise",
+    "base": {
+      "id": "personal:domain_scientist",
+      "owner": "domain_scientist",
+      "version": 4
+    },
+    "influenced_by": [
+      {
+        "id": "shared:discussion",
+        "owner": "shared",
+        "version": 6
+      },
+      {
+        "id": "personal:theory_scientist",
+        "owner": "theory_scientist",
+        "version": 5
+      }
+    ],
+    "question": "在这台装置上，能否只用一条无量纲刚度比 κ=(k_cℓ²)/(k_dL²cos²θ)——它在一阶上等于环宽的收缩 1−w、又在 κ→1 时让支合并——同时读出三件事：(i) 阈值列几乎不动（位置判据不含 k_d）、(ii) 环宽按 1−w≈cκ 收缩、(iii) κ→1 处该单元退化为单调元素而退出迟滞字母表；从而把『该翻未翻』的三种来源（阈值平移 / 环路关闭 / 次序反转）分别落到中心列、宽度列、周期长度上，而不必为此再加一条记忆轴？",
+    "reason": "上轮问题是『一个位置判据＋一个刚度比＋线序＋反转序列』，但刚度比里的 |K_neg| 不可测，使问题悬空。本轮发现宽度列就是该比值，于是问题从『测负刚度』变成『读哪一列』，并把 peer 的两轴与我的近阈值分析接上：κ 不是第三轴而是 P 轴的宽度坐标。"
+  },
+  "revision_obligations": [],
+  "shared_object": "共同对象＝台面上的一个无量纲刚度比 κ=(k_cℓ²)/(k_dL²cos²θ)：它在一阶上给出环宽收缩（1−w≈cκ，c≈0.8–1.1）与支合并条件（κ→1），却几乎不移动释放位置（位置判据不含 k_d）。于是同一张夹紧表有三列可分别读出：中心列（耦合偏置/阈值平移）、宽度列（κ，P 轴可表示性）、周期/事件串（R 轴返回性）。",
+  "shared_question_update": {
+    "action": "revise",
+    "base": {
+      "id": "shared:discussion",
+      "owner": "shared",
+      "version": 6
+    },
+    "influenced_by": [
+      {
+        "id": "shared:discussion",
+        "owner": "shared",
+        "version": 6
+      },
+      {
+        "id": "personal:theory_scientist",
+        "owner": "theory_scientist",
+        "version": 5
+      }
+    ],
+    "question": "(a) 记忆分两轴（R 返回性 / P 通路可表示性）是否成立；(b) 是否有一条两轴共用的无量纲比 κ=(k_cℓ²)/(k_dL²cos²θ)，它同时给出环宽收缩（1−w≈cκ，c≈0.8–1.1）、支合并（κ→1 时元素退化为单调、退出迟滞字母表）而几乎不移动释放位置；(c) 若是，『该翻未翻』的三个来源应分别读中心列（阈值平移）、宽度列（κ）、周期长度（R 轴），pair_A 已测 κ=0.05–0.47 都未合并，换软驱动弹簧（S007）才把 ℓ=4.731 单元推到 κ≈1.3；(d) network_C 的 16 事件（第 9–16 与第 1–8 逐项相同）只支持该幅值下事件串周期为 1，s3 的该翻未翻仍属幅值窗口或环路关闭，不是 R 轴证据；(e) 『支合并删除一个迟滞元素而非写入隐藏反转』能否作为两轴的分界陈述？",
+    "reason": "peer 的两轴把记忆类别拆开了，但他们的 (e) 只把近阈值连续支挂在两轴之间；我的 κ 关系给出了它在一维坐标上的位置（P 轴宽度端点）与一个可算的临界点，同时用『删除元素』回答它为何不单独破坏 R 轴。故把共享问题从『该挂哪一轴』改为『用哪一列读、临界在哪』。"
+  },
+  "summary": "作为 domain_scientist 返回讨论：接受理论科学家把记忆分成 R（返回性）与 P（通路可表示性）两轴的改动，但把近阈值连续支/沉默单元从『第三轴』改述为 P 轴宽度坐标的端点。关键联系是：上轮的可见性判据 Ω=k_dL²cos²θ/|K_neg| 里的未知 |K_neg| 其实被台面已测的环宽替换——1−w 与 1/Ω 是同一个无量纲群 κ=(k_cℓ²)/(k_dL²cos²θ) 的两种读数（pair_A 三点：κ=0.052/0.209/0.470 对 1−w=0.056/0.167/0.361，比例 0.77–1.07）。由此得到条件性后果：κ→1 时支合并、单元退化为单调元素（删除一个迟滞元素而非写入隐藏反转，故不单独破坏 R 轴）；换更软驱动弹簧（S007=0.07）应使 ℓ=4.731 单元 κ≈1.3、跳变关闭而释放 γ 几乎不动；现装弹簧下 κ=1 约在 ℓ≈6.9 cm，接近几何上限 7.6 cm。另逐条接受内部评审 F1–F6 的算术/归属纠正，并以同键 correction 记忆 note 修正 coupling_torque_moments。",
+  "verification_responses": [
+    {
+      "finding_id": "F1",
+      "reason": "复算确认：ℓ=1.577 处转子1 up 平移 0/0.6 与 down 平移 0.2/1.2 差 0.2 cm，转子2 在 ℓ=3.154 同样差 0.2 cm；我此前把容差写成 ±0.1 cm 是数据不支持的。影响：b 的等量形式只到 ±0.2 cm 精度，我的 b 估值的误差棒应据此放大（见 internal_review/report.json F1）。",
+      "stance": "accept"
+    },
+    {
+      "finding_id": "F2",
+      "reason": "确认：『差 ≤1%』只在 other_state=−1 列成立；+1 列 ℓ=3.154 处 12.0/14.4 对 3.0/3.4 差 0.049（≈5%）。该 note 属 theory_scientist，我不改写其键，只在自己的读表中按列分开引用（internal_review/report.json F2）。",
+      "stance": "accept"
+    },
+    {
+      "finding_id": "F3",
+      "reason": "确认指数错位与跨装置外推：network_C 四环宽 10.9/9.6/9.1/10.2 落在 9–11，而 pair_A『ℓ≈3』是 12.0/3.2 cm，唯一入区间的是 ℓ=4.731 的转子1（9.2），且数据字典明确 network_C 为独立四转子装置。该句撤回，改为『量级可比但不可共享参数』。",
+      "stance": "accept"
+    },
+    {
+      "finding_id": "F4",
+      "reason": "复算确认：1−w 从 0.056 到 0.167（ℓ×2）只增 ×3.0，幂次 1.58，比 ℓ² 低 25%；只有 3.154→4.731 段（1.90）与 2b₂ 比（2.17–2.21）在 1.8–2.2 内。已按同键 coupling_torque_moments 写 kind:correction 版本（internal_review/report.json F4）。",
+      "stance": "accept"
+    },
+    {
+      "finding_id": "F5",
+      "reason": "确认：s4=−1 时驱动到 −5.1 仍未下翻，故只能给 ≥1.8 cm，取 1.9 需额外假设一个更低的读数刻度。统一改写为 ≥1.8 cm（internal_review/report.json F5）。",
+      "stance": "accept"
+    },
+    {
+      "finding_id": "F6",
+      "reason": "确认归属错误：M3 说的是随 L 的移动方向不变号，且已写出 4.3/5.5 差 1.2 cm，从未主张转子1 阈值与 other_state 无关。我的表述应改为『补充/明确』而非『纠正』（internal_review/report.json F6）。",
+      "stance": "accept"
+    }
+  ],
+  "source_use": [
+    {
+      "source_id": "K03abe2016b74f8f2",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "K060126bd81e39251",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "K1364a25c430600ea",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "K28f7c485693e9065",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "K39e4d7948f08afe0",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "K3c2b6ea13200cfe4",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "K3f6699082630dceb",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "K4501f1234d5bc6b9",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "K4945110a4e800cae",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "K4e588f0e6237a815",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "K5505bed0b02387a3",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "K59d96b908b49c9d1",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "K5ba21260fb623147",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "K66a33a03c6e99e71",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "K690a760e178df473",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "K69f61398511b2fa2",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "K71826186441ec4d5",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "K7c34157152280fec",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "Kaabe245d4dec85bb",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "Kb0f4dbeef014a3fa",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "Kb79df3fa28d1e48d",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "Kd07e02313e0ce192",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "Kd2a532e9a1eb6c57",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "Kd81b72e9f33cf252",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "Kdca177429482b145",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "Ke230119a3587f202",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "Ke4a32fd4fc008366",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "Ke929929c7a6d22d6",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    },
+    {
+      "source_id": "Kf060d5d884c3294d",
+      "relation": "not_read",
+      "reason": "No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.",
+      "controller_default": true
+    }
+  ],
+  "source_use_author_submission": [],
+  "transport_bindings": [
+    {
+      "field": "source_use",
+      "rule": "Preserve author submission; map known IDs and mark unreported use as unconfirmed"
+    }
+  ]
+}

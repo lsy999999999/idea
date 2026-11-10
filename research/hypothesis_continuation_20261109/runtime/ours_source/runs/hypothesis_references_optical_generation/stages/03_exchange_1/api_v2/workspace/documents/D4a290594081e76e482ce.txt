@@ -1,0 +1,205 @@
+# Idea 构建与最终检查
+
+当前任务是提出研究 idea。流程为 **idea builder → check agent**；讨论学习入口也复用同一个 checker。检查包含已有工作比较与明显数学／逻辑错误粗筛两项职责。idea 可以保留尚未解决的问题；证明、实现、数据、实验结果均不是保留候选的条件。
+
+## 贡献覆盖检查：claim-centric-v2（2026-11-05）
+
+已有工作检查返回两层结论：
+
+- `prior_work.verdict`：研究方向是否非常相近。`close_direction_found` 只报告方向重合，包含来源论文和后续论文，不能据此淘汰候选。
+- `novelty`：在实验规定的时间与输入可见性范围内，哪些原始核心主张被合格先例覆盖；同时保存全部文献的比较结果。
+
+例如：先例已经研究模型结构发现，但尚未确认是否覆盖候选提出的更弱识别条件。可以同时记录 `close_direction_found` 和 `PARTIAL_OVERLAP`。同主题、同数据或共享通用技术本身不足以判定非常相近。V1 说明原样保存在 `IDEA_CHECK_V1_20261105.md`。
+
+### 时间范围与隐藏来源论文
+
+历史任务采用来源论文首次公开时点作为参考时间，优先使用已核实的预印本首次公开时间。只有明确早于参考时间的其他文献可以否定历史新颖性；后续工作单独记录。日期不明或时间范围交叠时保留未知。只知道年份就记录当年首日至末日的区间，不补造某一天。多篇来源论文需要实验控制端明确参考时间与理由，不自动取最早或最晚日期。
+
+**生成 agent 没看到来源论文中的对应 idea／结论时，即使提出与该论文六维全部相同的 idea，也可以记为任务内的独立重发现，并保留候选。** 多篇来源论文分别记录可见性。来源中对应结论已经通过摘要、工具返回、讨论或记忆提供时记 `exposed`；只缺全文不足以记 `hidden`。无法确认时记 `unknown`。这些记录核对实验输入与工具／记忆暴露，不证明模型预训练中没有接触相关知识。
+
+隐藏来源论文用于检验重发现是否匹配，不作为否定任务内新颖性的先例；其他更早论文仍正常比较。已暴露来源中的对应内容作为生成前已知内容处理。当前文献新颖性另记：与已发表论文完整匹配可以同时有 `INDEPENDENT_REDISCOVERY` 和 `world_novelty: EXISTING_MATCH`。
+
+`evaluation_context` 由实验控制端在候选保存后加入，每个 idea 独立记录。checker 无权修改；生成角色不能自行声明隐藏或历史截止日期。未提供时默认当前时间范围、不设隐藏来源豁免。历史任务的参考日期未知时保留未决，不猜日期。
+
+上下文结构如下；所有快照必须是项目内已保存的 UTF-8 文本：
+
+```text
+evaluation_context:
+  mode: current/historical
+  reference_date: null 或 {earliest: YYYY-MM-DD, latest: YYYY-MM-DD,
+                           url: 日期来源URL, snapshot_path, quote: 逐字日期证据}
+  reference_reason: 参考时间的实验依据；current 模式 reference_date 为 null
+  source_papers: [
+    {paper_id: 控制端稳定ID, title, urls: [DOI或其他已核对身份URL及别名],
+     idea_exposure: {status: hidden/exposed/unknown, reason,
+                     snapshot_path, quote: 输入清单或工具/记忆审计中的逐字证据}}
+  ]
+```
+
+`hidden/exposed` 必须有暴露审计快照与引文；`unknown` 只需理由。来源身份用规范化 URL 精确匹配，DOI 链接忽略大小写并兼容 dx.doi.org；其他落地页别名需由控制端明确列出。标题相似不触发隐藏豁免。日期证据与论文身份的真实性仍需查阅实际下载记录。
+
+对于已明确指定历史时点的实验，`reference_date` 可使用 `evidence_kind: "task_configuration"`，并提供 `earliest/latest`、本地配置快照及逐字引文，此时不要求外部日期 URL；`reference_reason` 必须说明这是实验配置边界。该例外只适用于参考时间，不能用于 `sources[].publication_date`。鱼类任务沿用批准的 2010-01-01 边界，不能把它描述成来源论文发表日期。
+
+### 同一 checker 内的三个步骤
+
+1. **忠实拆解。** 从原始 idea 提取 1–5 条核心研究主张／问题，每条绑定原文 `idea_quote`。已有明确主张才拆解；缺少机制、假设或验证设计时记 `not specified`，不替作者补出更强方案。若原始主张声称整合产生新机制／能力，单列 `combination` 主张。提出问题、研究未知关系也是合法主张；不要求先有结论。
+2. **多角度检索。** 从 problem、mechanism、contribution 分别生成短关键词和同义查询。初始计划每个 idea 4–6 个查询，候选池目标 30–50 篇去重记录，读 8–10 篇摘要，深入比较最相关的 3–5 篇。按可能覆盖主张的程度筛选，保留各检索角度的近邻与筛选理由。实际引擎、候选、失败和下载内容写进本地检索台账；有语义检索工具时才记录为语义检索。允许一轮针对未决主张的补检，最多两个查询。
+3. **证据比较。** 对入选的每个来源分别作六维比较和逐主张比较。保存来源文本、证据位置、逐字引文和解释；复杂细节按实际读到的方法、定理或实验段落判断。
+
+数量是工程预算，受每个角色的时间限制约束。保存实际完成量；不凑数，也不以达到数量证明检索完整。明确先例覆盖全部核心贡献时可以提前结束。遇到访问／时间限制，保存未决问题和停止原因。否定式结论需有三个检索角度均已完成的记录；检索不足返回 `unclear`。
+
+三个步骤由提示词组织在一次 checker 会话内，候选池、筛选与下载由该角色执行。时间资格、范围内聚合和任务结论由 `src/novelty_scope.py` 确定性核对。当前没有新增固定的检索后端或 embedding 检索器。
+
+### 六维解释与有向覆盖
+
+| 维度 | 比较对象 |
+| --- | --- |
+| problem | 科学问题／目标 |
+| mechanism | 方法、因果机制、工作原理 |
+| contribution | 提议的新结果、理论、能力或研究问题 |
+| assumptions | 条件、对象、范围、量词与可识别性 |
+| validation | 验证设计或证据贡献；尚未设计可记未知 |
+| application | 场景、数据、领域 |
+
+六维不加权求和。假设放宽或验证方法本身可以是核心贡献，重要性由原始主张决定。
+
+采用宽松保留规则：方向重合与部分主张重合均不足以淘汰候选；只有合格先例完整覆盖全部核心贡献才记 `CORE_ALREADY_KNOWN`。六维的字面差异不是投票：仅换名字或数据集不自动产生贡献；更弱条件、新预测、新机制或实质组合关系可以构成剩余贡献。证据不足保留候选并补检。
+
+六维与逐主张比较均使用同一组关系标签：`EQUIVALENT`、`PRIOR_COVERS_IDEA`、`PARTIAL_OVERLAP`、`RELATED_ONLY`、`DISTINCT`、`UNKNOWN`。`DISTINCT` 需要实质差异的证据；摘要未提到某细节只能支持未知，不能直接支持差异。关系标签与证据层级分别记录，不使用混合标签 `POTENTIALLY_COVERED`。
+
+对于理论 `C_I ⇒ R` 与 `C_P ⇒ R`，若结论和研究对象确实匹配且 `C_I ⇒ C_P`，已有结果可覆盖候选特例。比较时明确对象对应、结论、量词和条件；难以判断蕴含时记 `unknown`，不要求证明器。现有推导或经验结果也不自动覆盖一个更强的理论保证。
+
+各模块分别已有先例，不自动建立整合方案已有先例；有组合主张时按完整机制／能力比较。原文只把熟悉模块并列，也不自动构成新的组合贡献。
+
+### 证据层级
+
+`evidence_level` 为 `full_text`、`abstract`、`metadata_only` 或 `unavailable`。摘要的明确陈述可支持其范围内的覆盖；定理条件、实验设置等细节需要相应段落。全文可访问不意味着每个主张都有证据。
+
+保存原始下载响应与用于引用的 UTF-8 文本（PDF/XML/倒排摘要等需另存提取文本），来源中记录实际 URL 和阅读日期。每条证据绑定 `source_id`、`quote`、`locator`；`snapshot_path` 使用绝对路径，引用必须逐字出现在保存文本中。`locator` 可为摘要、节名、页码或定理号。元数据或访问失败不足以建立实质覆盖。
+
+程序能核对引文存在、ID 对应、结果聚合和字段完整性；来源真实性、摘录是否忠实于下载原文、引文能否支撑解释仍依赖实际检索与模型判断。
+
+## JSON 输出契约
+
+顶层包含 `schema_version: "claim-centric-v2"`、`searches`、`checks`，以及 runtime 的六个标准字段 `summary, artifacts, evidence, claims, limitations, next_actions`。顶层 `claims` 是运行器通用记录，各 idea 的原子主张放在 `checks[].novelty.claims`。
+
+`searches` 每条包含：
+
+```text
+query, url, status: completed/failed, idea_ids: [原始ID],
+facet: problem/mechanism/contribution, round: 1/2,
+snapshot_path: 已完成查询保存响应的绝对路径,
+failure_reason: 失败原因（仅 failed 必需）
+```
+
+每条 `checks` 包含 `idea_id`、`prior_work`、`math`、`novelty`：
+
+```text
+prior_work:
+  verdict: close_direction_found/no_close_work_found/unclear
+  reason: 中文理由
+  sources: [
+    {source_id, title, url, accessed_on, content_note,
+     similarity: very_similar/related_only,
+     evidence_level: full_text/abstract/metadata_only/unavailable,
+     snapshot_path: 绝对路径；unavailable 时为 null,
+     publication_date: null 或 {earliest, latest, url, snapshot_path, quote}}
+  ]
+math:
+  verdict: no_obvious_error/obvious_error/unclear
+  reason: 中文理由
+  errors: [{claim: 错误原句或公式, explanation: 原因}]
+novelty:
+  idea_card:
+    {problem, mechanism, contribution, assumptions, validation, application}
+  claims: [
+    {claim_id, text, idea_quote,
+     kind: method/theory/scientific_finding/question/combination/other,
+     coverage: COVERED/PARTIAL_OVERLAP/UNKNOWN/NO_COVERAGE_FOUND}
+  ]
+  evidence: [{evidence_id, source_id, quote, locator}]
+  comparisons: [
+    {source_id,
+     facets: {
+       problem: {relation, reason, evidence_ids},
+       mechanism: {relation, reason, evidence_ids},
+       contribution: {relation, reason, evidence_ids},
+       assumptions: {relation, reason, evidence_ids},
+       validation: {relation, reason, evidence_ids},
+       application: {relation, reason, evidence_ids}
+     },
+     claim_relations: [
+       {claim_id, relation, reason, evidence_ids,
+        conditions: {
+          relation: idea_implies_prior/prior_implies_idea/equivalent/
+                    incomparable/unknown/not_applicable,
+          reason: 条件映射与判断依据
+        }}
+     ]}
+  ]
+  overall_status: COVERED/PARTIAL_OVERLAP/UNCLEAR/NO_COVERAGE_FOUND
+  assessment:
+    context: 控制端 evaluation_context 的完整原样副本；未提供时用下述默认值
+    source_roles: [
+      {source_id, paper_id: 来源论文控制端ID或null,
+       timing: current/before/after/overlap/unknown,
+       role: hidden_origin/exposed_origin/unknown_origin/eligible_prior/later_work/date_uncertain,
+       eligible: true/false}
+    ]
+    all_sources_status: COVERED/PARTIAL_OVERLAP/UNCLEAR/NO_COVERAGE_FOUND
+    rediscovered_claim_ids: 被隐藏来源明确覆盖的主张ID排序数组
+    task_verdict: CORE_ALREADY_KNOWN/INDEPENDENT_REDISCOVERY/RETAIN_CANDIDATE/UNRESOLVED
+    candidate_retained: true/false
+    world_novelty: EXISTING_MATCH/NOT_ESTABLISHED
+  combination_assessment:
+    {status: assessed_as_claims/not_claimed,
+     claim_ids: 所有 combination 主张ID的排序数组,
+     reason: 组合贡献的判断}
+  remaining_difference: [{claim_id, description}]
+  recommended_action: INSPECT_PRIOR/TARGETED_SEARCH/CONTINUE_EXPLORATION/REFINE_PROPOSAL
+  next_step: 建议与科学理由
+  search_exhaustive: false
+  search_summary:
+    {stop_reason: budget_reached/sufficient_coverage/access_limited/planned_searches_complete,
+     limitations: 实际完成情况、台账路径及未覆盖范围}
+```
+
+所有 `sources` 均有六维与全部核心主张的比较。缺内容的字段用 `UNKNOWN` 和理由保留。确定的关系标签需绑定同一来源的引文证据；`UNKNOWN` 可无证据。理论覆盖的条件关系必须是 `idea_implies_prior` 或 `equivalent`。
+
+来源资格：隐藏来源不合格；已暴露来源合格；暴露未知的来源保持范围未知。其他文献在 current 模式合格；historical 模式明确早于参考区间才合格，晚于区间记后续，交叠或日期未知记范围未知。日期对象均含逐字证据，不用访问日期代替发表日期。
+
+逐主张只汇总合格来源：有明确 `EQUIVALENT/PRIOR_COVERS_IDEA` → `COVERED`；否则有部分重叠 → `PARTIAL_OVERLAP`；否则存在未知、三类检索未齐、参考时间未知，或范围未知来源可能覆盖该主张 → `UNKNOWN`；其余 → `NO_COVERAGE_FOUND`。仅相关／明确不同的范围未知来源不制造覆盖未知。
+
+整体聚合：同一合格来源覆盖全部核心主张 → `COVERED`；有任何已覆盖／部分重叠主张 → `PARTIAL_OVERLAP`（包括多篇分别覆盖各模块）；其余存在未知 → `UNCLEAR`；其余 → `NO_COVERAGE_FOUND`。`COVERED` 必须同时报告 `close_direction_found`。分散先例交给组合分析。`all_sources_status` 用全部文献按同样规则聚合，不过滤时间和可见性。
+
+任务结论：范围内 `COVERED` → `CORE_ALREADY_KNOWN`；`UNCLEAR` → `UNRESOLVED`；同一隐藏来源完整覆盖全部主张，且范围内主张不存在未知 → `INDEPENDENT_REDISCOVERY`；其余 → `RETAIN_CANDIDATE`。隐藏来源完整匹配但较早先例范围未决时返回 `UNRESOLVED`，保留匹配记录。只有 `CORE_ALREADY_KNOWN` 的 `candidate_retained=false`。数学检查仍独立保存；此字段只表示新颖性检查是否保留。
+
+`world_novelty` 在全部来源完整覆盖时为 `EXISTING_MATCH`，其余为 `NOT_ESTABLISHED`。默认上下文为：
+
+```json
+{"mode":"current","reference_date":null,"reference_reason":"No historical cutoff supplied.","source_papers":[]}
+```
+
+`remaining_difference` 只列范围内尚未被确认覆盖的原始核心主张，包括对隐藏来源已匹配、但未被合格先例覆盖的主张；理由中说明这种身份，不将它写成超出来源的新贡献。“本次未找到”与“证据不足”由 `coverage` 区分。未知应引导补检。修改建议须保留原始科学目标，并说明差异为何有意义。主流程不自动改写或启动 refinement 循环；原始候选和历史分支全部保留。
+
+## 数学／逻辑粗筛
+
+检查明显的算术、代数、量纲、概率或逻辑矛盾；指出原句／公式与原因。没有公式的概念性方向也可以通过。未证明的猜想、未知的效果、未取得的数据、实现成本或暂时不能验证均不构成错误。两项判断各自保存。
+
+## 使用与兼容
+
+在项目目录运行，输入和新运行目录都放在项目内。已有 Codex 登录，默认请求 GPT-6 Luna，每个角色默认最多 600 秒。
+
+```bash
+.venv/bin/python src/idea_check.py --brief docs/NEW_DISCOVERY_BRIEF.md --run-dir runs/ideas_002 --count 3
+.venv/bin/python src/idea_check.py --idea runs/ideas_001/ideas.json --run-dir runs/check_003
+.venv/bin/python src/idea_check.py --idea runs/ideas_001/ideas.json --evaluation-context runs/context_by_idea.json --run-dir runs/check_historical_004
+```
+
+输入 JSON 仍只必需 `id`、`title`、`idea` 三个非空字符串。Markdown 作为一个完整 idea 输入。无需作者先填写贡献表。
+
+`--evaluation-context` 是 `{idea_id: evaluation_context}` 的控制端 JSON 文件，需覆盖本次所有 ID，且仅交给 checker。也可在 check-only 的 idea JSON 中提供上下文。生成模式禁止生成角色自行填充上下文。跨学科与学习入口的新检查默认 current 模式；需要补做历史检查时，通过上述 check-only 入口传入原始候选与经核对的上下文。
+
+结果位于 `ideas.json` 和 `check_report.json`，完整角色输出、检索台账、来源快照和中文 `CHECK.md` 在 `stages/`。新调用必须通过 v2 契约；V1 和更早报告继续用其旧契约读取，不回写、不重新解释历史结论。调用失败保留原始记录，可用运行器 `--config` 恢复 dispatch，或在新目录重新检查已保存候选。
+
+`src/idea_check.py`、`src/cross_domain_ideas.py`、`src/learning_lab.py` 的新 checker 调用均接入本契约。检索数量、语义召回和内容判定由角色执行；软件校验不构成文献评测效果的验证。

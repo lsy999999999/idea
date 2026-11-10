@@ -1,0 +1,57 @@
+{
+  "name": "analyze_csv",
+  "args": {
+    "dataset": "measurements",
+    "group_column": "configuration_id",
+    "group_value": "pair_A",
+    "variables": [
+      {
+        "name": "r1",
+        "expression": "where(rotor_i==1,1,0)"
+      },
+      {
+        "name": "r2",
+        "expression": "where(rotor_i==2,1,0)"
+      },
+      {
+        "name": "up",
+        "expression": "where(direction==\"up\",drive_gamma_cm,0)"
+      },
+      {
+        "name": "down",
+        "expression": "where(direction==\"down\",drive_gamma_cm,0)"
+      },
+      {
+        "name": "g",
+        "expression": "drive_gamma_cm"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "n_up",
+        "expression": "sum(where(direction==\"up\",1,0))"
+      },
+      {
+        "name": "n_down",
+        "expression": "sum(where(direction==\"down\",1,0))"
+      },
+      {
+        "name": "min_gamma",
+        "expression": "min(g)"
+      },
+      {
+        "name": "max_gamma",
+        "expression": "max(g)"
+      }
+    ]
+  },
+  "call_id": "call_01_bWrJxVV6ShxOzof7euuo7555",
+  "seconds": 0.0016802907921373844,
+  "registered_paths": [],
+  "result": {
+    "status": "error",
+    "error_type": "ValueError",
+    "message": "Unsupported expression syntax: Name"
+  },
+  "policy_fingerprint": "1e4f5dcbb6b1c6873b226ff66dc837a3f5d0ea528bce61489f59a4cc965b7607"
+}

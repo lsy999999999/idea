@@ -1,0 +1,69 @@
+{
+  "name": "analyze_csv",
+  "args": {
+    "dataset": "measurements",
+    "group_column": "spring_id",
+    "group_value": "S019",
+    "variables": [
+      {
+        "name": "dx",
+        "expression": "x_m - mean(x_m)"
+      },
+      {
+        "name": "df",
+        "expression": "force_N - mean(force_N)"
+      },
+      {
+        "name": "slope",
+        "expression": "sum(dx*df)/sum(dx*dx)"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "k_N_per_cm",
+        "expression": "slope/100"
+      },
+      {
+        "name": "intercept_N",
+        "expression": "mean(force_N) - slope*mean(x_m)"
+      },
+      {
+        "name": "max_abs_resid_N",
+        "expression": "max(abs(force_N - (mean(force_N) - slope*mean(x_m) + slope*x_m)))"
+      }
+    ]
+  },
+  "call_id": "call_01_SdnsASfxyB1IAk9ZHl7J7819",
+  "seconds": 0.0009121666662395,
+  "registered_paths": [],
+  "result": {
+    "status": "executed",
+    "dataset": "measurements",
+    "sha256": "5e40502610e3904c627ab6b4cda5b65f4cf9185ed5190459d6b909313619504e",
+    "total_rows": 123,
+    "selected_rows": 13,
+    "selection": {
+      "column": "spring_id",
+      "value": "S019"
+    },
+    "outputs": {
+      "k_N_per_cm": {
+        "shape": [],
+        "value": 0.1896866196013289,
+        "nonfinite_count": 0
+      },
+      "intercept_N": {
+        "shape": [],
+        "value": -0.799487208803987,
+        "nonfinite_count": 0
+      },
+      "max_abs_resid_N": {
+        "shape": [],
+        "value": 0.005109534883720457,
+        "nonfinite_count": 0
+      }
+    },
+    "scope": "Executed researcher-authored expressions on registered measurements; not validation of causal interpretation."
+  },
+  "policy_fingerprint": "1e4f5dcbb6b1c6873b226ff66dc837a3f5d0ea528bce61489f59a4cc965b7607"
+}

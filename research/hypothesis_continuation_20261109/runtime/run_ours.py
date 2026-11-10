@@ -1,6 +1,6 @@
 """Native inquiry controller with compact, tool-capable, provider-neutral transport."""
 from __future__ import annotations
-import argparse, difflib, hashlib, json, os, sys, time, traceback
+import argparse, difflib, hashlib, shutil, json, os, sys, time, traceback
 from pathlib import Path
 from types import SimpleNamespace
 from urllib.parse import urlparse
@@ -8,6 +8,7 @@ import requests
 from openai import OpenAI
 from research_context import ContextStore, dumps
 from research_tools import ResearchTools, function
+from flexible_locator import select
 from submission_repair import apply_edits, save_draft, load_draft, repair_context
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -22,7 +23,7 @@ from analysis_executor import expression
 from knowledge_broker import KnowledgeBroker, SourcePolicy
 from case_access import locked_policy, assert_measurements, screen_document, actor_brief
 
-VERSION='tool-transport-v7-delta-review'
+VERSION='tool-transport-v10-controller-metadata'
 SUBMIT=function('submit_result','Submit a stage result once. If validation fails it is saved as a draft; use patch_result to change only affected fields.',
                 {'result':{'type':'object','additionalProperties':True}},strict=False)
 
@@ -77,9 +78,9 @@ class StageAdapter:
         self.out=self.root/'runs'/case/'ours'/phase
         self.out.mkdir(parents=True,exist_ok=True)
         if (self.out/'FINAL_FREEZE.json').exists():raise ValueError('Frozen run; create a clean replay folder')
-        self.run=PROJECT/'runs'/('hypothesis_continuation_'+case+'_'+phase)
+        self.run=PROJECT/'runs'/('hypothesis_metadata_'+case+'_'+phase)
         # Memory initializes its directory; keep it outside the native controller's new run.
-        self.memory=Memory(PROJECT/'api_researchers'/case/phase)
+        self.memory=Memory(PROJECT/'api_researchers'/case/('metadata_'+phase))
         self.domains=[('domain_scientist','光学偏振与光计算' if case=='optical' else '主动机械超材料与非平衡动力学'),('theory_scientist','统计物理、随机过程与可辨识性')]
         self.owners=[x[0] for x in self.domains]
         self.knowledge=knowledge
@@ -112,8 +113,33 @@ class StageAdapter:
         if not isinstance(value,dict):raise ValueError('Result must be a JSON object')
         return value
 
-    def normalize(self,result,bindings,store):
+    def normalize(self,result,bindings,store,context=None):
         result=json.loads(json.dumps(result,ensure_ascii=False));changes=[]
+        for field in ['artifacts','evidence','claims','limitations','next_actions']:
+            value=result.get(field)
+            if value is None:result[field]=[]
+            elif not isinstance(value,list):result[field]=[value]
+        if context and context.get('development_cycle'):
+            expected=context.get('broker_reply_source_ids',[])
+            raw=result.get('source_use',[])
+            rows=raw.get('uses',[]) if isinstance(raw,dict) else raw
+            if not isinstance(rows,list):rows=[]
+            by_id={}
+            for row in rows:
+                if not isinstance(row,dict):continue
+                sid=row.get('source_id',row.get('source'))
+                if sid not in expected:
+                    try:sid=json.loads(store.documents[store.resolve(sid)]['text']).get('id',sid)
+                    except (ValueError,KeyError,TypeError):pass
+                if sid in expected and sid not in by_id:
+                    item=dict(row);item['source_id']=sid
+                    if item.get('relation') not in {'direct','method','irrelevant','not_read'} or not item.get('reason'):
+                        item.update(relation='not_read',reason='No explicit standard relevance assessment was supplied; reading/use remains unconfirmed.',controller_default=True)
+                    by_id[sid]=item
+            result['source_use']=[by_id.get(sid,{'source_id':sid,'relation':'not_read','reason':'No explicit relevance assessment was supplied for this returned source; reading/use remains unconfirmed.','controller_default':True}) for sid in expected]
+            if raw!=result['source_use']:
+                result['source_use_author_submission']=raw
+                changes.append({'field':'source_use','rule':'Preserve author submission; map known IDs and mark unreported use as unconfirmed'})
         allowed=set(bindings.values())
         def source(value):
             if value in bindings:return bindings[value]
@@ -131,31 +157,39 @@ class StageAdapter:
                     original=store.documents[store.resolve(row['source'])]['text']
                     pointer=row.get('quote_pointer')
                     if pointer is not None:
-                        if not isinstance(pointer,str) or not pointer.startswith('/'):
-                            raise ValueError('quote_pointer must be a JSON pointer to a string in the named source')
-                        value=json.loads(original)
-                        for token in pointer[1:].split('/'):
-                            token=token.replace('~1','/').replace('~0','~')
-                            value=value[int(token)] if isinstance(value,list) else value[token]
+                        if not isinstance(pointer,str):
+                            raise ValueError('quote_pointer must locate a source string by path or unique field name')
+                        value,canonical=select(json.loads(original),pointer)
+                        row['quote_pointer']=canonical
                         if not isinstance(value,str) or not value.strip():
                             raise ValueError('quote_pointer must select a nonempty source string')
-                        if row.get('quote') is not None and row['quote']!=value:
-                            raise ValueError('quote conflicts with the exact quote_pointer value; omit the duplicate quote or supply the identical value')
+                        if row.get('quote') is not None and row['quote']!=value:row['author_excerpt']=row['quote']
                         row['quote']=value
                         changes.append({'field':'development quote','rule':'Resolve author-selected JSON pointer to exact source string','source':row['source'],'pointer':pointer})
                     quote=row.get('quote')
                     if quote is not None and not anchored(quote,original):
-                        candidates=list(dict.fromkeys(t for t in texts(original) if 0<len(t)<=1200))
-                        close=difflib.get_close_matches(quote,candidates,n=2,cutoff=.4) if isinstance(quote,str) else []
-                        raise ValueError('Development quote is absent from '+str(old)+'. Quote an exact source string value, not a field-name plus its value. '
-                                         'You may use quote_pointer to select the exact JSON string. Closest source strings (suggestions only): '+dumps(close))
+                        row['author_excerpt']=quote
+                        row['quote']=None
+                        row['locator_scope']='registered_document'
+                        changes.append({'field':'development source','rule':'Keep author paraphrase separately; use exact registered source identity for provenance','source':row['source']})
             req=result.get('learning_request')
-            if isinstance(req,dict) and req.get('context_ref')=='development_step':
-                # The author chooses a structural reference; do not reconcile different prose silently.
-                if ('gap' in req and req['gap']!=step['gap']) or ('why_now' in req and req['why_now']!=step['reason']):
-                    raise ValueError('context_ref conflicts with explicit gap/why_now; omit the duplicated fields or make them identical')
-                req['gap'],req['why_now']=step['gap'],step['reason']
-                changes.append({'field':'learning_request','rule':'Resolve author-specified development_step reference'})
+            if isinstance(req,dict):
+                req['context_ref']='development_step'
+                req.setdefault('gap',step['gap']);req.setdefault('why_now',step['reason'])
+        if context:
+            questions=context.get('question_state',{})
+            own=questions.get('self')
+            if own:
+                if 'personal_question_update' not in result:
+                    result['personal_question_update']={'base':own['ref'],'question':own['question'],'action':'retain','reason':'No explicit question revision was supplied; controller preserves the current state.','influenced_by':[],'controller_default':True}
+                    changes.append({'field':'personal_question_update','rule':'Preserve current state when no explicit edit was supplied'})
+                result.setdefault('shared_question_update',None)
+            supplied={card['ref']['key']:card['ref']['version'] for card in context.get('hypothesis_state',{}).get('self',[])}
+            for card in result.get('hypothesis_updates',[]):
+                expected=supplied.get(card.get('key'),0)
+                if card.get('base_version')!=expected:
+                    changes.append({'field':'hypothesis base version','key':card.get('key'),'author_value':card.get('base_version'),'controller_value':expected})
+                    card['base_version']=expected
         for row in result.get('sources',[]):
             locator=row.get('local_path')
             if locator in store.documents:
@@ -278,26 +312,8 @@ class StageAdapter:
         if sid=='07_check':raise GenerationFrozen()
         workspace=run/'stages'/sid/'api_v2/workspace';workspace.mkdir(parents=True,exist_ok=True)
         result_path=workspace/'result.json'
-        if sid=='01_materials' and not result_path.exists():
-            # Explicit continuation, not a new scientific answer from the controller.
-            draft=read(PROJECT/'inherited/original_material_draft.json')
-            store=ContextStore(workspace/'documents',admission_guard=self.admit_document)
-            store.prepare(inputs)
-            bindings=[]
-            for row in draft['sources']:
-                previous=row['local_path']
-                target=(run/'allowed/measurements_brief.json') if row['id']=='B1' else PROJECT/'inherited/accepted'/Path(previous).name
-                store.add_file(target);row['local_path']=str(target)
-                bindings.append({'from':previous,'to':str(target)})
-            store.save()
-            self.validate(draft,sid,role,{},inputs);self.validate_artifacts(draft,workspace)
-            for filename,body in draft.pop('files',{}).items():(workspace/filename).write_text(body)
-            write(workspace/'INHERITANCE.json',{'source':str(PROJECT/'inherited/original_material_draft.json'),'locator_rebindings':bindings,'scientific_content_changed':False})
-            write(result_path,draft)
-            return result_path,draft
-
         sources=[{'path':str(p),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in inputs]
-        fingerprint=hashlib.sha256(dumps({'version':VERSION,'role':role,'prompt':prompt,'sources':sources,'knowledge':self.knowledge,'config':{k:self.cfg.get(k) for k in ['model','api_style','base_url','reasoning_effort','preserve_reasoning_items','continuation_mode']},'transport_code':{name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest() for name in ['run_ours.py','research_context.py','research_tools.py','submission_repair.py','model_gateway.py']}}).encode()).hexdigest()
+        fingerprint=hashlib.sha256(dumps({'version':VERSION,'role':role,'prompt':prompt,'sources':sources,'knowledge':self.knowledge,'config':{k:self.cfg.get(k) for k in ['model','api_style','base_url','reasoning_effort','preserve_reasoning_items','continuation_mode']},'transport_code':{name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest() for name in ['run_ours.py','research_context.py','research_tools.py','submission_repair.py','model_gateway.py','flexible_locator.py']}}).encode()).hexdigest()
         contract=workspace/'TRANSPORT.json'
         if contract.exists() and read(contract)['fingerprint']!=fingerprint:raise ValueError('Stage transport inputs changed; use a new run')
         if result_path.exists():return result_path,read(result_path)
@@ -308,8 +324,53 @@ class StageAdapter:
         cycle=context.get('development_cycle',{})
         bindings={'S'+str(i+1):p for i,p in enumerate(cycle.get('sources',{}))}
         expected_sources=sorted({s['id'] for p in inputs if p.parent==run/'services/replies' for s in read(p)['sources']})
+
+        context['broker_reply_source_ids']=expected_sources
+        inherited=self.root/'METADATA_CONTINUATION.json'
+        if inherited.exists() and sid in read(inherited)['stage_inheritance']:
+            parent=Path(read(inherited)['parent_run']);prior=parent/'stages'/sid/'api_v2/workspace'
+            original=prior/'result.json'
+            if not original.exists():
+                saved=read(prior/'SESSION.json')['pending_draft']
+                original=prior/'drafts'/(saved['sha256']+'.json')
+            draft=read(original)
+            aliases={str(parent/'allowed/measurements_brief.json'):str(run/'allowed/measurements_brief.json')}
+            for name in read(inherited)['stage_inheritance']:
+                aliases[str(parent/'stages'/name/'api_v2/workspace/result.json')]=str(run/'stages'/name/'api_v2/workspace/result.json')
+            for path in (parent/'services/replies').glob('*.json'):
+                aliases[str(path)]=str(run/'services/replies'/path.name)
+            def rebind(value):
+                if isinstance(value,str):return aliases.get(value,value)
+                if isinstance(value,list):return [rebind(v) for v in value]
+                if isinstance(value,dict):return {k:rebind(v) for k,v in value.items()}
+                return value
+            draft=rebind(draft)
+            if sid=='01_materials' and not (run/'services/replies').exists():
+                shutil.copytree(parent/'services',run/'services',dirs_exist_ok=True)
+                for path in (run/'services/replies').glob('*.json'):
+                    reply=rebind(read(path));reply['request'].setdefault('context_ref','development_step');write(path,reply)
+                if (parent/'public_fetches.json').exists():shutil.copy2(parent/'public_fetches.json',run/'public_fetches.json')
+            # Retain exact documents previously exposed to this author, including computations.
+            manifest=prior/'documents/manifest.json'
+            if manifest.exists():
+                for ref,row in read(manifest).items():
+                    text=(prior/'documents'/(ref+'.txt')).read_text()
+                    for path in row['paths']:
+                        if path not in aliases:store.add(path,text)
+            for item in draft.get('artifacts',[]):
+                name=item.get('path') if isinstance(item,dict) else item
+                source=prior/name
+                if source.is_file():shutil.copy2(source,workspace/name)
+            candidate=self.normalize(draft,bindings,store,context)
+            self.validate(candidate,sid,role,context,inputs);self.validate_artifacts(candidate,workspace)
+            for filename,body in candidate.pop('files',{}).items():(workspace/filename).write_text(body)
+            store.save();write(result_path,candidate)
+            write(workspace/'INHERITANCE.json',{'source':str(original),'source_sha256':hashlib.sha256(original.read_bytes()).hexdigest(),'locator_rebindings':aliases,'scientific_content_rewritten':False})
+            return result_path,candidate
+
+        context['broker_reply_source_ids']=expected_sources
         memory_probe=self.is_memory_probe(sid)
-        tools=ResearchTools(store,workspace,{} if memory_probe else {'measurements':self.root/'cases'/self.case/'measurements.csv'},None if memory_probe else self.broker(workspace),expression,max_calls=16,max_searches=2,source_policy=self.source_policy)
+        tools=ResearchTools(store,workspace,{} if memory_probe else {'measurements':self.root/'cases'/self.case/'measurements.csv'},None if memory_probe else self.broker(workspace),expression,max_calls=64,max_searches=4,source_policy=self.source_policy)
         packet=store.packet(top,max_inline_chars=42000 if sid=='04_internal_review' else 26000)
         packet.update(source_bindings={key:{'path':path,'ref':store.paths[path], 'peer':path in cycle.get('peer_sources',[]),'service':path in cycle.get('required_service_uptake',[])} for key,path in bindings.items()},
                       broker_reply_source_ids=expected_sources,datasets=tools.catalog())
@@ -317,7 +378,7 @@ class StageAdapter:
                 'The originating study and its explanations are hidden. Retrieval is mechanically restricted to independently dated earlier sources; original-study versions/mirrors and unknown dates are blocked. You may use disciplinary reasoning and clearly labelled conditional hypotheses; lack of an external citation does not prohibit a derivation. '
                 'Use search_sources for actual missing public knowledge; returned access depth is explicit, not proof of relevance. analyze_csv reads every selected row, not the 12-row preview. '
                 'Submit once using submit_result; if validation fails, the draft is saved locally. Use patch_result with the latest draft_ref and only changed fields; do not regenerate unchanged text. Original submissions remain archived. Every result requires summary (nonempty string) and artifacts, evidence, claims, limitations, next_actions (arrays, empty allowed), plus stage-specific fields. '
-                'For development_step focus/uptake source, use an exact S-number from source_bindings and a verbatim quote from that document. '
+                'For development_step focus/uptake source, use a supplied source ID, document ID or unambiguous registered filename. Use a source-field locator instead of copying an exact quote when convenient. A registered document ID/path suffices if no specific field is selected; optional paraphrases are stored separately from exact quotes. '
                 'For a JSON source, quote the exact string VALUE, without adding its field name. Alternatively supply quote_pointer (JSON pointer to a string) and omit quote; the exact selected string will be resolved and logged. '
                 'For learning_request, context_ref="development_step" may replace duplicate gap/why_now strings; this references your own gap/reason, never changes its content. '
                 'For sources[].local_path use the returned D-document ID to avoid copying long paths; it resolves to the exact registered file. '
@@ -380,7 +441,7 @@ class StageAdapter:
                         session['prepared_submission']={'call_id':call_id,'call_sha256':call_hash,
                                                         'draft_ref':session['pending_draft']['ref']}
                         write(session_path,session)
-                        candidate=self.normalize(draft,bindings,store)
+                        candidate=self.normalize(draft,bindings,store,context)
                         self.validate(candidate,sid,role,context,inputs)
                         self.validate_artifacts(candidate,workspace)
                         for filename,body in candidate.pop('files',{}).items():

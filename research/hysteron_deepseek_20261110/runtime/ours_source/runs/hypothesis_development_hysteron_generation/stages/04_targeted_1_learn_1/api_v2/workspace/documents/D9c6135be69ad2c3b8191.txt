@@ -1,0 +1,51 @@
+{
+  "name": "read_documents",
+  "args": {
+    "requests": [
+      {
+        "ref": "D9476f3d4ce5d1ed60a0c",
+        "pointer": "/hypothesis_state/peer_branches",
+        "offset": 0,
+        "limit": 12000,
+        "raw": false
+      },
+      {
+        "ref": "D776cad76e70c3675a562",
+        "pointer": "/dependency_responses",
+        "offset": 0,
+        "limit": 3000,
+        "raw": false
+      }
+    ]
+  },
+  "call_id": "call_00_AC8z8afkawFlNcJm6ZEG0333",
+  "seconds": 0.9394101253710687,
+  "registered_paths": [],
+  "result": {
+    "status": "read",
+    "documents": [
+      {
+        "ref": "D9476f3d4ce5d1ed60a0c",
+        "sha256": "9476f3d4ce5d1ed60a0ccdb4b6ed833ea8563499cd5bd2b299f5fd61fe794704",
+        "pointer": "/hypothesis_state/peer_branches",
+        "offset": 0,
+        "text": "[{\"assumption\":\"修订：释放要分成两个判据。(i) 位置判据 T_d(γ,θ)+T_c(θ,σ)=0，不含驱动刚度 k_d ⇒ 换驱动弹簧不移动释放 γ；(ii) 存在/可见性判据 ∂²U/∂θ² = k_d L²cos²θ − |K_neg| 过零：定义 Ω=k_d L²cos²θ/|K_neg|，Ω>1 时约束支被稳定为连续支（无跳变），Ω 自上方趋于 1 时跳变高度趋于 0，Ω<1 才有跳变且幅度随 Ω 减小而增大。故「近阈值带」是刚度空间里的区域，它在 (x_offset, R−ℓ0) 平面上的投影随 k_d 滑动；「浮动」仍是连续支的极限，但到达它的条件是刚度比，不只是几何距离。几何存在判据（回跳有无）只在 k_d→0 的死载极限下等价于本判据。\",\"motivation\":\"上轮把带写成「阈值位形＋到阈值的无量纲距离」，却没有分母。本轮读到 MEMS 浅拱正文：失稳处最低阶基频降到零、有效刚度先增后减，且 snap-through 可有可无而 pull-in 总有、阈值随初始拱高升高随长度降低；摘要级源又给出「最小无量纲刚度 β」。三者合起来指向「总有效刚度为零」的判据，并让驱动刚度成为一个不移动阈值位置、只改变可见性的旋钮。\",\"conceptual_move\":\"把「到阈值的距离」换成「两个刚度的比较」（控制刚度 vs 负刚度），并把位置判据与可见性判据分开，使几何判据降为 k_d→0 的极限情形。\",\"implications\":[\"条件性：换驱动弹簧（标定样 S046=0.46 与 S007=0.07 N/cm，pair_A 现用 0.19）应几乎不动释放 γ，却按 Ω 比例改变沉默段宽度与跳变高度；这是现有装备上可读的判别。\",\"学习性算例（假设、未测）：pair_A 取 L=6.3 cm、r=4.731 cm、k_d=0.19、k_c=0.07、θ≈20°，K_ctrl≈6.6 N·cm/rad、2k_c r²≈3.1 N·cm/rad ⇒ Ω≈2.1>1；若负刚度只来自耦合弹簧，驱动会压住跳变，故已记录的同 γ 双翻须由驱动-止挡几何提供负刚度，或小角/力臂假设在 36.6° 处失效。\",\"条件性：k_d→0 极限退回纯几何存在判据（MEMS 拱的 rise/length 条件、薄片的纯几何临界位移），故几何判据不是竞争解释而是极限，Ω 判据只适用于有限控制刚度且负刚度可比的弹簧-止挡装置。\"],\"open_questions\":[\"|K_neg| 在 pair_A 各位形下的值能否由记录量估到（需要止挡角-位形对应与耦合静长）？\",\"Ω 的临界值是否严格为 1，是否带几何 O(1) 因子？\",\"交叉装配（共享节点两支同时动）时 Ω 是否仍可由单转子能量写成，还是必须写成两自由度矩阵的最小特征值？\",\"摩擦与止挡有限刚度是否把 Ω 判据变成率相关，从而破坏 RPM 的准静态前提？\"],\"status\":\"developing\",\"depends_on\":[],\"ref\":{\"owner\":\"domain_scientist\",\"key\":\"unilateral_stop_state\",\"version\":3},\"conceptual_content_changed\":true,\"change_metric_scope\":\"Literal field difference, not semantic progress or improved quality\",\"reason\":\"分母首次有了力学身份（有效刚度），并与一条已发表特征（失稳处基频→0）对应；但 pair_A 的 |K_neg| 未算，算术只到数量级，临界值未知，故保留 developing。\",\"influenced_by\":[{\"key\":\"threshold_coordinate_factorization\",\"owner\":\"theory_scientist\",\"version\":3},{\"key\":\"barrier_interaction_frontier\",\"owner\":\"theory_scientist\",\"version\":3}],\"source_stage\":\"04_targeted_0_learn_1\",\"source_result\":\"/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/04_targeted_0_learn_1/api_v2/workspace/result.json\"},{\"assumption\":\"保留 v1 的幅度分解并补上符号前提：b 与 1−w 仍是同一耦合力矩函数的两类矩（邻态方向的差 / 止挡方向的差），幅度同标度（∝ell^1.8–2.2）且同随 k_c/k_d 变；但 sign(b) 不是自由参数，而由耦合边的装配奇偶性决定——并联（pair_A）给 b<0，交叉（pair_B）给 b>0。于是「幅度」与「符号」分属刚度比/几何与线序两个旋钮。\",\"motivation\":\"apparatus 的 parallel/crossed 与 b 的符号一一对应；peer 把等量平移读成 Ising 局域场，但只把符号当读表结果。\",\"conceptual_move\":\"把 peer 分解中的符号从经验参数降为装配拓扑的不变量，同时保留「两类矩同源」的幅度论证。\",\"implications\":[\"条件性：固定几何与刚度、只换并联/交叉，应得 b→−b 而 (|b|,1−w) 近似不变——可判别，但现有 pair 数据因 ell 与静长同时不同不能配对检验。\",\"条件性：network_C 的 Δβ_3>0 单凭符号不能归因于钢丝单侧边；判别量是 Δα_3≠Δβ_3。\",\"条件性：若 1−w 随线序翻转而变，则「两类矩共源」的分解被削弱，说明高阶项并不独立。\"],\"open_questions\":[\"交叉安装是否只翻转一阶矩，还是也改变力矩臂从而改变 |b|？\",\"同一几何换线序的实验不存在，如何用已有 pair 数据做弱检验？\",\"释放处弹簧处于压缩时（R<ℓ0），力矩符号翻转，分解如何分情形重写？\"],\"status\":\"developing\",\"depends_on\":[],\"ref\":{\"owner\":\"domain_scientist\",\"key\":\"coupling_torque_moments\",\"version\":2},\"conceptual_content_changed\":true,\"change_metric_scope\":\"Literal field difference, not semantic progress or improved quality\",\"reason\":\"幅度分解的证据强度不变，新增的符号来源有装置事实与类比支持但未配对检验，故仍 developing。\",\"influenced_by\":[{\"key\":\"threshold_coordinate_factorization\",\"owner\":\"theory_scientist\",\"version\":3}],\"source_stage\":\"04_targeted_0_learn_0\",\"source_result\":\"/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/04_targeted_0_learn_0/api_v2/workspace/result.json\"},{\"assumption\":\"修订：RPM 应写成「被保留反转值的后进先出/擦除」结构，而不是 ±1 状态集上的次序不变性。记忆对象是过去反转点序列；主回线上该序列退化为排列 ρ，图拓扑由 ρ 而非切换场数值支配；±1 只是输出字母表，只要每个记录事件对应一次完整支切换，它不改变序列结构。若某转子停在连续支中间，序列里会留下一个没有事件对应的反转值，±1 表看不到它。已发表（play/stop/Preisach 同族、连续输出、共有同余与擦除）说明连续幅度本身不是 rpm 的破坏源。\",\"motivation\":\"上轮把 rpm 写成「释放次序不变性」，但这个表述对「在带内不产生事件、却保留了中间位形」的路径没有位置；而 play/stop 综述说历史由过去反转点序列描述，PRE 2020 摘要说主回线拓扑由排列 ρ 支配。两者合起来说明状态字母表与记忆对象应分开。\",\"conceptual_move\":\"把状态字母表（±1 或连续幅度）与记忆对象（反转点序列）分开，把 rpm 判据从「排列是否存在」改为「序列是否被擦除（LIFO）」。\",\"implications\":[\"条件性：若某转子在带内（Ω>1）不产生事件但仍保留一个反转值，则后续同一 γ 的事件次序会依赖那段被记录为「无事件」的路径——±1 表会显得破坏 rpm，连续记录不会。\",\"条件性：network_C 的 16 个事件没有反转行，无法重建反转序列；因此「次序反转」可以用事件表判，「擦除失败」不能用本表判。\",\"条件性：若 play/stop 类保持擦除性质，则破坏源是支切换不完整或单侧边（peer 的 Δα≠Δβ），而不是连续幅度本身。\"],\"open_questions\":[\"在部分转子浮动的装置里，反转点序列长度是否有限（摩擦/迟滞是否使擦除不完全）？\",\"ρ 的 |R|=递增子序列数这一组合事实能否用来数 network_C 的子环（只读到摘要句）？\",\"若转子可在同一次扫描中先停连续支再跳变，事件表的一次「无事件」与一次「延迟事件」如何区分？\"],\"status\":\"developing\",\"depends_on\":[],\"ref\":{\"owner\":\"domain_scientist\",\"key\":\"rpm_as_order_invariance\",\"version\":2},\"conceptual_content_changed\":true,\"change_metric_scope\":\"Literal field difference, not semantic progress or improved quality\",\"reason\":\"它把上轮的「次序不变性」换成能容留无事件路径的序列表述，并给出两个可判别的后果；但依据只有摘要级的 play/stop 与 ρ，形式条件未读到，故保留 developing。\",\"influenced_by\":[{\"key\":\"latch_as_threshold_inequality\",\"owner\":\"theory_scientist\",\"version\":2}],\"source_stage\":\"04_targeted_0_learn_1\",\"source_result\":\"/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/04_targeted_0_learn_1/api_v2/workspace/result.json\"},{\"assumption\":\"耦合边对邻居态的方向偏好由共享节点的接线奇偶性决定：两根耦合弹簧并联（同向）时两转子同向占据为低能组合，b<0（铁磁型）；交叉（跨接）时反向占据为低能组合，b>0（反铁磁型）。判别依据是线序这一离散装配事实，不是刚度或长度。\",\"motivation\":\"pair_A=parallel,b<0 与 pair_B=crossed,b>0 的事实配对；已发表 S 形双屈曲实验给出同一原型：同向屈曲使中间连接区曲率与弹性能很高，因此一个单元跳变可无外驱动带动另一单元反向跳。\",\"conceptual_move\":\"把「铁磁/反铁磁」这一 Ising 语言落到连接图上，使符号在装配层面有成因，并给出「换线序不改幅度」的操作。\",\"implications\":[\"条件性：交叉边在驱动下可产生无外驱动的邻态跟随（同 γ 双翻的对称版本），不需要非互易元件；并联边给同向锁存。\",\"条件性：若 network_C 的 1–3 边是交叉装配，Δβ_3>0 无需钢丝；若是并联，则 Δβ_3>0 指向单侧边或非可加求和。\",\"条件性：符号结构（peer 用来判 l-RPM 类别）因此可由装配图预读，而不必从阈值表反推。\"],\"open_questions\":[\"并联/交叉是否也改变 |b| 量级（力臂不同），从而破坏「只翻符号」的简洁性？\",\"大止挡跨度 73° 下共享节点能量论证（小曲率前提）是否仍给纯反向偏好？\",\"network_C 各边奇偶性无记录（case 询问返回 unknown），该支在网络上暂不可判。\"],\"status\":\"parked\",\"depends_on\":[{\"key\":\"coupling_torque_moments\",\"owner\":\"domain_scientist\",\"version\":2}],\"ref\":{\"owner\":\"domain_scientist\",\"key\":\"wiring_parity_sign\",\"version\":2},\"conceptual_content_changed\":true,\"change_metric_scope\":\"Literal field difference, not semantic progress or improved quality\",\"reason\":\"停用而非否证：其「符号由装配奇偶性决定」的前提已被 coupling_torque_moments v2 完整吸收，另设一支只会重复同一前提。其判别性预言（换线序 b→−b 而 (|b|,1−w) 近似不变）仍保存在本卡与记忆 note 中；若真测到换线序同时改变 |b|，该预言与 coupling_torque_moments v2 一并被削弱，届时恢复本支以分开两处责任。\",\"influenced_by\":[{\"key\":\"threshold_coordinate_factorization\",\"owner\":\"theory_scientist\",\"version\":3}],\"source_stage\":\"04_targeted_0_learn_1\",\"source_result\":\"/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/04_targeted_0_learn_1/api_v2/workspace/result.json\"}]",
+        "next_offset": null,
+        "total_characters": 6409,
+        "raw_original": false
+      },
+      {
+        "ref": "D776cad76e70c3675a562",
+        "sha256": "776cad76e70c3675a562ea8d39dca768041ce7c3c8c4bac7f75cf87f5e98dbd4",
+        "pointer": "/dependency_responses",
+        "offset": 0,
+        "text": "[{\"action\":\"revise\",\"reason\":\"依赖 threshold_coordinate_factorization v4 把符号降为（R 轴的）标签后，本卡不能再以『回路奇偶』为判据；本轮两条直接返源进一步要求把它降为必要通道并补上耦合空间区域与幅值窗口。新版卡已按此重写并明确依赖 v4。\",\"ref\":{\"key\":\"gauge_frustration_memory_class\",\"owner\":\"theory_scientist\",\"version\":1}}]",
+        "next_offset": null,
+        "total_characters": 244,
+        "raw_original": false
+      }
+    ],
+    "paging": "Large batches are paginated automatically; follow next_offset for remaining text."
+  },
+  "policy_fingerprint": "c05e68c657d34f6673d55715947f6115a1c5cb4fcfd1f899cf2f83a48dc104e5"
+}

@@ -88,9 +88,13 @@ class ResearchTools:
                 result=self.store.read(**args)
             elif name == 'read_documents':
                 requests=args['requests']
-                if not isinstance(requests,list) or not 1<=len(requests)<=8 or any(type(r.get('limit')) is not int or r['limit']<1 for r in requests) or sum(r['limit'] for r in requests)>24000:
+                if not isinstance(requests,list) or not 1<=len(requests)<=8 or any(type(r.get('limit')) is not int or r['limit']<1 for r in requests):
                     raise ValueError('Batch requires 1-8 document pages, with positive limits totaling at most 24000 characters')
-                result={'status':'read','documents':[self.store.read(**r) for r in requests]}
+                remaining=24000;pages=[]
+                for i,page in enumerate(requests):
+                    chosen=min(page['limit'],12000,max(1,remaining//(len(requests)-i)))
+                    pages.append(self.store.read(**{**page,'limit':chosen}));remaining-=chosen
+                result={'status':'read','documents':pages,'paging':'Large batches are paginated automatically; follow next_offset for remaining text.'}
             elif name == 'analyze_csv':
                 result=self.analyze(**args)
             elif name == 'search_sources' and self.broker:

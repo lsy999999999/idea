@@ -1,0 +1,69 @@
+{
+  "name": "analyze_csv",
+  "args": {
+    "dataset": "measurements",
+    "group_column": "configuration_id",
+    "group_value": "network_C",
+    "variables": [
+      {
+        "name": "s1",
+        "expression": "s1"
+      },
+      {
+        "name": "s2",
+        "expression": "s2"
+      },
+      {
+        "name": "s3",
+        "expression": "s3"
+      },
+      {
+        "name": "s4",
+        "expression": "s4"
+      },
+      {
+        "name": "gam",
+        "expression": "drive_gamma_cm"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "hamming_between_successive_events",
+        "expression": "abs(diff(s1)) + abs(diff(s2)) + abs(diff(s3)) + abs(diff(s4))"
+      },
+      {
+        "name": "flips_rotor1_per_cycle",
+        "expression": "sum(abs(diff(s1)))"
+      },
+      {
+        "name": "flips_rotor2_per_cycle",
+        "expression": "sum(abs(diff(s2)))"
+      },
+      {
+        "name": "flips_rotor3_per_cycle",
+        "expression": "sum(abs(diff(s3)))"
+      },
+      {
+        "name": "flips_rotor4_per_cycle",
+        "expression": "sum(abs(diff(s4)))"
+      },
+      {
+        "name": "mean_state_sum",
+        "expression": "mean(s1 + s2 + s3 + s4)"
+      },
+      {
+        "name": "repeat_check_first8_minus_last8",
+        "expression": "s1 - shift(s1, 8)"
+      }
+    ]
+  },
+  "call_id": "call_00_OXTvfOf65adcPOX2Mip46470",
+  "seconds": 0.008448584005236626,
+  "registered_paths": [],
+  "result": {
+    "status": "error",
+    "error_type": "ValueError",
+    "message": "Use a new safe variable name"
+  },
+  "policy_fingerprint": "1e4f5dcbb6b1c6873b226ff66dc837a3f5d0ea528bce61489f59a4cc965b7607"
+}

@@ -1,0 +1,82 @@
+{
+  "name": "analyze_csv",
+  "args": {
+    "dataset": "measurements",
+    "group_column": "mount_l_cm",
+    "group_value": "1.577",
+    "variables": [
+      {
+        "name": "u1n",
+        "expression": "where(drive_gamma_cm > 0, where(other_state == -1, drive_gamma_cm, 0), 0)"
+      },
+      {
+        "name": "d1n",
+        "expression": "where(drive_gamma_cm < 0, where(other_state == -1, drive_gamma_cm, 0), 0)"
+      },
+      {
+        "name": "u1p",
+        "expression": "where(drive_gamma_cm > 0, where(other_state == 1, drive_gamma_cm, 0), 0)"
+      },
+      {
+        "name": "d1p",
+        "expression": "where(drive_gamma_cm < 0, where(other_state == 1, drive_gamma_cm, 0), 0)"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "r1_otherneg_width",
+        "expression": "(max(u1n) - min(d1n)) / 2"
+      },
+      {
+        "name": "r1_otherneg_center",
+        "expression": "(max(u1n) + min(d1n)) / 2"
+      },
+      {
+        "name": "r1_otherpos_width",
+        "expression": "(max(u1p) - min(d1p)) / 2"
+      },
+      {
+        "name": "r1_otherpos_center",
+        "expression": "(max(u1p) + min(d1p)) / 2"
+      }
+    ]
+  },
+  "call_id": "call_01_APkhKNx66q8JyoWV73kv7484",
+  "seconds": 0.0032273749820888042,
+  "registered_paths": [],
+  "result": {
+    "status": "executed",
+    "dataset": "measurements",
+    "sha256": "5e40502610e3904c627ab6b4cda5b65f4cf9185ed5190459d6b909313619504e",
+    "total_rows": 123,
+    "selected_rows": 8,
+    "selection": {
+      "column": "mount_l_cm",
+      "value": "1.577"
+    },
+    "outputs": {
+      "r1_otherneg_width": {
+        "shape": [],
+        "value": 6.8,
+        "nonfinite_count": 0
+      },
+      "r1_otherneg_center": {
+        "shape": [],
+        "value": 0.2999999999999998,
+        "nonfinite_count": 0
+      },
+      "r1_otherpos_width": {
+        "shape": [],
+        "value": 6.9,
+        "nonfinite_count": 0
+      },
+      "r1_otherpos_center": {
+        "shape": [],
+        "value": 0.19999999999999973,
+        "nonfinite_count": 0
+      }
+    },
+    "scope": "Executed researcher-authored expressions on registered measurements; not validation of causal interpretation."
+  },
+  "policy_fingerprint": "1e4f5dcbb6b1c6873b226ff66dc837a3f5d0ea528bce61489f59a4cc965b7607"
+}

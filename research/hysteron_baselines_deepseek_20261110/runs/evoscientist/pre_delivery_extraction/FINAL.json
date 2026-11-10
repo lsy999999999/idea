@@ -1,0 +1,53 @@
+{
+  "hypotheses": [
+    {
+      "id": "H1_calibration_linear",
+      "title": "标定弹簧近似线性，斜率接近名义刚度并带小预载偏置",
+      "mechanism": "采用胡克模型 F = k(x - x0)。测得的三组标定样品在加载与卸载两个方向上，同一长度处的力几乎重合，支持以单一斜率描述；非零截距被解释为预载/零点偏置，而不是强非线性。该机制只针对标定样品，不能自动等同于每一根已安装弹簧。",
+      "equations_or_derivation": "线性最小二乘: F = k*x + b; k = Cov(x,F)/Var(x), b = mean(F)-k*mean(x)。由轨迹中的 analyze_csv 输出: S046 k=45.853 N/m=0.4585 N/cm, b=-1.786 N, n=29; S019 k=18.969 N/m=0.1897 N/cm, b=-0.799 N, n=13; S007 k=6.960 N/m=0.0696 N/cm, b=-0.186 N, n=25。名义值分别为 0.46, 0.19, 0.07 N/cm。",
+      "measured_support": "实测关系: 三组斜率分别为 0.4585, 0.1897, 0.0696 N/cm，与名义值 S046/S019/S007 很接近；例如 S046 在 x=0.30591 m 处加载/卸载力为 12.29242/12.26005 N，S007 在 x=0.2826 m 处为 1.78346/1.78248 N，方向差异很小。模型假设: 力零点偏置、标定样品可代表装置弹簧。未计算残差或独立重复，因此线性性只是近似支持。",
+      "assumptions": [
+        "标定样品与已安装弹簧不是精确同一身份，只能作为刚度近似。",
+        "截距来自预载/零点偏置，而非强非线性或摩擦。",
+        "无独立重复与误差棒，斜率不确定性未由本轨迹量化。",
+        "同一长度处加载/卸载差异小于表观分辨率，不能据此检验动态滞后。"
+      ],
+      "distinct_prediction": "若在 S046、S019、S007 的未参与拟合长度上复测，力应落在上述直线附近，且加载与卸载斜率无系统差异；若存在明显硬化/软化或方向相关斜率，则 H1 被削弱。该预测可与“弹簧强非线性”区分。",
+      "alternatives": "替代解释包括非线性弹簧、夹具零点漂移、标定样品与安装弹簧身份不一致。当前数据不能排除截距的仪器来源，但斜率接近名义值使“近似线性”仍是简约描述。",
+      "trajectory_origin": "轨迹位置: research_tool/analyze_csv 对 S046、S019、S007 的三次调用及输出（slope 45.85329350291625、18.968661960132913、6.959797525722672）；read_file('/dossier.json') 的 calibration 行 1-67。"
+    },
+    {
+      "id": "H2_coupling_lever",
+      "title": "耦合附件距离通过杠杆臂线性偏置阈值，偏置符号由两转子状态共同决定",
+      "mechanism": "把切换阈值写成力矩平衡: 驱动弹簧力矩 + 耦合弹簧力矩 + 止挡/摩擦项 = 0。耦合弹簧在转子上的力臂为 mount_l，其力矩近似与 l 和耦合伸长成正比；线性化后，阈值 gamma_th 随 l 近似线性变化，斜率符号由被切换转子状态 s_i 与另一转子固定状态 s_other 的乘积及几何符号决定。l=0 时耦合力臂消失，故不同 other_state 的阈值应合并。",
+      "equations_or_derivation": "线性化阈值方程: tau_d(gamma_th) + tau_c(l, s_i, s_other) + tau_stop = 0。取 tau_c ≈ -k_c*l*Delta(s_i,s_other)，tau_d ≈ k_d*L*(gamma_th-gamma0)，得到 gamma_th(i,dir,s_other) ≈ gamma0(i,dir) + alpha_i(s_other)*l，alpha_i ∝ (k_c/k_d)*(1/L)*h(s_i,s_other)。因此同一 (i,dir) 下不同 other_state 的曲线应在 l=0 相交，随 l 分离；若耦合可忽略，则 alpha≈0。",
+      "measured_support": "实测关系（pair_A, rows 68-99）: l=0 时 rotor1 up 两种 other_state 均为 7.3 cm，rotor1 down 均为 -7.1 cm，rotor2 up 均为 3.5 cm，rotor2 down 均为 0.1 cm，说明零力臂时两状态条件合并。l=4.731 cm 时: rotor1 up 为 4.3(other=+1) vs 5.5(other=-1); rotor2 up 为 0.5 vs 4.9; rotor1 down 为 -4.9 vs -3.7; rotor2 down 为 -1.7 vs 2.7。近似斜率: rotor1 up 约 -0.63 vs -0.38 cm/cm; rotor2 up 约 -0.63 vs +0.30; rotor1 down 约 +0.47 vs +0.72; rotor2 down 约 -0.38 vs +0.55。模型解释是耦合力矩杠杆臂，而非已测得的直接力矩。",
+      "assumptions": [
+        "mount_l 是“被切换转子”的耦合弹簧 attachment 距离；该点经 request_case_definition 查询返回 unknown，故这是待确认的模型假设。",
+        "other rotor 确实固定在其 - 或 + 止挡，耦合弹簧保持线性。",
+        "阈值取首次切换，准静态，驱动阈值不确定度 ±0.1 cm；无独立重复。",
+        "pair_A 的耦合几何、止挡刚度和摩擦未完全已知，alpha 的绝对值不能由本轨迹唯一确定。"
+      ],
+      "distinct_prediction": "在 pair_A 上增加一个中间 l（例如 2.36 cm）复测，四个 (rotor,direction) 家族的阈值应落在由 l=0 截距和上述近似斜率给出的直线上；若 l=0 的交点消失或斜率不随 other_state 变号，则 H2 被削弱。该预测区别于“阈值只由驱动弹簧和止挡决定”的独立转子模型。",
+      "alternatives": "替代解释包括止挡摩擦、耦合弹簧几何非线性、安装预紧变化、或 mount_l 并非被切换转子的力臂。l=0 处状态条件合并是支持杠杆解释的关键，但不足以排除所有几何非线性。",
+      "trajectory_origin": "轨迹位置: read_file('/dossier.json') 的 pair_A threshold 行 68-99；request_case_definition 对 mount_l 语义返回 status=unknown；本轨迹未执行阈值拟合，故 H2 是条件性解释而非已拟合结论。"
+    },
+    {
+      "id": "H3_network_period8",
+      "title": "四转子网络在恒幅循环驱动下呈确定性周期8事件轨道，等驱动值事件是分辨率内近同时而非独立重复",
+      "mechanism": "每个转子是带止挡的迟滞单元，其切换阈值是多转子状态的函数；恒幅循环驱动在四维状态超立方体上闭合出一条事件序列。耦合（包括 rotor1-rotor3 之间用钢丝延长的弹簧对）使状态按非单调顺序翻转，形成周期轨道。相同 drive_gamma 的相邻事件表示两个阈值在测量分辨率内接近，事件顺序仍由 event_index 保留，不能解释为同一时刻的独立重复。",
+      "equations_or_derivation": "对每个转子 j，定义阈值面 gamma_th,j(s_1,s_2,s_3,s_4)。当驱动 gamma(t) 穿过该面且 s_j 允许翻转时，事件发生；一个完整周期满足状态序列 S_(n+8)=S_n。若把各转子近似为独立 hysteron，则事件应随 gamma 单调分块出现；观测到的往复符号与耦合项要求阈值面含交叉项，例如 gamma_th,j = gamma0_j + sum_{m≠j} J_jm*s_m。",
+      "measured_support": "实测关系（network_C, rows 108-123）: 事件 1-8 的状态串依次为 -+-+, ++-+, ++++, +++-, -++-, --+-, --++, ---+，对应 drive 4.5, 5.8, 5.8, -4.3, -5.1, -5.1, 5.9, -3.3 cm；事件 9-16 逐项重复同样的状态串和 drive 值。5.8/5.8 与 -5.1/-5.1 是等驱动值相邻事件。模型机制是阈值面交叉耦合导致周期轨道；轨迹未对 network_C 做数值拟合。",
+      "assumptions": [
+        "16 个事件属于同一连续记录，后 8 个是周期重复而非独立重复实验。",
+        "恒定幅值循环驱动；但幅值、反转位置和时间间隔未提供，不能从事件极值推反转点。",
+        "network_C 的完整连接、止挡角度和 rotor1-rotor3 钢丝弹簧的 exact 几何未知。",
+        "等驱动值事件的先后由 event_index 保留，时间差未分辨；不能断言严格同时。"
+      ],
+      "distinct_prediction": "若继续记录下一个完整周期，事件 17-24 应再次复现上述 8 个状态串及 drive 值（在 ±0.1 cm 或事件表分辨率内）；若把驱动幅值降到不足以越过某个晚期阈值，周期应截短或改为不同轨道；若改变 rotor1-rotor3 的耦合，8 事件顺序应改变。独立转子模型则预测状态随驱动单调分块，不会出现这种交叉往复序列。",
+      "alternatives": "替代解释包括数据表把同一周期复制了两次、事件缺失导致表观周期、或驱动反转附近的状态未被记录。由于没有独立重复、时间戳和反转行，H3 只能作为条件性周期轨道假设；它不能仅凭这 16 行证明可重复性。",
+      "trajectory_origin": "轨迹位置: read_file('/dossier.json') 的 network_C state_event 行 108-123；事件 1-8 与 9-16 的逐项重复直接可见；本轨迹未对 network_C 执行 analyze_csv，故未验证周期或阈值面。"
+    }
+  ],
+  "summary": "本轨迹实际完成的是三组标定弹簧的线性斜率计算，以及对 pair_A 阈值表和 network_C 事件表的读取；没有执行阈值拟合或网络计算。因此提取三条条件性假设：H1 标定弹簧近似线性（实测斜率 0.4585/0.1897/0.0696 N/cm，接近名义 0.46/0.19/0.07 N/cm，但截距非零）；H2 pair_A 的 mount_l 通过耦合杠杆臂线性偏置阈值，l=0 时不同 other_state 阈值合并、l=4.731 cm 时分离且斜率随转子/状态变号；H3 network_C 的 16 个事件中后 8 个逐项复现前 8 个，条件性地支持恒幅驱动下的确定性周期8轨道，等驱动值事件只表示分辨率内近同时/有序未分辨。三条均区分了实测关系、模型假设与 proposed mechanism，并保留未验证与替代解释。"
+}

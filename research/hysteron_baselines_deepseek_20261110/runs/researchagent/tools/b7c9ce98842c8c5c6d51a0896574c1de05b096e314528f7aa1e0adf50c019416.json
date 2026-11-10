@@ -1,0 +1,123 @@
+{
+  "name": "analyze_csv",
+  "args": {
+    "dataset": "measurements",
+    "group_column": "record_type",
+    "group_value": "state_event",
+    "variables": [
+      {
+        "name": "d1",
+        "expression": "abs(diff(s1,axis=0))"
+      },
+      {
+        "name": "d2",
+        "expression": "abs(diff(s2,axis=0))"
+      },
+      {
+        "name": "d3",
+        "expression": "abs(diff(s3,axis=0))"
+      },
+      {
+        "name": "d4",
+        "expression": "abs(diff(s4,axis=0))"
+      },
+      {
+        "name": "tot",
+        "expression": "d1+d2+d3+d4"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "n_multi_flip_transitions",
+        "expression": "sum(where(tot>1,1,0))"
+      },
+      {
+        "name": "flips_rotor1",
+        "expression": "sum(d1)"
+      },
+      {
+        "name": "flips_rotor2",
+        "expression": "sum(d2)"
+      },
+      {
+        "name": "flips_rotor3",
+        "expression": "sum(d3)"
+      },
+      {
+        "name": "flips_rotor4",
+        "expression": "sum(d4)"
+      },
+      {
+        "name": "first_state_s1",
+        "expression": "s1"
+      }
+    ]
+  },
+  "call_id": "call_00_w0s0BJx9BrH7VVHBBXSP3470",
+  "seconds": 0.021947708912193775,
+  "registered_paths": [],
+  "result": {
+    "status": "executed",
+    "dataset": "measurements",
+    "sha256": "5e40502610e3904c627ab6b4cda5b65f4cf9185ed5190459d6b909313619504e",
+    "total_rows": 123,
+    "selected_rows": 16,
+    "selection": {
+      "column": "record_type",
+      "value": "state_event"
+    },
+    "outputs": {
+      "n_multi_flip_transitions": {
+        "shape": [],
+        "value": 15,
+        "nonfinite_count": 0
+      },
+      "flips_rotor1": {
+        "shape": [],
+        "value": 8.0,
+        "nonfinite_count": 0
+      },
+      "flips_rotor2": {
+        "shape": [],
+        "value": 6.0,
+        "nonfinite_count": 0
+      },
+      "flips_rotor3": {
+        "shape": [],
+        "value": 8.0,
+        "nonfinite_count": 0
+      },
+      "flips_rotor4": {
+        "shape": [],
+        "value": 8.0,
+        "nonfinite_count": 0
+      },
+      "first_state_s1": {
+        "shape": [
+          16
+        ],
+        "value": [
+          -1.0,
+          1.0,
+          1.0,
+          1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          1.0,
+          1.0,
+          1.0,
+          -1.0,
+          -1.0,
+          -1.0,
+          -1.0
+        ],
+        "nonfinite_count": 0
+      }
+    },
+    "scope": "Executed researcher-authored expressions on registered measurements; not validation of causal interpretation."
+  },
+  "policy_fingerprint": "1e4f5dcbb6b1c6873b226ff66dc837a3f5d0ea528bce61489f59a4cc965b7607"
+}

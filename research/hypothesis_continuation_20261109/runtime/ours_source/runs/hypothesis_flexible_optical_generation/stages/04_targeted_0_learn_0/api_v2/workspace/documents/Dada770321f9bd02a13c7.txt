@@ -1,0 +1,102 @@
+{
+  "name": "read_documents",
+  "args": {
+    "requests": [
+      {
+        "limit": 12000,
+        "offset": 0,
+        "pointer": "",
+        "raw": false,
+        "ref": "D4a290594081e76e482ce"
+      },
+      {
+        "limit": 12000,
+        "offset": 0,
+        "pointer": "/request",
+        "raw": false,
+        "ref": "Daa4da195710bfbeb31e7"
+      },
+      {
+        "limit": 12000,
+        "offset": 0,
+        "pointer": "/sources",
+        "raw": false,
+        "ref": "Daa4da195710bfbeb31e7"
+      },
+      {
+        "limit": 8000,
+        "offset": 0,
+        "pointer": "/development_step",
+        "raw": false,
+        "ref": "D466f42de8a4556445777"
+      },
+      {
+        "limit": 8000,
+        "offset": 0,
+        "pointer": "/development_step",
+        "raw": false,
+        "ref": "D4bc525258bd521100347"
+      }
+    ]
+  },
+  "call_id": "call_9394bd5ece5549279036f18ae6d8f1c7",
+  "seconds": 0.12514349957928061,
+  "registered_paths": [],
+  "result": {
+    "status": "read",
+    "documents": [
+      {
+        "ref": "D4a290594081e76e482ce",
+        "sha256": "4a290594081e76e482ce8bac2a59319ee3e326e179b5578b38dc107932ea139f",
+        "pointer": "",
+        "offset": 0,
+        "text": "# Idea 构建与最终检查\n\n当前任务是提出研究 idea。流程为 **idea builder → check agent**；讨论学习入口也复用同一个 checker。检查包含已有工作比较与明显数学／逻辑错误粗筛两项职责。idea 可以保留尚未解决的问题；证明、实现、数据、实验结果均不是保留候选的条件。\n\n## 贡献覆盖检查：claim-centric-v2（2026-11-05）\n\n已有工作检查返回两层结论：\n\n- `prior_work.verdict`：研究方向是否非常相近。`close_direction_found` 只报告方向重合，包含来源论文和后续论文，不能据此淘汰候选。\n- `novelty`：在实验规定的时间与输入可见性范围内，哪些原始核心主张被合格先例覆盖；同时保存全部文献的比较结果。\n\n例如：先例已经研究模型结构发现，但尚未确认是否覆盖候选提出的更弱识别条件。可以同时记录 `close_direction_found` 和 `PARTIAL_OVERLAP`。同主题、同数据或共享通用技术本身不足以判定非常相近。V1 说明原样保存在 `IDEA_CHECK_V1_20261105.md`。\n\n### 时间范围与隐藏来源论文\n\n历史任务采用来源论文首次公开时点作为参考时间，优先使用已核实的预印本首次公开时间。只有明确早于参考时间的其他文献可以否定历史新颖性；后续工作单独记录。日期不明或时间范围交叠时保留未知。只知道年份就记录当年首日至末日的区间，不补造某一天。多篇来源论文需要实验控制端明确参考时间与理由，不自动取最早或最晚日期。\n\n**生成 agent 没看到来源论文中的对应 idea／结论时，即使提出与该论文六维全部相同的 idea，也可以记为任务内的独立重发现，并保留候选。** 多篇来源论文分别记录可见性。来源中对应结论已经通过摘要、工具返回、讨论或记忆提供时记 `exposed`；只缺全文不足以记 `hidden`。无法确认时记 `unknown`。这些记录核对实验输入与工具／记忆暴露，不证明模型预训练中没有接触相关知识。\n\n隐藏来源论文用于检验重发现是否匹配，不作为否定任务内新颖性的先例；其他更早论文仍正常比较。已暴露来源中的对应内容作为生成前已知内容处理。当前文献新颖性另记：与已发表论文完整匹配可以同时有 `INDEPENDENT_REDISCOVERY` 和 `world_novelty: EXISTING_MATCH`。\n\n`evaluation_context` 由实验控制端在候选保存后加入，每个 idea 独立记录。checker 无权修改；生成角色不能自行声明隐藏或历史截止日期。未提供时默认当前时间范围、不设隐藏来源豁免。历史任务的参考日期未知时保留未决，不猜日期。\n\n上下文结构如下；所有快照必须是项目内已保存的 UTF-8 文本：\n\n```text\nevaluation_context:\n  mode: current/historical\n  reference_date: null 或 {earliest: YYYY-MM-DD, latest: YYYY-MM-DD,\n                           url: 日期来源URL, snapshot_path, quote: 逐字日期证据}\n  reference_reason: 参考时间的实验依据；current 模式 reference_date 为 null\n  source_papers: [\n    {paper_id: 控制端稳定ID, title, urls: [DOI或其他已核对身份URL及别名],\n     idea_exposure: {status: hidden/exposed/unknown, reason,\n                     snapshot_path, quote: 输入清单或工具/记忆审计中的逐字证据}}\n  ]\n```\n\n`hidden/exposed` 必须有暴露审计快照与引文；`unknown` 只需理由。来源身份用规范化 URL 精确匹配，DOI 链接忽略大小写并兼容 dx.doi.org；其他落地页别名需由控制端明确列出。标题相似不触发隐藏豁免。日期证据与论文身份的真实性仍需查阅实际下载记录。\n\n对于已明确指定历史时点的实验，`reference_date` 可使用 `evidence_kind: \"task_configuration\"`，并提供 `earliest/latest`、本地配置快照及逐字引文，此时不要求外部日期 URL；`reference_reason` 必须说明这是实验配置边界。该例外只适用于参考时间，不能用于 `sources[].publication_date`。鱼类任务沿用批准的 2010-01-01 边界，不能把它描述成来源论文发表日期。\n\n### 同一 checker 内的三个步骤\n\n1. **忠实拆解。** 从原始 idea 提取 1–5 条核心研究主张／问题，每条绑定原文 `idea_quote`。已有明确主张才拆解；缺少机制、假设或验证设计时记 `not specified`，不替作者补出更强方案。若原始主张声称整合产生新机制／能力，单列 `combination` 主张。提出问题、研究未知关系也是合法主张；不要求先有结论。\n2. **多角度检索。** 从 problem、mechanism、contribution 分别生成短关键词和同义查询。初始计划每个 idea 4–6 个查询，候选池目标 30–50 篇去重记录，读 8–10 篇摘要，深入比较最相关的 3–5 篇。按可能覆盖主张的程度筛选，保留各检索角度的近邻与筛选理由。实际引擎、候选、失败和下载内容写进本地检索台账；有语义检索工具时才记录为语义检索。允许一轮针对未决主张的补检，最多两个查询。\n3. **证据比较。** 对入选的每个来源分别作六维比较和逐主张比较。保存来源文本、证据位置、逐字引文和解释；复杂细节按实际读到的方法、定理或实验段落判断。\n\n数量是工程预算，受每个角色的时间限制约束。保存实际完成量；不凑数，也不以达到数量证明检索完整。明确先例覆盖全部核心贡献时可以提前结束。遇到访问／时间限制，保存未决问题和停止原因。否定式结论需有三个检索角度均已完成的记录；检索不足返回 `unclear`。\n\n三个步骤由提示词组织在一次 checker 会话内，候选池、筛选与下载由该角色执行。时间资格、范围内聚合和任务结论由 `src/novelty_scope.py` 确定性核对。当前没有新增固定的检索后端或 embedding 检索器。\n\n### 六维解释与有向覆盖\n\n| 维度 | 比较对象 |\n| --- | --- |\n| problem | 科学问题／目标 |\n| mechanism | 方法、因果机制、工作原理 |\n| contribution | 提议的新结果、理论、能力或研究问题 |\n| assumptions | 条件、对象、范围、量词与可识别性 |\n| validation | 验证设计或证据贡献；尚未设计可记未知 |\n| application | 场景、数据、领域 |\n\n六维不加权求和。假设放宽或验证方法本身可以是核心贡献，重要性由原始主张决定。\n\n采用宽松保留规则：方向重合与部分主张重合均不足以淘汰候选；只有合格先例完整覆盖全部核心贡献才记 `CORE_ALREADY_KNOWN`。六维的字面差异不是投票：仅换名字或数据集不自动产生贡献；更弱条件、新预测、新机制或实质组合关系可以构成剩余贡献。证据不足保留候选并补检。\n\n六维与逐主张比较均使用同一组关系标签：`EQUIVALENT`、`PRIOR_COVERS_IDEA`、`PARTIAL_OVERLAP`、`RELATED_ONLY`、`DISTINCT`、`UNKNOWN`。`DISTINCT` 需要实质差异的证据；摘要未提到某细节只能支持未知，不能直接支持差异。关系标签与证据层级分别记录，不使用混合标签 `POTENTIALLY_COVERED`。\n\n对于理论 `C_I ⇒ R` 与 `C_P ⇒ R`，若结论和研究对象确实匹配且 `C_I ⇒ C_P`，已有结果可覆盖候选特例。比较时明确对象对应、结论、量词和条件；难以判断蕴含时记 `unknown`，不要求证明器。现有推导或经验结果也不自动覆盖一个更强的理论保证。\n\n各模块分别已有先例，不自动建立整合方案已有先例；有组合主张时按完整机制／能力比较。原文只把熟悉模块并列，也不自动构成新的组合贡献。\n\n### 证据层级\n\n`evidence_level` 为 `full_text`、`abstract`、`metadata_only` 或 `unavailable`。摘要的明确陈述可支持其范围内的覆盖；定理条件、实验设置等细节需要相应段落。全文可访问不意味着每个主张都有证据。\n\n保存原始下载响应与用于引用的 UTF-8 文本（PDF/XML/倒排摘要等需另存提取文本），来源中记录实际 URL 和阅读日期。每条证据绑定 `source_id`、`quote`、`locator`；`snapshot_path` 使用绝对路径，引用必须逐字出现在保存文本中。`locator` 可为摘要、节名、页码或定理号。元数据或访问失败不足以建立实质覆盖。\n\n程序能核对引文存在、ID 对应、结果聚合和字段完整性；来源真实性、摘录是否忠实于下载原文、引文能否支撑解释仍依赖实际检索与模型判断。\n\n## JSON 输出契约\n\n顶层包含 `schema_version: \"claim-centric-v2\"`、`searches`、`checks`，以及 runtime 的六个标准字段 `summary, artifacts, evidence, claims, limitations, next_actions`。顶层 `claims` 是运行器通用记录，各 idea 的原子主张放在 `checks[].novelty.claims`。\n\n`searches` 每条包含：\n\n```text\nquery, url, status: completed/failed, idea_ids: [原始ID],\nfacet: problem/mechanism/contribution, round: 1/2,\nsnapshot_path: 已完成查询保存响应的绝对路径,\nfailure_reason: 失败原因（仅 failed 必需）\n```\n\n每条 `checks` 包含 `idea_id`、`prior_work`、`math`、`novelty`：\n\n```text\nprior_work:\n  verdict: close_direction_found/no_close_work_found/unclear\n  reason: 中文理由\n  sources: [\n    {source_id, title, url, accessed_on, content_note,\n     similarity: very_similar/related_only,\n     evidence_level: full_text/abstract/metadata_only/unavailable,\n     snapshot_path: 绝对路径；un",
+        "next_offset": 4800,
+        "total_characters": 9659,
+        "raw_original": false
+      },
+      {
+        "ref": "Daa4da195710bfbeb31e7",
+        "sha256": "aa4da195710bfbeb31e729eb127266abcaa4a81b96b5b562ce2f8b4dd0f00e55",
+        "pointer": "/request",
+        "offset": 0,
+        "text": "{\"gap\":\"peer的假设仍未连接到估计过程：如果有强度加权平均、跨相位合成和归一化，方向列和DOP分别对应哪一阶段？各步骤次序是否会改变可保留的信息？\",\"needed\":true,\"operations\":[],\"queries\":[\"Stokes vector intensity-weighted averaging degree of polarization normalization order\",\"degree of polarization average Stokes vectors normalize direction polarization measurement\"],\"record_ids\":[],\"source_ids\":[],\"urls\":[],\"why_now\":\"这个概念连接决定字段分离是单纯的输出表示差异，还是反映不同的统计对象；当前数值本身不能解答，但针对性学习可明确哪些定义必须追问。\"}",
+        "next_offset": null,
+        "total_characters": 422,
+        "raw_original": false
+      },
+      {
+        "ref": "Daa4da195710bfbeb31e7",
+        "sha256": "aa4da195710bfbeb31e729eb127266abcaa4a81b96b5b562ce2f8b4dd0f00e55",
+        "pointer": "/sources",
+        "offset": 0,
+        "text": "[{\"title\":\"Atomic state interferometry for complex vector light.\",\"date\":\"2025-11-07\",\"publication_dates\":[\"2025-11-07\",\"2025-11-07\"],\"doi\":\"https://doi.org/10.1515/nanoph-2025-0491\",\"url\":\"https://doi.org/10.1515/nanoph-2025-0491\",\"text\":\"Features of complex vector light become important in any interference effects, including scattering, diffraction, and nonlinear processes. Here, we are investigating the role of polarization-structured light in atomic state interferometers. Unlike optical or atomic path interferometers, these facilitate local interference between atomic transition amplitudes and hence the orthogonal optical polarization components driving these transitions. We develop a fully analytical description for the interaction of generalized structured light with an atomic four state system, that is, multiply connected via optical as well as magnetic transitions. Our model allows us to identify spatially dependent dark states, associated with spatially structured absorption coefficients, which are defined by the geometry of the polarization state and the magnetic field direction. We illustrate this for a range of optical beams including polarization vortices, optical skyrmions, and polarization lattices. This results in a new interpretation and an enhanced understanding of atomic state interferometry, and a versatile mechanism to modify and control optical absorption as a function of polarization and magnetic field alignment.\",\"access\":\"indexed_abstract_only\",\"date_evidence\":\"Europe PMC firstPublicationDate\",\"id\":\"K68c0f7b1e701af1e\",\"retrieved_at\":\"2026-11-09T18:35:47.125321+00:00\",\"query\":\"Stokes vector intensity-weighted averaging degree of polarization normalization order\"},{\"title\":\"Polarization of road target detection under complex weather conditions.\",\"date\":\"2024-12-05\",\"publication_dates\":[\"2024-12-05\",\"2024-12-05\"],\"doi\":\"https://doi.org/10.1038/s41598-024-80830-3\",\"url\":\"https://doi.org/10.1038/s41598-024-80830-3\",\"text\":\"Polarization imaging technology can be applied to unveil the interaction between light and matter by harnessing the transverse vector wave attributes of light, thus to accentuate target characteristics amidst complex weather conditions. This technology has the potential to be widely used in road target detection. However, polarization detection is significantly affected by illumination and detection angles, as well as the considerable variation in the scale of road targets. The optimal polarization parameters should be adaptively adjusted to weather conditions, angles and target features, whereas most existing research employs handcrafted polarization parameters without considering actual complex detection requirements, which are unable to adaptively adjust the polarization feature enhancement methods. In this paper, we propose a road target detection algorithm based on an end-to-end adaptive polarization coding method, named YOLO-Polarization of Road Target Detection (YOLO-PRTD). To enhance the polarized features of targets under complex weather conditions, an Adaptive Polarization Coding Module (APCM) is designed. This module integrates channel-wise global self-attention and small kernel convolution to adaptively adjust the polarization enhancement method using dynamically extracted global and local polarization feature information. A multi-scale detection network is also designed to fully extract and fuse multi-scale feature information from receptive fields, channels, and spaces in different dimensions. Additionally, a dataset of Polarized Images of Road Targets in Complex Weather conditions (PIRT-CW) is proposed for training and evaluation. Experimental results on the PIRT-CW show that the YOLO-PRTD algorithm achieves a mAP0.5 of 89.83%, reducing the error rate by 15.54% compared to the baseline network YOLOX.\",\"access\":\"indexed_abstract_only\",\"date_evidence\":\"Europe PMC firstPublicationDate\",\"id\":\"Ka7c3f05f47225d40\",\"retrieved_at\":\"2026-11-09T18:35:59.848577+00:00\",\"query\":\"Stokes vector intensity-weighted averaging degree of polarization normalization order\"},{\"title\":\"Neuronal normalization in monkey MT is an intensity-weighted average\",\"date\":\"2025-07-25\",\"publication_dates\":[\"2025-07-25\"],\"doi\":\"https://doi.org/10.1101/2025.07.21.665985\",\"url\":\"https://doi.org/10.1101/2025.07.21.665985\",\"text\":\"Abstract \\n                 Normalization is a ubiquitous neuronal computation that is important for safeguarding stimulus selectivity. However, normalization strength has been found to vary greatly across neurons. Here, we show that the normalization of responses by neurons in the macaque middle temporal visual area (MT) is profoundly affected by the receptive field responsivity at each stimulus location. An intensity-weighted normalization model, in which intensity is de",
+        "next_offset": 4800,
+        "total_characters": 39739,
+        "raw_original": false
+      },
+      {
+        "ref": "D466f42de8a4556445777",
+        "sha256": "466f42de8a45564457777bddeea6dad7b6750523c2403ea8d01bb18ce7f5e38b",
+        "pointer": "/development_step",
+        "offset": 0,
+        "text": "{\"action\":\"derive\",\"expected_change\":\"把争论从“范数近1是否证明单位化”推进到“何种处理次序会使方向不足以重建合成偏振程度”，并相应收窄案例解释。\",\"focus\":{\"quote\":\"案例导出的S1/S2/S3可能是逐行归一化的偏振方向变量，而DOP作为不同标量另行导出；两者不应被默认视为同一个Stokes向量的方向与长度测量。\",\"source\":\"/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/runs/hypothesis_flexible_optical_generation/stages/02_initial_1/api_v2/workspace/result.json\"},\"gap\":\"同伴的字段分离假设尚未连接至生成这些字段的估计过程：强度加权平均、跨相位合成与方向归一化发生在何处，是否改变方向字段和DOP各自保留的信息？\",\"outcome\":{\"kind\":\"clarification\",\"remaining_gap\":\"案例实际S、DOP定义，以及权重、平均和归一化次序未知；无法将学习例的条件映射确定到本案。\",\"statement\":\"回应中将平均与方向归一化的次序视为决定信息保留的条件性关系，而非本案已知事实。两个相反等权Stokes方向的学习例展示了先平均的抵消与只保留逐态方向的差别。\"},\"reason\":\"用简短经典Stokes学习例明确平均和逐态归一化可能不交换，直接回应同伴关于方向丢失长度信息的条件性假设；案例算法仍需定义来源才能判断。\",\"uptake\":[{\"consequence\":\"条件性地，若方向在聚合前逐态归一化且权重/长度未保留，方向字段不足以重建聚合后的偏振程度；若DOP来自独立估计器，则不能将其解释为这些方向所丢失的长度。\",\"effect\":\"challenge\",\"quote\":\"条件性主张：若案例S1/S2/S3确由向量逐行单位化得到，则它们只表征方向，范数本身不再是偏振度的独立读数；DOP下降可与方向字段并存，但其物理含义须由DOP的估计链确定。\",\"reason\":\"Peer’s specific contribution is the conditional distinction between normalized direction and the separately exported DOP. I extend it by asking which stage normalizes: if normalization precedes averaging and weights or lengths are discarded, the retained directions cannot reconstruct the aggregate polarization; if DOP is independently estimated, it is not automatically the missing length. This is a conceptual distinction, not an assertion about this case’s pipeline.\",\"source\":\"/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/runs/hypothesis_flexible_optical_generation/stages/03_exchange_0/api_v2/workspace/result.json\"}]}",
+        "next_offset": null,
+        "total_characters": 1618,
+        "raw_original": false
+      },
+      {
+        "ref": "D4bc525258bd521100347",
+        "sha256": "4bc525258bd521100347c38f258a6cfe8fa88501375cd5e029c674e8fa4824c8",
+        "pointer": "/development_step",
+        "offset": 0,
+        "text": "{\"action\":\"learn\",\"expected_change\":\"理解一个具体反例，检验“先平均再归一化”和“先归一化后保留方向”是否交换，并据此修正对字段关系的解读。\",\"focus\":{\"quote\":\"Exported normalized polarization-direction components. Their squared norm should be inspected rather than assumed equal to the exported DOP.\",\"source\":\"/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/runs/hypothesis_flexible_optical_generation/allowed/measurements_brief.json\"},\"gap\":\"目前未能把“已归一化的偏振方向分量”与独立导出的标量DOP在同一条估计流程中联系起来；若两者分属平均或归一化的不同阶段，就不能从方向向量范数直接读出DOP，可能改变对所谓数据不一致的理解。\",\"outcome\":{\"kind\":\"clarification\",\"remaining_gap\":\"案例实际DOP和S1/S2/S3的定义、各自估计阶段及平均顺序仍未查明。\",\"statement\":\"完成了一个经典学习例：强度加权Stokes向量先平均时，相反方向可相消；分别归一化并只保留方向会丢失权重和合并后的长度。由此澄清字段关系取决于处理顺序，但案例实际采用哪一顺序仍未知。\"},\"reason\":\"经典Stokes表示的几何意义本身不足以判断字段关系；需要弄清强度加权平均、单位方向归一化和DOP标量之间的信息损失关系，才能提出恰当的同伴问题。\",\"uptake\":[{\"consequence\":\"条件性地，若案例字段是单位方向，方向几何可描述态取向，但必须另有强度或偏振度标量才能保留向量长度信息。\",\"effect\":\"extend\",\"quote\":\"In classical optics, these traits are characterized by the Stokes parameters, which can be geometrically interpreted using the Poincaré sphere.\",\"reason\":\"摘要提供Stokes几何背景，但不规定该案例字段的归一化或DOP算法；因此只能支撑学习例的表示，不能填平案例映射缺口。\",\"source\":\"/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/learning_lab/library/330d314c21e4cade755f94169919045009f46f57f72ee12956b0f9eadc3e0a9c.json\"},{\"consequence\":\"条件性地，若当前导出字段也来自不同信号处理阶段，则DOP和方向量可能互补而非冗余；现有材料未确认这一点。\",\"effect\":\"extend\",\"quote\":\"While the retardation information is encoded in the amplitude ratio of the two interferometric signals, the axis orientation is encoded entirely in their phase difference.\",\"reason\":\"该OCT摘要展示一个具体系统将不同偏振性质编码于不同信号特征；这是测量表示的迁移类比，不是当前实验装置或映射的证据。\",\"source\":\"/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/learning_lab/library/807e12d5eaab9def3f4455efb9a92f80617dc988949618de9fd873b13cb6b664.json\"}]}",
+        "next_offset": null,
+        "total_characters": 1837,
+        "raw_original": false
+      }
+    ],
+    "paging": "Large batches are paginated automatically; follow next_offset for remaining text."
+  },
+  "policy_fingerprint": "31f8670cf0af311ecb39d6808416541ca1dcc79e92e3c923ce3275ba607b9f45"
+}

@@ -1,0 +1,58 @@
+{
+  "id": "956b9fb3-3c36-4dc0-8426-5acfc6bc448f",
+  "choices": [
+    {
+      "finish_reason": "tool_calls",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "",
+        "refusal": null,
+        "role": "assistant",
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "tool_calls": [
+          {
+            "id": "call_00_quWql5xTxPAHZ2iqEASd5775",
+            "function": {
+              "arguments": "{\"requests\": [{\"limit\": 5000, \"offset\": 0, \"pointer\": \"/case_facts\", \"raw\": false, \"ref\": \"D258ac2dfad1c5ae4e9c1\"}, {\"limit\": 5000, \"offset\": 0, \"pointer\": \"/computed\", \"raw\": false, \"ref\": \"D258ac2dfad1c5ae4e9c1\"}, {\"limit\": 3000, \"offset\": 0, \"pointer\": \"/relevance_reviews\", \"raw\": false, \"ref\": \"D258ac2dfad1c5ae4e9c1\"}]}",
+              "name": "read_documents"
+            },
+            "type": "function",
+            "index": 0
+          }
+        ],
+        "reasoning_content": "The service reply contains 12 sources. I need to read the sources' content in the reply, plus relevance_reviews, case_facts, computed.\n\nThe reply is 356k chars. Let me read the \"sources\" section parts and \"computed\" and \"case_facts\" and \"relevance_reviews\". Let me first find structure: read around offset 6000-... Actually the first section: request_stage, development_context, request, routing, knowledge_attempts, then sources array. Each source includes \"text\" (full text or excerpt). 12 sources. Total 356k chars.\n\nWait—the reply also lists source_count. Let me read the relevance_reviews and case_facts sections first (smaller), then read each source's text selectively.\n\nActually, note broker_reply_source_ids: 12 IDs K1672..., etc. The required_service_uptake is the reply file. I need source_use for each of the 12 returned sources (broker reply source IDs). So I need to classify each.\n\nLet me read the reply in chunks. Better: read the sources section but that's big. Perhaps I can find \"case_facts\" and \"relevance_reviews\" pointers directly. JSON pointer /case_facts, /relevance_reviews, /computed.\n\nLet me do parallel reads: /case_facts, /relevance_reviews, /computed, /status, /knowledge_status.\n\nBut note pointer paths for this file: sections listed [\"request_stage\",\"development_context\",\"request\",\"routing\",\"knowledge_attempts\",\"sources\",\"computed\",\"unavailable\",\"case_facts\",\"relevance_reviews\",\"relevance_scope\",\"status\",\"knowledge_status\"].\n\nLet me read /computed, /case_facts, /relevance_reviews."
+      }
+    }
+  ],
+  "created": 1794292075,
+  "model": "deepseek-flash",
+  "object": "chat.completion",
+  "metadata": null,
+  "moderation": null,
+  "service_tier": null,
+  "system_fingerprint": "bc19ba97cbe016479903222bb1578db6",
+  "usage": {
+    "completion_tokens": 554,
+    "prompt_tokens": 27314,
+    "total_tokens": 27868,
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": null,
+      "audio_tokens": null,
+      "reasoning_tokens": 376,
+      "rejected_prediction_tokens": null,
+      "text_tokens": null
+    },
+    "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cache_write_tokens": null,
+      "cached_tokens": 18688,
+      "image_tokens": null,
+      "text_tokens": null
+    },
+    "prompt_cache_hit_tokens": 18688,
+    "prompt_cache_miss_tokens": 8626
+  }
+}

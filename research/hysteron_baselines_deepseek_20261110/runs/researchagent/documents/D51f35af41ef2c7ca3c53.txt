@@ -1,0 +1,53 @@
+{
+  "name": "analyze_csv",
+  "args": {
+    "dataset": "measurements",
+    "group_column": "mount_l_cm",
+    "group_value": "0",
+    "variables": [
+      {
+        "name": "u1n",
+        "expression": "where(drive_gamma_cm > 0, where(other_state == -1, drive_gamma_cm, 0), 0)"
+      },
+      {
+        "name": "d1n",
+        "expression": "where(drive_gamma_cm < 0, where(other_state == -1, drive_gamma_cm, 0), 0)"
+      },
+      {
+        "name": "u1p",
+        "expression": "where(drive_gamma_cm > 0, where(other_state == 1, drive_gamma_cm, 0), 0)"
+      },
+      {
+        "name": "d1p",
+        "expression": "where(drive_gamma_cm < 0, where(other_state == 1, drive_gamma_cm, 0), 0)"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "r1_otherneg_width",
+        "expression": "(max(u1n) - min(d1n)) / 2"
+      },
+      {
+        "name": "r1_otherneg_center",
+        "expression": "(max(u1n) + min(d1n)) / 2"
+      },
+      {
+        "name": "r1_otherpos_width",
+        "expression": "(max(u1p) - min(d1p)) / 2"
+      },
+      {
+        "name": "r1_otherpos_center",
+        "expression": "(max(u1p) + min(d1p)) / 2"
+      }
+    ]
+  },
+  "call_id": "call_02_EzP8ZxCJJwMefUV4XRHR0794",
+  "seconds": 0.0009791660122573376,
+  "registered_paths": [],
+  "result": {
+    "status": "error",
+    "error_type": "ValueError",
+    "message": "Selection has no rows"
+  },
+  "policy_fingerprint": "1e4f5dcbb6b1c6873b226ff66dc837a3f5d0ea528bce61489f59a4cc965b7607"
+}

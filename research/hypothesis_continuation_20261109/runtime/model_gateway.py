@@ -18,7 +18,7 @@ def estimate_tokens(payload):
     return int(len(encoding.encode(json.dumps(payload,ensure_ascii=False)))*1.1)+256
 
 def transport_identity():
-    fields={k:CFG.get(k) for k in ['model','api_style','reasoning_effort','base_url','credential_source','api_key_env','preserve_reasoning_items','chat_reasoning_parameter']}
+    fields={k:CFG.get(k) for k in ['model','api_style','reasoning_effort','base_url','credential_source','api_key_env','preserve_reasoning_items','chat_reasoning_parameter','thinking_enabled','credential_file']}
     fields['historical_boundaries']={case:locked_policy(case) for case in CASE_RULES}
     if CFG.get('credential_source')=='existing_codex_config':
         config=tomllib.loads(Path('/Users/LSY/.codex/config.toml').read_text())
@@ -26,6 +26,12 @@ def transport_identity():
     return hashlib.sha256(json.dumps(fields,sort_keys=True).encode()).hexdigest()
 
 def client():
+    if CFG.get('credential_source')=='private_file':
+        if CFG.get('base_url')!='https://api.deepseek.com':
+            raise ValueError('Private DeepSeek credential is restricted to the official endpoint')
+        key_path=Path(CFG['credential_file'])
+        if key_path.stat().st_mode & 0o077:raise ValueError('Credential file must be owner-only')
+        return OpenAI(api_key=key_path.read_text().strip(),base_url=CFG['base_url'],timeout=180,max_retries=0)
     if CFG['credential_source']=='existing_codex_config':
         c=tomllib.loads(Path('/Users/LSY/.codex/config.toml').read_text())
         a=json.loads(Path('/Users/LSY/.codex/auth.json').read_text())
@@ -111,6 +117,8 @@ def invoke(group,payload):
                 kwargs['messages']=[{k:v for k,v in m.items() if k!='provider_response_items'} for m in kwargs['messages']]
                 if CFG.get('reasoning_effort') and CFG.get('chat_reasoning_parameter'):
                     kwargs[CFG['chat_reasoning_parameter']]=CFG['reasoning_effort']
+                if CFG.get('thinking_enabled') is not None:
+                    kwargs['extra_body']={'thinking':{'type':'enabled' if CFG['thinking_enabled'] else 'disabled'}}
                 r=api.chat.completions.create(model=CFG['model'],max_tokens=maxout,**kwargs);raw=r.model_dump();response=raw
             prefix.with_suffix('.response.json').write_text(json.dumps(raw,ensure_ascii=False,indent=2))
             prefix.with_suffix('.chat.json').write_text(json.dumps(response,ensure_ascii=False,indent=2))

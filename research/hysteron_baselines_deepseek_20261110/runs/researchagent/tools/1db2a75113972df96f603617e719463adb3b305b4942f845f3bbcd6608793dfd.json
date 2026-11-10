@@ -1,0 +1,77 @@
+{
+  "name": "analyze_csv",
+  "args": {
+    "dataset": "measurements",
+    "group_column": "configuration_id",
+    "group_value": "network_C",
+    "variables": [
+      {
+        "name": "flips",
+        "expression": "abs(diff(s1))+abs(diff(s2))+abs(diff(s3))+abs(diff(s4))"
+      },
+      {
+        "name": "d1",
+        "expression": "abs(s1-shift(s1,8))"
+      },
+      {
+        "name": "d2",
+        "expression": "abs(s2-shift(s2,8))"
+      },
+      {
+        "name": "d3",
+        "expression": "abs(s3-shift(s3,8))"
+      },
+      {
+        "name": "d4",
+        "expression": "abs(s4-shift(s4,8))"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "multi_flip_transitions",
+        "expression": "sum(where(isfinite(flips),where(flips>2,1,0),0))"
+      },
+      {
+        "name": "max_repeat_mismatch",
+        "expression": "max(abs(d1)+abs(d2)+abs(d3)+abs(d4))"
+      },
+      {
+        "name": "event_count",
+        "expression": "sum(where(isfinite(s1),1,0))"
+      }
+    ]
+  },
+  "call_id": "call_03_n9lAUKMvXTaXVC6dtyJp5273",
+  "seconds": 0.018886958248913288,
+  "registered_paths": [],
+  "result": {
+    "status": "executed",
+    "dataset": "measurements",
+    "sha256": "5e40502610e3904c627ab6b4cda5b65f4cf9185ed5190459d6b909313619504e",
+    "total_rows": 123,
+    "selected_rows": 16,
+    "selection": {
+      "column": "configuration_id",
+      "value": "network_C"
+    },
+    "outputs": {
+      "multi_flip_transitions": {
+        "shape": [],
+        "value": 0,
+        "nonfinite_count": 0
+      },
+      "max_repeat_mismatch": {
+        "shape": [],
+        "value": null,
+        "nonfinite_count": 1
+      },
+      "event_count": {
+        "shape": [],
+        "value": 16,
+        "nonfinite_count": 0
+      }
+    },
+    "scope": "Executed researcher-authored expressions on registered measurements; not validation of causal interpretation."
+  },
+  "policy_fingerprint": "1e4f5dcbb6b1c6873b226ff66dc837a3f5d0ea528bce61489f59a4cc965b7607"
+}

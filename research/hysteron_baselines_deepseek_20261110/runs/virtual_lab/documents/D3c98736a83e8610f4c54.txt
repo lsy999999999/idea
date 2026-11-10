@@ -1,0 +1,61 @@
+{
+  "name": "analyze_csv",
+  "args": {
+    "dataset": "measurements",
+    "group_column": "spring_id",
+    "group_value": "S019",
+    "variables": [
+      {
+        "name": "x",
+        "expression": "x_m"
+      },
+      {
+        "name": "f",
+        "expression": "force_N"
+      },
+      {
+        "name": "dx",
+        "expression": "diff(x_m)"
+      },
+      {
+        "name": "df",
+        "expression": "diff(force_N)"
+      },
+      {
+        "name": "s",
+        "expression": "df/dx"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "k_mean",
+        "expression": "mean(s)"
+      },
+      {
+        "name": "k_load",
+        "expression": "mean(where(dx>0,s,nan))"
+      },
+      {
+        "name": "k_unload",
+        "expression": "mean(where(dx<0,s,nan))"
+      },
+      {
+        "name": "secant",
+        "expression": "(max(f)-min(f))/(max(x)-min(x))"
+      },
+      {
+        "name": "fric_halfgap_N",
+        "expression": "abs(mean(where(dx>0,f-19.1*x,nan))-mean(where(dx<0,f-19.1*x,nan)))/2"
+      }
+    ]
+  },
+  "call_id": "call_01_zwThfcHEixwzXv3q5Ycz0504",
+  "seconds": 0.0019631669856607914,
+  "registered_paths": [],
+  "result": {
+    "status": "error",
+    "error_type": "ValueError",
+    "message": "Unsupported expression syntax: Name"
+  },
+  "policy_fingerprint": "1e4f5dcbb6b1c6873b226ff66dc837a3f5d0ea528bce61489f59a4cc965b7607"
+}

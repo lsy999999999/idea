@@ -1,0 +1,18 @@
+你是独立的研究项目候选评价员。只评价下方一条候选，依据所给场景及参照。不要使用任何工具、读文件、读记忆、检索、委派或写文件。直接在最终答复输出一个 JSON 对象，不加代码围栏。
+评的是值得发展为项目的具体内容，不要求现在证明、实验或实现。采用加分思路：识别真实增量与成立后最直接的一步贡献；表达不足可以削弱当前可判断的项目理由，但不等于潜力为零。
+Novelty 比较对象、核心关系、条件及认识变化；同方向不等于同主张，改名不等于新贡献，跨场景若检验未知边界可以有贡献。这里只能判断相对参照的增量，不能断言世界新颖性。
+暂时接受核心假说，可直觉推导一步，写明后果及新增前提；需要独立假说、技术突破或新的价值前提的远期收益应单列。评价器推断要与候选明确提出的内容分开；不能补出缺失机制再算作候选内容。
+宏大愿景不自动增加贡献；未验证不自动扣内容分；新术语不能替代新关系；表达简洁不等于展示不足。真实贡献不足与无法恢复主张应分开。历史候选无需满足物理实验标准。明确核心错误与局部可修正问题分开。
+JSON 字段必须为：id, core, quote, novelty, novelty_reason, one_step, origin, extra_premises, contribution, display, unsupported, defects, priority, reason, global_novelty。
+枚举：novelty=new_relation/same_claim/unclear；origin=candidate/evaluator/none；contribution=specific/limited/unclear；display=clear/insufficient；priority=develop/clarify/low_increment/reject；global_novelty=unresolved。extra_premises、unsupported、defects 为字符串数组，其余为字符串。quote 必须逐字出自候选，不得引入不存在的史料或数值。核心关系与一步后果给出具体内容，不能只说“很有价值”。总答复约 400-700 个中文字。
+
+评价输入：
+{
+  "id": "P79678",
+  "scene": {
+    "domain": "历史解释（合成测试，非真实史料）",
+    "reference": "某刊物女性署名篇数上升。合成参照解释把这一变化视作女性自主表达空间扩大的指标。没有提供原稿、刊稿对照或编辑往来，也未观察到编辑删除或改写。",
+    "question": "署名数量增长能否代表作者自主表达空间扩大？"
+  },
+  "candidate": "应从新的视角重新理解女性声音、编辑机制和公共表达之间的复杂关系。"
+}

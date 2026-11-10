@@ -1,0 +1,56 @@
+{
+  "name": "analyze_csv",
+  "args": {
+    "dataset": "measurements",
+    "group_column": "spring_id",
+    "group_value": "S007",
+    "variables": [
+      {
+        "expression": "x_m - mean(x_m)",
+        "name": "dx"
+      },
+      {
+        "expression": "force_N - mean(force_N)",
+        "name": "dF"
+      }
+    ],
+    "outputs": [
+      {
+        "expression": "sum(isfinite(x_m))",
+        "name": "n"
+      },
+      {
+        "expression": "sum(dx*dF)/sum(dx*dx)",
+        "name": "slope_N_per_m"
+      }
+    ]
+  },
+  "call_id": "call_01_mI4XODMnMtqRVK3SozKz4850",
+  "seconds": 0.0021997918374836445,
+  "registered_paths": [],
+  "result": {
+    "status": "executed",
+    "dataset": "measurements",
+    "sha256": "5e40502610e3904c627ab6b4cda5b65f4cf9185ed5190459d6b909313619504e",
+    "total_rows": 123,
+    "selected_rows": 25,
+    "selection": {
+      "column": "spring_id",
+      "value": "S007"
+    },
+    "outputs": {
+      "n": {
+        "shape": [],
+        "value": 25,
+        "nonfinite_count": 0
+      },
+      "slope_N_per_m": {
+        "shape": [],
+        "value": 6.959797525722684,
+        "nonfinite_count": 0
+      }
+    },
+    "scope": "Executed researcher-authored expressions on registered measurements; not validation of causal interpretation."
+  },
+  "policy_fingerprint": "c05e68c657d34f6673d55715947f6115a1c5cb4fcfd1f899cf2f83a48dc104e5"
+}

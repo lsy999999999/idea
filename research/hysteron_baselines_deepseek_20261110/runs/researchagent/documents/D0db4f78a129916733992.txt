@@ -1,0 +1,103 @@
+{
+  "name": "analyze_csv",
+  "args": {
+    "dataset": "measurements",
+    "group_column": "spring_id",
+    "group_value": "S046",
+    "variables": [
+      {
+        "name": "xm",
+        "expression": "mean(x_m)"
+      },
+      {
+        "name": "fm",
+        "expression": "mean(force_N)"
+      },
+      {
+        "name": "xc",
+        "expression": "x_m - xm"
+      },
+      {
+        "name": "fc",
+        "expression": "force_N - fm"
+      },
+      {
+        "name": "slope",
+        "expression": "sum(xc*fc)/sum(xc*xc)"
+      },
+      {
+        "name": "icpt",
+        "expression": "fm - slope*xm"
+      },
+      {
+        "name": "res",
+        "expression": "force_N - (slope*x_m + icpt)"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "slope_N_per_cm",
+        "expression": "slope*100"
+      },
+      {
+        "name": "intercept_N",
+        "expression": "icpt"
+      },
+      {
+        "name": "max_abs_resid_N",
+        "expression": "max(abs(res))"
+      },
+      {
+        "name": "rms_resid_N",
+        "expression": "sqrt(mean(res*res))"
+      },
+      {
+        "name": "n_rows",
+        "expression": "sum(isfinite(force_N))"
+      }
+    ]
+  },
+  "call_id": "call_00_Uk6EQuEJhQwV9EJdxzpJ3610",
+  "seconds": 0.0011654999107122421,
+  "registered_paths": [],
+  "result": {
+    "status": "executed",
+    "dataset": "measurements",
+    "sha256": "5e40502610e3904c627ab6b4cda5b65f4cf9185ed5190459d6b909313619504e",
+    "total_rows": 123,
+    "selected_rows": 29,
+    "selection": {
+      "column": "spring_id",
+      "value": "S046"
+    },
+    "outputs": {
+      "slope_N_per_cm": {
+        "shape": [],
+        "value": 4585.3293502916395,
+        "nonfinite_count": 0
+      },
+      "intercept_N": {
+        "shape": [],
+        "value": -1.7855388280120703,
+        "nonfinite_count": 0
+      },
+      "max_abs_resid_N": {
+        "shape": [],
+        "value": 0.057778253234850974,
+        "nonfinite_count": 0
+      },
+      "rms_resid_N": {
+        "shape": [],
+        "value": 0.0334566611711853,
+        "nonfinite_count": 0
+      },
+      "n_rows": {
+        "shape": [],
+        "value": 29,
+        "nonfinite_count": 0
+      }
+    },
+    "scope": "Executed researcher-authored expressions on registered measurements; not validation of causal interpretation."
+  },
+  "policy_fingerprint": "1e4f5dcbb6b1c6873b226ff66dc837a3f5d0ea528bce61489f59a4cc965b7607"
+}

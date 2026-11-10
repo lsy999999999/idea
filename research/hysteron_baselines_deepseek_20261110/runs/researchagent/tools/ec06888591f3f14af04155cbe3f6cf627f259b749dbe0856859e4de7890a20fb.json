@@ -1,0 +1,113 @@
+{
+  "name": "analyze_csv",
+  "args": {
+    "dataset": "measurements",
+    "group_column": "spring_id",
+    "group_value": "S046",
+    "variables": [
+      {
+        "name": "x",
+        "expression": "x_m"
+      },
+      {
+        "name": "f",
+        "expression": "force_N"
+      },
+      {
+        "name": "dx",
+        "expression": "diff(x_m)"
+      },
+      {
+        "name": "df",
+        "expression": "diff(force_N)"
+      },
+      {
+        "name": "s",
+        "expression": "df/dx"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "n_rows",
+        "expression": "sum(where(isfinite(x),1,0))"
+      },
+      {
+        "name": "slope_all",
+        "expression": "sum(s*where(isfinite(s),1,0))/sum(where(isfinite(s),1,0))"
+      },
+      {
+        "name": "slope_loading",
+        "expression": "sum(where(dx>0,s,0))/sum(where(dx>0,1,0))"
+      },
+      {
+        "name": "slope_unloading",
+        "expression": "sum(where(dx<0,s,0))/sum(where(dx<0,1,0))"
+      },
+      {
+        "name": "max_step_at_equal_x",
+        "expression": "max(where(abs(dx)<1e-12,abs(df),0))"
+      },
+      {
+        "name": "xmin",
+        "expression": "min(x_m)"
+      },
+      {
+        "name": "xmax",
+        "expression": "max(x_m)"
+      }
+    ]
+  },
+  "call_id": "call_00_I4dJgXI7vin6y6piJEd51984",
+  "seconds": 0.004266750067472458,
+  "registered_paths": [],
+  "result": {
+    "status": "executed",
+    "dataset": "measurements",
+    "sha256": "5e40502610e3904c627ab6b4cda5b65f4cf9185ed5190459d6b909313619504e",
+    "total_rows": 123,
+    "selected_rows": 29,
+    "selection": {
+      "column": "spring_id",
+      "value": "S046"
+    },
+    "outputs": {
+      "n_rows": {
+        "shape": [],
+        "value": 29,
+        "nonfinite_count": 0
+      },
+      "slope_all": {
+        "shape": [],
+        "value": 46.12101785714287,
+        "nonfinite_count": 0
+      },
+      "slope_loading": {
+        "shape": [],
+        "value": 45.996678571428575,
+        "nonfinite_count": 0
+      },
+      "slope_unloading": {
+        "shape": [],
+        "value": 46.24535714285715,
+        "nonfinite_count": 0
+      },
+      "max_step_at_equal_x": {
+        "shape": [],
+        "value": 0.0,
+        "nonfinite_count": 0
+      },
+      "xmin": {
+        "shape": [],
+        "value": 0.05791,
+        "nonfinite_count": 0
+      },
+      "xmax": {
+        "shape": [],
+        "value": 0.32591,
+        "nonfinite_count": 0
+      }
+    },
+    "scope": "Executed researcher-authored expressions on registered measurements; not validation of causal interpretation."
+  },
+  "policy_fingerprint": "1e4f5dcbb6b1c6873b226ff66dc837a3f5d0ea528bce61489f59a4cc965b7607"
+}

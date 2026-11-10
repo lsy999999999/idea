@@ -1,0 +1,898 @@
+{
+  "request_stage": "04_targeted_1_request_0",
+  "development_context": {
+    "action": "learn",
+    "expected_change": "把『幅度/间隙』从记忆判据降为 Preisach—scrambled 判据，把『符号结构与 Δα=Δβ 对称性』提升为记忆判据；并把 network_C 的唯一异常从『需要第三态』改写为『需要一条上下不对称/非互易的边』。",
+    "focus": {
+      "quote": "嵌套要求存在与状态无关的释放次序",
+      "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/03_exchange_0/api_v2/workspace/result.json"
+    },
+    "gap": "这句话把『与状态无关的释放次序』当作 RPM 的判据；我不知道它对应哪一层（Preisach 排序 / l-RPM / RPM），也不知道本装置『上下阈值等量平移』这一形态在符号不同时究竟已构成保护还是威胁。缺的具体连接是：等量平移（Δα=Δβ）是否等价于 Ising 铁磁/反铁磁耦合，以及 l-RPM 的破坏需要幅度还是只需要符号。",
+    "outcome": {
+      "kind": "relation",
+      "remaining_gap": "『铁磁保持 l-RPM』只读到引用句，混合符号与非互易情形（含单侧钢丝边）是否有判据未知；本轮两次检索未命中。反转值、各边平行/交叉、network_C 自身阈值表都缺，因此 Δα_3≠Δβ_3 只能预言不能检验。",
+      "statement": "得到两条条件性关系：(1) 本装置的三坐标形态中等量平移（Δα=Δβ=2b）等价于 Ising 型局域场，b<0 为铁磁型、b>0 为反铁磁型；据已发表『铁磁型保持 l-RPM』，符号单一为负时记忆类别不随 |b|/间隙改变，幅度只决定是否出现雪崩/脱离 Preisach 类（获得 scrambling 的强度正比于切换场之差）。读表：pair_A 四个 L 全为铁磁型、移位/间隙 0/0.11/0.23/2.0；pair_B 全为反铁磁型。(2) network_C 的 s3 异常在固定 (s1,s2)=(−1,−1) 下由 s4 引起，Δβ_3≥+1.8 且符号与 pair_A 相反；与对 σ1+σ2 的铁磁型依赖相容 ⇒ 符号混合网络，落在已发表指认可破坏 l-RPM 的类里，不需要第三态，也不需要非可加求和；但记录无振幅子循环，仍不能判定。"
+    },
+    "reason": "若等量平移就是局域场，那已发表关于铁磁型保持 l-RPM 的结果会把我的三坐标形态直接变成一个记忆类别判据，并反转我上一版『等量平移不构成 RPM 保护条件』的断言；这会把我一直用的设计坐标（幅度对间隙）降级为 scrambling 判据。",
+    "required_service_uptake": [],
+    "uptake": [
+      {
+        "consequence": "条件性：报告装置的记忆稳健性时，必须分别报告『是否为 Preisach 图』与『是否 l-RPM / RPM』，而这两件事在本装置上由不同量（排序一致性+雪崩 vs 符号结构）决定。",
+        "effect": "revise",
+        "quote": "嵌套要求存在与状态无关的释放次序",
+        "reason": "已发表把这一条定义为 Preisach 图判据（还要求无雪崩），而把『嵌套』本身定义为 l-RPM（拓扑），并指出普通 RPM 更强、依赖切换场数值的相对次序。于是 peer 的三个概念被压成一个，我不能把它当作记忆判据直接使用。",
+        "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/03_exchange_0/api_v2/workspace/result.json"
+      },
+      {
+        "consequence": "条件性：交叉的独立 hysteron 对（α 序与 β 序相反、无单一状态无关排序）仍精确满足 RPM ⇒ 『次序不变性』不能当作 RPM 的必要条件；反之符号混合可能破坏 l-RPM 而不必打乱排序。",
+        "effect": "revise",
+        "quote": "the nesting feature is a topological property of the transitions between hysteron states, which is referred to as loop RPM",
+        "reason": "这一句把『拓扑性质』明确归给 loop RPM，与普通 RPM 分开；它也把『上升与下降同序』写成一个排序选择，而不是 RPM 的必要条件。所以我先前『RPM 是整张转移图的嵌套拓扑性质』的记忆需要更正为 l-RPM。",
+        "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/learning_lab/library/29f64daec76492b02eb411ed9602e6f0b9f174d4eab0f9772c0233d8d026503c.json"
+      },
+      {
+        "consequence": "条件性：若该边只受拉，则转子3的上/下移位应不等（Δα_3≠Δβ_3），而 pair_A/pair_B 的纯局域场给 Δα=Δβ——这给出一条用现有夹紧协议即可判别的差异。",
+        "effect": "extend",
+        "quote": "A spring pair between rotors 1 and 3 is extended with steel wire.",
+        "reason": "这条只谈装配的事实把『缺失事件』的机制候选从第三态/非可加求和扩展到耦合边本身的单侧力学（钢丝只受拉），并且它正好落在被测到符号异常的那个转子上。",
+        "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/allowed/measurements_brief.json"
+      }
+    ]
+  },
+  "request": {
+    "case_questions": [
+      "每个耦合对的弹簧布置（平行/交叉）与每个往复周期的驱动反转值是否被记录？若未记录请直接说明。"
+    ],
+    "context_ref": "development_step",
+    "gap": "混合符号与非互易（b_ij≠b_ji，或 Δα≠Δβ）的 hysteron 网络上，l-RPM 是否存在的判据是什么？已发表只给出『铁磁型保持 l-RPM』与『反铁磁型可破坏』，我把它用作本装置的记忆判据，但不知道（a）该结论的证明是否覆盖含雪崩的网络，（b）混合符号时是否存在可判的充分条件（例如存在状态变量重标定使所有边同号），（c）一条只能受拉的耦合边（钢丝）是否等价于非互易从而落在定理之外。缺这三条，『符号而非幅度决定记忆类别』就只是对单符号情形的借用。",
+    "needed": true,
+    "operations": [],
+    "queries": [
+      "ferromagnetic interactions preserve loop return point memory hysteron network proof",
+      "non-reciprocal coupling hysteresis return point memory scrambled criterion"
+    ],
+    "record_ids": [],
+    "search_terms": [
+      "ferromagnetic interactions preserve loop return point memory hysteron network proof",
+      "nonreciprocal hysteron network scrambled transition graph return point memory criterion",
+      "unilateral tension-only coupling hysteresis effective nonreciprocal switching field",
+      "moving Preisach model return point memory wiping out"
+    ],
+    "source_ids": [],
+    "urls": [],
+    "why_now": "本轮把等量平移读成 Ising 局域场之后，记忆判据被压缩成符号结构；这使得判据的适用范围从『有个说法』变成必须精确的东西——因为下一步要判 network_C（符号混合、有一条钢丝边）到底在不在保护类内。"
+  },
+  "routing": {
+    "knowledge_requested": true,
+    "routes": []
+  },
+  "knowledge_attempts": [
+    {
+      "request": {
+        "case_questions": [
+          "每个耦合对的弹簧布置（平行/交叉）与每个往复周期的驱动反转值是否被记录？若未记录请直接说明。"
+        ],
+        "context_ref": "development_step",
+        "gap": "混合符号与非互易（b_ij≠b_ji，或 Δα≠Δβ）的 hysteron 网络上，l-RPM 是否存在的判据是什么？已发表只给出『铁磁型保持 l-RPM』与『反铁磁型可破坏』，我把它用作本装置的记忆判据，但不知道（a）该结论的证明是否覆盖含雪崩的网络，（b）混合符号时是否存在可判的充分条件（例如存在状态变量重标定使所有边同号），（c）一条只能受拉的耦合边（钢丝）是否等价于非互易从而落在定理之外。缺这三条，『符号而非幅度决定记忆类别』就只是对单符号情形的借用。",
+        "needed": true,
+        "operations": [],
+        "queries": [
+          "ferromagnetic interactions preserve loop return point memory hysteron network proof",
+          "non-reciprocal coupling hysteresis return point memory scrambled criterion"
+        ],
+        "record_ids": [],
+        "search_terms": [
+          "ferromagnetic interactions preserve loop return point memory hysteron network proof",
+          "nonreciprocal hysteron network scrambled transition graph return point memory criterion",
+          "unilateral tension-only coupling hysteresis effective nonreciprocal switching field",
+          "moving Preisach model return point memory wiping out"
+        ],
+        "source_ids": [],
+        "urls": [],
+        "why_now": "本轮把等量平移读成 Ising 局域场之后，记忆判据被压缩成符号结构；这使得判据的适用范围从『有个说法』变成必须精确的东西——因为下一步要判 network_C（符号混合、有一条钢丝边）到底在不在保护类内。"
+      },
+      "sources": [
+        {
+          "title": "Hysteron Proteron  in Questions and Answers",
+          "date": "2007-02-22",
+          "publication_dates": [
+            "2007-02-22",
+            "2007-02-22"
+          ],
+          "doi": "https://doi.org/10.1093/acprof:oso/9780199280124.003.04",
+          "url": "https://doi.org/10.1093/acprof:oso/9780199280124.003.04",
+          "text": "Abstract \n                This chapter studies a phenomenon first observed by Samuel Bassett in questions and answers in the Homeric epics: the poet's preference for spelling out a twofold instruction, proposal, or question, and in a subsequent passage reversing the original order of presentation. It discusses the ‘device’ in the context of the Odyssey. There are two findings: first, that this practice of answering questions in an order that reverses the order of asking is motivated both by cognitive factors and, following Schegloff and Sacks, social factors; and, second, that, since hysteron proteron is a feature of oral discourse more generally, oral poets in this tradition observed an everyday practice, and mimicked it in stylized form in their songs.",
+          "access": "indexed_abstract_only",
+          "date_evidence": "Crossref published date-parts; incomplete date uses latest possible day",
+          "id": "Ke097673d6687fdd8",
+          "retrieved_at": "2026-11-10T08:02:58.915980+00:00",
+          "query": "ferromagnetic interactions preserve loop return point memory hysteron network proof"
+        },
+        {
+          "title": "Energy-efficient computing with integrated ferroelectrics for embedded and edge devices",
+          "date": "2023-07-05",
+          "publication_dates": [
+            "2023-07-05"
+          ],
+          "doi": "https://doi.org/10.70675/1b4f212fz5b5az4a9fz9274zcfbec0252ff3",
+          "url": "https://doi.org/10.70675/1b4f212fz5b5az4a9fz9274zcfbec0252ff3",
+          "text": "Calcul éco-énergétique avec matériaux ferroélectriques intégrés pour les systèmes embarqués et à la périphérie de réseau L’inclusion de matériaux ferroélectriques dans les circuits intégrés suscite de plus en plus d’intérêt, notamment grâce à l’introduction d’oxydes de hafnium dopés au zirconium, compatibles avec les matériaux semi-conducteurs et les procédés de fabrication les plus modernes.Leurs propriétés ferroélectriques, combinées aux technologies CMOS conventionnelles, permettent de créer de nouvelles architectures de circuits innovantes. Le rapprochement physique de mémoires non volatiles aux éléments de calcul ouvre de nombreuses possibilités d’amélioration de l’efficacité énergétique en réduisant les transferts de données, en diminuant la consommation d’énergie statique et en permettant l'utilisation de paradigmes de calcul normalement éteint (normally-off computing).Dans cette thèse, les matériaux ferroélectriques sont abordés du point de vue de la conception de circuits, offrant une explication élémentaire de leurs propriétés et des approches utilisées pour leur modélisation. Plusieurs architectures de circuits utilisant des matériaux ferroélectriques sont également présentées, utilisant des technologies de dépôt en bout de ligne (Back-End of Line), ainsi que de transistors à effet de champ ferroélectrique (FeFET), avec les résultats de caractérisation électrique obtenus, le cas échéant. Enfin, des techniques d’exploration de l’espace de conception (DSE) et un outil interne d’évaluation des performances au niveau système sont combinés pour extraire des chiffres de performance projetés, afin de permettre une comparaison avec des technologies plus matures, tant au niveau du circuit que du système.Les résultats obtenus correspondent à la conception de nouveaux circuits, dont certains ont été fabriqués en 130 nm et 28 nm, aux résultats des simulations DSE pour des paramètres tels que la fenêtre de mémoire et la consommation d’énergie, ainsi qu’à de multiples outils logiciels créés au long du projet.",
+          "access": "indexed_abstract_only",
+          "date_evidence": "OpenAlex publication_date",
+          "id": "K6c53f576da1d6921",
+          "retrieved_at": "2026-11-10T08:03:00.256678+00:00",
+          "query": "ferromagnetic interactions preserve loop return point memory hysteron network proof"
+        },
+        {
+          "title": "Construction of a superconducting circuit simulator and its applications in cryogenic computing",
+          "date": "2019-01-01",
+          "publication_dates": [
+            "2019-01-01"
+          ],
+          "doi": "https://openalex.org/W3137812544",
+          "url": "https://openalex.org/W3137812544",
+          "text": "In this work, I first construct a unified simulation platform, where superconducting electronics can be designed and optimized with high performance and accuracy.For this purpose, I first select numerical simulation methods that can deal with the highly non-linear characteristics of the superconducting devices.I validate the simulated responses with experimental data on device and circuit level examples.Following the implementation of the simulator, I use this framework to analyze existing superconducting nanowire based technologies, and optimize them for wider operation regimes and higher performance metrics.I use nanofabrication processes to realize these devices and conduct liquid helium immersion measurements to characterize them experimentally.Optimized devices show superior characteristics that demonstrate the predictive capabilities of this simulator.Finally, I use this simulator to design a superconducting nanowire based deep neural network training accelerator.I design, implement, and characterize a unit cell for this application.These local processors have significant device-level advantages over the readily available non-volatile memory technologies in realizing mixed-signal architectures.The devices produced throughout this work have immediate and near-term applications, proving the merit of having a high-performance simulator.",
+          "access": "indexed_abstract_only",
+          "date_evidence": "OpenAlex publication_date",
+          "id": "Kee4f892091e18fd9",
+          "retrieved_at": "2026-11-10T08:03:17.984550+00:00",
+          "query": "non-reciprocal coupling hysteresis return point memory scrambled criterion"
+        },
+        {
+          "title": "Synthetic Physiology: Manipulating and Measuring Biological Pattern Formation With Light",
+          "date": "2019-09-12",
+          "publication_dates": [
+            "2019-09-12"
+          ],
+          "doi": "https://openalex.org/W3109038586",
+          "url": "https://openalex.org/W3109038586",
+          "text": "Multicellular tissues and organisms execute complex physiological functions through precise spatiotemporal coordination of their constituent cells. Cells achieve this coordination through long-range intercellular communication pathways – for example, electrical signaling synchronizes the beating heart, and biochemical morphogen signals organize the developing embryo. It is an outstanding challenge in quantitative biology to develop mathematical models (borrowing from e.g. control theory or statistical physics) that explain how robust pattern formation emerges from these long-range interactions. It is generally challenging to connect theoretical models to experimental demonstrations due to the difficulty of manipulating and measuring physiological dynamics in complex tissues.\\nThe emergence of optogenetic tools has opened new opportunities in experimental biology. By placing signaling pathways under the control of light, one can leverage methods from optical physics in order to pattern biological signals with precise agility in space and time. By combining these tools with complementary optical methods for mapping resultant patterns with high spatial resolution, one can create high-dimensional biological interfaces in order to study pattern formation. Optogenetic tools have achieved widespread adoption in the study of the brain, but they have only begun to be extended to study biological pattern formation in other contexts like the developing embryo.\\nThe first portion of this thesis presents ‘synthetic electrophysiology’, a new framework for studying bioelectrical pattern formation. By deploying all-optical electrophysiology in engineered tissues with designed electrical components, we study electrical tissues as dynamical systems. In tissues comprised of synthetic excitable cells, we show that geometry is a fundamental determinant of stability and chaos in biological pacemakers, and we show that excitable cells can be composed into bioelectric circuits capable of primitive information processing and memory. We also show that electrically bistable tissues can form reaction-diffusion patterns of electrical domains which undergo phase transitions via spontaneous symmetry breaking. These previously unobserved classes of stable electrical patterns suggest a potential role for electrophysiology during embryonic development. This strategy of ‘bioelectrical engineering’ can articulate subtle aspects of electrophysiological patterning that may be obscured by the complexity of the embryo \\\\textit{in vivo}. \\nThe latter portion of this thesis describes progress towards developing tools for optical manipulation and measurement of spatial patterns of gene expression. The ability to spatially pattern morphogen signals in the embryo, and to map the complete transcriptional response of a system to a given signal, could enable the pressure-testing of mutually consistent morphogen models which classical methods cannot disambiguate. First, we describe a new optogenetic platform for patterning the Nodal morphogen signal in the zebrafish embryo. By fusing the Nodal receptors acvr1b/acvr2b to the photoassociating domain pair CRY2/CIB1, we convert blue photons into Nodal morphogens. Deploying these reagents in a platform for patterning illumination in dozens of embryos in parallel enables us to systematically study the spatiotemporal requirements of Nodal signaling. We next discuss a new platform for using photochemical patterning of DNA barcodes to layer spatial information onto droplet microfluidics-based single cell RNA sequencing (scRNAseq) methods. By attaching these DNA ‘zipcodes’ as barcoded features on the cell surface, we can introduce spatial information onto scRNAseq while retaining the single-cell discretization and full-transcriptome depth of droplet methods. Combining optogenetic morphogen patterning with spatially resolved transcriptomics may enable more powerful studies of how the embryo processes morphogen patterns as dynamical signals.\\nWe conclude by discussing future prospects for this strategy of ‘synthetic physiology’ to unveil quantitative physical principles which underlie the robustness and reliability of biological patterning.",
+          "access": "indexed_abstract_only",
+          "date_evidence": "OpenAlex publication_date",
+          "id": "K58abbae4e2bc10b8",
+          "retrieved_at": "2026-11-10T08:03:17.993854+00:00",
+          "query": "non-reciprocal coupling hysteresis return point memory scrambled criterion"
+        }
+      ],
+      "attempts": [
+        {
+          "query": "ferromagnetic interactions preserve loop return point memory hysteron network proof",
+          "provider": "europepmc",
+          "status": "completed",
+          "candidates": 0
+        },
+        {
+          "query": "ferromagnetic interactions preserve loop return point memory hysteron network proof",
+          "provider": "crossref",
+          "candidate": 0,
+          "status": "no_readable_content"
+        },
+        {
+          "query": "ferromagnetic interactions preserve loop return point memory hysteron network proof",
+          "provider": "crossref",
+          "status": "completed",
+          "candidates": 2
+        },
+        {
+          "query": "ferromagnetic interactions preserve loop return point memory hysteron network proof",
+          "provider": "openalex",
+          "status": "completed",
+          "candidates": 1
+        },
+        {
+          "query": "non-reciprocal coupling hysteresis return point memory scrambled criterion",
+          "provider": "europepmc",
+          "candidate": 0,
+          "status": "full_text_unavailable",
+          "error_type": "HTTPError"
+        },
+        {
+          "query": "non-reciprocal coupling hysteresis return point memory scrambled criterion",
+          "provider": "europepmc",
+          "candidate": 0,
+          "status": "no_readable_content"
+        },
+        {
+          "query": "non-reciprocal coupling hysteresis return point memory scrambled criterion",
+          "provider": "europepmc",
+          "candidate": 1,
+          "status": "full_text_unavailable",
+          "error_type": "HTTPError"
+        },
+        {
+          "query": "non-reciprocal coupling hysteresis return point memory scrambled criterion",
+          "provider": "europepmc",
+          "candidate": 1,
+          "status": "no_readable_content"
+        },
+        {
+          "query": "non-reciprocal coupling hysteresis return point memory scrambled criterion",
+          "provider": "europepmc",
+          "status": "completed",
+          "candidates": 2
+        },
+        {
+          "query": "non-reciprocal coupling hysteresis return point memory scrambled criterion",
+          "provider": "crossref",
+          "candidate": 0,
+          "status": "no_readable_content"
+        },
+        {
+          "query": "non-reciprocal coupling hysteresis return point memory scrambled criterion",
+          "provider": "crossref",
+          "candidate": 1,
+          "status": "no_readable_content"
+        },
+        {
+          "query": "non-reciprocal coupling hysteresis return point memory scrambled criterion",
+          "provider": "crossref",
+          "status": "completed",
+          "candidates": 2
+        },
+        {
+          "query": "non-reciprocal coupling hysteresis return point memory scrambled criterion",
+          "provider": "openalex",
+          "status": "completed",
+          "candidates": 2
+        }
+      ],
+      "status": "read_content_returned",
+      "remaining_gap": "",
+      "date_boundary": "2024-09-12",
+      "date_boundary_exclusive": true,
+      "policy_fingerprint": "c05e68c657d34f6673d55715947f6115a1c5cb4fcfd1f899cf2f83a48dc104e5"
+    },
+    {
+      "request": {
+        "case_questions": [
+          "每个耦合对的弹簧布置（平行/交叉）与每个往复周期的驱动反转值是否被记录？若未记录请直接说明。"
+        ],
+        "context_ref": "development_step",
+        "gap": "混合符号与非互易（b_ij≠b_ji，或 Δα≠Δβ）的 hysteron 网络上，l-RPM 是否存在的判据是什么？已发表只给出『铁磁型保持 l-RPM』与『反铁磁型可破坏』，我把它用作本装置的记忆判据，但不知道（a）该结论的证明是否覆盖含雪崩的网络，（b）混合符号时是否存在可判的充分条件（例如存在状态变量重标定使所有边同号），（c）一条只能受拉的耦合边（钢丝）是否等价于非互易从而落在定理之外。缺这三条，『符号而非幅度决定记忆类别』就只是对单符号情形的借用。",
+        "needed": true,
+        "operations": [],
+        "queries": [
+          "return point memory random field Ising model",
+          "nonreciprocal Ising hysteresis return point memory"
+        ],
+        "record_ids": [],
+        "search_terms": [
+          "ferromagnetic interactions preserve loop return point memory hysteron network proof",
+          "nonreciprocal hysteron network scrambled transition graph return point memory criterion",
+          "unilateral tension-only coupling hysteresis effective nonreciprocal switching field",
+          "moving Preisach model return point memory wiping out"
+        ],
+        "source_ids": [],
+        "urls": [],
+        "why_now": "本轮把等量平移读成 Ising 局域场之后，记忆判据被压缩成符号结构；这使得判据的适用范围从『有个说法』变成必须精确的东西——因为下一步要判 network_C（符号混合、有一条钢丝边）到底在不在保护类内。"
+      },
+      "sources": [
+        {
+          "title": "Zero-temperature hysteresis in the random-field Ising model on a Bethe lattice",
+          "date": "1997-08-07",
+          "publication_dates": [
+            "1997-08-07"
+          ],
+          "doi": "https://doi.org/10.1088/0305-4470/30/15/013",
+          "url": "https://doi.org/10.1088/0305-4470/30/15/013",
+          "text": "We consider the single-spin-flip dynamics of the random-field Ising model on a Bethe lattice at zero temperature in the presence of a uniform external field. We determine the average magnetization as the external field is varied from to by setting up the self-consistent field equations, which we show are exact in this case. The qualitative behaviour of magnetization as a function of the external field unexpectedly depends on the coordination number z of the Bethe lattice. For z = 3, with a Gaussian distribution of the quenched random fields, we find no jump in magnetization for any non-zero strength of disorder. For , for weak disorder the magnetization shows a jump discontinuity as a function of the external uniform field, which disappears for a larger variance of the quenched field. We determine exactly the critical point separating smooth hysteresis curves from those with a jump. We have checked our results by Monte Carlo simulations of the model on three- and four-coordinated random graphs, which for large system sizes give the same results as on the Bethe lattice, but avoid surface effects altogether.",
+          "access": "indexed_abstract_only",
+          "date_evidence": "OpenAlex publication_date",
+          "id": "K0f3c1342d77e97e4",
+          "retrieved_at": "2026-11-10T08:03:39.616656+00:00",
+          "query": "return point memory random field Ising model"
+        },
+        {
+          "title": "Heisenberg pseudo-exchange and emergent anisotropies in field-driven pinwheel artificial spin ice",
+          "date": "2019-11-07",
+          "publication_dates": [
+            "2019-11-07"
+          ],
+          "doi": "https://doi.org/10.1103/physrevb.100.174410",
+          "url": "https://doi.org/10.1103/physrevb.100.174410",
+          "text": "Rotating all islands in square artificial spin ice (ASI) uniformly about their centers gives rise to the recently reported pinwheel ASI. At angles around ${45}^{\\ensuremath{\\circ}}$, the antiferromagnetic ordering changes to ferromagnetic and the magnetic configurations of the system exhibit near degeneracy, making it particularly sensitive to small perturbations. We investigate through micromagnetic modeling the influence of dipolar fields produced by physically extended islands in field-driven magnetization processes in pinwheel arrays and compare the results to hysteresis experiments performed in situ using Lorentz transmission electron microscopy. We find that magnetization end states induce a Heisenberg pseudoexchange interaction that governs both the interisland coupling and the resultant array reversal process. Symmetry reduction gives rise to anisotropies and array-corner mediated avalanche reversals through a cascade of nearest-neighbor (NN) islands. The symmetries of the anisotropy axes are related to those of the geometrical array but are misaligned to the array axes as a result of the correlated interactions between neighboring islands. The NN dipolar coupling is reduced by decreasing the island size and, using this property, we track the transition from the strongly coupled regime towards the pure point dipole one and observe modification of the ferromagnetic array reversal process. Our results shed light on important aspects of the interactions in pinwheel ASI and demonstrate a mechanism by which their properties may be tuned for use in a range of fundamental research and spintronic applications.",
+          "access": "indexed_abstract_only",
+          "date_evidence": "OpenAlex publication_date",
+          "id": "Ka10e861eb16d139b",
+          "retrieved_at": "2026-11-10T08:03:48.711446+00:00",
+          "query": "nonreciprocal Ising hysteresis return point memory"
+        },
+        {
+          "title": "Reversible to irreversible transitions in periodic driven many-body systems and future directions for classical and quantum systems",
+          "date": "2023-05-11",
+          "publication_dates": [
+            "2023-05-11"
+          ],
+          "doi": "https://doi.org/10.1103/physrevresearch.5.021001",
+          "url": "https://doi.org/10.1103/physrevresearch.5.021001",
+          "text": "Reversible to irreversible (R-IR) transitions have been found in a wide variety of both soft and hard matter periodically driven collectively interacting systems that, after a certain number of driving cycles, organize into either a reversible state where the particle trajectories repeat during every or every few cycles or into a chaotic motion state. An overview of R-IR transitions including recent advances in the field is followed by a discussion of how the general framework of R-IR transitions could be applied to a much broader class of nonequilibrium systems in which periodic driving occurs, including not only soft and hard condensed matter systems, but also astrophysics, biological systems, and social systems.",
+          "access": "indexed_abstract_only",
+          "date_evidence": "OpenAlex publication_date",
+          "id": "K4f6d13b58c610846",
+          "retrieved_at": "2026-11-10T08:03:48.723933+00:00",
+          "query": "nonreciprocal Ising hysteresis return point memory"
+        }
+      ],
+      "attempts": [
+        {
+          "query": "return point memory random field Ising model",
+          "provider": "europepmc",
+          "status": "retrieval_failed",
+          "error_type": "ReadTimeout"
+        },
+        {
+          "query": "return point memory random field Ising model",
+          "provider": "crossref",
+          "status": "retrieval_failed",
+          "error_type": "SSLError"
+        },
+        {
+          "query": "return point memory random field Ising model",
+          "provider": "openalex",
+          "candidate": 0,
+          "status": "no_readable_content"
+        },
+        {
+          "query": "return point memory random field Ising model",
+          "provider": "openalex",
+          "status": "completed",
+          "candidates": 2
+        },
+        {
+          "query": "nonreciprocal Ising hysteresis return point memory",
+          "provider": "europepmc",
+          "status": "completed",
+          "candidates": 0
+        },
+        {
+          "query": "nonreciprocal Ising hysteresis return point memory",
+          "provider": "crossref",
+          "candidate": 0,
+          "status": "no_readable_content"
+        },
+        {
+          "query": "nonreciprocal Ising hysteresis return point memory",
+          "provider": "crossref",
+          "candidate": 1,
+          "status": "no_readable_content"
+        },
+        {
+          "query": "nonreciprocal Ising hysteresis return point memory",
+          "provider": "crossref",
+          "status": "completed",
+          "candidates": 2
+        },
+        {
+          "query": "nonreciprocal Ising hysteresis return point memory",
+          "provider": "openalex",
+          "status": "completed",
+          "candidates": 2
+        }
+      ],
+      "status": "read_content_returned",
+      "remaining_gap": "",
+      "date_boundary": "2024-09-12",
+      "date_boundary_exclusive": true,
+      "policy_fingerprint": "c05e68c657d34f6673d55715947f6115a1c5cb4fcfd1f899cf2f83a48dc104e5"
+    },
+    {
+      "request": {
+        "case_questions": [
+          "每个耦合对的弹簧布置（平行/交叉）与每个往复周期的驱动反转值是否被记录？若未记录请直接说明。"
+        ],
+        "context_ref": "development_step",
+        "gap": "混合符号与非互易（b_ij≠b_ji，或 Δα≠Δβ）的 hysteron 网络上，l-RPM 是否存在的判据是什么？已发表只给出『铁磁型保持 l-RPM』与『反铁磁型可破坏』，我把它用作本装置的记忆判据，但不知道（a）该结论的证明是否覆盖含雪崩的网络，（b）混合符号时是否存在可判的充分条件（例如存在状态变量重标定使所有边同号），（c）一条只能受拉的耦合边（钢丝）是否等价于非互易从而落在定理之外。缺这三条，『符号而非幅度决定记忆类别』就只是对单符号情形的借用。",
+        "needed": true,
+        "operations": [],
+        "queries": [
+          "Preisach model return point memory",
+          "nonreciprocal Preisach model"
+        ],
+        "record_ids": [],
+        "search_terms": [
+          "ferromagnetic interactions preserve loop return point memory hysteron network proof",
+          "nonreciprocal hysteron network scrambled transition graph return point memory criterion",
+          "unilateral tension-only coupling hysteresis effective nonreciprocal switching field",
+          "moving Preisach model return point memory wiping out"
+        ],
+        "source_ids": [],
+        "urls": [],
+        "why_now": "本轮把等量平移读成 Ising 局域场之后，记忆判据被压缩成符号结构；这使得判据的适用范围从『有个说法』变成必须精确的东西——因为下一步要判 network_C（符号混合、有一条钢丝边）到底在不在保护类内。"
+      },
+      "sources": [
+        {
+          "title": "Review of Play and Preisach Models for Hysteresis in Magnetic Materials.",
+          "date": "2023-03-17",
+          "publication_dates": [
+            "2023-03-17",
+            "2023-03-17"
+          ],
+          "doi": "https://doi.org/10.3390/ma16062422",
+          "url": "https://doi.org/10.3390/ma16062422",
+          "text": "This paper studies the properties of the Preisach model and the play model, and compare their similarities. Both are history-dependent hysteresis models that are used to model magnetic hysteresis. They are described as discrete sums of simple hysteresis operators but can easily be reformulated as integral equations of continuous distribution functions using either a Preisach weight distribution function or a play distribution function. The models are mostly seen as phenomenological or mathematical tools but can also be related to friction-like pinning of domain-wall motions, where Rayleigh's law of magnetic hysteresis can be seen as the simplest case on either the play model or the Preisach model. They are poor at modeling other domain behavior, such as nucleation-driven hysteresis. Yet another hysteresis model is the stop model, which can be seen as the inverted version of the play model. This type of model has advantages for expressions linked to energy and can be related to Steinmetz equation of hysteresis losses. The models share several mathematical properties, such as the congruency property and wiping-out property, and both models have a history of dependence that can be described by the series of past reversal points. More generally, it is shown that the many models can be expressed as Preisach models, showing that they can be treated as subcategories of the Preisach type models. These include the play model, the stop model and also the alternative KP-hysteron model.",
+          "access": "indexed_abstract_only",
+          "date_evidence": "Europe PMC firstPublicationDate",
+          "id": "K1364a25c430600ea",
+          "retrieved_at": "2026-11-10T07:12:17.599428+00:00",
+          "query": "continuous Preisach model return-point memory"
+        },
+        {
+          "title": "State transition graph of the Preisach model and the role of return-point memory",
+          "date": "2020-07-09",
+          "publication_dates": [
+            "2020-07-09"
+          ],
+          "doi": "https://doi.org/10.1103/physreve.102.012122",
+          "url": "https://doi.org/10.1103/physreve.102.012122",
+          "text": "The Preisach model has been useful as a null model for understanding memory formation in periodically driven disordered systems. In amorphous solids, for example, the athermal response to shear is due to localized plastic events (soft spots). As shown recently by Mungan et al. [Phys. Rev. Lett. 123, 178002 (2019)PRLTAO0031-900710.1103/PhysRevLett.123.178002], the plastic response to applied shear can be rigorously described in terms of a directed network whose transitions correspond to one or more soft spots changing states. The topology of this graph depends on the interactions between soft spots and when such interactions are negligible, the resulting description becomes that of the Preisach model. A first step in linking transition graph topology with the underlying soft-spot interactions is therefore to determine the structure of such graphs in the absence of interactions. Here we perform a detailed analysis of the transition graph of the Preisach model. We highlight the important role played by return-point memory in organizing the graph into a hierarchy of loops and subloops. Our analysis reveals that the topology of a large portion of this graph is actually not governed by the values of the switching fields that describe the hysteretic behavior of the individual elements but by a coarser parameter, a permutation ρ which prescribes the sequence in which the individual hysteretic elements change their states as the main hysteresis loop is traversed. This in turn allows us to derive combinatorial properties, such as the number of major loops in the transition graph as well as the number of states |R| constituting the main hysteresis loop and its nested subloops. We find that |R| is equal to the number of increasing subsequences contained in the permutation ρ.",
+          "access": "indexed_abstract_only",
+          "date_evidence": "OpenAlex publication_date",
+          "id": "Kd215cb6fc530a930",
+          "retrieved_at": "2026-11-10T06:25:00.652209+00:00",
+          "query": "return point memory Preisach hysteresis sufficient condition"
+        },
+        {
+          "title": "Preisach modeling of piezoceramic and shape memory alloy hysteresis",
+          "date": "1997-06-01",
+          "publication_dates": [
+            "1997-06-01"
+          ],
+          "doi": "https://doi.org/10.1088/0964-1726/6/3/007",
+          "url": "https://doi.org/10.1088/0964-1726/6/3/007",
+          "text": "Smart materials such as piezoceramics, magnetostrictive materials, and shape memory alloys exhibit hysteresis, and the larger the input signal the larger the effect. Hysteresis can lead to unwanted harmonics, inaccuracy in open loop control, and instability in closed loop control. The Preisach independent domain hysteresis model has been shown to capture the major features of hysteresis arising in ferromagnetic materials. Noting the similarity between the microscopic domain kinematics that generate static hysteresis effects in ferromagnetics, piezoceramics, and shape memory alloys (SMAs), we apply the Preisach model for the hysteresis in piezoceramic and shape memory alloy materials. This paper reviews the basic properties of the Preisach model, discusses control-theoretic issues such as identification, simulation, and inversion, and presents experimental results for piezoceramic sheet actuators bonded to a flexible aluminum beam, and a Nitinol SMA wire muscle that applies a bending force to the end of a beam.",
+          "access": "indexed_abstract_only",
+          "date_evidence": "OpenAlex publication_date",
+          "id": "Ke85fd9d7c2fe7cbc",
+          "retrieved_at": "2026-11-10T06:25:00.643424+00:00",
+          "query": "return point memory Preisach hysteresis sufficient condition"
+        },
+        {
+          "title": "Extracting Individual Properties from Global Behaviour: First-order Reversal Curve Method Applied to Magnetic Nanowire Arrays",
+          "date": "2010-02-01",
+          "publication_dates": [
+            "2010-02-01"
+          ],
+          "doi": "https://doi.org/10.5772/39475",
+          "url": "https://doi.org/10.5772/39475",
+          "text": "Extracting Individual Properties from Global Behaviour: First-order Reversal Curve Method Applied to Magnetic Nanowire Arrays",
+          "access": "indexed_abstract_only",
+          "date_evidence": "OpenAlex publication_date",
+          "id": "Ka21bf6100e3a12cc",
+          "retrieved_at": "2026-11-10T08:04:36.334907+00:00",
+          "query": "nonreciprocal Preisach model"
+        },
+        {
+          "title": "Passive and active field theories for disease spreading",
+          "date": "2024-05-15",
+          "publication_dates": [
+            "2024-05-15"
+          ],
+          "doi": "https://doi.org/10.1088/1751-8121/ad4c31",
+          "url": "https://doi.org/10.1088/1751-8121/ad4c31",
+          "text": "Abstract The worldwide COVID-19 pandemic has led to a significant growth of interest in the development of mathematical models that allow to describe effects such as social distancing measures, the development of vaccines, and mutations. Several of these models are based on concepts from soft matter theory. Considerably less well investigated is the reverse direction, i.e. how results from epidemiological research can be of interest for the physics of colloids and polymers. In this work, we consider the susceptible-infected-recovered (SIR)-dynamical density functional theory (DDFT) model, a combination of the SIR model from epidemiology with DDFT from nonequilibrium soft matter physics, which allows for an explicit modeling of social distancing. We extend the SIR-DDFT model both from an epidemiological perspective by incorporating vaccines, asymptomaticity, reinfections, and mutations, and from a soft matter perspective by incorporating noise and self-propulsion and by deriving a phase field crystal (PFC) model that allows for a simplified description. On this basis, we investigate via computer simulations how epidemiological models are affected by the presence of non-reciprocal interactions. This is done in a numerical study of a zombie outbreak.",
+          "access": "indexed_abstract_only",
+          "date_evidence": "OpenAlex publication_date",
+          "id": "K76f48790bf6b54ab",
+          "retrieved_at": "2026-11-10T08:04:36.352388+00:00",
+          "query": "nonreciprocal Preisach model"
+        }
+      ],
+      "attempts": [
+        {
+          "query": "Preisach model return point memory",
+          "provider": "europepmc",
+          "candidate": 0,
+          "status": "full_text_unavailable",
+          "error_type": "ValueError"
+        },
+        {
+          "query": "Preisach model return point memory",
+          "provider": "europepmc",
+          "candidate": 0,
+          "status": "no_readable_content"
+        },
+        {
+          "query": "Preisach model return point memory",
+          "provider": "europepmc",
+          "candidate": 1,
+          "status": "full_text_unavailable",
+          "error_type": "ValueError"
+        },
+        {
+          "query": "Preisach model return point memory",
+          "provider": "europepmc",
+          "status": "completed",
+          "candidates": 2
+        },
+        {
+          "query": "Preisach model return point memory",
+          "provider": "crossref",
+          "candidate": 0,
+          "status": "no_readable_content"
+        },
+        {
+          "query": "Preisach model return point memory",
+          "provider": "crossref",
+          "candidate": 1,
+          "status": "no_readable_content"
+        },
+        {
+          "query": "Preisach model return point memory",
+          "provider": "crossref",
+          "status": "completed",
+          "candidates": 2
+        },
+        {
+          "query": "Preisach model return point memory",
+          "provider": "openalex",
+          "status": "completed",
+          "candidates": 2
+        },
+        {
+          "query": "nonreciprocal Preisach model",
+          "provider": "europepmc",
+          "status": "completed",
+          "candidates": 0
+        },
+        {
+          "query": "nonreciprocal Preisach model",
+          "provider": "crossref",
+          "candidate": 0,
+          "status": "no_readable_content"
+        },
+        {
+          "query": "nonreciprocal Preisach model",
+          "provider": "crossref",
+          "candidate": 1,
+          "status": "no_readable_content"
+        },
+        {
+          "query": "nonreciprocal Preisach model",
+          "provider": "crossref",
+          "status": "completed",
+          "candidates": 2
+        },
+        {
+          "query": "nonreciprocal Preisach model",
+          "provider": "openalex",
+          "status": "completed",
+          "candidates": 2
+        }
+      ],
+      "status": "read_content_returned",
+      "remaining_gap": "",
+      "date_boundary": "2024-09-12",
+      "date_boundary_exclusive": true,
+      "policy_fingerprint": "c05e68c657d34f6673d55715947f6115a1c5cb4fcfd1f899cf2f83a48dc104e5"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Hysteron Proteron  in Questions and Answers",
+      "date": "2007-02-22",
+      "publication_dates": [
+        "2007-02-22",
+        "2007-02-22"
+      ],
+      "doi": "https://doi.org/10.1093/acprof:oso/9780199280124.003.04",
+      "url": "https://doi.org/10.1093/acprof:oso/9780199280124.003.04",
+      "text": "Abstract \n                This chapter studies a phenomenon first observed by Samuel Bassett in questions and answers in the Homeric epics: the poet's preference for spelling out a twofold instruction, proposal, or question, and in a subsequent passage reversing the original order of presentation. It discusses the ‘device’ in the context of the Odyssey. There are two findings: first, that this practice of answering questions in an order that reverses the order of asking is motivated both by cognitive factors and, following Schegloff and Sacks, social factors; and, second, that, since hysteron proteron is a feature of oral discourse more generally, oral poets in this tradition observed an everyday practice, and mimicked it in stylized form in their songs.",
+      "access": "indexed_abstract_only",
+      "date_evidence": "Crossref published date-parts; incomplete date uses latest possible day",
+      "id": "Ke097673d6687fdd8",
+      "retrieved_at": "2026-11-10T08:02:58.915980+00:00",
+      "query": "ferromagnetic interactions preserve loop return point memory hysteron network proof"
+    },
+    {
+      "title": "Energy-efficient computing with integrated ferroelectrics for embedded and edge devices",
+      "date": "2023-07-05",
+      "publication_dates": [
+        "2023-07-05"
+      ],
+      "doi": "https://doi.org/10.70675/1b4f212fz5b5az4a9fz9274zcfbec0252ff3",
+      "url": "https://doi.org/10.70675/1b4f212fz5b5az4a9fz9274zcfbec0252ff3",
+      "text": "Calcul éco-énergétique avec matériaux ferroélectriques intégrés pour les systèmes embarqués et à la périphérie de réseau L’inclusion de matériaux ferroélectriques dans les circuits intégrés suscite de plus en plus d’intérêt, notamment grâce à l’introduction d’oxydes de hafnium dopés au zirconium, compatibles avec les matériaux semi-conducteurs et les procédés de fabrication les plus modernes.Leurs propriétés ferroélectriques, combinées aux technologies CMOS conventionnelles, permettent de créer de nouvelles architectures de circuits innovantes. Le rapprochement physique de mémoires non volatiles aux éléments de calcul ouvre de nombreuses possibilités d’amélioration de l’efficacité énergétique en réduisant les transferts de données, en diminuant la consommation d’énergie statique et en permettant l'utilisation de paradigmes de calcul normalement éteint (normally-off computing).Dans cette thèse, les matériaux ferroélectriques sont abordés du point de vue de la conception de circuits, offrant une explication élémentaire de leurs propriétés et des approches utilisées pour leur modélisation. Plusieurs architectures de circuits utilisant des matériaux ferroélectriques sont également présentées, utilisant des technologies de dépôt en bout de ligne (Back-End of Line), ainsi que de transistors à effet de champ ferroélectrique (FeFET), avec les résultats de caractérisation électrique obtenus, le cas échéant. Enfin, des techniques d’exploration de l’espace de conception (DSE) et un outil interne d’évaluation des performances au niveau système sont combinés pour extraire des chiffres de performance projetés, afin de permettre une comparaison avec des technologies plus matures, tant au niveau du circuit que du système.Les résultats obtenus correspondent à la conception de nouveaux circuits, dont certains ont été fabriqués en 130 nm et 28 nm, aux résultats des simulations DSE pour des paramètres tels que la fenêtre de mémoire et la consommation d’énergie, ainsi qu’à de multiples outils logiciels créés au long du projet.",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "K6c53f576da1d6921",
+      "retrieved_at": "2026-11-10T08:03:00.256678+00:00",
+      "query": "ferromagnetic interactions preserve loop return point memory hysteron network proof"
+    },
+    {
+      "title": "Construction of a superconducting circuit simulator and its applications in cryogenic computing",
+      "date": "2019-01-01",
+      "publication_dates": [
+        "2019-01-01"
+      ],
+      "doi": "https://openalex.org/W3137812544",
+      "url": "https://openalex.org/W3137812544",
+      "text": "In this work, I first construct a unified simulation platform, where superconducting electronics can be designed and optimized with high performance and accuracy.For this purpose, I first select numerical simulation methods that can deal with the highly non-linear characteristics of the superconducting devices.I validate the simulated responses with experimental data on device and circuit level examples.Following the implementation of the simulator, I use this framework to analyze existing superconducting nanowire based technologies, and optimize them for wider operation regimes and higher performance metrics.I use nanofabrication processes to realize these devices and conduct liquid helium immersion measurements to characterize them experimentally.Optimized devices show superior characteristics that demonstrate the predictive capabilities of this simulator.Finally, I use this simulator to design a superconducting nanowire based deep neural network training accelerator.I design, implement, and characterize a unit cell for this application.These local processors have significant device-level advantages over the readily available non-volatile memory technologies in realizing mixed-signal architectures.The devices produced throughout this work have immediate and near-term applications, proving the merit of having a high-performance simulator.",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "Kee4f892091e18fd9",
+      "retrieved_at": "2026-11-10T08:03:17.984550+00:00",
+      "query": "non-reciprocal coupling hysteresis return point memory scrambled criterion"
+    },
+    {
+      "title": "Synthetic Physiology: Manipulating and Measuring Biological Pattern Formation With Light",
+      "date": "2019-09-12",
+      "publication_dates": [
+        "2019-09-12"
+      ],
+      "doi": "https://openalex.org/W3109038586",
+      "url": "https://openalex.org/W3109038586",
+      "text": "Multicellular tissues and organisms execute complex physiological functions through precise spatiotemporal coordination of their constituent cells. Cells achieve this coordination through long-range intercellular communication pathways – for example, electrical signaling synchronizes the beating heart, and biochemical morphogen signals organize the developing embryo. It is an outstanding challenge in quantitative biology to develop mathematical models (borrowing from e.g. control theory or statistical physics) that explain how robust pattern formation emerges from these long-range interactions. It is generally challenging to connect theoretical models to experimental demonstrations due to the difficulty of manipulating and measuring physiological dynamics in complex tissues.\\nThe emergence of optogenetic tools has opened new opportunities in experimental biology. By placing signaling pathways under the control of light, one can leverage methods from optical physics in order to pattern biological signals with precise agility in space and time. By combining these tools with complementary optical methods for mapping resultant patterns with high spatial resolution, one can create high-dimensional biological interfaces in order to study pattern formation. Optogenetic tools have achieved widespread adoption in the study of the brain, but they have only begun to be extended to study biological pattern formation in other contexts like the developing embryo.\\nThe first portion of this thesis presents ‘synthetic electrophysiology’, a new framework for studying bioelectrical pattern formation. By deploying all-optical electrophysiology in engineered tissues with designed electrical components, we study electrical tissues as dynamical systems. In tissues comprised of synthetic excitable cells, we show that geometry is a fundamental determinant of stability and chaos in biological pacemakers, and we show that excitable cells can be composed into bioelectric circuits capable of primitive information processing and memory. We also show that electrically bistable tissues can form reaction-diffusion patterns of electrical domains which undergo phase transitions via spontaneous symmetry breaking. These previously unobserved classes of stable electrical patterns suggest a potential role for electrophysiology during embryonic development. This strategy of ‘bioelectrical engineering’ can articulate subtle aspects of electrophysiological patterning that may be obscured by the complexity of the embryo \\\\textit{in vivo}. \\nThe latter portion of this thesis describes progress towards developing tools for optical manipulation and measurement of spatial patterns of gene expression. The ability to spatially pattern morphogen signals in the embryo, and to map the complete transcriptional response of a system to a given signal, could enable the pressure-testing of mutually consistent morphogen models which classical methods cannot disambiguate. First, we describe a new optogenetic platform for patterning the Nodal morphogen signal in the zebrafish embryo. By fusing the Nodal receptors acvr1b/acvr2b to the photoassociating domain pair CRY2/CIB1, we convert blue photons into Nodal morphogens. Deploying these reagents in a platform for patterning illumination in dozens of embryos in parallel enables us to systematically study the spatiotemporal requirements of Nodal signaling. We next discuss a new platform for using photochemical patterning of DNA barcodes to layer spatial information onto droplet microfluidics-based single cell RNA sequencing (scRNAseq) methods. By attaching these DNA ‘zipcodes’ as barcoded features on the cell surface, we can introduce spatial information onto scRNAseq while retaining the single-cell discretization and full-transcriptome depth of droplet methods. Combining optogenetic morphogen patterning with spatially resolved transcriptomics may enable more powerful studies of how the embryo processes morphogen patterns as dynamical signals.\\nWe conclude by discussing future prospects for this strategy of ‘synthetic physiology’ to unveil quantitative physical principles which underlie the robustness and reliability of biological patterning.",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "K58abbae4e2bc10b8",
+      "retrieved_at": "2026-11-10T08:03:17.993854+00:00",
+      "query": "non-reciprocal coupling hysteresis return point memory scrambled criterion"
+    },
+    {
+      "title": "Zero-temperature hysteresis in the random-field Ising model on a Bethe lattice",
+      "date": "1997-08-07",
+      "publication_dates": [
+        "1997-08-07"
+      ],
+      "doi": "https://doi.org/10.1088/0305-4470/30/15/013",
+      "url": "https://doi.org/10.1088/0305-4470/30/15/013",
+      "text": "We consider the single-spin-flip dynamics of the random-field Ising model on a Bethe lattice at zero temperature in the presence of a uniform external field. We determine the average magnetization as the external field is varied from to by setting up the self-consistent field equations, which we show are exact in this case. The qualitative behaviour of magnetization as a function of the external field unexpectedly depends on the coordination number z of the Bethe lattice. For z = 3, with a Gaussian distribution of the quenched random fields, we find no jump in magnetization for any non-zero strength of disorder. For , for weak disorder the magnetization shows a jump discontinuity as a function of the external uniform field, which disappears for a larger variance of the quenched field. We determine exactly the critical point separating smooth hysteresis curves from those with a jump. We have checked our results by Monte Carlo simulations of the model on three- and four-coordinated random graphs, which for large system sizes give the same results as on the Bethe lattice, but avoid surface effects altogether.",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "K0f3c1342d77e97e4",
+      "retrieved_at": "2026-11-10T08:03:39.616656+00:00",
+      "query": "return point memory random field Ising model"
+    },
+    {
+      "title": "Heisenberg pseudo-exchange and emergent anisotropies in field-driven pinwheel artificial spin ice",
+      "date": "2019-11-07",
+      "publication_dates": [
+        "2019-11-07"
+      ],
+      "doi": "https://doi.org/10.1103/physrevb.100.174410",
+      "url": "https://doi.org/10.1103/physrevb.100.174410",
+      "text": "Rotating all islands in square artificial spin ice (ASI) uniformly about their centers gives rise to the recently reported pinwheel ASI. At angles around ${45}^{\\ensuremath{\\circ}}$, the antiferromagnetic ordering changes to ferromagnetic and the magnetic configurations of the system exhibit near degeneracy, making it particularly sensitive to small perturbations. We investigate through micromagnetic modeling the influence of dipolar fields produced by physically extended islands in field-driven magnetization processes in pinwheel arrays and compare the results to hysteresis experiments performed in situ using Lorentz transmission electron microscopy. We find that magnetization end states induce a Heisenberg pseudoexchange interaction that governs both the interisland coupling and the resultant array reversal process. Symmetry reduction gives rise to anisotropies and array-corner mediated avalanche reversals through a cascade of nearest-neighbor (NN) islands. The symmetries of the anisotropy axes are related to those of the geometrical array but are misaligned to the array axes as a result of the correlated interactions between neighboring islands. The NN dipolar coupling is reduced by decreasing the island size and, using this property, we track the transition from the strongly coupled regime towards the pure point dipole one and observe modification of the ferromagnetic array reversal process. Our results shed light on important aspects of the interactions in pinwheel ASI and demonstrate a mechanism by which their properties may be tuned for use in a range of fundamental research and spintronic applications.",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "Ka10e861eb16d139b",
+      "retrieved_at": "2026-11-10T08:03:48.711446+00:00",
+      "query": "nonreciprocal Ising hysteresis return point memory"
+    },
+    {
+      "title": "Reversible to irreversible transitions in periodic driven many-body systems and future directions for classical and quantum systems",
+      "date": "2023-05-11",
+      "publication_dates": [
+        "2023-05-11"
+      ],
+      "doi": "https://doi.org/10.1103/physrevresearch.5.021001",
+      "url": "https://doi.org/10.1103/physrevresearch.5.021001",
+      "text": "Reversible to irreversible (R-IR) transitions have been found in a wide variety of both soft and hard matter periodically driven collectively interacting systems that, after a certain number of driving cycles, organize into either a reversible state where the particle trajectories repeat during every or every few cycles or into a chaotic motion state. An overview of R-IR transitions including recent advances in the field is followed by a discussion of how the general framework of R-IR transitions could be applied to a much broader class of nonequilibrium systems in which periodic driving occurs, including not only soft and hard condensed matter systems, but also astrophysics, biological systems, and social systems.",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "K4f6d13b58c610846",
+      "retrieved_at": "2026-11-10T08:03:48.723933+00:00",
+      "query": "nonreciprocal Ising hysteresis return point memory"
+    },
+    {
+      "title": "Review of Play and Preisach Models for Hysteresis in Magnetic Materials.",
+      "date": "2023-03-17",
+      "publication_dates": [
+        "2023-03-17",
+        "2023-03-17"
+      ],
+      "doi": "https://doi.org/10.3390/ma16062422",
+      "url": "https://doi.org/10.3390/ma16062422",
+      "text": "This paper studies the properties of the Preisach model and the play model, and compare their similarities. Both are history-dependent hysteresis models that are used to model magnetic hysteresis. They are described as discrete sums of simple hysteresis operators but can easily be reformulated as integral equations of continuous distribution functions using either a Preisach weight distribution function or a play distribution function. The models are mostly seen as phenomenological or mathematical tools but can also be related to friction-like pinning of domain-wall motions, where Rayleigh's law of magnetic hysteresis can be seen as the simplest case on either the play model or the Preisach model. They are poor at modeling other domain behavior, such as nucleation-driven hysteresis. Yet another hysteresis model is the stop model, which can be seen as the inverted version of the play model. This type of model has advantages for expressions linked to energy and can be related to Steinmetz equation of hysteresis losses. The models share several mathematical properties, such as the congruency property and wiping-out property, and both models have a history of dependence that can be described by the series of past reversal points. More generally, it is shown that the many models can be expressed as Preisach models, showing that they can be treated as subcategories of the Preisach type models. These include the play model, the stop model and also the alternative KP-hysteron model.",
+      "access": "indexed_abstract_only",
+      "date_evidence": "Europe PMC firstPublicationDate",
+      "id": "K1364a25c430600ea",
+      "retrieved_at": "2026-11-10T07:12:17.599428+00:00",
+      "query": "continuous Preisach model return-point memory"
+    },
+    {
+      "title": "State transition graph of the Preisach model and the role of return-point memory",
+      "date": "2020-07-09",
+      "publication_dates": [
+        "2020-07-09"
+      ],
+      "doi": "https://doi.org/10.1103/physreve.102.012122",
+      "url": "https://doi.org/10.1103/physreve.102.012122",
+      "text": "The Preisach model has been useful as a null model for understanding memory formation in periodically driven disordered systems. In amorphous solids, for example, the athermal response to shear is due to localized plastic events (soft spots). As shown recently by Mungan et al. [Phys. Rev. Lett. 123, 178002 (2019)PRLTAO0031-900710.1103/PhysRevLett.123.178002], the plastic response to applied shear can be rigorously described in terms of a directed network whose transitions correspond to one or more soft spots changing states. The topology of this graph depends on the interactions between soft spots and when such interactions are negligible, the resulting description becomes that of the Preisach model. A first step in linking transition graph topology with the underlying soft-spot interactions is therefore to determine the structure of such graphs in the absence of interactions. Here we perform a detailed analysis of the transition graph of the Preisach model. We highlight the important role played by return-point memory in organizing the graph into a hierarchy of loops and subloops. Our analysis reveals that the topology of a large portion of this graph is actually not governed by the values of the switching fields that describe the hysteretic behavior of the individual elements but by a coarser parameter, a permutation ρ which prescribes the sequence in which the individual hysteretic elements change their states as the main hysteresis loop is traversed. This in turn allows us to derive combinatorial properties, such as the number of major loops in the transition graph as well as the number of states |R| constituting the main hysteresis loop and its nested subloops. We find that |R| is equal to the number of increasing subsequences contained in the permutation ρ.",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "Kd215cb6fc530a930",
+      "retrieved_at": "2026-11-10T06:25:00.652209+00:00",
+      "query": "return point memory Preisach hysteresis sufficient condition"
+    },
+    {
+      "title": "Preisach modeling of piezoceramic and shape memory alloy hysteresis",
+      "date": "1997-06-01",
+      "publication_dates": [
+        "1997-06-01"
+      ],
+      "doi": "https://doi.org/10.1088/0964-1726/6/3/007",
+      "url": "https://doi.org/10.1088/0964-1726/6/3/007",
+      "text": "Smart materials such as piezoceramics, magnetostrictive materials, and shape memory alloys exhibit hysteresis, and the larger the input signal the larger the effect. Hysteresis can lead to unwanted harmonics, inaccuracy in open loop control, and instability in closed loop control. The Preisach independent domain hysteresis model has been shown to capture the major features of hysteresis arising in ferromagnetic materials. Noting the similarity between the microscopic domain kinematics that generate static hysteresis effects in ferromagnetics, piezoceramics, and shape memory alloys (SMAs), we apply the Preisach model for the hysteresis in piezoceramic and shape memory alloy materials. This paper reviews the basic properties of the Preisach model, discusses control-theoretic issues such as identification, simulation, and inversion, and presents experimental results for piezoceramic sheet actuators bonded to a flexible aluminum beam, and a Nitinol SMA wire muscle that applies a bending force to the end of a beam.",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "Ke85fd9d7c2fe7cbc",
+      "retrieved_at": "2026-11-10T06:25:00.643424+00:00",
+      "query": "return point memory Preisach hysteresis sufficient condition"
+    },
+    {
+      "title": "Extracting Individual Properties from Global Behaviour: First-order Reversal Curve Method Applied to Magnetic Nanowire Arrays",
+      "date": "2010-02-01",
+      "publication_dates": [
+        "2010-02-01"
+      ],
+      "doi": "https://doi.org/10.5772/39475",
+      "url": "https://doi.org/10.5772/39475",
+      "text": "Extracting Individual Properties from Global Behaviour: First-order Reversal Curve Method Applied to Magnetic Nanowire Arrays",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "Ka21bf6100e3a12cc",
+      "retrieved_at": "2026-11-10T08:04:36.334907+00:00",
+      "query": "nonreciprocal Preisach model"
+    },
+    {
+      "title": "Passive and active field theories for disease spreading",
+      "date": "2024-05-15",
+      "publication_dates": [
+        "2024-05-15"
+      ],
+      "doi": "https://doi.org/10.1088/1751-8121/ad4c31",
+      "url": "https://doi.org/10.1088/1751-8121/ad4c31",
+      "text": "Abstract The worldwide COVID-19 pandemic has led to a significant growth of interest in the development of mathematical models that allow to describe effects such as social distancing measures, the development of vaccines, and mutations. Several of these models are based on concepts from soft matter theory. Considerably less well investigated is the reverse direction, i.e. how results from epidemiological research can be of interest for the physics of colloids and polymers. In this work, we consider the susceptible-infected-recovered (SIR)-dynamical density functional theory (DDFT) model, a combination of the SIR model from epidemiology with DDFT from nonequilibrium soft matter physics, which allows for an explicit modeling of social distancing. We extend the SIR-DDFT model both from an epidemiological perspective by incorporating vaccines, asymptomaticity, reinfections, and mutations, and from a soft matter perspective by incorporating noise and self-propulsion and by deriving a phase field crystal (PFC) model that allows for a simplified description. On this basis, we investigate via computer simulations how epidemiological models are affected by the presence of non-reciprocal interactions. This is done in a numerical study of a zombie outbreak.",
+      "access": "indexed_abstract_only",
+      "date_evidence": "OpenAlex publication_date",
+      "id": "K76f48790bf6b54ab",
+      "retrieved_at": "2026-11-10T08:04:36.352388+00:00",
+      "query": "nonreciprocal Preisach model"
+    }
+  ],
+  "computed": [],
+  "unavailable": [],
+  "case_facts": [
+    {
+      "id": "F3c7f515a729c0170ed43",
+      "question": "每个耦合对的弹簧布置（平行/交叉）与每个往复周期的驱动反转值是否被记录？若未记录请直接说明。",
+      "status": "released",
+      "facts": [
+        {
+          "statement": "文档使用“Uncrossed”描述一种耦合弹簧布置。",
+          "evidence_id": "Eb1c215612e88641b1b4a"
+        },
+        {
+          "statement": "文档使用“Crossed”描述一种耦合弹簧布置。",
+          "evidence_id": "Ea136416f87c5b4b134b6"
+        },
+        {
+          "statement": "一对转子的阈值测量使用图1D左侧所示配置。",
+          "evidence_id": "Eaebb0c0db03f0bccb1f2"
+        },
+        {
+          "statement": "文档在描述一对转子时写明用交叉弹簧耦合它们。",
+          "evidence_id": "E503d07d36e66e71ad0b0"
+        },
+        {
+          "statement": "链式实验中，转子与最近邻转子用交叉弹簧耦合。",
+          "evidence_id": "E30886785e0b764caad2a"
+        },
+        {
+          "statement": "文档描述驱动到10 cm后回到0。",
+          "evidence_id": "E2a79a71aa55e0ff8ff73"
+        },
+        {
+          "statement": "文档描述驱动到32 cm后回到0。",
+          "evidence_id": "E35c2a814fa214c2d4384"
+        },
+        {
+          "statement": "四转子实验采用单位振幅循环驱动。",
+          "evidence_id": "Ec9df5ae173f1ba62b6f5"
+        }
+      ],
+      "scope": "Question-scoped case facts; not a scientific explanation or result."
+    }
+  ],
+  "relevance_reviews": [
+    {
+      "assessments": [
+        {
+          "source_id": "Ke097673d6687fdd8",
+          "relation": "irrelevant",
+          "reason": "Literary/rhetorical study of 'hysteron proteron' in Homeric epic; not about hysteresis operators, hysteron networks, return-point memory, coupling signs, or nonreciprocity.",
+          "quote": "This chapter studies a phenomenon first observed by Samuel Bassett in questions and answers in the Homeric epics: the poet's preference for spelling out a twofold instruction, proposal, or question, and in a subsequent passage reversing the original order of presentation."
+        },
+        {
+          "source_id": "K6c53f576da1d6921",
+          "relation": "irrelevant",
+          "reason": "Discusses ferroelectric materials and circuit/architecture design for energy-efficient computing, not the mathematical memory properties of interacting hysteron networks or nonreciprocal coupling.",
+          "quote": "L’inclusion de matériaux ferroélectriques dans les circuits intégrés suscite de plus en plus d’intérêt, notamment grâce à l’introduction d’oxydes de hafnium dopés au zirconium, compatibles avec les matériaux semi-conducteurs et les procédés de fabrication les plus modernes."
+        },
+        {
+          "source_id": "Kee4f892091e18fd9",
+          "relation": "irrelevant",
+          "reason": "Describes a superconducting circuit simulator and neural-network accelerator; contains no theorem or method about return-point memory in hysteron networks or mixed-sign/nonreciprocal couplings.",
+          "quote": "In this work, I first construct a unified simulation platform, where superconducting electronics can be designed and optimized with high performance and accuracy."
+        },
+        {
+          "source_id": "K58abbae4e2bc10b8",
+          "relation": "irrelevant",
+          "reason": "Biological pattern-formation and optogenetics thesis; no relevance to hysteron-network memory criteria, ferromagnetic-like interaction signs, or tension-only coupling.",
+          "quote": "Multicellular tissues and organisms execute complex physiological functions through precise spatiotemporal coordination of their constituent cells."
+        }
+      ],
+      "revised_queries": [
+        "return point memory random field Ising model",
+        "nonreciprocal Ising hysteresis return point memory"
+      ]
+    },
+    {
+      "assessments": [
+        {
+          "source_id": "K0f3c1342d77e97e4",
+          "relation": "irrelevant",
+          "reason": "This is a zero-temperature random-field Ising model on a Bethe lattice study of magnetization jumps and smooth-versus-discontinuous hysteresis. It does not prove or state a long-term return-point-memory criterion for hysteron networks, does not treat mixed-sign/nonreciprocal couplings, and does not address tension-only edges.",
+          "quote": "For z = 3, with a Gaussian distribution of the quenched random fields, we find no jump in magnetization for any non-zero strength of disorder."
+        },
+        {
+          "source_id": "Ka10e861eb16d139b",
+          "relation": "irrelevant",
+          "reason": "This is micromagnetic modeling of pinwheel artificial spin ice, including ferromagnetic ordering and avalanche reversal, but it provides no theorem or method for l-RPM in hysteron networks, no mixed-sign sufficient condition, and no treatment of nonreciprocal or tension-only coupling.",
+          "quote": "Symmetry reduction gives rise to anisotropies and array-corner mediated avalanche reversals through a cascade of nearest-neighbor (NN) islands."
+        },
+        {
+          "source_id": "K4f6d13b58c610846",
+          "relation": "irrelevant",
+          "reason": "This reviews reversible-to-irreversible transitions under periodic driving in terms of repeated particle trajectories versus chaos. It does not address hysteresis return-point memory, hysteron-network coupling signs, or nonreciprocal coupling criteria.",
+          "quote": "Reversible to irreversible (R-IR) transitions have been found in a wide variety of both soft and hard matter periodically driven collectively interacting systems that, after a certain number of driving cycles, organize into either a reversible state where the particle trajectories repeat during every or every few cycles or into a chaotic motion state."
+        }
+      ],
+      "revised_queries": [
+        "Preisach model return point memory",
+        "nonreciprocal Preisach model"
+      ]
+    },
+    {
+      "assessments": [
+        {
+          "source_id": "K1364a25c430600ea",
+          "relation": "irrelevant",
+          "reason": "Reviews classical Preisach/play models and notes congruency/wiping-out, but gives no criterion for l-RPM in coupled hysteron networks with mixed-sign or nonreciprocal edges, no avalanche proof, and no tension-only equivalence.",
+          "quote": "The models share several mathematical properties, such as the congruency property and wiping-out property, and both models have a history of dependence that can be described by the series of past reversal points."
+        },
+        {
+          "source_id": "Kd215cb6fc530a930",
+          "relation": "irrelevant",
+          "reason": "Analyzes return-point memory in the noninteracting Preisach transition graph; interactions are explicitly the case where the Preisach description fails. It does not supply the requested mixed-sign/nonreciprocal l-RPM sufficiency criterion or tension-only treatment.",
+          "quote": "The topology of this graph depends on the interactions between soft spots and when such interactions are negligible, the resulting description becomes that of the Preisach model."
+        },
+        {
+          "source_id": "Ke85fd9d7c2fe7cbc",
+          "relation": "irrelevant",
+          "reason": "Applies classical Preisach modeling to piezoceramic and shape-memory-alloy hysteresis; no discussion of coupling-sign structure, nonreciprocal hysterons, avalanche networks, or l-RPM criteria.",
+          "quote": "The Preisach independent domain hysteresis model has been shown to capture the major features of hysteresis arising in ferromagnetic materials."
+        },
+        {
+          "source_id": "Ka21bf6100e3a12cc",
+          "relation": "irrelevant",
+          "reason": "Supplied text is only a title about first-order reversal curves in magnetic nanowire arrays; it provides no theorem or method about l-RPM, mixed signs, nonreciprocity, or tension-only coupling.",
+          "quote": "Extracting Individual Properties from Global Behaviour: First-order Reversal Curve Method Applied to Magnetic Nanowire Arrays"
+        },
+        {
+          "source_id": "K76f48790bf6b54ab",
+          "relation": "irrelevant",
+          "reason": "Uses non-reciprocal interactions in an epidemiological/soft-matter field theory, not in hysteretic hysteron networks; the shared phrase 'non-reciprocal' does not address the memory criterion.",
+          "quote": "On this basis, we investigate via computer simulations how epidemiological models are affected by the presence of non-reciprocal interactions."
+        }
+      ],
+      "revised_queries": [
+        "interacting hysterons return-point memory",
+        "nonreciprocal Ising hysteresis"
+      ]
+    }
+  ],
+  "relevance_scope": "Service judgments with source passages, not proof of scientific adequacy",
+  "status": "returned",
+  "knowledge_status": "unresolved"
+}

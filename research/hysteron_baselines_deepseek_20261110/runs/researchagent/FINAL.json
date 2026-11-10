@@ -1,0 +1,53 @@
+{
+  "hypotheses": [
+    {
+      "id": "H1",
+      "title": "可加偏置—微分增益的窗口算子假设",
+      "mechanism": "每个转子在驱动坐标 gamma 中的切换窗口可用中心 c_i 与半宽 h_i 表示；邻转子状态 sigma 对耦合扭矩的效应被分解为平移窗口的可加偏置 B_i 和改变窗宽的微分增益 G_i。该分解是局部有效描述，不主张 bias/gain 是唯一物理成分。",
+      "equations_or_derivation": "c_i(sigma,l)=(gamma_i^up+gamma_i^down)/2; h_i(sigma,l)=(gamma_i^up-gamma_i^down)/2; B_i=c_i(sigma,l)-c_i(-sigma,l); G_i=h_i(sigma,l)-h_i(-sigma,l)。用带 sigma、l、sigma*l 项的嵌套回归估计，并对 ±0.1 cm 做区间传播。",
+      "measured_support": "pair_A 在固定 l 下，两个 other_state 的 h 基本相同：rotor 1 的 h 约 7.2, 6.8/6.9, 6.0, 4.6 cm；rotor 2 约 1.7, 1.6, 1.4–1.5, 1.1 cm；而中心随 l 的邻态差从约 0 增至 1.2 cm（rotor 1）和 4.4 cm（rotor 2）。pair_B 在单一 l=4.7 下 B 很大（约 11.1 和 5.5 cm），G 近零但仅 0.1–0.3 cm，低于/接近分辨率。宽度随 l 的收缩是 sigma 对称的共同模效应，不应误写成邻态微分增益。",
+      "assumptions": [
+        "gamma_down 按带符号阈值处理；当两阈值同号时 h 是代数半宽而非物理窗口。",
+        "bias/gain 是局部线性化分解，依赖驱动坐标与几何。",
+        "±0.1 cm 阈值不确定度需传播；pair_B 单点不能检验 l 扫描。",
+        "实测弹簧近似线性只约束机制，不证明几何机制。"
+      ],
+      "distinct_prediction": "在固定几何的新器件中，改变 other_state 应主要移动 c 而 h 在预注册等价边界内不变；若能可变 l 的交叉耦合床上观察到 G 随 l 系统增大并超过传播误差，则单纯 bias-only 描述失败，需要增益/刚度项。",
+      "alternatives": "非可分离的耦合力矩、止挡限制分支、安装/夹持边界改变、驱动零点偏移，均可产生表观中心移动；pair_B 的 G≈0 低功效，不能单独确认 bias-only。",
+      "trajectory_origin": "问题陈述·模型假设与 P1–P2；方法·第 2 阶段；Clarity/Validity/Originality 反馈对 c,h,B,G 的定义与 pair_B 低功效的批评。"
+    },
+    {
+      "id": "H2",
+      "title": "杠杆臂刚度项 q 与平行/交叉耦合的机制假设",
+      "mechanism": "准静态力矩平衡中，邻转子通过 b_ij(l)+q_ij(l)*theta_i 作用：b 提供可加力矩，q 改变有效刚度 K_eff，从而改变阈值窗宽。平行耦合因杠杆臂随 l 增长而预期 q≠0、窗宽随 l 收缩；固定 l 的交叉耦合被假设为近纯加性偏置（q≈0）。",
+      "equations_or_derivation": "0=k_d,i L_i(gamma-rho_i)-K_i theta_i+sum_j sigma_j[b_ij(l)+q_ij(l)theta_i]+tau_stop,i；K_eff=K_i-sum_j sigma_j q_ij；h_i≈tau_s,i/K_eff；c_i≈rho_i+sum_j sigma_j b_ij/K_eff。平行耦合拟合 b,q；交叉耦合检验 q=0，但跨器件只作为先验/传递假设，不作固定同一参数。",
+      "measured_support": "pair_A 中 h 随 l 单调减小（rotor 1: 7.2→6.8/6.9→6.0→4.6 cm；rotor 2: 1.7→约1.6→1.4/1.5→1.1 cm），与杠杆臂改变有效刚度方向一致；但同一 l 下 G≈0，说明该 l 效应是 sigma 对称的共同模项，现有平行表并未支持“邻态微分增益 q”版本。pair_B 只有一个 l，不能检验交叉耦合的 l 依赖；其大 B、近不变 h 仅与 bias-only 相容，不构成强证据。",
+      "assumptions": [
+        "小角度、硬止挡、无惯性、无摩擦的准静态主动集模型。",
+        "q_ij 是局部线性化刚度项，非线性剩余需作为残差检验。",
+        "pair_A/pair_B/network_C 是不同器件，参数不可直接共享；钢线 1–3 边应单列。",
+        "止挡角度、安装坐标和夹持反力未知或需实测。"
+      ],
+      "distinct_prediction": "若 q 机制成立，新平行耦合床在固定 other_state 下扫 l 应显示 h(l) 的系统变化；交叉耦合床扫 l 时若 h 不变而仅 c 变，则支持 crossed bias-only，若 h 随 l 变则否定该纯加性版本。该预测需新扫描，pair_B 现有单点不能检验。",
+      "alternatives": "纯 bias-only 交叉耦合；几何非线性/大角度力矩；止挡接触与夹持边界差异；弹簧样本与安装弹簧不一致。若新数据无图通过，应报告需放松的传递、边类型或几何假设，而非直接宣称机制被证伪。",
+      "trajectory_origin": "方法·第 3 阶段；实验·第 2 阶段；Validity/Innovativeness 反馈对 q 定义、pair_B 欠定和跨器件传递的批评；Robustness 反馈对 l^2 容差与符号异常的提醒。"
+    },
+    {
+      "id": "H3",
+      "title": "仅有序约束下的网络等价类与弱可辨识性假设",
+      "mechanism": "16 个 network_C 事件没有时间戳、反转行和唯一并列顺序，只能作为区间/序约束：每次事件要求翻转转子的阈值区间包含观测 gamma，非翻转转子尚未越过其阈值；并列仅限同一单调段内相邻事件。网络拓扑、止挡角、附着坐标和反转幅度属于未知参数，输出应是等价类而非唯一图。",
+      "equations_or_derivation": "对事件 t：gamma_t in I_{i_t}(sigma_t)，且 gamma_t notin I_j(sigma_t)（j≠i_t）；并列事件仅当同一单调段内相邻且 drive 坐标相同；反转幅度 R_k 作为满足单调段不等式的松弛变量，不由事件极值推断。图枚举为六条可能边 × {absent, parallel, crossed, wire}，用区间分支定界保留可行图与反转路径。",
+      "measured_support": "network_C 的 8 状态循环在第 9–16 事件精确重复，实际只有约 7 个独立转变；若干转变共享 gamma=5.8 与 -5.1，顺序仅为名义；事件极值不能当作反转位置。故 16 行不足以唯一确定 6 边图。精确重复只证明单一协议下的周期性，不证明吸引子稳定性。",
+      "assumptions": [
+        "相邻并列才可无序；非相邻重复不得全局并列。",
+        "反转幅度为未知松弛变量；时间间隔不可推断。",
+        "pair 参数跨器件只作带不确定度的传递先验。",
+        "±0.1 cm 与无重复使等价类可能很大；需报告类体积/熵及容差敏感性。"
+      ],
+      "distinct_prediction": "若补测 network_C 各转子在 8 种邻态、两个方向下的释放阈值，并做单边刚度替换/附着偏移，则等价类应可测量地收缩；若收缩后仍无任何图通过新约束，则最小 pairwise kernel 类被拒绝（非证明）。若仅记录反转幅度，只能消除路径歧义，不能识别拓扑。",
+      "alternatives": "更大的图/协议等价类；高阶或多体耦合；协议依赖的周期响应而非稳定吸引子；夹持边界改变阈值图。需把“无图通过”报告为嵌套放松结果，而非单一机制证伪。",
+      "trajectory_origin": "问题陈述·未知量与可辨识性目标；方法·第 4–5 阶段；实验·第 1/4/5 阶段；Clarity/Validity/Robustness 反馈对并列规则、等价类度量、重复计数和最小破缺测量的批评。"
+    }
+  ],
+  "summary": "实际轨迹发展出三类条件性假设：H1 把邻态耦合操作化为窗口中心平移 B 与半宽变化 G，pair_A 支持“同 l 下 h 不变、c 移动”，但 G 在现有数据中近零且低功效；H2 提出 b+q*theta 的杠杆臂刚度机制，平行耦合预期 q≠0、交叉耦合近 bias-only，然 pair_A 的 l 效应是 sigma 对称共同模，pair_B 单点不能检验扫描，故保留为待新实验的机制假设；H3 主张 16 个无时间戳事件只能给出图/反转协议等价类，精确 twofold 重复是周期性而非吸引子稳定性，需释放阈值或单边干预破缺。三者均区分实测关系、模型假设与机制，未新增更强机制。"
+}

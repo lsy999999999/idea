@@ -1,0 +1,58 @@
+{
+  "id": "bb3b3ddc-1202-4a38-abf1-e590cc232842",
+  "choices": [
+    {
+      "finish_reason": "tool_calls",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "",
+        "refusal": null,
+        "role": "assistant",
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "tool_calls": [
+          {
+            "id": "call_00_TODmr0nEJXTFzQwLvPuP1000",
+            "function": {
+              "arguments": "{\"ref\": \"Dc016d416e6458afd523e\", \"pointer\": \"/revision_obligations\", \"offset\": 0, \"limit\": 4000, \"raw\": false}",
+              "name": "read_document"
+            },
+            "type": "function",
+            "index": 0
+          }
+        ],
+        "reasoning_content": "Not relevant.\n\nMaybe inspect the draft's full document top to see whether there's a \"revision_obligations\" and also maybe \"hypothesis_updates\" duplicates? Also perhaps the draft has a field \"dependency_responses\" at top-level? Read document list of paths? read_document pointer \"\" maybe shows whole doc but 20k limit. Let's read /revision_obligations raw maybe same.\n\nAlternative: think about what exact obligation the validator computed. Possibly it computes obligations not from the supplied revision_obligations, but from hypothesis_updates' depends_on versus latest versions *before* update. Consider new card threshold_coordinate_factorization base_version 2 → v3 with depends_on [] — okay. barrier v3 depends_on latch v2 — unchanged, no obligation. threshold_gap v2 depends_on latch v2 — unchanged. So no obligations under that scheme; weird error.\n\nUnless the validator computes obligations against *all supplied hypothesis refs*, including peer branches, and requires responses for branches whose deps changed... no.\n\nHold on: maybe the validation error arises because I declared dependency_responses for obligations but the *hypothesis_ref version* in revision_obligations doesn't match the version the controller expects after applying updates (v3, v2). Let's test that hypothesis by patching to use v3 and v2. If wrong, we get another validation error and can iterate; draft saved locally, no harm.\n\nBut before that, maybe read the prior stage's result (Dc016d...) to see its revision_obligations formatting, e.g., it may have used hypothesis_ref at new version. That was stage 02_initial_1_learn_0, where latch v1→v2, barrier v2, threshold_gap v1. Let's read its revision_obligations."
+      }
+    }
+  ],
+  "created": 1794293660,
+  "model": "deepseek-flash",
+  "object": "chat.completion",
+  "metadata": null,
+  "moderation": null,
+  "service_tier": null,
+  "system_fingerprint": "bc19ba97cbe016479903222bb1578db6",
+  "usage": {
+    "completion_tokens": 502,
+    "prompt_tokens": 28446,
+    "total_tokens": 28948,
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": null,
+      "audio_tokens": null,
+      "reasoning_tokens": 381,
+      "rejected_prediction_tokens": null,
+      "text_tokens": null
+    },
+    "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cache_write_tokens": null,
+      "cached_tokens": 26368,
+      "image_tokens": null,
+      "text_tokens": null
+    },
+    "prompt_cache_hit_tokens": 26368,
+    "prompt_cache_miss_tokens": 2078
+  }
+}

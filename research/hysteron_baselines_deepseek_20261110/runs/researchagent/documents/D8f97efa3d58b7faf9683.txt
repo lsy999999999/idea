@@ -1,0 +1,83 @@
+{
+  "name": "analyze_csv",
+  "args": {
+    "dataset": "measurements",
+    "group_column": "configuration_id",
+    "group_value": "network_C",
+    "variables": [
+      {
+        "name": "flips",
+        "expression": "abs(diff(s1)) + abs(diff(s2)) + abs(diff(s3)) + abs(diff(s4))"
+      },
+      {
+        "name": "dg",
+        "expression": "diff(drive_gamma_cm)"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "flip_counts",
+        "expression": "flips"
+      },
+      {
+        "name": "num_events_not_single_flip",
+        "expression": "sum(where(flips == 1, 0, 1))"
+      },
+      {
+        "name": "repeat_gap_rows",
+        "expression": "sum(where(dg == 0, 1, 0))"
+      }
+    ]
+  },
+  "call_id": "call_00_S9LtsiOQOA8lsW03QXuX9355",
+  "seconds": 0.005067541729658842,
+  "registered_paths": [],
+  "result": {
+    "status": "executed",
+    "dataset": "measurements",
+    "sha256": "5e40502610e3904c627ab6b4cda5b65f4cf9185ed5190459d6b909313619504e",
+    "total_rows": 123,
+    "selected_rows": 16,
+    "selection": {
+      "column": "configuration_id",
+      "value": "network_C"
+    },
+    "outputs": {
+      "flip_counts": {
+        "shape": [
+          15
+        ],
+        "value": [
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        "nonfinite_count": 0
+      },
+      "num_events_not_single_flip": {
+        "shape": [],
+        "value": 15,
+        "nonfinite_count": 0
+      },
+      "repeat_gap_rows": {
+        "shape": [],
+        "value": 4,
+        "nonfinite_count": 0
+      }
+    },
+    "scope": "Executed researcher-authored expressions on registered measurements; not validation of causal interpretation."
+  },
+  "policy_fingerprint": "1e4f5dcbb6b1c6873b226ff66dc837a3f5d0ea528bce61489f59a4cc965b7607"
+}

@@ -1,0 +1,67 @@
+{
+  "id": "65aaeb48-35b7-4932-970f-a073f78c98fb",
+  "choices": [
+    {
+      "finish_reason": "tool_calls",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "",
+        "refusal": null,
+        "role": "assistant",
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "tool_calls": [
+          {
+            "id": "call_00_azd7VwKi3uk0NQ5iKtEp7987",
+            "function": {
+              "arguments": "{\"ref\": \"D539a6e7c905f6d316b1b\", \"pointer\": \"/artifacts\", \"offset\": 0, \"limit\": 6000, \"raw\": false}",
+              "name": "read_document"
+            },
+            "type": "function",
+            "index": 0
+          },
+          {
+            "id": "call_01_abCsQ1iIxtqy9a6AjQ8q4152",
+            "function": {
+              "arguments": "{\"ref\": \"D539a6e7c905f6d316b1b\", \"pointer\": \"/summary\", \"offset\": 0, \"limit\": 3000, \"raw\": false}",
+              "name": "read_document"
+            },
+            "type": "function",
+            "index": 1
+          }
+        ],
+        "reasoning_content": "The draft has the same content as the previous result (materials recovery stage), with sources having added fields. The validation error: \"Artifact MATERIALS.md does not exist; supply its exact text in files\". So the artifacts list declares MATERIALS.md and SOURCE_LEDGER.md, but the files object did not include them. I need to patch the draft, providing files. Wait — patch_result edits fields paths; \"files\" is not a field in the result though. Hmm, the instruction says \"files is an object of relative artifact paths to complete text content; every declared artifact must exist or be provided in files.\" For submit_result there's a files param. For patch_result, edits are JSON pointer paths on the draft... How do I supply files? Maybe I can patch result fields only and \"files\" is passed... patch_result schema only has draft_ref and edits. So maybe artifacts must be replaced with actual content? In the prior result D539a6e7c905f6d316b1b, artifacts was presumably a list of... let me check the old result's artifacts section. Perhaps old artifacts were objects with content, and the new draft turned them into filenames strings. Let me read /artifacts from D539a6e7c905f6d316b1b."
+      }
+    }
+  ],
+  "created": 1794290656,
+  "model": "deepseek-flash",
+  "object": "chat.completion",
+  "metadata": null,
+  "moderation": null,
+  "service_tier": null,
+  "system_fingerprint": "bc19ba97cbe016479903222bb1578db6",
+  "usage": {
+    "completion_tokens": 502,
+    "prompt_tokens": 24525,
+    "total_tokens": 25027,
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": null,
+      "audio_tokens": null,
+      "reasoning_tokens": 272,
+      "rejected_prediction_tokens": null,
+      "text_tokens": null
+    },
+    "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cache_write_tokens": null,
+      "cached_tokens": 18560,
+      "image_tokens": null,
+      "text_tokens": null
+    },
+    "prompt_cache_hit_tokens": 18560,
+    "prompt_cache_miss_tokens": 5965
+  }
+}

@@ -1,0 +1,442 @@
+{
+  "id": "resp_0cacf325475e93dc016af219f0ab3087d2a639ede756ff9e15",
+  "created_at": 1794251248.0,
+  "instructions": "Use only the tools exposed for this stage. Use read_documents to batch several needed pages in one call, avoiding repeated model round-trips. Use the supplied stage-scoped catalog; do not read arbitrary paths or earlier runs. The originating study and its explanations are hidden. Retrieval is mechanically restricted to independently dated earlier sources; original-study versions/mirrors and unknown dates are blocked. You may use disciplinary reasoning and clearly labelled conditional hypotheses; lack of an external citation does not prohibit a derivation. Use search_sources for actual missing public knowledge; returned access depth is explicit, not proof of relevance. analyze_csv reads every selected row, not the 12-row preview. Submit once using submit_result; if validation fails, the draft is saved locally. Use patch_result with the latest draft_ref and only changed fields; do not regenerate unchanged text. Original submissions remain archived. Every result requires summary (nonempty string) and artifacts, evidence, claims, limitations, next_actions (arrays, empty allowed), plus stage-specific fields. For development_step focus/uptake source, use a supplied source ID, document ID or unambiguous registered filename. Use a source-field locator instead of copying an exact quote when convenient. A registered document ID/path suffices if no specific field is selected; optional paraphrases are stored separately from exact quotes. For a JSON source, quote the exact string VALUE, without adding its field name. Alternatively supply quote_pointer (JSON pointer to a string) and omit quote; the exact selected string will be resolved and logged. For learning_request, context_ref=\"development_step\" may replace duplicate gap/why_now strings; this references your own gap/reason, never changes its content. For sources[].local_path use the returned D-document ID to avoid copying long paths; it resolves to the exact registered file. source_use covers exactly broker_reply_source_ids, not the whole source catalog or new searches in this turn. Cite newly read tool sources in evidence/memory_notes with actual paths/URLs. Keep result text concise; use 0-1 useful memory notes unless multiple are necessary. Preserve branches and open issues. files is an object of relative artifact paths to complete text content; every declared artifact must exist or be provided in files. If artifacts is empty, your exact summary is saved automatically as an artifact; do not repeat the entire JSON as prose. For review-index-v2, start with the stage directory and read relevant result/before-input sections by document ID. Summaries are incomplete navigation excerpts, not evidence. Start with input_refs and inline bodies, not the entire provenance catalog. When reading a needed document, request the relevant JSON pointer or a useful page (up to 12000 characters); avoid repeated tiny probes. For review, source_stage must match the stage containing the exact quote; note_keys are actual memory_notes keys (often empty), not JSON field names. If an input body is omitted or represented by $document, read it by ID. No scientific text was summarized; originals and before-inputs remain readable. Online retrieval is enabled.\n\nExecute agent_learn.md's learning and co-questioning plan. Chinese readable artifacts.\nDo not read earlier project runs/candidates. Only use listed inputs, their cited source files,\nthe current case's exchanges, supplied memory, and public sources. A previous task is accessible\nonly through the supplied memory packet and its provenance. Do not scan old run directories.\nRead the actual common sources behind summaries. Treat published findings as published knowledge.\nDo not present them as discoveries. Preserve disagreements and all idea branches.\nUse public sources via urllib/curl (Crossref, Europe PMC, PMC, arXiv, publishers as accessible).\nSave retrieved text and exact URLs; distinguish full text, abstract and failed access.\nNo solving, scientific validation experiment, proof or novelty gate is required for ideas.\nSmall worked calculations are allowed to learn a concept, clearly labelled learning examples.\nSave result.json with the six runtime fields plus the requested fields. Use summary as a STRING.\nDo not spend your entire budget retrieving; save useful partial understanding if needed.\n\nOrganize the ideas actually emerging from these exchanges, without inventing a replacement agenda.\nKeep 1-4 distinct candidates if they emerged; incomplete questions are valid. If none, ideas=[]\nand explain the unresolved learning entry point. Save all branches in BRANCHES.md, including\nabandoned ones. Return ideas array with id,title,idea,motivation,emergence (specific earlier\nstage paths and changes),domains. Save IDEAS.md. Also return question_trajectory array with\nstage, researcher, question, cause; quote real changes. Use the authoritative question history,\nnot self-described question_before. Preserve actual assumptions and conditional consequences,\nnot just whether-questions. Also return preserved_branches:[{ref:exact current hypothesis ref,\nreason:disposition}], accounting for ALL current branches including incomplete/parked ones.\nDo not pre-screen for novelty, evidence strength or feasibility.\n\n\nYou are Codex, a coding agent based on GPT-5. You and the user share one workspace, and your job is to collaborate with them until their goal is genuinely handled.\n\n# Personality\n\nYou are a deeply pragmatic, effective software engineer. You take engineering quality seriously, and collaboration comes through as direct, factual statements. You communicate efficiently, keeping the user clearly informed about ongoing actions without unnecessary detail.\n\n## Values\nYou are guided by these core values:\n- Clarity: You communicate reasoning explicitly and concretely, so decisions and tradeoffs are easy to evaluate upfront.\n- Pragmatism: You keep the end goal and momentum in mind, focusing on what will actually work and move things forward to achieve the user's goal.\n- Rigor: You expect technical arguments to be coherent and defensible, and you surface gaps or weak assumptions politely with emphasis on creating clarity and moving the task forward.\n\n## Interaction Style\nYou communicate respectfully, focusing on the task at hand. You always prioritize actionable guidance, clearly stating assumptions, environment prerequisites, and next steps.\n\nYou avoid cheerleading, motivational language, artificial reassurance, and general fluffiness. You don't comment on user requests, positively or negatively, unless there is reason for escalation.\n\n## Escalation\nYou may challenge the user to raise their technical bar, but you never patronize or dismiss their concerns. When presenting an alternative approach or solution to the user, you explain the reasoning behind the approach, so your thoughts are demonstrably correct. You maintain a pragmatic mindset when discussing these tradeoffs, and so are willing to work with the user after concerns have been noted.\n\n\n# General\nYou bring a senior engineer’s judgment to the work, but you let it arrive through attention rather than premature certainty. You read the codebase first, resist easy assumptions, and let the shape of the existing system teach you how to move.\n\n- When you search for text or files, you reach first for `rg` or `rg --files`; they are much faster than alternatives like `grep`. If `rg` is unavailable, you use the next best tool without fuss.\n- You parallelize tool calls whenever you can, especially file reads such as `cat`, `rg`, `sed`, `ls`, `git show`, `nl`, and `wc`. You use `multi_tool_use.parallel` for that parallelism, and only that. Do not chain shell commands with separators like `echo \"====\";`; the output becomes noisy in a way that makes the user’s side of the conversation worse.\n\n## Engineering judgment\n\nWhen the user leaves implementation details open, you choose conservatively and in sympathy with the codebase already in front of you:\n\n- You prefer the repo’s existing patterns, frameworks, and local helper APIs over inventing a new style of abstraction.\n- For structured data, you use structured APIs or parsers instead of ad hoc string manipulation whenever the codebase or standard toolchain gives you a reasonable option.\n- You keep edits closely scoped to the modules, ownership boundaries, and behavioral surface implied by the request and surrounding code. You leave unrelated refactors and metadata churn alone unless they are truly needed to finish safely.\n- You add an abstraction only when it removes real complexity, reduces meaningful duplication, or clearly matches an established local pattern.\n- You let test coverage scale with risk and blast radius: you keep it focused for narrow changes, and you broaden it when the implementation touches shared behavior, cross-module contracts, or user-facing workflows.\n\n## Frontend guidance\n\nYou follow these instructions when building applications with a frontend experience:\n\n### Build with empathy\n- If working with an existing design or given a design framework in context, you pay careful attention to existing conventions and ensure that what you build is consistent with the frameworks used and design of the existing application.\n- You think deeply about the audience of what you are building and use that to decide what features to build and when designing layout, components, visual style, on-screen text, and interaction patterns. Using your application should feel rich and sophisticated.\n- You make sure that the frontend design is tailored for the domain and subject matter of the application. For example, SaaS, CRM, and other operational tools should feel quiet, utilitarian, and work-focused rather than illustrative or editorial: avoid oversized hero sections, decorative card-heavy layouts, and marketing-style composition, and instead prioritize dense but organized information, restrained visual styling, predictable navigation, and interfaces built for scanning, comparison, and repeated action. A game can be more illustrative, expressive, animated, and playful.\n- You make sure that common workflows within the app are ergonomic and efficient, yet comprehensive -- the user of your application should be able to seamlessly navigate in and out of different views and pages in the application.\n\n### Design instructions\n- You make sure to use icons in buttons for tools, swatches for color, segmented controls for modes, toggles/checkboxes for binary settings, sliders/steppers/inputs for numeric values, menus for option sets, tabs for views, and text or icon+text buttons only for clear commands (unless otherwise specified). Cards are kept at 8px border radius or less unless the existing design system requires otherwise.\n- You do not use rounded rectangular UI elements with text inside if you could use a familiar symbol or icon instead (examples include arrow icons for undo/redo, B/I icons for bold/italics, save/download/zoom icons). You build tooltips which name/describe unfamiliar icons when the user hovers over it.\n- You use lucide icons inside buttons whenever one exists instead of manually-drawn SVG icons. If there is a library enabled in an existing application, you use icons from that library.\n- You build feature-complete controls, states, and views that a target user would naturally expect from the application.\n- You do not use visible, in-app text to describe the application's features, functionality, keyboard shortcuts, styling, visual elements, or how to use the application.\n- You should not make a landing page unless absolutely required; when asked for a site, app, game, or tool, build the actual usable experience as the first screen, not marketing or explanatory content.\n- When making a hero page, you use a relevant image, generated bitmap image, or immersive full-bleed interactive scene as the background with text over it that is not in a card; never use a split text/media layout where a card is one side and text is on another side, never put hero text or the primary experience in a card, never use a gradient/SVG hero page, and do not create an SVG hero illustration when a real or generated image can carry the subject.\n- On branded, product, venue, portfolio, or object-focused pages, the brand/product/place/object must be a first-viewport signal, not only tiny nav text or an eyebrow. Hero content must leave a hint of the next section's content visible on every mobile and desktop viewport, including wide desktop.\n- For landing-page heroes, make the H1 the brand/product/place/person name or a literal offer/category; put descriptive value props in supporting copy, not the headline.\n- Websites and games must use visual assets. You can use image search, known relevant images, or generated bitmap images instead of SVGs, unless making a game. Primary images and media should reveal the actual product, place, object, state, gameplay, or person; you refrain from dark, blurred, cropped, stock-like, or purely atmospheric media when the user needs to inspect the real thing. For highly specific game assets you use custom SVG/Three.js/etc.\n- For games or interactive tools with well-established rules, physics, parsing, or AI engines, you use a proven existing library for the core domain logic instead of hand-rolling it, unless the user explicitly asks for a from-scratch implementation.\n- You use Three.js for 3D elements, and make the primary 3D scene full-bleed or unframed and not inside a decorative card/preview container. Before finishing, you verify with Playwright screenshots and canvas-pixel checks across desktop/mobile viewports that it is nonblank, correctly framed, interactive/moving, and that referenced assets render as intended without overlapping.\n- You do not put UI cards inside other cards. Do not style page sections as floating cards. Only use cards for individual repeated items, modals, and genuinely framed tools. Page sections must be full-width bands or unframed layouts with constrained inner content.\n- You do not add discrete orbs, gradient orbs, or bokeh blobs as decoration or backgrounds.\n- You make sure that text fits within its parent UI element on all mobile and desktop viewports. Move it to a new line if needed, and if it still does not fit inside the UI element, use dynamic sizing so the longest word fits. Text must also not occlude preceding or subsequent content. Despite this, you check that text inside a UI button/card looks professionally designed and polished.\n- Match display text to its container: reserve hero-scale type for true heroes, and use smaller, tighter headings inside compact panels, cards, sidebars, dashboards, and tool surfaces.\n- You define stable dimensions with responsive constraints (such as  aspect-ratio, grid tracks, min/max, or container-relative sizing) for fixed-format UI elements like boards, grids, toolbars, icon buttons, counters, or tiles, so hover states, labels, icons, pieces, loading text, or dynamic content cannot resize or shift the layout.\n- You do not scale font size with viewport width. Letter spacing must be 0, not negative.\n- You do not make one-note palettes: avoid UIs dominated by variations of a single hue family, and limit dominant purple/purple-blue gradients, beige/cream/sand/tan, dark blue/slate, and brown/orange/espresso palettes; scan CSS colors before finalizing and revise if the page reads as one of these themes.\n- You make sure that UI elements and on-screen text do not overlap with each other in an incoherent manner. This is extremely important as it leads to a jarring user experience.\n\nWhen building a site or app that needs a dev server to run properly, you start the local dev server after implementation and give the user the URL so they can try it. If there's already a server on that port, you use another one. For a website where just opening the HTML will work, you don't start a dev server, and instead give the user a link to the HTML file that can open in their browser.\n\n## Editing constraints\n\n- You default to ASCII when editing or creating files. You introduce non-ASCII or other Unicode characters only when there is a clear reason and the file already lives in that character set.\n- You add succinct code comments only where the code is not self-explanatory. You avoid empty narration like \"Assigns the value to the variable\", but you do leave a short orienting comment before a complex block if it would save the user from tedious parsing. You use that tool sparingly.\n- Use `apply_patch` for manual code edits. Do not create or edit files with `cat` or other shell write tricks. Formatting commands and bulk mechanical rewrites do not need `apply_patch`.\n- Do not use Python to read or write files when a simple shell command or `apply_patch` is enough.\n- You may be in a dirty git worktree.\n  * NEVER revert existing changes you did not make unless explicitly requested, since these changes were made by the user.\n  * If asked to make a commit or code edits and there are unrelated changes to your work or changes that you didn't make in those files, you don't revert those changes.\n  * If the changes are in files you've touched recently, you read carefully and understand how you can work with the changes rather than reverting them.\n  * If the changes are in unrelated files, you just ignore them and don't revert them.\n- While working, you may encounter changes you did not make. You assume they came from the user or from generated output, and you do NOT revert them. If they are unrelated to your task, you ignore them. If they affect your task, you work **with** them instead of undoing them. Only ask the user how to proceed if those changes make the task impossible to complete.\n- Never use destructive commands like `git reset --hard` or `git checkout --` unless the user has clearly asked for that operation. If the request is ambiguous, ask for approval first.\n- You are clumsy in the git interactive console. Prefer non-interactive git commands whenever you can.\n\n## Special user requests\n\n- If the user makes a simple request that can be answered directly by a terminal command, such as asking for the time via `date`, you go ahead and do that.\n- If the user asks for a \"review\", you default to a code-review stance: you prioritize bugs, risks, behavioral regressions, and missing tests. Findings should lead the response, with summaries kept brief and placed only after the issues are listed. Present findings first, ordered by severity and grounded in file/line references; then add open questions or assumptions; then include a change summary as secondary context. If you find no issues, you say that clearly and mention any remaining test gaps or residual risk.\n\n## Autonomy and persistence\nYou stay with the work until the task is handled end to end within the current turn whenever that is feasible. Do not stop at analysis or half-finished fixes. Do not end your turn while `exec_command` sessions needed for the user’s request are still running. You carry the work through implementation, verification, and a clear account of the outcome unless the user explicitly pauses or redirects you.\n\nUnless the user explicitly asks for a plan, asks a question about the code, is brainstorming possible approaches, or otherwise makes clear that they do not want code changes yet, you assume they want you to make the change or run the tools needed to solve the problem. In those cases, do not stop at a proposal; implement the fix. If you hit a blocker, you try to work through it yourself before handing the problem back.\n\n# Working with the user\n\nYou have two channels for staying in conversation with the user:\n- You share updates in `commentary` channel.\n- After you have completed all of your work, you send a message to the `final` channel.\n\nThe user may send messages while you are working. If those messages conflict, you let the newest one steer the current turn. If they do not conflict, you make sure your work and final answer honor every user request since your last turn. This matters especially after long-running resumes or context compaction. If the newest message asks for status, you give that update and then keep moving unless the user explicitly asks you to pause, stop, or only report status.\n\nBefore sending a final response after a resume, interruption, or context transition, you do a quick sanity check: you make sure your final answer and tool actions are answering the newest request, not an older ghost still lingering in the thread.\n\nWhen you run out of context, the tool automatically compacts the conversation. That means time never runs out, though sometimes you may see a summary instead of the full thread. When that happens, you assume compaction occurred while you were working. Do not restart from scratch; you continue naturally and make reasonable assumptions about anything missing from the summary.\n\n## Formatting rules\n\nYou are writing plain text that will later be styled by the program you run in. Let formatting make the answer easy to scan without turning it into something stiff or mechanical. Use judgment about how much structure actually helps, and follow these rules exactly.\n\n- You may format with GitHub-flavored Markdown.\n- You add structure only when the task calls for it. You let the shape of the answer match the shape of the problem; if the task is tiny, a one-liner may be enough. Otherwise, you prefer short paragraphs by default; they leave a little air in the page. You order sections from general to specific to supporting detail.\n- Avoid nested bullets unless the user explicitly asks for them. Keep lists flat. If you need hierarchy, split content into separate lists or sections, or place the detail on the next line after a colon instead of nesting it. For numbered lists, use only the `1. 2. 3.` style, never `1)`. This does not apply to generated artifacts such as PR descriptions, release notes, changelogs, or user-requested docs; preserve those native formats when needed.\n- Headers are optional; you use them only when they genuinely help. If you do use one, make it short Title Case (1-3 words), wrap it in **…**, and do not add a blank line.\n- You use monospace commands/paths/env vars/code ids, inline examples, and literal keyword bullets by wrapping them in backticks.\n- Code samples or multi-line snippets should be wrapped in fenced code blocks. Include an info string as often as possible.\n- When referencing a real local file, prefer a clickable markdown link.\n  * Clickable file links should look like [app.py](/abs/path/app.py:12): plain label, absolute target, with optional line number inside the target.\n  * If a file path has spaces, wrap the target in angle brackets: [My Report.md](</abs/path/My Project/My Report.md:3>).\n  * Do not wrap markdown links in backticks, or put backticks inside the label or target. This confuses the markdown renderer.\n  * Do not use URIs like file://, vscode://, or https:// for file links.\n  * Do not provide ranges of lines.\n  * Avoid repeating the same filename multiple times when one grouping is clearer.\n- Don’t use emojis or em dashes unless explicitly instructed.\n\n## Final answer instructions\n\nIn your final answer, you keep the light on the things that matter most. Avoid long-winded explanation. In casual conversation, you just talk like a person. For simple or single-file tasks, you prefer one or two short paragraphs plus an optional verification line. Do not default to bullets. When there are only one or two concrete changes, a clean prose close-out is usually the most humane shape.\n\n- You suggest follow ups if useful and they build on the users request, but never end your answer with an \"If you want\" sentence.\n- When you talk about your work, you use plain, idiomatic engineering prose with some life in it. You avoid coined metaphors, internal jargon, slash-heavy noun stacks, and over-hyphenated compounds unless you are quoting source text. In particular, do not lean on words like \"seam\", \"cut\", or \"safe-cut\" as generic explanatory filler.\n- The user does not see command execution outputs. When asked to show the output of a command (e.g. `git show`), relay the important details in your answer or summarize the key lines so the user understands the result.\n- Never tell the user to \"save/copy this file\", the user is on the same machine and has access to the same files as you have.\n- If the user asks for a code explanation, you include code references as appropriate.\n- If you weren't able to do something, for example run tests, you tell the user.\n- Never overwhelm the user with answers that are over 50-70 lines long; provide the highest-signal context instead of describing everything exhaustively.\n- Tone of your final answer must match your personality.\n- Never talk about goblins, gremlins, raccoons, trolls, ogres, pigeons, or other animals or creatures unless it is absolutely and unambiguously relevant to the user's query.\n\n## Intermediary updates\n\n- Intermediary updates go to the `commentary` channel.\n- User updates are short updates while you are working, they are NOT final answers.\n- You treat messages to the user while you are working as a place to think out loud in a calm, companionable way. You casually explain what you are doing and why in one or two sentences.\n- Never praise your plan by contrasting it with an implied worse alternative. For example, never use platitudes like \"I will do <this good thing> rather than <this obviously bad thing>\", \"I will do <X>, not <Y>\".\n- Never talk about goblins, gremlins, raccoons, trolls, ogres, pigeons, or other animals or creatures unless it is absolutely and unambiguously relevant to the user's query.\n- You provide user updates frequently, every 30s.\n- When exploring, such as searching or reading files, you provide user updates as you go. You explain what context you are gathering and what you are learning. You vary your sentence structure so the updates do not fall into a drumbeat, and in particular you do not start each one the same way.\n- When working for a while, you keep updates informative and varied, but you stay concise.\n- Once you have enough context, and if the work is substantial, you offer a longer plan. This is the only user update that may run past two sentences and include formatting.\n- If you create a checklist or task list, you update item statuses incrementally as each item is completed rather than marking every item done only at the end.\n- Before performing file edits of any kind, you provide updates explaining what edits you are making.\n- Tone of your updates must match your personality.",
+  "metadata": {},
+  "model": "gpt-6-luna",
+  "object": "response",
+  "output": [
+    {
+      "arguments": "{\"result\":{\"summary\":\"从两条偏振扫描的交流中形成一个核心研究方向：把S1/S2/S3方向字段与导出DOP视为待识别的测量映射链，追问强度加权合成、跨状态平均和归一化的顺序如何决定信息保留。学习例给出条件性信息损失关系；案例字段流程和相位展宽机制仍未确定。保留四个互不等同的处理链/物理解释分支。\",\"artifacts\":[\"IDEAS.md\",\"BRANCHES.md\"],\"files\":{\"IDEAS.md\":\"# 候选 Ideas\\n\\n## I1：偏振方向字段与DOP的处理链\\n\\n**Idea：** 研究在光学偏振扫描中，强度加权Stokes合成、跨状态平均、方向归一化及DOP估计的不同次序，如何决定S1/S2/S3方向字段和标量DOP各自保留的信息。条件性地，若逐态方向先单位化且幅度/权重被丢弃，仅有方向一般不能确定后续加权合成的模长或抵消程度；若先合成后归一化，该特定信息损失推论不适用；若DOP来自独立估计链，也不自动等于丢失的模长。当前扫描中S范数全行近1，但这不识别其生成算法。研究问题是确定这些映射关系及其适用条件，不声称本案处理流程已知。\\n\\n**动机：** brief明确提醒S分量范数不可假定等于DOP，并称两条扫描DOP刻度不同。两扫描全CSV的S范数均接近1；方向与标量DOP因此值得分别追踪。研究者的问题从“改变了哪些场量、如何映射字段”及“是否同一对象/归一化步骤”，经交流转向平均、加权合成和归一化次序对信息保留的影响。\\n\\n**涌现路径：** `stages/02_initial_0`提出场/偏振量到输出字段的映射问题；`stages/02_initial_1`引入方向与DOP是否同对象的疑问；`stages/03_exchange_0`提出测量/平均/归一化管线；`stages/03_exchange_1`具体化处理次序；`stages/04_targeted_0_learn_1`将其细化为强度加权合成与信息损失；`stages/05_return_1`保留条件性推论且强调算法未知；`stages/06_candidates`以两相反等权向量作学习示例，未识别案例流程。\\n\\n**领域：** 光学、偏振测量、Stokes/Mueller表征、测量与信号处理。\\n\\n## I2：相位分布展宽与偏振抵消的条件关系\\n\\n**Idea：** 在明确的相位分布及固定其他光学条件、测量定义的前提下，研究相位分布展宽何时会造成合成偏振分量抵消并降低偏振度。现有spread扫描DOP随dphi增加下降只是单次导出扫描的线索，不证明dphi的物理含义或该机制。该问题与I1的字段处理链有关但不等同：即使字段映射明确，物理相位分布到合成偏振的关系仍需界定。\\n\\n**动机：** 材料预期在“dphi确为相对相位分布展宽且其他条件固定”时，相位平均可能降低合成相干分量；研究者一直保留仪器、后处理、尺度和扫描条件等替代分支。它从最初对控制相位所改变的光学量的追问中出现，后续始终作为条件候选而未被确认。\\n\\n**涌现路径：** `stages/01_materials_recovery`分别整理spread与mean-phase扫描及条件性预期；`stages/02_initial_0`询问控制量改变哪些场/偏振量；`stages/03_exchange_0`至`stages/05_return_1`保留相位抵消为一种可能而拒绝据输出趋势归因；`stages/06_candidates`仍将其列为未决条件分支。\\n\\n**领域：** 光学、偏振、相位统计、相干与测量。\\n\\n**状态说明：** I1是交流聚焦的主问题；I2是独立保留的物理机制问题。未预筛新颖性、证据强弱或可行性。\\n\",\"BRANCHES.md\":\"# 分支记录\\n\\n以下当前分支均保留；状态不表示成立。\\n\\n## `unit_direction_vs_dop`（theory_scientist v2）\\n假设S1/S2/S3方向字段与DOP是不同估计对象；近单位范数有助于提出此工作区分，但不足以确认逐行归一化操作或估计链。条件后果：若逐态单位化先于聚合且尺度/权重丢弃，方向不足以确定后续加权合成的模长；若DOP独立估计，不等于丢失的长度。保留为I1核心条件框架，不当作案例事实。\\n\\n## `unit_direction_vs_dop`（domain_scientist v1）\\n较宽的字段分离分支，包含低偏振条件下方向统计可能受测量不确定度影响的可能性。此点仅来自摘要层级的背景且适用条件未知；未并入确定结论，作为I1的测量不确定性子问题保留。\\n\\n## `conditional_preaggregation_unitization`\\n若聚合前逐态单位化并丢弃长度/强度权重，方向不能一般地重建后续加权合成的长度或抵消程度。保留为条件分支；未证明本案如此。\\n\\n## `postaggregation_normalization`\\n若先进行加权Stokes合成再归一化，方向表示合成结果方向，逐态先单位化的信息损失推论不适用；方向本身仍不携带长度。保留为与前一分支不同的处理链。\\n\\n## `independent_estimation`\\n若方向与DOP来自独立估计链，DOP变化可与近单位方向列并存，而不必解释为方向丢失了模长。保留；估计器定义缺失。\\n\\n## `phase_spread_cancellation`\\n若dphi确实表示相位分布展宽且其他条件、定义固定，相位平均导致偏振分量抵消是候选解释。保留为未决物理支线；扫描趋势不作因果证据。\\n\\n## 讨论与学习中的未转化支线\\n- 方向分量的均值相对相位变化如何对应偏振态方向旋转，取决于基底、相位参考及处理定义；保持开放，不另造确定机制。\\n- 不同光学系统可把不同偏振性质编码在不同信号特征；PS-OCT摘要只是类比，未证明适用于本案。\\n- 仪器响应、校准、样品/扫描条件、拟合或导出尺度都可能解释spread扫描DOP趋势；均未判定。\\n- 两扫描DOP刻度分别约0–100与0–1，且不是独立重复；不合并、不由其差异形成跨扫描解释。\\n\"},\"ideas\":[{\"id\":\"I1\",\"title\":\"偏振方向字段与DOP的处理链\",\"idea\":\"研究强度加权Stokes合成、跨状态平均、方向归一化及DOP估计的次序，如何决定S1/S2/S3方向字段与标量DOP各自保留的信息。条件性地，若逐态方向先单位化并丢弃幅度/权重，方向一般不足以确定后续加权合成的模长或抵消程度；先合成后归一化或独立估计DOP则对应不同解释。当前数据近单位S范数不识别具体算法；本案字段流程仍未知。\",\"motivation\":\"材料警示不能把S向量范数当作导出DOP。全量扫描分别显示方向向量近单位范数，而DOP是独立字段且两扫描刻度不同。双方交流把问题从列间对应关系推进到测量估计对象及处理次序的信息保留问题。\",\"emergence\":\"变化轨迹：`stages/02_initial_0`追问控制量改变哪些场/偏振量及其到字段的映射；`stages/02_initial_1`追问方向和DOP是否同对象；`stages/03_exchange_0`提出测量管线；`stages/03_exchange_1`将焦点改为平均/归一化顺序；`stages/04_targeted_0_learn_1`明确强度加权与信息保留；`stages/05_return_1`收窄条件推论并保持案例算法未知；`stages/06_candidates`用相反向量示例说明条件关系。\",\"domains\":[\"光学\",\"偏振测量\",\"Stokes表征\",\"信号处理\"]},{\"id\":\"I2\",\"title\":\"相位展宽导致偏振抵消的条件\",\"idea\":\"在相位分布含义明确、其他光学条件和DOP定义固定时，研究相位分布展宽何时会令合成偏振分量抵消并降低偏振度。spread扫描的DOP下降仅是该次扫描的趋势线索；不能据此确认相位机制。\",\"motivation\":\"起始材料提出条件性预期：若dphi代表相对相位分布展宽，随机相位平均可能降低相干合成分量。交流没有消除此条件，也持续保留仪器、后处理、刻度和扫描条件等替代解释。\",\"emergence\":\"`stages/01_materials_recovery`分别整理两扫描及条件性预期；`stages/02_initial_0`提出控制变量对应的物理量问题；`stages/03_exchange_0`、`stages/04_targeted_0_learn_0`、`stages/05_return_1`至`stages/06_candidates`持续保留相位抵消解释但不将观察归因为该机制。\",\"domains\":[\"光学\",\"偏振\",\"相位统计\",\"相干测量\"]}],\"question_trajectory\":[{\"stage\":\"02_initial_0\",\"researcher\":\"domain_scientist\",\"question\":\"在这组光学偏振扫描里，控制相位展宽或平均相位时，究竟是哪些场/偏振量被改变，以及何种测量处理把这些变化映射成DOP与S1/S2/S3？\",\"cause\":\"独立初始问题：同时询问被控物理量和观测到的字段映射。\"},{\"stage\":\"02_initial_1\",\"researcher\":\"theory_scientist\",\"question\":\"在两条偏振扫描中，S1/S2/S3的几何方向与导出的DOP是否描述同一对象、同一归一化步骤？尤其是spread扫描中DOP随dphi下降时，这代表物理偏振度改变，还是方向被单位化后另一个标量被独立处理？\",\"cause\":\"另一研究者把初问具体化为方向与DOP是否同一对象/步骤，并提出物理变化与独立标量处理的分支。\"},{\"stage\":\"03_exchange_0\",\"researcher\":\"shared\",\"question\":\"在两条偏振扫描中，S1/S2/S3方向列与导出DOP分别对应测量、平均和归一化管线中的哪些估计对象或步骤？尤其在spread扫描中DOP下降而方向范数近1时，哪些结论由字段定义支持，哪些依赖尚未确认的处理顺序？\",\"cause\":\"交流把两个初始问题合并为共享的测量表示链问题，同时避免把逐行单位化视为事实。\"},{\"stage\":\"03_exchange_1\",\"researcher\":\"theory_scientist\",\"question\":\"在两条偏振扫描中，S1/S2/S3方向字段和导出DOP分别对应测量、平均与归一化链中的哪些估计对象或步骤？特别是平均与方向归一化的次序是否会使DOP无法从方向字段恢复？\",\"cause\":\"从字段映射进一步追问运算次序如何保留或丢失可恢复的信息。\"},{\"stage\":\"04_targeted_0_learn_1\",\"researcher\":\"domain_scientist\",\"question\":\"在两条偏振扫描中，底层信号或偏振状态如何经强度加权Stokes合成、平均、估计和归一化映射为S1/S2/S3方向字段与DOP？尤其当方向字段近单位范数而spread扫描DOP下降时，哪些信息关系取决于合成与归一化的次序，哪些仍需本案字段定义及测量不确定度确认？\",\"cause\":\"学习未获得本案算法定义，但把共享问题细化为强度加权合成、归一化次序，并加入方向统计测量不确定度这一条件。\"},{\"stage\":\"05_return_1\",\"researcher\":\"shared\",\"question\":\"在两条偏振扫描中，哪些测量与处理步骤分别生成S1/S2/S3方向字段和DOP？特别是强度加权Stokes合成、跨状态平均与方向归一化的次序，如何决定尺度或权重信息是否保留？\",\"cause\":\"学习后将问题收敛到估计步骤和尺度/权重信息保留，同时明确本案定义未查明。\"},{\"stage\":\"06_candidates\",\"researcher\":\"theory_scientist\",\"question\":\"本案的平均、权重和归一化分别作用于何种对象、次序如何，以致导出的单位方向是否保留聚合偏振程度所需的信息？\",\"cause\":\"小型向量学习例说明不同次序的信息差异，但未识别本案流程；延续问题聚焦具体估计对象和次序。\"}],\"preserved_branches\":[{\"ref\":\"shared:conditional_preaggregation_unitization\",\"reason\":\"作为条件性信息损失分支保留；本案是否先逐态单位化并丢弃权重未知。\"},{\"ref\":\"shared:postaggregation_normalization\",\"reason\":\"不同的处理顺序分支，先聚合再归一化时不适用逐态丢尺度的推论；本案顺序未知。\"},{\"ref\":\"shared:independent_estimation\",\"reason\":\"DOP可能来自独立估计链，避免将其默认解释为方向字段丢失的长度；估计定义缺失。\"},{\"ref\":\"shared:phase_spread_cancellation\",\"reason\":\"保留相位展宽导致偏振抵消的条件候选，但趋势不足以作因果归因。\"},{\"ref\":\"theory_scientist:unit_direction_vs_dop:v2\",\"reason\":\"当前主要假设；全表近单位范数不证明归一化算法，处理链仍待识别。\"},{\"ref\":\"domain_scientist:unit_direction_vs_dop:v1\",\"reason\":\"保留更宽的字段分离解释及条件性测量不确定度疑问；证据未决定其适用性。\"}],\"evidence\":[{\"source\":\"Dbf1a9ec6f2767c45ac42\",\"note\":\"案例brief定义扫描分组、DOP刻度区别及S分量说明，并明确两次扫描不能合并为独立重复。\"},{\"source\":\"D330d314c21e4cade755f\",\"note\":\"可读综述摘要支持经典偏振的Stokes参数与Poincare球表述；摘要不规定案例处理链。\"},{\"source\":\"D807e12d5eaab9def3f44\",\"note\":\"PS-OCT摘要展示特定系统以振幅比与相位差编码不同偏振性质，仅作为测量映射类比。\"},{\"source\":\"D4b040c53f3ee4786edc8\",\"note\":\"候选版本的权威问题历史与当前假设登记，包含各阶段问题变化和来源路径。\"},{\"source\":\"D377087c1bbdd8b2e8df3\",\"note\":\"当前延续阶段的学习示例：相反等权方向平均可抵消；抽象信息关系不证明案例流程。\"},{\"source\":\"D072ea6a6e049ffa1359f\",\"note\":\"全量CSV mean_phase扫描200行：S范数均值0.9999978、范围0.9999908至0.9999998；非因果统计。\"},{\"source\":\"D804f1eeccd0ec7446bb8\",\"note\":\"全量CSV spread扫描102行：S范数均值0.9999967、范围0.9999719至0.9999991；与另一扫描分开计算。\"},{\"source\":\"D4a290594081e76e482ce\",\"note\":\"学习与候选生成计划：保存问题轨迹、保留分支，候选可为未决问题，不要求证明或可行性门槛。\"}],\"claims\":[\"条件推论：若聚合前逐态单位化并丢弃长度/权重，仅方向一般不足以确定后续加权合成的模长或抵消程度。\",\"若先合成再归一化，该逐态信息损失推论不适用；方向本身仍不表示合成长度。\",\"若DOP来自独立估计链，其变化不自动等于方向字段丢失的长度。\",\"本案的字段定义、加权、平均、归一化顺序和DOP估计器仍未知。\"],\"limitations\":[\"未获得可确认匹配本案扫描的可读实验方法全文；外部偏振来源为摘要级。\",\"数值统计是两次不同source scan的描述，不是独立重复或因果验证。\",\"全量S范数近1不能证明逐行单位化操作，也不能确定DOP物理意义。\",\"两扫描DOP刻度不同，不应合并比较。\"],\"next_actions\":[\"取得原始图表/方法说明，核对S1/S2/S3、DOP、dphi及mean_phase的定义、单位、权重和处理顺序。\",\"分别保留预聚合单位化、后聚合归一化及独立DOP估计等分支；在定义可读前不把趋势归因于相位抵消。\"]}}",
+      "call_id": "call_b27499baf27e42d59564a8f7ebe58c12",
+      "name": "submit_result",
+      "type": "function_call",
+      "id": "fc_0cacf325475e93dc016af219f1650087d292a71107f3b94008",
+      "status": "completed"
+    }
+  ],
+  "parallel_tool_calls": false,
+  "temperature": 1.0,
+  "tool_choice": "auto",
+  "tools": [
+    {
+      "name": "read_document",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "maximum": 12000,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "offset": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "pointer": {
+            "type": "string"
+          },
+          "raw": {
+            "type": "boolean"
+          },
+          "ref": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "ref",
+          "pointer",
+          "offset",
+          "limit",
+          "raw"
+        ],
+        "type": "object"
+      },
+      "strict": true,
+      "type": "function",
+      "description": "Read a supplied immutable document, including omitted context. JSON pointer selects a section; pagination never silently truncates. raw=true returns original text for quotations."
+    },
+    {
+      "name": "read_documents",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "requests": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "limit": {
+                  "maximum": 12000,
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                "offset": {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "pointer": {
+                  "type": "string"
+                },
+                "raw": {
+                  "type": "boolean"
+                },
+                "ref": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "ref",
+                "pointer",
+                "offset",
+                "limit",
+                "raw"
+              ],
+              "type": "object"
+            },
+            "maxItems": 8,
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "requests"
+        ],
+        "type": "object"
+      },
+      "strict": true,
+      "type": "function",
+      "description": "Read several needed documents in one call to avoid repeated model round-trips. Each page has explicit next_offset and SHA. Total requested characters must be at most 24000."
+    },
+    {
+      "name": "analyze_csv",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "dataset": {
+            "type": "string"
+          },
+          "group_column": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "group_value": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "outputs": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "expression": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "expression"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "variables": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "expression": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "expression"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "dataset",
+          "group_column",
+          "group_value",
+          "variables",
+          "outputs"
+        ],
+        "type": "object"
+      },
+      "strict": true,
+      "type": "function",
+      "description": "Compute on the ENTIRE registered CSV (not preview rows). Numeric column names are arrays. scan selections use group_column/group_value. Define variables in order and output safe array expressions. Functions: abs,sqrt,sin,cos,mean,sum,std,min,max,median,quantile,isfinite,where,clip,diff(axis=0),norm(axis=-1),shift,rolling. No Python execution or file access."
+    },
+    {
+      "name": "search_sources",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "queries": {
+            "items": {
+              "maxLength": 400,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 2,
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "queries"
+        ],
+        "type": "object"
+      },
+      "strict": true,
+      "type": "function",
+      "description": "Search actual public scientific indexes, save eligible readable sources and return IDs, access depth and excerpts. Search success is not evidence of relevance or understanding."
+    },
+    {
+      "name": "submit_result",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "result": {
+            "additionalProperties": true,
+            "type": "object"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object"
+      },
+      "strict": false,
+      "type": "function",
+      "description": "Submit a stage result once. If validation fails it is saved as a draft; use patch_result to change only affected fields."
+    }
+  ],
+  "top_p": 0.98,
+  "background": false,
+  "completed_at": 1794251324.0,
+  "image": {
+    "context_compression": "disabled"
+  },
+  "prompt_cache_key": "c808bd51-4587-4fc8-b88c-925a62f3b068",
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "all_turns",
+    "effort": "low",
+    "mode": "standard"
+  },
+  "safety_identifier": "user-LbCUqBnUNrp8YjUQJfttWd0O",
+  "service_tier": "default",
+  "status": "completed",
+  "text": {
+    "format": {
+      "type": "text"
+    },
+    "verbosity": "medium"
+  },
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "total_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      }
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  },
+  "top_logprobs": 0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 48291,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0
+    },
+    "output_tokens": 4207,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 52498,
+    "attribution": {
+      "items": {
+        "fc_0cacf325475e93dc016af219c4773c87d2ac9a2f3df69a9724": {
+          "input_tokens": 261,
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 0
+        },
+        "fc_0cacf325475e93dc016af219d0003887d28fa96fd1ca9f8ba3": {
+          "input_tokens": 192,
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 0
+        },
+        "fc_0cacf325475e93dc016af219d5d5bc87d2bcab1013b954537c": {
+          "input_tokens": 236,
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 0
+        },
+        "fc_0cacf325475e93dc016af219e057c487d2820ee081fa3fe0aa": {
+          "input_tokens": 130,
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 0
+        },
+        "fc_0cacf325475e93dc016af219e5998c87d284629a7433eb817f": {
+          "input_tokens": 130,
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 0
+        },
+        "fc_0cacf325475e93dc016af219ea7e1887d2b8fc582397c43032": {
+          "input_tokens": 129,
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 0
+        },
+        "fc_0cacf325475e93dc016af219f0abec87d2811d7f4af9763bba": {
+          "input_tokens": 12329,
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 0,
+          "content": [
+            {
+              "input_tokens": 12329,
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "output_tokens": 0
+            }
+          ]
+        },
+        "fc_0cacf325475e93dc016af219f0abec87d2848b15d7a47aaf62": {
+          "input_tokens": 6175,
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 0,
+          "content": [
+            {
+              "input_tokens": 6175,
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "output_tokens": 0
+            }
+          ]
+        },
+        "fc_0cacf325475e93dc016af219f0abec87d28784c66f282f78c0": {
+          "input_tokens": 138,
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 0,
+          "content": [
+            {
+              "input_tokens": 138,
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "output_tokens": 0
+            }
+          ]
+        },
+        "fc_0cacf325475e93dc016af219f0abec87d28adeb49c7d85a40b": {
+          "input_tokens": 292,
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 0,
+          "content": [
+            {
+              "input_tokens": 292,
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "output_tokens": 0
+            }
+          ]
+        },
+        "fc_0cacf325475e93dc016af219f0abec87d296247f480d4d2acd": {
+          "input_tokens": 303,
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 0,
+          "content": [
+            {
+              "input_tokens": 303,
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "output_tokens": 0
+            }
+          ]
+        },
+        "fc_0cacf325475e93dc016af219f0abec87d2a5d6e06500bc993f": {
+          "input_tokens": 7120,
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 0,
+          "content": [
+            {
+              "input_tokens": 7120,
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "output_tokens": 0
+            }
+          ]
+        },
+        "fc_0cacf325475e93dc016af219f1650087d292a71107f3b94008": {
+          "input_tokens": 2,
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 4207
+        },
+        "msg_0cacf325475e93dc016af219f0abe887d2bf1633d45bbf7e90": {
+          "input_tokens": 14943,
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 0,
+          "content": [
+            {
+              "input_tokens": 14943,
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "output_tokens": 0
+            }
+          ]
+        }
+      },
+      "request_fields": {
+        "instructions": {
+          "input_tokens": 5381,
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 0
+        },
+        "tools": {
+          "input_tokens": 530,
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 0
+        }
+      }
+    }
+  },
+  "frequency_penalty": 0.0,
+  "presence_penalty": 0.0,
+  "store": false
+}

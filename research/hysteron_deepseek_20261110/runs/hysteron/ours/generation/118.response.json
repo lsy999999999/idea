@@ -1,0 +1,67 @@
+{
+  "id": "327a3dd1-4586-4894-adff-f64857abc468",
+  "choices": [
+    {
+      "finish_reason": "tool_calls",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "",
+        "refusal": null,
+        "role": "assistant",
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "tool_calls": [
+          {
+            "id": "call_00_V3KmE0qSGxjtzqNs2Tmi8238",
+            "function": {
+              "arguments": "{\"ref\": \"Dc2f530d8695d2a174da1\", \"pointer\": \"/revision_obligations\", \"offset\": 0, \"limit\": 4000, \"raw\": true}",
+              "name": "read_document"
+            },
+            "type": "function",
+            "index": 0
+          },
+          {
+            "id": "call_01_ReHOzCYXHVeJXuBP5iI39936",
+            "function": {
+              "arguments": "{\"ref\": \"D03b424ea694e88071ea0\", \"pointer\": \"/summary\", \"offset\": 0, \"limit\": 3000, \"raw\": true}",
+              "name": "read_document"
+            },
+            "type": "function",
+            "index": 1
+          }
+        ],
+        "reasoning_content": "The draft's revision_obligations already appears to have dependency_responses for both obligations. But validation error says \"Respond once to each pending hypothesis dependency obligation\". Maybe the draft revision_obligations we read is already patched? Wait the draft ref D03b... maybe contains current content including a revision_obligations that is correct, but error was from submission attempt? Hmm, read shows dependency_responses present. But maybe the validator counts obligations from supplied hypothesis_state revision_obligations (two) and expects exactly? There are two objects, each with one response, refs to latch v2. Seems fine. But maybe the error arises because the response ref should be the obligation's hypothesis_ref? No, dependency_responses ref should be the dependency ref that changed? The spec: \"For each obligation return dependency_responses:[{ref:exact hypothesis_ref,action:...,reason:...}]\". Ambiguity: ref = exact hypothesis_ref — probably the dependency ref? Let's parse: \"revision_obligations lists your branches whose declared premises changed... For each obligation return dependency_responses:[{ref:exact hypothesis_ref,action:revise/reaffirm/park/unresolved,reason}]\". Likely ref identifies the dependency that is being responded to, i.e., the premise. The draft uses latch_as_threshold_inequality v2. That seems right.\n\nBut error persists. Maybe the issue: the branch cards in hypothesis_updates for the depended branch itself (latch_as_threshold_inequality) is missing? For revision action, \"Reaffirm/revise requires an updated full card citing current dependency versions\". The draft has updated full cards for barrier_interaction_frontier (base_version 2, -> v3) and threshold_gap_addressability (base_version 1 -> v2), but perhaps because the branch depending on latch v2 does not include latch card? No, revised cards need be in hypothesis_updates. Both are present. Hmm.\n\nMaybe the problem: revision_obligations has two obligations, but one response's hypothesis_ref version mismatch? Actually obligation for barrier v2, and response uses latch v2. Fine.\n\nBut perhaps validator expects dependency_responses for every pending obligation and the field \"revision_obligations\" should be a list with \"dependency_responses\"; we have it. Unless it wants also one entry for threshold_coordinate_factorization? Let's re-check: supplied hypothesis_state revision_obligations has exactly two:\n- barrier_interaction_frontier v2 depends on latch v1; latest v2.\n- threshold_gap_addressability v1 depends on latch v1; latest v2.\n\nDraft responses both revise. So why error? Maybe because the draft's hypothesis_updates changed the depended branch `latch_as_threshold_inequality`? No, not in updates this turn. The updates include threshold_coordinate_factorization base_version 2 -> v3, barrier base_version 2 -> v3, threshold_gap base_version 1 -> v2, and new unilateral_wire_edge. Wait threshold_coordinate_factorization v3 also has depends_on []? Actually shows depends_on: [] — it previously had no depends_on (v2 had none). Fine.\n\nMaybe the validator requires the dependency response's ref to be the exact `hypothesis_ref` of obligation (barrier v2 / threshold_gap v1), not the dependency. Let's infer from typical schema. The term \"dependency_responses\" and \"ref: exact hypothesis_ref\" likely refers to the dependency that changed (as in causes.dependency_ref). \"Respond once to each pending hypothesis dependency obligation\" — maybe each obligation needs a response keyed by the branch awaiting review? Hmm.\n\nLet's look for any supplied example in documents from prior peers perhaps. Search in Dc2f... for revision_obligations. That result is peer's exchange_0 and may include revision_obligations field."
+      }
+    }
+  ],
+  "created": 1794293880,
+  "model": "deepseek-flash",
+  "object": "chat.completion",
+  "metadata": null,
+  "moderation": null,
+  "service_tier": null,
+  "system_fingerprint": "bc19ba97cbe016479903222bb1578db6",
+  "usage": {
+    "completion_tokens": 1049,
+    "prompt_tokens": 28085,
+    "total_tokens": 29134,
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": null,
+      "audio_tokens": null,
+      "reasoning_tokens": 821,
+      "rejected_prediction_tokens": null,
+      "text_tokens": null
+    },
+    "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cache_write_tokens": null,
+      "cached_tokens": 24576,
+      "image_tokens": null,
+      "text_tokens": null
+    },
+    "prompt_cache_hit_tokens": 24576,
+    "prompt_cache_miss_tokens": 3509
+  }
+}

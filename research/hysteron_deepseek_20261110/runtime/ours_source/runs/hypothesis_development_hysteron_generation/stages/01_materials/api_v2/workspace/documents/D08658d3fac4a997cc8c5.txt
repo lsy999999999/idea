@@ -1,0 +1,91 @@
+{
+  "name": "analyze_csv",
+  "args": {
+    "dataset": "measurements",
+    "group_column": "spring_id",
+    "group_value": "S046",
+    "variables": [
+      {
+        "name": "x",
+        "expression": "x_m"
+      },
+      {
+        "name": "F",
+        "expression": "force_N"
+      },
+      {
+        "name": "dx",
+        "expression": "x_m - mean(x_m)"
+      },
+      {
+        "name": "dF",
+        "expression": "force_N - mean(force_N)"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "n",
+        "expression": "sum(isfinite(x_m))"
+      },
+      {
+        "name": "slope_N_per_m",
+        "expression": "sum(dx*dF)/sum(dx*dx)"
+      },
+      {
+        "name": "mean_F",
+        "expression": "mean(force_N)"
+      },
+      {
+        "name": "min_x",
+        "expression": "min(x_m)"
+      },
+      {
+        "name": "max_x",
+        "expression": "max(x_m)"
+      }
+    ]
+  },
+  "call_id": "call_00_jfUnVVK1Awmh4uQ3tglD4978",
+  "seconds": 0.013891125097870827,
+  "registered_paths": [],
+  "result": {
+    "status": "executed",
+    "dataset": "measurements",
+    "sha256": "5e40502610e3904c627ab6b4cda5b65f4cf9185ed5190459d6b909313619504e",
+    "total_rows": 123,
+    "selected_rows": 29,
+    "selection": {
+      "column": "spring_id",
+      "value": "S046"
+    },
+    "outputs": {
+      "n": {
+        "shape": [],
+        "value": 29,
+        "nonfinite_count": 0
+      },
+      "slope_N_per_m": {
+        "shape": [],
+        "value": 45.853293502916394,
+        "nonfinite_count": 0
+      },
+      "mean_F": {
+        "shape": [],
+        "value": 6.55563379310345,
+        "nonfinite_count": 0
+      },
+      "min_x": {
+        "shape": [],
+        "value": 0.05791,
+        "nonfinite_count": 0
+      },
+      "max_x": {
+        "shape": [],
+        "value": 0.32591,
+        "nonfinite_count": 0
+      }
+    },
+    "scope": "Executed researcher-authored expressions on registered measurements; not validation of causal interpretation."
+  },
+  "policy_fingerprint": "c05e68c657d34f6673d55715947f6115a1c5cb4fcfd1f899cf2f83a48dc104e5"
+}

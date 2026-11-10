@@ -1,0 +1,664 @@
+{
+  "artifacts": [
+    "artifacts/rank_one_edge_identity.md",
+    "artifacts/pair_A_threshold_recompute.csv"
+  ],
+  "claims": [
+    {
+      "basis": "40 个 threshold 行逐格复算；对数斜率法在小量上被分辨率主导",
+      "claim": "pair_A 的 b 与 Δh 在四个 ℓ 上都与 ℓ² 相符（偏差 0.03–0.10 cm ≤ 一格分辨率），上一轮 1.63/2.22 的幂差不可分辨",
+      "status": "data-derived estimate"
+    },
+    {
+      "basis": "由 S_ij=s·B·k_cℓ_iℓ_j 与 h、b 的定义消去 θ、k_c、k_d、ε",
+      "claim": "无自由参数恒等式 b1·b2 = 4·Δh1·Δh2 在 ℓ=3.154 给出 0.95、在 ℓ=4.731 给出 0.85；ℓ=1.577 为 0.29，但该点 Δh2=0.1 cm 仅一格",
+      "status": "my derivation checked on rows"
+    },
+    {
+      "basis": "S_ij=k_c[(r̂·t_i)(r̂·t_j)(1+ε/R)−(ε/R)(t_i·t_j)] 的代数",
+      "claim": "两力臂切向共线时单簧边 Hessian 严格秩一：S_ij=s·B·k_cℓ_iℓ_j，B=cos²ψ(1+ε/R)−ε/R∈(0,1]；ψ=0 时 B=1 且与 ε 无关",
+      "status": "my derivation, literature unverified"
+    },
+    {
+      "basis": "同一 B 同时出现在 S_ii 与 S_ij",
+      "claim": "预压 ε 不能使对角与非对角异号，也不能让两通道反向移动；上轮据此提出的判读作废",
+      "status": "self-correction of prior claim"
+    },
+    {
+      "basis": "秩一 + 符号 s；条件性，可被案件几何否掉",
+      "claim": "sign(b_i)=sign(S_ij)=s=sign(τ1·τ2) ⇒ pair_A 的 b<0 要求两耦合臂在各自枢轴上取相反朝向（异侧），pair_B 的 b>0 要求同侧",
+      "status": "hypothesis with a falsifier"
+    },
+    {
+      "basis": "两装置独立同值；B≤1 使 N=1 对 pair_A 不可能（除 mount_l 非力矩臂）",
+      "claim": "λ/(N k_c,nomℓ²/(k_dL)) 在 pair_A 为 1.28、pair_B 为 1.20（N=2、名义 k_c），即振幅指向 ψ≈0（B=1）且装机 k 约为标定名义的 1.2–1.3 倍",
+      "status": "conditional estimate"
+    },
+    {
+      "basis": "秩一结果 + pair_A 的 0.85–0.95",
+      "claim": "『两通道可独立调节』等价于边 Hessian 秩≥2，需同一对转子上两簧奇偶相反（或切向不共线）；场隐形边（λ=0 且 Δh>0）是两簧精确抵消，pair_A 反而最接近秩一上限、离它最远",
+      "status": "my inference"
+    }
+  ],
+  "dependency_responses": [
+    {
+      "action": "revise",
+      "reason": "原前提 coupling_torque_moments 由 v3 经 v4 到 v5；新卡改为由 s=sign(τ1·τ2) 推导符号（不再由并联/交叉命名），幅度责任移出，并同时声明依赖 rank_one_edge_coupling v2。",
+      "ref": {
+        "key": "wiring_parity_sign",
+        "owner": "domain_scientist",
+        "version": 4
+      }
+    },
+    {
+      "action": "park",
+      "reason": "前提 unilateral_stop_state 已到 v5；且秩一结果说明单簧边本无挫折可被 κ→1『抹平』，该支只剩『窄环（κ≈0.9）⇒ 同 γ 雪崩幅度读数』这一较弱内容，故保持停用、原样保留其预言，不再消耗本轮论证。",
+      "ref": {
+        "key": "degeneracy_heals_frustration",
+        "owner": "domain_scientist",
+        "version": 2
+      }
+    }
+  ],
+  "development_step": {
+    "action": "derive",
+    "action_note": null,
+    "expected_change": "把『两通道不同幂、预压异号分裂』替换为『切向共线时边 Hessian 恰秩一、两列是同一 B 的两个权重』，并给出两条可判后果：b1b2=4Δh1Δh2（无自由参数）与 s=sign(τ1·τ2)（符号=几何奇偶，pair_A 应两臂异侧）。",
+    "focus": {
+      "quote": "Hold the other rotor fixed at its - or + stop; move the common drive quasistatically until the free rotor switches. Repeat for both directions.",
+      "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/allowed/measurements_brief.json"
+    },
+    "gap": "上一轮把『预压项在对角与非对角异号』当作幂差（1.63 对 2.22）的机制，但该幂差来自小量上的对数斜率；缺口在于：这两个通道到底是不是两个独立读数，还是同一个数的两个权重？若是后者，就必须给出一个不依赖拟合、能被同一张夹紧表否掉的恒等式，并说明预压还能进到哪里。",
+    "outcome": {
+      "kind": "relation",
+      "remaining_gap": "两端未定：mount_l 是否即各转子自己的力矩臂（宽度比 4.33 对 θ 比 3.49 差 24%），以及 N（每装置耦合弹簧数）只能由振幅自洽性反推；文献侧三轮零产出，秩一/规范的既有地位仍 unknown。",
+      "statement": "单簧边的二阶展开给 S_ij=k_c[(r̂·t_i)(r̂·t_j)(1+ε/R)−(ε/R)(t_i·t_j)]；两力臂切向共线时它严格秩一 S_ij=s·B·k_cℓ_iℓ_j，B=cos²ψ(1+ε/R)−ε/R∈(0,1]，s=sign(τ1·τ2)。由此：(1) ε 出现在对角与非对角的同一个因子里，不能使两通道反向——上一轮的判读作废；(2) 代回 h、b 的定义得无自由参数恒等式 b1b2=4Δh1Δh2，实测 0.95（ℓ=3.154）/0.85（ℓ=4.731），而 ℓ=1.577 的 0.29 处 Δh2 只有一格；(3) 幂差本身在 ±0.1 cm 内不存在，两列都与 ℓ² 相容；(4) 符号只由切向奇偶决定，pair_A 的 b<0 要求两耦合臂异侧，pair_B 的 b>0 要求同侧，这是可被案件几何否掉的预言；(5) 振幅 λ/(N k_c,nomℓ²/(k_dL)) 在两台独立装置上为 1.28/1.20，指向 ψ≈0（此时 B=1 且与 ε 无关）与装机 k≈1.2–1.3×名义。"
+    },
+    "reason": "控制器没有返回任何源，文献无法帮助；但缺口本身是代数性的：把 U=½k_c(R−ℓ0)² 的二阶展开写全，就能判断 ε 是否可能让 S_ii 与 S_ij 反号，并把 h_i、b_i 的定义代回，看是否得到一个不含 k_c、k_d、ε 的恒等式。这比继续解释两个幂次更能收敛。",
+    "uptake": [
+      {
+        "consequence": "条件性：符号只能写成『由 b 的符号反推臂的相对朝向』，无法与现实几何核对；秩一⇒可规范的文献地位保持 unknown。",
+        "effect": "unresolved",
+        "quote": null,
+        "reason": "本轮主服务回复（09_develop_000）sources 为 []：3 次请求、每次 3 家 provider 全为 retrieval_failed(ValueError)；同时 case_facts[0] status=unknown（pair_A 两簧安装侧别与力臂符号）。文献与案件两侧都没有输入。",
+        "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/services/replies/09_develop_000_request_0.json"
+      },
+      {
+        "consequence": "条件性：秩一结论仍只是我对该装置二阶展开的自得结果，不能被引作已发表结论。",
+        "effect": "unresolved",
+        "quote": null,
+        "reason": "早前 targeted_0 回复返回的一批源（负刚度点阵、几何非线性平衡路径、3D 打印多稳结构等）就是我在此前 source_use 中逐条归为 irrelevant/not_read 的那批；它们只给力-位移的定性多稳或泡孔/梁结构，没有『旋转自由度、切向共线力臂、边 Hessian 的秩与符号』这类陈述。knowledge_status=unresolved，不能用来判 rank_one_edge_coupling 是既有知识还是本装置判据。",
+        "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/services/replies/04_targeted_0_continuation_request.json"
+      },
+      {
+        "consequence": "条件性汇合点：若秩一成立，peer 的 pathway 分级（数到二、accumulator）可读成边符号切向奇偶的宏观后果；此汇合点尚未检验。",
+        "effect": "unchanged",
+        "quote": null,
+        "reason": "targeted_1 回复 relevant_sources_returned，主体是压缩褶皱板的 Preisach/scrambled/accumulator pathway 与 hysteron 相互作用强度的既有结果：支持『相互作用改写阈值与记忆类别』，与我本轮『一条单簧边只有一个数（秩一）』相容，但对 S_ij 的代数结构与符号几何无内容。",
+        "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/services/replies/04_targeted_1_continuation_request.json"
+      },
+      {
+        "consequence": null,
+        "effect": "unresolved",
+        "quote": null,
+        "reason": "05_return_1 回复 sources 为 []、knowledge_status=unresolved，既未确认也未否定秩一/规范问题；它只是把上轮的检索缺口原样带回。",
+        "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/services/replies/05_return_1_continuation_request.json"
+      },
+      {
+        "consequence": "条件性：振幅只定出『装机 k 相对名义的倍数』，在 ψ≈0 的构型下不独立定出 ε。",
+        "effect": "extend",
+        "quote": "S046=0.46, S019=0.19, S007=0.07 N/cm; samples are not exact identities of every installed spring.",
+        "reason": "这句话把『标定样本≠装机弹簧』写进案件前提，正好吸收振幅比 B_obs≈1.2（>1，超几何上限 20–30%）的残差，使我不必把它当成机制失败。",
+        "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/allowed/measurements_brief.json"
+      },
+      {
+        "consequence": "条件性：若两转子的夹紧读数可拼成同一个 2×2 刚度矩阵、且无夹紧时该对存在稳定平衡，则正定性直接给出 χ1χ2 = b1b2/(4h1h2) = S12²/[(S11+k_dL²)(S22+k_dL²)] < 1，而 1−χ1χ2 就是该对的联合稳定裕度（rank-one 时 ≈ k_dL²(1/S11+1/S22) ∝ ℓ⁻²）。按 peer 自己的 χ 定义复算本表：pair_A ℓ=4.731 得 χ=(1.20/9.2, 4.40/2.2)=(0.130, 2.00)，乘积 0.26；pair_B 得 (11.1/8.1, 5.5/23.1)=(1.37, 0.24)，乘积 0.33——两对都<1，且 peer 报的 pair_B 1.37 与我的复算逐位相符，说明两边 χ 定义一致。于是 peer 的『χ≳1 ⇒ 该单元态被邻态强制、±1 事件序不可判』在一对转子中至多一侧成立：pair_A 只在转子2，pair_B 的 1.37 必须配 0.24 的伙伴；不能把两侧同时读成『场强制』。附带修正：本步 (2) 报的『b1b2=4Δh1Δh2 实测 0.85（ℓ=4.731）/0.95（ℓ=3.154）』按半宽 h=(γ_up−γ_down)/2 复算是 0.26 与 0.033；秩一给的是『上界 1 减去 k_dL²/(Bk_cℓ²) 控制的差额』，不是无差额恒等式，这处数值差异与 ℓ 标度（预期 ∝ℓ⁻²，实测更陡）留待下一步澄清。",
+        "effect": "challenge",
+        "quote": "因此 sign(K)=−sign(b) 可操作、奇偶对正 metric 规范不变、而 |b| 不可跨转子比较",
+        "reason": "peer 的 sign(K)=−sign(b) 与我此轮的 S_ij=−K_ij、b_i∝2S_ijθ_j（θ_j>0 分支）是同一约定下的同一件事：两条独立推导在符号上汇合，这加强了『符号属几何奇偶而非装配标签』。但 peer 把 χ_i=|b_i|/2h_i 当作逐格的『事件序是否良定义』判据，只给了单格读法，没有约束同一对转子两侧 χ 的联合取值；而我的秩一/正定联合 Hessian 恰好能给这条约束，故这是对 peer 具体关系的一次收紧而非附和。",
+        "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/05_return_1_learn_1/api_v2/workspace/result.json"
+      }
+    ],
+    "work": "工作分三步，都是为了让一个具体关系可被否掉，而不是增加描述。(1) 先复算：把 pair_A 的 32 个 threshold 行按 (rotor, direction, other_state, ℓ) 分组，得 h_i=(up−down)/2 与 b_i=[Δup+Δdown]/2，四点 h1=7.20/6.85/6.00/4.60、h2=1.70/1.60/1.45/1.10，b1=−0.10/−0.60/−1.20、b2=−0.40/−1.90/−4.40。逐点对纯 ℓ² 的偏差 0.03–0.10 cm，正好是一格分辨率；上一轮 1.63 对 2.22 的幂差是把 0.1 cm 量级的差取对数斜率得到的，属于小量噪声，不是机制指纹。这一步是对我自己上轮主结论的否定。(2) 再推导：写全 U=½k_c(R−ℓ0)² 的 Hessian。因为 a_i=∂_iR=−(r̂·t_i)、∂_i∂_jR=−[t_i·t_j−(r̂·t_i)(r̂·t_j)]/R、∂_i²R=−[|t_i|²−(r̂·t_i)²]/R，得 S_ij=k_c[(r̂·t_i)(r̂·t_j)(1+ε/R)−(ε/R)(t_i·t_j)]。关键观察：对角与非对角只差把 (r̂·t_j) 换成 (r̂·t_i)，两者共用同一个括号里的 B；因此『预压项让对角与非对角异号』在代数上不可能——它只能让三项一起变号（那正是两态稳定性边界 B=0），或一起缩放。当两切向共线时 S_ij=s·B·k_cℓ_iℓ_j 严格秩一，s=sign(τ1·τ2)。(3) 把 h、b 的定义代回：h_i=θ_i(S_ii+k_dL²)/(k_dL) 的耦合部分 ∝ S_iiθ_i，b_i ∝ 2S_ijθ_j，故秩一给出 b1b2=4Δh1Δh2 与 b1/b2=θ2/θ1，θ、k_c、k_d、ε 全部消去。实测 0.95、0.85；b1/b2=0.273 对 θ2/θ1=0.287（5%）。这一步把『两通道是否独立』变成可判：判据通过 ⇒ 单簧（或奇偶相同的多簧）边根本只有一个数；要两个独立旋钮，必须秩≥2，即同一对转子上两簧切向奇偶相反。(4) 两条由此掉出来的后果。第一条：符号不再是装配标签，而是几何奇偶 s。pair_A 的 b<0 ⇒ s=−1 ⇒ 两耦合臂在各自枢轴上取相反朝向；pair_B 的 b>0 ⇒ 同侧。这与案件里仍 unknown 的『两簧安装侧别』正面相接，是可被否掉的预言。第二条：λ 有上限 N k_cℓ²/(k_dL)（因为 B≤1），实测比值在两台独立装置上都是 1.2，说明装机 k 约为标定名义的 1.2–1.3 倍，而且 ψ≈0——恰好是 B=1 与 ε 无关的那个构型。这解释了一件此前困惑的事：为什么 ε 的符号在这张表里读不出来，不是数据不够，而是该构型下预压对阈值的效应被 cos²ψ 与 −ε/R 精确抵消。(5) 算不下去的地方（保留）：宽度比 Δh1/Δh2=4.33 对 θ 比 3.49 差 24%，若两臂等长则秩一预测应更接近 3.49，等价于 ℓ1/ℓ2≈1.11；但 mount_l 只给了一个数，无法判断是臂长不等还是 mount_l 不是径向臂。N=2 同样是反推量：若 N=1，pair_A 需 B=2.57，几何上不可能，故要么 N=2 要么 mount_l 另有含义——这两种可能我都不排除。"
+  },
+  "evidence": [
+    {
+      "locator": "rows 68-107 (record_type=threshold); apparatus.pair_A/pair_B; data_dictionary.mount_l_cm",
+      "note": "h、b、Δh、λ、秩一比全部由此算出；pair_A 止挡 [-36.6,36.7]/[-9.8,11.2] 提供 θ1、θ2",
+      "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/allowed/measurements_brief.json"
+    },
+    {
+      "locator": "/sources,/knowledge_attempts,/case_facts,/status",
+      "note": "sources=[]；3 次请求×3 provider 全 retrieval_failed(ValueError)；case_facts[0] status=unknown（pair_A 两簧安装侧别与力臂符号）",
+      "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/services/replies/09_develop_000_request_0.json"
+    },
+    {
+      "locator": "/sources",
+      "note": "7 条登记源：2 条正文节选（mechanical computing）、1 条 PNAS 评述节选、4 条仅摘要；无一条涉及旋转力臂的 Hessian 秩",
+      "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/source_catalog.json"
+    },
+    {
+      "locator": "/development_step/outcome/statement",
+      "note": "上轮主张『宽度幂 1.63、场幂 2.22、预压项异号解释』；本轮复算与代数把它列为更正对象",
+      "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/09_develop_000/api_v2/workspace/result.json"
+    },
+    {
+      "locator": "/sources[1] (Kdca177429482b145)",
+      "note": "压缩褶皱板三级 pathway 的摘要，仍是 peer 的 P 轴语言来源，但对本轮几何问题无内容",
+      "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/04_targeted_1_continuation_request.json"
+    }
+  ],
+  "hypothesis_updates": [
+    {
+      "key": "coupling_torque_moments",
+      "base_version": 4,
+      "assumption": "修订：b 与 Δh 仍是一套耦合力矩的两个读数，但实测不支持『两通道 ℓ 幂不同』——pair_A 的 b 与 Δh 在四个 ℓ 上都与 ℓ² 相容（偏差 0.03–0.10 cm ≈ 一格分辨率）。稳的关系是乘积恒等式 b1b2=4Δh1Δh2（ℓ=3.154：0.95；ℓ=4.731：0.85；ℓ=1.577：0.29 但 Δh2 只有 0.1 cm）与 b1/b2=θ2/θ1（0.273 对 0.287）。故两列是同一边 Hessian 的两个权重读数，λ12≈λ21 是秩一的推论而非互易性证据。",
+      "motivation": "上一轮把幂差 0.6 当作唯一未被机制吸收的定量事实；本轮逐格复算后它在分辨率内消失，而一个无自由参数的乘积恒等式替代了它，若不改版会继续用不存在的证据。",
+      "conceptual_move": "从『两个独立通道（各自幂律）』退回到『同一因子 sB 的两个权重（θ_i 与 θ_j）』，并把通道可分性降为待证命题（需秩≥2）。",
+      "implications": [
+        "条件性：比较 λ12 与 λ21 不能作为非互易性证据，只能检查读数/止挡角分配是否有误。",
+        "条件性：换静长只会缩放 B；在 ψ≈0 时 B=1 与 ε 无关，故『固定 ℓ 换静长使两通道反向移动』的判读作废。",
+        "条件性：跨装置比 λ 比原始 b 稳（实测比 2.53 对名义 2.71），但两者都只是在名义参数意义上的比较。",
+        "条件性：宽度比 4.33 对 θ 比 3.49 的 24% 残差要求 ℓ1/ℓ2≈1.11 或 θ 读法有偏，尚未定。"
+      ],
+      "open_questions": [
+        "Δh 与 b 是否共享同一驱动几何因子（我假设共同 k_dL 与同一线性化）？",
+        "ℓ=1.577 处的 0.29 是分辨率还是真偏离？",
+        "两转子耦合臂长是否相等？"
+      ],
+      "status": "developing",
+      "reason": "核心定量断言（两通道异幂）被自己的复算否定，改用无自由参数恒等式与 θ 比；保留 b/Δh 作为两读数的定义。",
+      "influenced_by": [
+        {
+          "key": "interaction_field_metric",
+          "owner": "theory_scientist",
+          "version": 1
+        }
+      ],
+      "depends_on": []
+    },
+    {
+      "key": "rank_one_edge_coupling",
+      "base_version": 1,
+      "assumption": "修订：单簧边 Hessian 为 S_ij=k_c[(r̂·t_i)(r̂·t_j)(1+ε/R)−(ε/R)(t_i·t_j)]；两力臂切向共线时它严格秩一：S_ij=s·B·k_cℓ_iℓ_j，s=sign(τ1·τ2)，B=cos²ψ(1+ε/R)−ε/R，B>0 即两态稳定（⇔ ε<R cot²ψ），且 B≤1（等号当且仅当 ψ=0，此时与 ε 无关）。故 (i) ε 不可能让对角与非对角异号，也不能使两通道反向；(ii) b 的符号只由两臂切向平行/反平行决定；(iii) 代回 h、b 定义得 b1b2=4Δh1Δh2（实测 0.95/0.85）与 b1/b2=θ2/θ1（5%）；(iv) 振幅上限 λ≤N k_cℓ²/(k_dL)，实测该比值在两装置为 1.28/1.20。",
+      "motivation": "上一轮用『预压项在对角与非对角异号』解释幂差；代数和复算同时表明该项是共同因子，且幂差本身在分辨率内不存在，机制必须换成秩一/奇偶。",
+      "conceptual_move": "把边符号从『多簧装配标签』与『预压项符号』两处收回为单一几何量 s=sign(τ1·τ2)，并把预压从『分裂通道』降为『统一缩放 + 稳定性上界 B≤1』。",
+      "implications": [
+        "条件性：任何单簧边都不受挫；回路的符号乘积=∏s 纯由几何决定，可先于阈值表读出。",
+        "条件性：场隐形边（λ=0 而 Δh>0）只能在一条边挂≥2 簧且奇偶相反时造出；pair_A 的 b 已达秩一上限的 85–95%，它离该点最远而不是最近。",
+        "条件性：pair_A 的 b<0 ⇒ s=−1 ⇒ 两耦合臂异侧；pair_B 的 b>0 ⇒ 同侧。若案件确认 pair_A 两臂同侧，则本卡的符号读法与 s 一并作废。",
+        "条件性：在 ψ≈0 的构型下预压对阈值与环宽都不留痕，因此 ε 的符号与大小不能由这张表读出（不是精度不够）。",
+        "条件性：N=1 时 pair_A 需 B=2.57（>1，几何不可能），故要么 N=2 且装机 k≈1.2×名义，要么 mount_l 不是径向力矩臂。"
+      ],
+      "open_questions": [
+        "两转子角度正方向是否同向？若相反，s 的整体读法要反号。",
+        "秩一⇒可规范在连续旋转自由度上的文献地位（三轮检索零产出）。",
+        "切向不共线时秩二部分对应什么可测组合（是否就是 Δα−Δβ）？"
+      ],
+      "status": "developing",
+      "reason": "从『机制性解释幂差』改为『代数上恒秩一并附一个无参数恒等式』，同时撤回自己的异号修正项主张；因符号预言与 mount 侧别 unknown 直接冲突，保留 developing。",
+      "influenced_by": [
+        {
+          "key": "gauge_frustration_memory_class",
+          "owner": "theory_scientist",
+          "version": 4
+        },
+        {
+          "key": "interaction_field_metric",
+          "owner": "theory_scientist",
+          "version": 1
+        }
+      ],
+      "depends_on": [
+        {
+          "key": "coupling_torque_moments",
+          "owner": "domain_scientist",
+          "version": 4
+        }
+      ]
+    },
+    {
+      "key": "wiring_parity_sign",
+      "base_version": 4,
+      "assumption": "修订：符号不再由『并联/交叉』这一装配命名直接给出，而由两耦合臂在枢轴处的切向朝向决定：s=sign(τ1·τ2)。同向（两臂同侧）⇒ s=+1 ⇒ b>0（反铁磁型）；反向（异侧/镜像）⇒ s=−1 ⇒ b<0（铁磁型）。幅度不再由本支承担（由 B 与 N k_cℓ² 给出）。可判预言：pair_A 应为两臂异侧、pair_B 同侧；换线序只翻 b 的号，Δh 与 |b| 不变。",
+      "motivation": "上一版把符号挂在并联/交叉上，只是与数据配对（pare_A 并联给 b<0、pair_B 交叉给 b>0），没有成因；秩一分解给出 s 的几何定义，并把它变成可被案件几何否掉的命题。",
+      "conceptual_move": "把『接线奇偶』从弹簧之间的并联/交叉改写为力臂切向的平行/反平行，使符号有几何定义而不是装配命名。",
+      "implications": [
+        "条件性：pair_A 两耦合臂应取相反朝向（异侧）；pair_B 同侧。这是从 b 的符号反推的可判几何事实。",
+        "条件性：符号翻转不改变 B，故『同几何换线序只翻号』的对照可判；若换线序同时改 |b|，则本支与秩一分解一并被削弱。",
+        "条件性：network_C 的回路乘积=∏s 可直接由装配图读出，无需阈值表。"
+      ],
+      "open_questions": [
+        "『并联/交叉』究竟指弹簧之间的并联/交叉，还是两臂的相对朝向？案件定义未给。",
+        "两转子角度正方向是否同向？若相反，s 的读法整体反号。"
+      ],
+      "status": "developing",
+      "reason": "由 parked 重启：声明前提 coupling_torque_moments 已到 v5，且本轮给出了 s 的推导（不再只是命名配对），故有新内容可承担；同时保留原有可判预言。",
+      "influenced_by": [
+        {
+          "key": "gauge_frustration_memory_class",
+          "owner": "theory_scientist",
+          "version": 4
+        }
+      ],
+      "depends_on": [
+        {
+          "key": "coupling_torque_moments",
+          "owner": "domain_scientist",
+          "version": 4
+        },
+        {
+          "key": "rank_one_edge_coupling",
+          "owner": "domain_scientist",
+          "version": 1
+        }
+      ]
+    },
+    {
+      "key": "channel_separability_rank",
+      "base_version": 0,
+      "assumption": "一条边的两个通道（宽度收缩 Δh 与场 λ）可独立调节，当且仅当该边 Hessian 的秩≥2；切向共线的簧秩恒为 1，故需同一对转子上至少两簧且切向奇偶相反（或切向不共线）。『场隐形边』(λ=0 且 Δh>0) 的精确条件是对该边 Σ_r s_rB_rk_rℓ_r²=0 而 Σ_rB_rk_rℓ_r²>0。",
+      "motivation": "上一轮把两通道当独立旋钮，给出 κ→1（关环宽）与 |λ|Δθ≥2h（推阈值）两种沉默；秩一结果说明在单簧边上这两个极限重合，独立沉默必须由秩≥2 提供。",
+      "conceptual_move": "把『通道可分』从描述性说法改写为线性代数条件（边 Hessian 的秩），从而把设计问题变成『能否在同一对转子上配两条奇偶相反的簧』。",
+      "implications": [
+        "条件性：单簧装置只有一种沉默机制，不是两种。",
+        "条件性：pair_A 的秩一比 0.85–0.95 说明它离场隐形边最远；要造该边需两簧近似镜面对称且 kℓ² 近似相等，并同时满足总 B>0。",
+        "条件性：纯场隐形边不移动任何阈值，故对 pathway/偏序不可见，只压缩环宽——它若存在，会把『沉默』从事件次序层移到幅度层。"
+      ],
+      "open_questions": [
+        "秩≥2 时每边一个符号的差分语言是否失效，回路乘积还能否定义？",
+        "抵消点附近 |b| 的相对误差随 k 失配如何变化（本表只有一台装置且远离该点）？"
+      ],
+      "status": "developing",
+      "reason": "新分支：把上轮『两种独立沉默机制』的并列改写为秩条件，并给出场隐形边的精确代数条件。",
+      "influenced_by": [
+        {
+          "key": "threshold_coordinate_factorization",
+          "owner": "theory_scientist",
+          "version": 5
+        }
+      ],
+      "depends_on": [
+        {
+          "key": "rank_one_edge_coupling",
+          "owner": "domain_scientist",
+          "version": 1
+        }
+      ]
+    },
+    {
+      "key": "degeneracy_heals_frustration",
+      "base_version": 2,
+      "assumption": "条件性猜想：把某单元推到 κ→1（支合并）会把它从迟滞字母表删除，于是任何经过它的受挫回路在『迟滞元素图』上少一条边，受挫奇偶可因此被抹平；反过来 κ 略小于 1 的窄环单元最容易被邻态在同 γ 带走（雪崩），是 P 轴最不稳的一档。",
+      "motivation": "peer 的两轴判据说 R 破坏需挫折（必要）＋耦合空间开区域＋幅值窗口；而 κ 提供一个把单个元素推出迟滞域的连续旋钮，且 pair_A 的 κ 范围 0.05–0.47 正好从宽环走到窄环、接近但未跨过 1。",
+      "conceptual_move": "把『近阈值』从『跳变小』改述为『元素退出字母表的临界点』，并把它接到挫折奇偶上：κ 不是标量记忆刻度，而是改变图结构的旋钮。",
+      "implications": [
+        "条件性：记忆风险随耦合增强不是单调的——只在 κ 跨 1 的邻域改变图结构；因此『更强相互作用＝更差记忆』在本装置上应被替换为『κ 跨 1 前后是两种图』。",
+        "条件性：窄环（κ≈0.9）单元会把雪崩量 2|b|/gap 推到最大（gap 是环宽），故 pair_A 在 ℓ≈6 cm 附近应出现同 γ 双翻，而 κ>1 处应完全无事件——两种『无事件』的对照。",
+        "条件性：退化单元仍随 γ 连续变化，作为对邻居的确定性场（而非迟滞元素）可以移动阈值但不能储存历史，故它不会单独产生多周期。"
+      ],
+      "open_questions": [
+        "退化单元作为确定性场能否替代迟滞元素参与 pathway 结构（P 轴的 pathway 是否仍良定义）？",
+        "雪崩判据里的 gap 究竟是不是环宽（若 gap→0 则 2|b|/gap→∞，判据爆掉）？",
+        "多单元同时近简并时，被删除的元素集合依赖扫描路径吗？"
+      ],
+      "status": "parked",
+      "reason": "维持 parked 并显式声明前提版本：unilateral_stop_state 已到 v5（κ 只统宽度列，平移列归 λ），且 rank_one_edge_coupling 给出单簧边本无挫折可治，故本卡不再承担 R 轴论证，只保留『窄环≈0.9 ⇒ 同 γ 雪崩』的幅度读数；内容原样保留，属前提版本更新后的停用确认，不是新进展。",
+      "influenced_by": [
+        {
+          "key": "gauge_frustration_memory_class",
+          "owner": "theory_scientist",
+          "version": 4
+        },
+        {
+          "key": "latch_as_threshold_inequality",
+          "owner": "theory_scientist",
+          "version": 2
+        }
+      ],
+      "depends_on": [
+        {
+          "key": "unilateral_stop_state",
+          "owner": "domain_scientist",
+          "version": 5
+        }
+      ]
+    }
+  ],
+  "learning_change": "本轮 09_develop_000 服务回复没有返回任何源（sources:[]，3 次请求 × 3 家 provider 全部 ValueError），05_return_1 回复同样为空；早前两条 targeted 回复（04_targeted_0/1）返回的 29 条源已在 source_use 中逐条归类，均为唯象迟滞模型、负刚度/褶皱结构与无关检索噪声，对『切向共线力臂的边 Hessian 秩与符号』没有内容。因此本轮没有文献层面的学习。变化来自把缺口自己算掉：原本的缺口是『幂差该由预压项还是小角化解释』，复算后发现幂差在 ±0.1 cm 内不存在，缺口因此改写为『两通道是否可分离（秩）』；随之我撤回了自己上轮的两个命题（预压异号分裂通道、平移列比宽度更陡），并得到一个无自由参数的恒等式与一个可被案件几何否掉的符号预言。仍然 open 的是：秩一⇒可规范在连续力学文献中是否已知（三轮检索均为摘要级或失败），以及每装置耦合弹簧数 N 与装机 k 都只能反推。",
+  "limitations": [
+    "复算为手算（analyze_csv 不支持行切片），未做误差传播；±0.1 cm 分辨率决定 0.03–0.1 cm 的偏差不算失败。",
+    "假设 Δh 与 b 共享同一驱动几何因子（同一 k_dL、同一线性化）；该因子未独立定标。",
+    "mount_l 是否即各转子自己的力矩臂、两转子臂长是否相等仍 unknown；宽度比 4.33 对 θ 比 3.49 的 24% 残差未解释（等价于 ℓ1/ℓ2≈1.11）。",
+    "每装置耦合弹簧数 N=2 是由振幅自洽性反推的，不是案件事实；若 N=1 则 pair_A 的振幅违反 B≤1，需 mount_l 另有含义。",
+    "ψ 只能由振幅反推，耦合安装点坐标不在数值表内。",
+    "本轮文献零产出：秩一⇒可规范、Mattis 规范在连续力学中的文献地位仍 unknown。"
+  ],
+  "memory_notes": [
+    {
+      "conditions": "单根线性弹簧；两力臂切向共线（平行或反平行）；准静态、驱动弹簧线性；Δh 与 b 共享同一驱动几何因子。两簧奇偶相同时也仍秩一（求和保秩）。",
+      "example": "学习算例（pair_A，ℓ=4.731 cm）：Δh1=2.6、Δh2=0.6、b1=−1.2、b2=−4.4 cm ⇒ b1b2=5.28，4Δh1Δh2=6.24，比 0.85；换成 λ=k_cℓ²/(k_dL) 归一化后两台装置都得到 B≈1.2。",
+      "key": "collinear_edge_hessian_rank_one",
+      "kind": "interpretation",
+      "mastery": "used",
+      "open_questions": [
+        "该命题在连续力学/Mattis 文献中是否已知（本轮检索失败）？",
+        "切向不共线时秩二的第二特征向量对应什么可测组合？",
+        "若 mount_l 不是各转子的力矩臂，上式中的 ℓ 需替换，振幅结论整块作废。"
+      ],
+      "sources": [
+        "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/allowed/measurements_brief.json"
+      ],
+      "tags": [
+        "rotational Hessian",
+        "rank one",
+        "prestress",
+        "spring coupling",
+        "转动刚度",
+        "秩一",
+        "预压",
+        "边符号"
+      ],
+      "title": "切向共线的单簧边：Hessian 恰为秩一 s·B·kℓℓ^T",
+      "understanding": "对一端接在转子力臂端的线性弹簧，S_ij=k_c[(r̂·t_i)(r̂·t_j)(1+ε/R)−(ε/R)(t_i·t_j)]。两力臂切向共线时 S_ij=s·B·k_cℓ_iℓ_j，s=sign(τ1·τ2)=±1，B=cos²ψ(1+ε/R)−ε/R。B>0 是两态稳定条件（⇔ ε<R·cot²ψ），B≤1 且等号当且仅当 ψ=0（力臂⊥弹簧轴），此时 B=1 与 ε 无关。因此对角与非对角共用同一因子：预压只能整体缩放，不能分裂通道；符号只是切向奇偶。由 h_i 与 b_i 的定义即得 b1b2=4Δh1Δh2 与 b1/b2=θ2/θ1。"
+    },
+    {
+      "conditions": "只对 pair_A 的四点夹紧格成立；pair_B 无 ℓ=0 基线，无法做同类判断。",
+      "example": null,
+      "key": "power_law_resolution_artifact",
+      "kind": "correction",
+      "mastery": "explained",
+      "open_questions": [
+        "若在 ℓ 轴上加密到 0.5 cm 步长或把 γ 分辨率降到 0.02 cm，幂差是否重现？",
+        "宽度比 4.33 对 θ 比 3.49 的 24% 残差是臂长不等（ℓ1/ℓ2≈1.11）还是同侧性差异？"
+      ],
+      "sources": [
+        "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/allowed/measurements_brief.json"
+      ],
+      "tags": [
+        "measurement resolution",
+        "power law",
+        "error propagation",
+        "测量分辨率",
+        "幂律",
+        "更正"
+      ],
+      "title": "两通道 ℓ 幂差（1.63/2.22）是 ±0.1 cm 分辨率产物",
+      "understanding": "更正我 09_develop_000 的主张：pair_A 的 b 与 Δh 在对数斜率上给出 1.7–2.7 的散布，但逐点相对于纯 ℓ² 的偏差只有 0.03–0.10 cm，等于一格驱动分辨率；Δh2 在 ℓ=1.577 处仅 0.1 cm。故『场通道比宽度更陡 0.6』不能作为机制证据，也不能用来判预压项与有限角饱和哪个对。"
+    },
+    {
+      "conditions": "线性弹簧、切向共线、每边簧数≥2；若切向不共线，秩二也可提供可分性但 B_r 与 s_r 的读法需重写。",
+      "example": null,
+      "key": "channel_split_requires_rank_two",
+      "kind": "hypothesis",
+      "mastery": "read",
+      "open_questions": [
+        "秩≥2 时『每边一个符号』的差分语言是否失效，回路乘积还能否定义？",
+        "抵消点附近 1−w 与 λ 的相对误差如何随 k 的失配变化（本表只有一台装置、且它在 0.85–0.95）？"
+      ],
+      "sources": [
+        "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/allowed/measurements_brief.json"
+      ],
+      "tags": [
+        "channel separability",
+        "rank",
+        "field-invisible edge",
+        "通道可分",
+        "秩",
+        "场隐形边"
+      ],
+      "title": "宽度通道与场通道可独立调节 ⇔ 边 Hessian 秩≥2",
+      "understanding": "单簧或奇偶相同的多簧边秩一，宽度收缩与阈值平移被同一因子锁定；要让 λ=0 而 Δh>0（场隐形边），需同一对转子上至少两簧且切向奇偶相反：Σ_r s_rB_rk_rℓ_r²=0 而 Σ_rB_rk_rℓ_r²>0。这把『两个沉默机制/两个旋钮』从描述改写成线性代数条件。"
+    }
+  ],
+  "memory_use": [],
+  "next_actions": [
+    "把『场隐形边』推成事件层预言：λ=0、Δh>0 的边不移动任何阈值（对 pathway/偏序不可见），只压缩环宽，故应与 κ→1（环宽→0、单元退化为单值）给出相反的事件计数。",
+    "用 pair_B 若可取得 ℓ=0 基线，检验同一恒等式 b1b2=4Δh1Δh2（其 λ 与 pair_A 相差 2.53 倍，是独立样本）。",
+    "把 s=sign(τ1·τ2) 的几何预言（pair_A 异侧、pair_B 同侧）作为可判案件问题保留，等待安装侧别释放。",
+    "若恢复检索：核实『秩一耦合 ⇒ 可规范』在连续旋转自由度上的文献地位，决定该卡是已知结论还是本装置判据。"
+  ],
+  "next_learning_request": {
+    "case_questions": [
+      "mount_l_cm 是从各自枢轴量到各自耦合弹簧安装点的径向距离，还是两转子共用一个横向刻度？两转子的耦合臂长度是否相等？",
+      "pair_A 的两根并联耦合弹簧，其安装点是否位于两枢轴连线的同一侧（两耦合臂朝向相同），还是镜像异侧？"
+    ],
+    "gap": "『两力臂切向共线 ⇒ 单簧边 Hessian 恰为秩一 s·B·kℓℓ^T、B≤1、符号=切向奇偶』这一命题在文献中是否已知（Mattis 规范、旋转自由度的秩一耦合、双稳单元的边刚度矩阵）。它决定 rank_one_edge_coupling 该标为既有知识还是本装置的设计判据。",
+    "needed": true,
+    "operations": [],
+    "queries": [
+      "rank-one coupling matrix two-state element rotational Hessian collinear levers",
+      "Mattis bond gauge transformation frustrated two-state mechanical network"
+    ],
+    "record_ids": [],
+    "source_ids": [],
+    "urls": [],
+    "why_now": "本轮代数自洽且被一个无参数恒等式支持，但我无法判断它是标准结论还是新表述；若已知，我应把重点移到秩≥2 的抵消条件，而不是继续复核秩一。"
+  },
+  "next_research_move": {
+    "action": "develop",
+    "focus": "把『场隐形边』(λ=0 而 Δh>0) 推到事件层：它不移动任何阈值（对 pathway/偏序不可见），只压缩环宽，因而应与 κ→1（环宽→0、单元退化为单值）给出相反的事件计数；推出可判后果并检查它能否在只有 ±1 事件表的 network_C 上留下痕迹。",
+    "operation": "derive",
+    "owner": "domain_scientist",
+    "reason": "本轮把『两种独立沉默』改写成秩条件，只有在秩≥2 时它们才分开；分开后的第一可判差别正是『次序不变而阈值移动』与『次序消失』。这直接检验 channel_separability_rank，而不是再次改描述。"
+  },
+  "personal_question_update": {
+    "action": "revise",
+    "base": {
+      "id": "personal:domain_scientist",
+      "owner": "domain_scientist",
+      "version": 6
+    },
+    "influenced_by": [
+      {
+        "id": "personal:theory_scientist",
+        "owner": "theory_scientist",
+        "version": 8
+      },
+      {
+        "id": "shared:discussion",
+        "owner": "shared",
+        "version": 11
+      }
+    ],
+    "question": "在这台装置上，是否应把每条耦合边读成两个可分离、几何权重不同的读数——对角刚度通道（环宽收缩 Δh_i）与非对角场通道（λ_ij=b_i/Δθ_j）——而已知在力臂切向共线的边上二者被同一个因子 B=cos²ψ(1+ε/R)−ε/R 锁定（无自由参数判据 b1b2=4Δh1Δh2，实测 0.95/0.85），且 b 的符号只由两臂切向平行(+)与反平行(−)决定？若如此，两通道的可分离性就等价于边 Hessian 的秩≥2，需要两簧力臂奇偶相反并把 λ 抵消；那么『该翻未翻』的平移来源仍只由 λ 定，而场振幅上限 λ≤N k_cℓ²/(k_dL) 是否足以用『装机 k 比标定名义高 20–30%』吸收两装置的 λ，并把 pair_A 的负号读成两臂异侧（与仍 unknown 的安装侧别相反）？",
+    "reason": "上轮把幂差当作唯一未被吸收的定量事实；本轮复算显示它在 ±0.1 cm 内不存在。问题因此从『两通道不同幂』退到『两通道能否分离（秩）』，并新增一个可被案件几何直接否掉的符号预言；保留 λ 与 Δh 的读数定义以维持连续性。"
+  },
+  "shared_question_update": {
+    "action": "revise",
+    "base": {
+      "id": "shared:discussion",
+      "owner": "shared",
+      "version": 11
+    },
+    "influenced_by": [
+      {
+        "id": "shared:discussion",
+        "owner": "shared",
+        "version": 11
+      },
+      {
+        "id": "personal:theory_scientist",
+        "owner": "theory_scientist",
+        "version": 8
+      }
+    ],
+    "question": "(a) 记忆两轴与耦合两通道的骨架保留，但通道不再当独立旋钮：切向共线时宽度与场由同一 B=cos²ψ(1+ε/R)−ε/R 锁定（b1b2=4Δh1Δh2，实测 0.95/0.85）；(b) λ12≈λ21 是秩一的恒等式（b1/b2=θ2/θ1，5%），不能当非互易性证据；(c) 『两通道 ℓ 幂 1.63 对 2.22』在 ±0.1 cm 内不可分辨，两列都与 ℓ² 相容，预压项不分裂通道而只进同一个 B，且在 ψ≈0 时 B=1 与 ε 无关；(d) 单簧（或奇偶相同的多簧）边 Hessian 恰为秩一 s·B·k_cℓℓ^T，s=sign(τ1·τ2)，B∈(0,1] ⇒ 单簧网络无挫折、FM/AF 是几何奇偶的读数，挫折与场隐形边需要 ≥2 簧且奇偶相反（Σ_r s_rB_rk_rℓ_r²=0 而 Σ_rB_rk_rℓ_r²>0）；(e) χ=|λ_ij|Δθ_j/(2h_i) 仍决定 ±1 事件图在该 γ 窗口是否良定义，但单簧边上它与 κ→1 是同一个极限；(f) network_C 的 16 事件只支持该幅值下事件串周期为 1；(g) 案件事实『驱动弹簧足够强以排除中间角平衡』仍把 κ<1 当设计约束；(h) 振幅 λ/(N k_c,nomℓ²/(k_dL)) 在两装置均为 ≈1.2 ⇒ 装机 k≈1.2–1.3×名义，pair_A 的 b<0 要求两臂异侧。",
+    "reason": "(b)(c)(d) 三条被本轮复算与代数替换：幂差不存在、互易性自动、符号来自奇偶而非装配命名；同时把振幅上限与 side 预言加为 (h)，使问题保持可判而不是更概括。"
+  },
+  "source_use": [
+    {
+      "reason": "仅摘要：串联 AF 型 hysteron 相互作用可破坏 RPM；为『符号结构是内容』提供已发表锚点，但对本轮力臂 Hessian 无内容，未用于本步。",
+      "relation": "method",
+      "source_id": "K03abe2016b74f8f2"
+    },
+    {
+      "reason": "悬索桥有限元标定（温度、塔沉降、索鞍），与旋转力臂的边刚度/符号无关。",
+      "relation": "irrelevant",
+      "source_id": "K060126bd81e39251"
+    },
+    {
+      "reason": "Preisach/play 综述摘要：给出算子类与 wiping-out/同余性质，界定我的 ±1 约化进入哪一族；但纯唯象，无助 S_ij 的力学。",
+      "relation": "method",
+      "source_id": "K1364a25c430600ea"
+    },
+    {
+      "reason": "PNAS 评述：相互作用改写切换场、可启用/禁用软点；支持『阈值可被邻态改写』，未给矩展开。",
+      "relation": "method",
+      "source_id": "K28f7c485693e9065"
+    },
+    {
+      "reason": "福柯文学理论学位论文，检索噪声，无任何机械迟滞内容。",
+      "relation": "irrelevant",
+      "source_id": "K39e4d7948f08afe0"
+    },
+    {
+      "reason": "Preisach 中的 RPM 与多重记忆/瞬态；与 peer 的 R 轴语言相关，与本轮几何无关。",
+      "relation": "method",
+      "source_id": "K3c2b6ea13200cfe4"
+    },
+    {
+      "reason": "play/Preisach 综述摘要的重复条目，只有『共享同余与擦除』一句，无新内容。",
+      "relation": "irrelevant",
+      "source_id": "K3f6699082630dceb"
+    },
+    {
+      "reason": "负刚度点阵的跳变与位移控制有限元，只给定性力-位移，无转动刚度矩阵结构。",
+      "relation": "irrelevant",
+      "source_id": "K4501f1234d5bc6b9"
+    },
+    {
+      "reason": "3D 打印多稳超结构的信息存储与逻辑，未涉及 RPM 或边符号几何。",
+      "relation": "irrelevant",
+      "source_id": "K4945110a4e800cae"
+    },
+    {
+      "reason": "l-RPM 判据与串联 AF hysteron 框架：正是我用来把回路乘积=∏s 接到记忆类别的语言；对 Hessian 无内容。",
+      "relation": "method",
+      "source_id": "K4e588f0e6237a815"
+    },
+    {
+      "reason": "RFIM 零温雪崩临界标度；与本轮『雪崩判据分母是环宽』只有远类比，未提供可迁移结论。",
+      "relation": "irrelevant",
+      "source_id": "K5505bed0b02387a3"
+    },
+    {
+      "reason": "经典 Preisach 为 relay 算子加权叠加的摘要陈述；是 ±1 字母表的来源之一，无力学。",
+      "relation": "method",
+      "source_id": "K59d96b908b49c9d1"
+    },
+    {
+      "reason": "几何非线性平衡路径与 CSP 极限点定位；不含有限刚度弹簧加载判据，也不含边符号。",
+      "relation": "irrelevant",
+      "source_id": "K5ba21260fb623147"
+    },
+    {
+      "reason": "倒置开关算子仍保持 wiping-out 与同余；与我此前的 ±1 粗粒化问题相邻，但非本轮缺口。",
+      "relation": "method",
+      "source_id": "K66a33a03c6e99e71"
+    },
+    {
+      "reason": "仅登记为早前回复的来源，本轮未取得可读正文，无法判断其对力臂 Hessian 或秩一命题的关系。",
+      "relation": "not_read",
+      "source_id": "K690a760e178df473"
+    },
+    {
+      "reason": "广义 play 算子用不同包络描述非对称饱和迟滞；对『非对称阈值≈Δα≠Δβ』有语言价值，无几何。",
+      "relation": "method",
+      "source_id": "K69f61398511b2fa2"
+    },
+    {
+      "reason": "Maxwell 判据指点阵拉伸/弯曲主导的刚度计数，不是极限点/稳定性判据，与 B>0 的稳定性边界无关。",
+      "relation": "irrelevant",
+      "source_id": "K71826186441ec4d5"
+    },
+    {
+      "reason": "KP/Preisach 要求 wiping-out 与同余；界定我的 ±1 描述成立的条件，非本轮缺口。",
+      "relation": "method",
+      "source_id": "K7c34157152280fec"
+    },
+    {
+      "reason": "压缩褶皱板记忆与 pathway（含『数到二』）摘要；是 peer 的 P 轴经验锚点，对边刚度无内容。",
+      "relation": "method",
+      "source_id": "Kaabe245d4dec85bb"
+    },
+    {
+      "reason": "把 PI play 算子做二进制 N 位状态编码用于求逆；是我『±1 编码丢掉什么』问题最接近的已发表处理，但未触及力臂几何。",
+      "relation": "method",
+      "source_id": "Kb0f4dbeef014a3fa"
+    },
+    {
+      "reason": "Kresling 折纸波纹管四单元串联退回 Preisach；不涉及相互作用符号或本装置几何。",
+      "relation": "irrelevant",
+      "source_id": "Kb79df3fa28d1e48d"
+    },
+    {
+      "reason": "QZS 超结构由斜梁屈曲提供负刚度，只给定性描述，无转动惯量矩阵或符号判据。",
+      "relation": "irrelevant",
+      "source_id": "Kd07e02313e0ce192"
+    },
+    {
+      "reason": "粘弹性跳变的伪双稳动力学；与准静态夹紧表无关。",
+      "relation": "irrelevant",
+      "source_id": "Kd2a532e9a1eb6c57"
+    },
+    {
+      "reason": "颗粒力链识别与 DEM-FEM 接触刚度标定，与旋转迟滞单元无关。",
+      "relation": "irrelevant",
+      "source_id": "Kd81b72e9f33cf252"
+    },
+    {
+      "reason": "压缩褶皱板的 Preisach/scrambled/accumulator 三级 pathway 摘要；给 peer 的 P 轴分级，对 Hessian 无内容。",
+      "relation": "method",
+      "source_id": "Kdca177429482b145"
+    },
+    {
+      "reason": "木-工字梁多面强度准则与湿分传输；材料强度判据，非稳定/极限点判据。",
+      "relation": "irrelevant",
+      "source_id": "Ke230119a3587f202"
+    },
+    {
+      "reason": "跳变单元的位移驱动平衡/分岔路径，未给弹簧加载极限点判据。",
+      "relation": "irrelevant",
+      "source_id": "Ke4a32fd4fc008366"
+    },
+    {
+      "reason": "拱梁静电固定载荷 pull-in 摘要；与本装置的位移驱动与边符号无关。",
+      "relation": "irrelevant",
+      "source_id": "Ke929929c7a6d22d6"
+    },
+    {
+      "reason": "广义 Prandtl-Ishlinskii 逆模型用于微定位前馈补偿；不涉及记忆性质或力臂几何。",
+      "relation": "irrelevant",
+      "source_id": "Kf060d5d884c3294d"
+    }
+  ],
+  "summary": "本轮控制器回复没有返回任何可读源（3 次请求、每请求 3 家 provider 全部 retrieval_failed(ValueError)，sources:[]），案件问题（pair_A 两耦合弹簧安装侧别/力臂符号）返回 unknown。于是改为自行推导上一轮的悬案：把 pair_A 的 40 个 threshold 行逐格复算后发现，所谓『两通道 ℓ 幂 1.63 对 2.22』在 ±0.1 cm 读数分辨率内并不存在——b 与 Δh 在四个 ℓ 上都与 ℓ² 相符（偏差 0.03–0.10 cm）。真正稳的关系是：当两转子力臂切向共线时，单簧边 Hessian 严格秩一 S_ij=s·B·k_cℓ_iℓ_j，s=sign(τ1·τ2)=±1，B=cos²ψ(1+ε/R)−ε/R∈(0,1]，于是对角与非对角共用同一因子、预压不可能使两通道反向；实测无自由参数恒等式 b1b2=4Δh1Δh2 在 ℓ=3.154/4.731 给出 0.95/0.85。由此上轮『预压项异号解释幂差』作废，符号改由力臂切向奇偶决定（pair_A 的 b<0 ⇒ 两耦合臂异侧，这是可被案件几何否掉的预言），『两通道可独立调节』被改写为『边 Hessian 秩≥2，需两簧奇偶相反』。振幅上，λ/(N k_c,nomℓ²/(k_dL)) 在两台独立装置上都≈1.2，指向 ψ≈0（此时 B=1 与 ε 无关）与装机 k 约为标定名义的 1.2–1.3 倍。",
+  "transport_bindings": [
+    {
+      "field": "development source",
+      "from": "S30",
+      "to": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/services/replies/09_develop_000_request_0.json"
+    },
+    {
+      "field": "development source",
+      "from": "S20",
+      "to": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/services/replies/04_targeted_0_continuation_request.json"
+    },
+    {
+      "field": "development source",
+      "from": "S23",
+      "to": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/services/replies/04_targeted_1_continuation_request.json"
+    },
+    {
+      "field": "development source",
+      "from": "S26",
+      "to": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/services/replies/05_return_1_continuation_request.json"
+    },
+    {
+      "field": "development source",
+      "from": "S1",
+      "to": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/allowed/measurements_brief.json"
+    }
+  ]
+}

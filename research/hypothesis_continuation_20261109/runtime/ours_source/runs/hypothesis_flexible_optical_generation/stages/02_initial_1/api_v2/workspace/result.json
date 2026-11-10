@@ -1,0 +1,166 @@
+{
+  "artifacts": [
+    "_summary_2368740a1afa.md"
+  ],
+  "claims": [
+    "条件性解释：导出的S1/S2/S3或许是经单位范数归一化的方向变量，因此其范数近1并非独立的偏振度观测；若成立，DOP与方向需视作不同表示，不能由方向范数反推DOP。",
+    "目前没有足够材料判定其余DOP下降是否由随机相位平均、仪器/后处理还是尺度差异造成。"
+  ],
+  "development_step": {
+    "action": "learn",
+    "expected_change": "若范数在全扫描中几乎恒为1，我会把方向字段视为可能的归一化表示，并将物理DOP解释与导出表示分开；若不是，则要保留不同映射的解释。",
+    "focus": {
+      "quote": "Exported normalized polarization-direction components. Their squared norm should be inspected rather than assumed equal to the exported DOP.",
+      "source": "/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/runs/hypothesis_flexible_optical_generation/allowed/measurements_brief.json"
+    },
+    "gap": "brief称这些分量是normalized polarization-direction components，但仍缺少一个关键连接：这里的“normalized”是否意味着每行先取偏振向量再除以其范数，而DOP另行保留长度？如果是，单位范数将是数据表示约定，不是物理态纯度约束。这个区别决定能否将S范数用作DOP的交叉核验。",
+    "outcome": {
+      "kind": "clarification",
+      "remaining_gap": "缺少S字段和DOP的原始定义及计算步骤；还不能识别单位范数究竟是表示选择还是测量/物理约束。",
+      "statement": "关键区分从“Stokes方向范数是否等于DOP”推进到“近单位范数是否由字段归一化构造出来”。全量CSV两扫描的S范数都约为1，支持保留归一化方向这一解释，但尚不能确认具体数据处理流程或物理状态。"
+    },
+    "reason": "需要弄清经典Stokes向量长度/方向与归一化表示的关系；同时用已注册测量算出完整扫描的范数，而不只看预览点，来理解疑问为何重要。",
+    "uptake": [
+      {
+        "consequence": "若案例S字段确为单位化方向，则不同的导出DOP可能对应相同方向而不同长度，必须先了解字段变换后才能比较。",
+        "effect": "extend",
+        "quote": "In classical optics, these traits are characterized by the Stokes parameters, which can be geometrically interpreted using the Poincaré sphere.",
+        "reason": "该摘要支持把三个S分量作为几何表示来理解，但没有证明案例字段的归一化约定；因此我把方向与标量长度作为需要核实的不同信息。",
+        "source": "/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/learning_lab/library/330d314c21e4cade755f94169919045009f46f57f72ee12956b0f9eadc3e0a9c.json"
+      },
+      {
+        "consequence": "若单位范数来自字段定义，则范数不能为DOP提供独立校验；当前数据展示的是方向几乎恒定长度，DOP则是独立导出标量。",
+        "effect": "extend",
+        "quote_pointer": "/data_dictionary/S1~1S2~1S3",
+        "reason": "我对两个扫描的全部行分别计算了S向量范数，均在约1e-5以内接近1；这是对brief提示的全量核查，不是把两扫描合并。",
+        "source": "/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/runs/hypothesis_flexible_optical_generation/allowed/measurements_brief.json",
+        "quote": "Exported normalized polarization-direction components. Their squared norm should be inspected rather than assumed equal to the exported DOP."
+      }
+    ]
+  },
+  "evidence": [
+    {
+      "note": "案例 brief 说明两次source scan不能合并为独立重复，并提示DOP的导出尺度不同且S1/S2/S3的平方范数不可假定等于导出DOP。",
+      "source": "Dbf1a9ec6f2767c45ac42"
+    },
+    {
+      "note": "可读综述摘要称经典偏振以Stokes参数表征，并可用Poincaré球作几何解释；仅摘要级来源。",
+      "source": "D330d314c21e4cade755f"
+    },
+    {
+      "note": "全CSV mean_phase扫描200行计算得到S向量范数均值0.9999978、最小0.9999908、最大0.9999998；DOP均值0.7951。",
+      "source": "D0804862c1a8c536fb48c"
+    },
+    {
+      "note": "全CSV spread扫描102行计算得到S向量范数均值0.9999967、最小0.9999719、最大0.9999991；DOP均值57.1706。",
+      "source": "D55aefa9d8bcda7a3c447"
+    }
+  ],
+  "hypothesis_updates": [
+    {
+      "assumption": "案例导出的S1/S2/S3可能是逐行归一化的偏振方向变量，而DOP作为不同标量另行导出；两者不应被默认视为同一个Stokes向量的方向与长度测量。",
+      "base_version": 0,
+      "conceptual_move": "将状态/强度相关的Stokes信息、单位方向表示与导出DOP字段分开，视作不同的数据映射，直到原始定义建立它们之间的转换。",
+      "depends_on": [],
+      "implications": [
+        "若方向确由单位化生成，S范数对DOP不提供额外证据；只可分析方向随控制量的变化。",
+        "若spread扫描DOP下降同时方向范数固定，则该下降可能反映被单独保留的长度信息，也可能是后处理或刻度效应，不能仅由方向字段认定物理机制。"
+      ],
+      "influenced_by": [],
+      "key": "unit_direction_vs_dop",
+      "motivation": "注册CSV中两个独立扫描各自几乎所有S向量范数均为1，但DOP取值范围明显不同；brief也明确提示不得假定S分量平方范数等于DOP。",
+      "open_questions": [
+        "S分量是否逐行单位化？",
+        "DOP是由未归一化Stokes分量、偏振测量器输出还是其他拟合量计算？",
+        "spread扫描的DOP下降能否在明确平均顺序和校准后归因于相位分布展宽？"
+      ],
+      "reason": "全量计算将数据表示层面的可辨识性缺口具体化为单位方向与标量DOP的分离假设；假设仍未被数据处理来源确认。",
+      "status": "developing"
+    }
+  ],
+  "initial_question": "在两条偏振扫描中，S1/S2/S3的几何方向与导出的DOP是否描述同一对象、同一归一化步骤？尤其是spread扫描中DOP随dphi下降时，这代表物理偏振度改变，还是方向被单位化后另一个标量被独立处理？",
+  "interpretation": "统计物理视角下，重要的区分不是先解释DOP为何变化，而是区分状态向量、方向变量与跨相位/样本平均后的量。若输出S字段由非零向量除以自身范数获得，范数接近1将是构造性结果，不是额外的物理发现。此时DOP可能携带长度或不同算法信息；但仅凭现有字段不能确定这条数据处理链。",
+  "learning_request": {
+    "gap": "已用现有摘要和测量完成当前定量学习；未解决缺口是来源方法中的S字段归一化与DOP计算定义。",
+    "needed": false,
+    "operations": [],
+    "queries": [],
+    "record_ids": [],
+    "source_ids": [],
+    "urls": [],
+    "why_now": "进一步广泛检索不会替代匹配扫描的原始数据字典/处理方法；本轮应保存该具体未知，等方法文本可读时再查。"
+  },
+  "limitations": [
+    "两次扫描是不同source scan，不是独立重复；DOP尺度不可直接比较。",
+    "不知道S1/S2/S3和DOP的算法、归一化顺序、校准、误差或原始扫描条件。",
+    "外部检索仅有摘要/片段，未取得匹配实验的完整方法文本；成功检索不等于确立了随机相位机制。",
+    "研究独立来源只读到综述摘要，且公开检索结果有摘要级或截断内容；不能作为案例方法的证据。"
+  ],
+  "memory_notes": [
+    {
+      "conditions": "仅针对当前案例的导出字段；需要原始数据字典、Stokes定义、测量和归一化顺序才能作物理解释。两种扫描不能合并，DOP标度不同。",
+      "example": "mean_phase扫描200行：S范数均值0.9999978，DOP均值0.7951；spread扫描102行：S范数均值0.9999967，DOP均值57.1706。计算使用完整注册CSV，组别独立分析。",
+      "key": "stokes_direction_dop_separation",
+      "kind": "interpretation",
+      "mastery": "used",
+      "open_questions": [
+        "S向量的近单位范数来自明确的逐行归一化，还是其他测量/物理约束？",
+        "DOP采用何种定义和标度，是否能从未归一化Stokes参数恢复？"
+      ],
+      "revision_reason": "",
+      "sources": [
+        "registered case brief: measurements_brief.json",
+        "https://doi.org/10.1364/aop.404175",
+        "full registered CSV analysis records D0804862c1a8c536fb48c and D55aefa9d8bcda7a3c447"
+      ],
+      "tags": [
+        "Stokes vector",
+        "degree of polarization",
+        "identifiability",
+        "polarization direction",
+        "斯托克斯向量",
+        "偏振度",
+        "可辨识性"
+      ],
+      "title": "单位化 Stokes 方向与导出 DOP 的区分",
+      "understanding": "在本案注册数据中，两个扫描各自S1/S2/S3范数均约为1（完整行扫描计算），而DOP为不同范围的独立字段。结合brief称其为归一化方向分量，合理但未证实的解释是S字段承载单位方向、DOP另行表达某种标量。不得将近单位范数当作物理态完全偏振或DOP正确性的证明。"
+    }
+  ],
+  "memory_use": [],
+  "next_actions": [
+    "优先查明S1/S2/S3字段是否经逐行单位范数归一化，以及DOP的定义和计算顺序。",
+    "保持两个扫描分支分离；在解释spread扫描前，弄清dphi所表示的分布、测量平均次序及DOP的每扫描单位。",
+    "保留并列解释：相位平均改变合成Stokes量，或测量/导出处理把方向单位化而DOP另行标度。"
+  ],
+  "question_to_peer": "你如何理解S1/S2/S3在两次扫描中几乎严格单位范数这一点？它更像导出时明确归一化的方向变量，还是某种物理约束的结果？在不知道DOP算法时，哪些解读你会保留或排除？",
+  "revision_obligations": [],
+  "summary": "我把偏振数据暂时理解为两种不同量的观测：方向向量与其长度，不能在未核实导出定义前把标量 DOP 当成向量范数。对注册的全部CSV按扫描分别计算后，两个扫描的 S1/S2/S3 范数都约为1（spread均值0.999997，mean_phase均值0.999998），而其DOP尺度、范围明显不同；这支持“归一化方向字段可能被刻意投影到单位球面”这一解释，但不能证明原始偏振态完全偏振，也不能说明DOP的计算步骤。",
+  "uncertainties": "尚不清楚dphi及mean_phase的物理定义、导出DOP单位和公式、S向量的归一化步骤、测量与平均先后次序，以及两扫描间仪器和设置是否相同。摘要背景提示Stokes/Poincaré表示，但未解决这些字段的操作定义。",
+  "transport_bindings": [
+    {
+      "field": "development source",
+      "from": "S1",
+      "to": "/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/runs/hypothesis_flexible_optical_generation/allowed/measurements_brief.json"
+    },
+    {
+      "field": "development source",
+      "from": "S7",
+      "to": "/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/learning_lab/library/330d314c21e4cade755f94169919045009f46f57f72ee12956b0f9eadc3e0a9c.json"
+    },
+    {
+      "field": "development source",
+      "from": "S1",
+      "to": "/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/runs/hypothesis_flexible_optical_generation/allowed/measurements_brief.json"
+    },
+    {
+      "field": "development quote",
+      "rule": "Resolve author-selected JSON pointer to exact source string",
+      "source": "/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/runs/hypothesis_flexible_optical_generation/allowed/measurements_brief.json",
+      "pointer": "/data_dictionary/S1/S2/S3"
+    },
+    {
+      "field": "artifacts",
+      "rule": "Saved exact author summary as a real file"
+    }
+  ]
+}

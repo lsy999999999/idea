@@ -1,0 +1,1084 @@
+{
+  "stage": "09_develop_000",
+  "researcher": "domain_scientist",
+  "sequence": 14,
+  "source_result": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/09_develop_000/api_v2/workspace/result.json",
+  "source_sha256": "ac683cad2db59992b9bc2cbea02cb3d4813c747ce37947b414acbdf38d381008",
+  "result_object_sha256": "54e5c5f7f8fa7110ee690db8ddb7d1af319694fd4b961ba3add9ce5c161dc054",
+  "before": {
+    "researcher": "domain_scientist",
+    "independent": false,
+    "self": [
+      {
+        "assumption": "修订：释放的位置判据仍是 T_d(γ,θ)+T_c(θ,σ)=0（不含 k_d），但可见性不再需要独立的 |K_neg|：它由无量纲比 κ=(k_cℓ²)/(k_dL²cos²θ) 给出，而 κ 正是已测环宽收缩 1−w 的同一条群（1−w≈cκ，c≈0.8–1.1）。因此 Ω=1/κ 的物理内容与『环宽→0』是同一件事：κ→1 时约束支与释放支合并，该单元退化为 γ 的单值单调函数（无跳变、环路关闭）。",
+        "motivation": "pair_A 实测 1−w=0/0.056/0.167/0.361（转子2 同列 0/0.059/0.176/0.353）与由 k_d=0.19 N/cm、k_c=0.07 N/cm、L=6.3 cm、ℓ=1.577/3.154/4.731 cm、θ≈20° 估得 κ=0.052/0.209/0.470 逐点同序且相差 ≤25%；两者都由同一力矩比给出，故不是巧合而是同一条无量纲群。",
+        "conceptual_move": "把上版『需要一个未知负刚度 |K_neg|』换成『台面上已测的环宽就是该刚度比的读数』，使判据在只有夹紧表时可算，并把『沉默单元』从新状态降为 κ→1 的极限。",
+        "implications": [
+          "条件性：换更软的驱动弹簧（标定样 S007=0.07 vs 现用 0.19，κ 放大约 2.7 倍）应使 pair_A ℓ=4.731 单元 κ≈1.3>1：跳变关闭、环路消失，而释放 γ 几乎不动（位置判据不含 k_d）。这是同一台面上可读的判别。",
+          "学习性算例（假设、未测）：κ=1 对应 ℓ≈6.9 cm（几何上限 w/2=7.6 cm），故用现装弹簧把 ℓ 推到极限也才刚接近合并；在 ℓ=4.731 处 κ=0.47，远未合并——记录到的三组阈值都应带可测跳变，与记录一致。",
+          "条件性：阈值列对 κ 只有二阶依赖（位置判据不含 k_d），宽度列才是一阶读数；用阈值平移量去推 κ 会低估约 2–3 倍。",
+          "条件性：κ→1 是把一个迟滞元素从字母表删除，而非写入一段不可见历史，故它单独不可能破坏返回性（R 轴）。"
+        ],
+        "open_questions": [
+          "比例 c≈0.8–1.1 是否随止挡跨度（36.6°/9.8° 对 18.3°/38.8°）或耦合弹簧数目变？",
+          "摩擦与有限止挡刚度是否会在 κ→1 前把支合并变成率相关的粘滑，从而破坏准静态前提？",
+          "表内 k_d 与 L 是否恒定（隔离服务对『是否同一驱动弹簧』答 unknown）；若不恒定，κ 的归一失去共同基准？",
+          "κ>1 时连续支真的单值，还是出现新的多值区间（二阶失稳/折返）？"
+        ],
+        "status": "developing",
+        "depends_on": [],
+        "ref": {
+          "owner": "domain_scientist",
+          "key": "unilateral_stop_state",
+          "version": 4
+        },
+        "conceptual_content_changed": true,
+        "change_metric_scope": "Literal field difference, not semantic progress or improved quality",
+        "reason": "本轮首次让 Ω 在只有实测宽度时可算，并给出一个不换几何只换弹簧的判别；但 c 的比例、θ/弹簧数假设、k_d 恒定性都未定，故保留 developing。",
+        "influenced_by": [
+          {
+            "key": "pathway_vs_return_two_axes",
+            "owner": "theory_scientist",
+            "version": 1
+          },
+          {
+            "key": "threshold_coordinate_factorization",
+            "owner": "theory_scientist",
+            "version": 5
+          }
+        ],
+        "source_stage": "05_return_0",
+        "source_result": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/05_return_0/api_v2/workspace/result.json"
+      },
+      {
+        "assumption": "修正：b（邻态方向的差）与 1−w（止挡方向的差）仍是同一耦合力矩函数的两类矩，但公共标度不能写成统一 ℓ²：1−w 在 ℓ 1.577→3.154 只增 ×3.0（幂 1.58，比 ℓ² 低 25%），只有 3.154→4.731 段给 1.90、2b₂ 比给 2.17–2.21。其真正的公共内容是同一个无量纲群 κ∝k_cℓ²/(k_dL²)；幂律偏离是几何因子（止挡角、弹簧静长）在力臂变小时的表现。等量平移也只是近似：ℓ=1.577 处 up 与 down 的平移量差 0.2 cm。",
+        "motivation": "内部评审 F4 复算指出小 ℓ 端幂次 1.58 而非 1.8；F1 指出等量平移的容差应是 0.2 cm 而非 0.1 cm。读表事实仍是 pair_A 四组 Δα=Δβ（同向平移）与 pair_B 的 +0.2/+0.6 cm 偏差。",
+        "conceptual_move": "把『同标度 ∝ ℓ²』弱化为『同群 κ 加上一个未定的几何因子』，并把符号来源（并联/交叉）与标度来源分开保留。",
+        "implications": [
+          "条件性：固定几何只换并联/交叉，应得 b→−b 而 (|b|,1−w) 近似不变；现有 pair 数据因 ℓ 与静长同时不同不能配对检验。",
+          "条件性：用 1−w 去估 κ 时，小 ℓ 端偏差 25%，故 κ 的三点校准应只当量级；要定幂次需要更多 ℓ 点或独立改变 k_c。",
+          "条件性：network_C 的 Δβ_3>0 单凭符号不能归因于钢丝单侧边；判别量是 Δα_3≠Δβ_3，且阈值需高于读数不确定度（≈0.2 cm）。",
+          "条件性：若换线序同时改变 |b|，则『符号』与『幅度』的分离被削弱，幂律偏离就不能只归给几何因子。"
+        ],
+        "open_questions": [
+          "幂 1.58 是小角/力臂模型失效，还是耦合弹簧静长在 ℓ 变小时进入强非线性？",
+          "同一几何换线序的实验不存在，能否用 pair_A 的 Δα−Δβ=0 与 pair_B 的 0.2/0.6 cm 做弱检验？",
+          "释放处弹簧处于压缩（R<ℓ0）时力矩符号翻转，两类矩的分解如何分情形重写？"
+        ],
+        "status": "developing",
+        "depends_on": [],
+        "ref": {
+          "owner": "domain_scientist",
+          "key": "coupling_torque_moments",
+          "version": 3
+        },
+        "conceptual_content_changed": true,
+        "change_metric_scope": "Literal field difference, not semantic progress or improved quality",
+        "reason": "按评审 F4/F1 修正了标度断言与容差，并把 b 与 1−w 的公共内容改述为 κ；幅度分解的证据强度不变，故仍 developing。",
+        "influenced_by": [
+          {
+            "key": "threshold_coordinate_factorization",
+            "owner": "theory_scientist",
+            "version": 5
+          }
+        ],
+        "source_stage": "05_return_0",
+        "source_result": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/05_return_0/api_v2/workspace/result.json"
+      },
+      {
+        "assumption": "修正：RPM 的记忆对象是反转点序列的擦除（LIFO），±1 只是输出字母表——这条保留；但撤回上版推论『停在带内会保留一个没有事件对应的反转值』。κ→1 时两支合并，γ→θ 对该单元单值，往返重描同一路径，不写入任何反转点；字母表丢掉的只是连续幅度，不是隐藏历史。",
+        "motivation": "把 Ω 改写成 κ 后可以看到：所谓『带内停留』的极限是环路整体关闭（单值），而不是两个分支配一个幽灵反转点；同时 play/stop 同族（连续输出、共有同余与擦除）说明连续幅度本身不改变记忆类别。",
+        "conceptual_move": "把『字母表之外的隐藏反转』改为『字母表之外的连续幅度』，从而把 ±1 编码问题与记忆结构问题彻底分开。",
+        "implications": [
+          "条件性：沉默单元（κ≥1）在事件表上表现为『该翻未翻』，但不改变 LIFO 栈，故不能作为 R 轴受损的证据。",
+          "条件性：真正会在字母表外留下东西的是幅度连续化（play 型连续输出），已发表同族结果表明它保持同余与擦除；故 ±1 与连续不应被读成两个记忆类别。",
+          "条件性：network_C 第 9–16 与第 1–8 逐项相同，只支持该幅值下事件串周期为 1；若其中某单元 κ>1，事件周期的 1 也不等于 γ 映射的周期，须有 γ 记录才能对齐。"
+        ],
+        "open_questions": [
+          "仅凭 ±1 事件表如何把『阈值被推出幅值窗口』与『环路已关闭』分开（宽度列：关闭时 up−down 宽为 0；平移时宽度近似不变）？",
+          "若某次扫描中单元在 κ≈1 附近，迟滞与连续两种描述是否给出不同的事件串长度？",
+          "反转过冲/摩擦是否会让『重描同一路径』不严格成立，从而留下弱反转点？"
+        ],
+        "status": "developing",
+        "depends_on": [],
+        "ref": {
+          "owner": "domain_scientist",
+          "key": "rpm_as_order_invariance",
+          "version": 3
+        },
+        "conceptual_content_changed": true,
+        "change_metric_scope": "Literal field difference, not semantic progress or improved quality",
+        "reason": "上版把『停在带内』当成保留了反转值的路径；κ 的极限分析表明那不是隐藏记忆而是元素退化。这是对我自己上一版推论的实质修正。",
+        "influenced_by": [
+          {
+            "key": "pathway_vs_return_two_axes",
+            "owner": "theory_scientist",
+            "version": 1
+          }
+        ],
+        "source_stage": "05_return_0",
+        "source_result": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/05_return_0/api_v2/workspace/result.json"
+      },
+      {
+        "assumption": "耦合边对邻居态的方向偏好由共享节点的接线奇偶性决定：两根耦合弹簧并联（同向）时两转子同向占据为低能组合，b<0（铁磁型）；交叉（跨接）时反向占据为低能组合，b>0（反铁磁型）。判别依据是线序这一离散装配事实，不是刚度或长度。幅度一半（幂律与 κ 群）由 coupling_torque_moments 承担，本支只承担符号一半。",
+        "motivation": "pair_A=parallel,b<0 与 pair_B=crossed,b>0 的事实配对；已发表 S 形双屈曲实验给出同一原型：同向屈曲使中间连接区曲率与弹性能很高，因此一个单元跳变可无外驱动带动另一单元反向跳。",
+        "conceptual_move": "把「铁磁/反铁磁」这一 Ising 语言落到连接图上，使符号在装配层面有成因，并给出「换线序不改幅度」的操作；幅度侧改写后，本支自觉收缩为只保留符号侧。",
+        "implications": [
+          "条件性：交叉边在驱动下可产生无外驱动的邻态跟随（同 γ 双翻的对称版本），不需要非互易元件；并联边给同向锁存。",
+          "条件性：若 network_C 的 1–3 边是交叉装配，Δβ_3>0 无需钢丝；若是并联，则 Δβ_3>0 指向单侧边或非可加求和。",
+          "条件性：符号结构（peer 用来判 l-RPM 类别）因此可由装配图预读，而不必从阈值表反推。",
+          "条件性（v3 前提维护）：换线序应得 b→−b 而 |b| 与 1−w 近似不变；若真测到 |b| 同时改变，则本支与 coupling_torque_moments v3 的『符号/幅度分离』一并被削弱，届时需恢复本支把两处责任分开。"
+        ],
+        "open_questions": [
+          "并联/交叉是否也改变 |b| 量级（力臂不同），从而破坏「只翻符号」的简洁性？",
+          "大止挡跨度 73° 下共享节点能量论证（小曲率前提）是否仍给纯反向偏好？",
+          "network_C 各边奇偶性无记录（case 询问返回 unknown），该支在网络上暂不可判？"
+        ],
+        "status": "parked",
+        "depends_on": [
+          {
+            "key": "coupling_torque_moments",
+            "owner": "domain_scientist",
+            "version": 2
+          }
+        ],
+        "ref": {
+          "owner": "domain_scientist",
+          "key": "wiring_parity_sign",
+          "version": 3
+        },
+        "conceptual_content_changed": true,
+        "change_metric_scope": "Literal field difference, not semantic progress or improved quality",
+        "reason": "停用理由未变（前提被 coupling_torque_moments 吸收），本轮仅把 depends_on 从该支 v2 更新到 v3 并注明幅度侧归属，属前提维护；判别性预言（换线序 b→−b 而 (|b|,1−w) 近似不变）仍保存在本卡中。",
+        "influenced_by": [
+          {
+            "key": "threshold_coordinate_factorization",
+            "owner": "theory_scientist",
+            "version": 5
+          }
+        ],
+        "source_stage": "05_return_0",
+        "source_result": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/05_return_0/api_v2/workspace/result.json"
+      },
+      {
+        "assumption": "条件性猜想：把某单元推到 κ→1（支合并）会把它从迟滞字母表删除，于是任何经过它的受挫回路在『迟滞元素图』上少一条边，受挫奇偶可因此被抹平；反过来 κ 略小于 1 的窄环单元最容易被邻态在同 γ 带走（雪崩），是 P 轴最不稳的一档。故 κ 跨 1 时对 R 轴（更安全）与 P 轴（更乱）作用方向相反。",
+        "motivation": "peer 的两轴判据说 R 破坏需挫折（必要）＋耦合空间开区域＋幅值窗口；而 κ 提供一个把单个元素推出迟滞域的连续旋钮，且 pair_A 的 κ 范围 0.05–0.47 正好从宽环走到窄环、接近但未跨过 1。",
+        "conceptual_move": "把『近阈值』从『跳变小』改述为『元素退出字母表的临界点』，并把它接到挫折奇偶上：κ 不是标量记忆刻度，而是改变图结构的旋钮。",
+        "implications": [
+          "条件性：记忆风险随耦合增强不是单调的——只在 κ 跨 1 的邻域改变图结构；因此『更强相互作用＝更差记忆』在本装置上应被替换为『κ 跨 1 前后是两种图』。",
+          "条件性：窄环（κ≈0.9）单元会把雪崩量 2|b|/gap 推到最大（gap 是环宽），故 pair_A 在 ℓ≈6 cm 附近应出现同 γ 双翻，而 κ>1 处应完全无事件——两种『无事件』的对照。",
+          "条件性：退化单元仍随 γ 连续变化，作为对邻居的确定性场（而非迟滞元素）可以移动阈值但不能储存历史，故它不会单独产生多周期。"
+        ],
+        "open_questions": [
+          "退化单元作为确定性场能否替代迟滞元素参与 pathway 结构（P 轴的 pathway 是否仍良定义）？",
+          "雪崩判据里的 gap 究竟是不是环宽（若 gap→0 则 2|b|/gap→∞，判据爆掉）？",
+          "多单元同时近简并时，被删除的元素集合依赖扫描路径吗？"
+        ],
+        "status": "developing",
+        "depends_on": [
+          {
+            "key": "unilateral_stop_state",
+            "owner": "domain_scientist",
+            "version": 3
+          }
+        ],
+        "ref": {
+          "owner": "domain_scientist",
+          "key": "degeneracy_heals_frustration",
+          "version": 1
+        },
+        "conceptual_content_changed": true,
+        "change_metric_scope": "Literal field difference, not semantic progress or improved quality",
+        "reason": "这是本轮由 κ 与 peer 挫折判据相接得到的新连接，尚无可判数据；保留以便与『纯宽度收缩』解释分开。",
+        "influenced_by": [
+          {
+            "key": "gauge_frustration_memory_class",
+            "owner": "theory_scientist",
+            "version": 2
+          },
+          {
+            "key": "latch_as_threshold_inequality",
+            "owner": "theory_scientist",
+            "version": 2
+          }
+        ],
+        "source_stage": "05_return_0",
+        "source_result": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/05_return_0/api_v2/workspace/result.json"
+      }
+    ],
+    "peer_branches": [
+      {
+        "assumption": "修订：等量平移形态 F_i^±(σ)=c_i+b_iσ±h_i 保留，但『b 的符号只是标签』必须按轴分开。子格翻转 σ_i→−σ_i 把相连 b→−b，且逐元素的换态事件序列 ρ 以及每个元素自身的 α、β 前后顺序都不变，因此对返回性(R 轴)它是纯标签；但同一次翻转也把该元素相对共同驱动 γ 的取向反过来，于是元素之间的偏序（『s_i=+ ⇒ s_j=+』这类单调关系，即 no-passing）被反号，故对通路可表示性(P 轴)它不是标签。结果是 pair_A（全 b<0）与 pair_B（全 b>0）在 R 轴同类、在 P 轴异类。",
+        "motivation": "读表事实（两装配只差符号、Δα≈Δβ、pair_A 严格相等、pair_B 差 +0.2/+0.6 cm）与已发表一句正面冲突：反铁磁相互作用使机械 hysteron 网络没有内部状态偏序，而该网络仍以高精度保持 RPM。这要求把『符号是标签』这句话限定到一个轴上，而不是放弃它。",
+        "conceptual_move": "把『标签自由度』从全称命题降为分轴命题：同一变量重标定对事件序列是恒等、对元素间偏序是反号。于是『符号既不重要又重要』不再矛盾，而是各自对应一个可观测层。",
+        "implications": [
+          "条件性：pair_A 与 pair_B 在返回性上不可区分（可观测差异＝锁存发生在哪个扫描方向），但在 P 轴上可区分——pair_B（AF）应当失去偏序，因而任何假设单一状态无关排序的模型/pathway 预测器在 pair_B 上失效，在 pair_A 上仍可用。",
+          "条件性：用两转子表去判定『记忆类别是否改变』在 R 轴无意义，但在 P 轴有意义（AF 对会给出交叉的路径，FM 对给出嵌套路径）。",
+          "条件性：network_C 若确有回路且符号乘积为 −1，则它至少在 P 轴已离开 Preisach 区；但要断言 R 轴受损，还须另给区域与幅值窗口。",
+          "条件性：Δα≠Δβ（不可写成 ±b 的边）不在这个标签论证的覆盖范围内，它是第三类残差，不可被 R 轴或 P 轴的符号语言吸收。"
+        ],
+        "open_questions": [
+          "『R 轴不受符号影响』是否只在准静态、共同驱动、逐对线性可加之下成立？若存在同 γ 双翻（锁存），翻转标签是否仍保持事件序列？",
+          "pair_B 是否真的表现出非嵌套（交叉）路径：现有 pair_B 每组只有一个 L，且无路径记录，无法读表验证。",
+          "no-passing 与本装置可测量的量之间的对应尚未写下（我只有『偏序被反号』这一句论证）。"
+        ],
+        "status": "developing",
+        "depends_on": [],
+        "ref": {
+          "owner": "theory_scientist",
+          "key": "threshold_coordinate_factorization",
+          "version": 5
+        },
+        "conceptual_content_changed": true,
+        "change_metric_scope": "Literal field difference, not semantic progress or improved quality",
+        "reason": "上一版把『可观测差异只剩锁存方向』写成无条件；新证据要求把它限定在 R 轴，同时在 P 轴上保留符号作为内容。这是前提层的分轴修订，不是措辞调整，故必须改版。",
+        "influenced_by": [
+          {
+            "key": "rpm_as_order_invariance",
+            "owner": "domain_scientist",
+            "version": 2
+          },
+          {
+            "key": "gauge_frustration_memory_class",
+            "owner": "theory_scientist",
+            "version": 1
+          }
+        ],
+        "source_stage": "04_targeted_1_learn_1",
+        "source_result": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/04_targeted_1_learn_1/api_v2/workspace/result.json"
+      },
+      {
+        "assumption": "同一 γ 双翻由间隙归一化不等式决定：设 A_i 为当前邻居态下转子 i 的上翻（或下翻）阈值，j 先翻（A_j 小于 A_i）后 i 被立即带走 iff A_i+2b_i ≤ A_j，即 2|b_i| ≥ |A_i−A_j|；锁存方向由 sign(b) 与扫描方向决定，不需要势阱不对称。该不等式只判别雪崩，不判别 RPM。",
+        "motivation": "pair_A L=4.731 升段：A_1=5.5、A_2=4.9、b_1=−0.6 ⇒ 2|b_1|=1.2 ≥ 0.6，预言 4.9 处同 γ 双翻；L=3.154：2|b_1|=0.6 < 2.6，预言顺序单翻（对应已记录的 5.9>3.9）。pair_B 的符号反号（b≈+2.7）则预言镜像：锁存应出现在下降段。",
+        "conceptual_move": "把「雪崩/锁存」从需要一个正反馈描述，降为对已测阈值的间隙比较；同时把「锁存破坏 RPM」这一未经检验的因果剪断，只留「锁存改变图」这一较弱关系。",
+        "implications": [
+          "条件性：pair_B（交叉几何、b>0）若可观测，应在下降段出现双翻，而上升段顺序——方向性来自 sign(b)，不来自「非互易机械元件」。",
+          "网络 C 的两处并列（升段 s1/s3、降段 s1/s2）与状态依赖的伙伴身份相容，但同样与偶然近简并相容；判定需要连通性与时间间隔，而后者被记录约定明确排除。",
+          "「降低势垒易切换」与「保住顺序性」不是同一对比：间隙比较里没有 h，减小 h 只有在它同时缩小间隙时才影响锁存。"
+        ],
+        "open_questions": [
+          "多邻居时逐对间隙条件是否仍充分（第三个邻居可能同时位移两个阈值）？",
+          "夹紧态的 b 与自由态的 b 是否同值（夹紧改变了支点受力路径）？"
+        ],
+        "status": "developing",
+        "depends_on": [],
+        "ref": {
+          "owner": "theory_scientist",
+          "key": "latch_as_threshold_inequality",
+          "version": 2
+        },
+        "conceptual_content_changed": true,
+        "change_metric_scope": "Literal field difference, not semantic progress or improved quality",
+        "reason": "判据形式与两组数字一致，且给出可判读的镜像预言；但「逐对充分」与「b 可迁移」两个前提都未检验，故保留 developing。",
+        "influenced_by": [
+          {
+            "key": "threshold_coordinate_factorization",
+            "owner": "theory_scientist",
+            "version": 1
+          }
+        ],
+        "source_stage": "02_initial_1_learn_0",
+        "source_result": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/02_initial_1_learn_0/api_v2/workspace/result.json"
+      },
+      {
+        "assumption": "修订：以『移位/阈值间隙』为坐标的边界只划出 Preisach（可被唯一状态无关排序描述、无雪崩）与 scrambled/雪崩之间的界，不划出记忆类别；记忆类别由耦合符号结构决定。并且该边界不是一条线：间隙由几何（x 偏移、止挡角）给定，移位 ∝ k_c/k_d，故可二维调节；『一个几何旋钮 L 同时锁死两目标』只在固定刚度比时成立。",
+        "motivation": "pair_A 的移位/间隙单调上升（0/0.11/0.23/2.0）并在 (3.154,4.731) 越过 1，但同四个 L 上 Δα=Δβ 且全负（铁磁型），按已发表结果记忆类别不变；peer 又用释放条件不含刚度、b ∝ k_c/k_d 说明刚度比是独立旋钮。",
+        "conceptual_move": "把单一设计坐标拆成『形状坐标（几何→间隙与耦合力臂）』与『幅度坐标（刚度比→移位大小）』，并把该边界的功能从『记忆前沿』降为『可分辨性前沿』。",
+        "implications": [
+          "条件性：为易切换/强集体响应而增大 L 的设计会先跨过 scrambled/雪崩边界，但若符号结构保持铁磁，则不跨过记忆边界。",
+          "条件性：在固定几何下提高 k_c/k_d 可任意推近或推远该边界，所以『play nice』是二维面里的一个区域，而不是一条线上的区间。",
+          "条件性：network_C 若为符号混合，其记忆风险来自符号而不是这条边界；因此即便它的移位/间隙比比 pair_A 小，也可能更脆弱。"
+        ],
+        "open_questions": [
+          "几何（间隙）与刚度比（移位）在多转子网络里是否真的可分离调节，还是耦合路径本身改变止挡受力从而改变间隙？",
+          "雪崩边界在 N≥3 时是否仍由单对 2|b|/gap 给出，还是被邻态求和提前？"
+        ],
+        "status": "developing",
+        "depends_on": [
+          {
+            "key": "latch_as_threshold_inequality",
+            "owner": "theory_scientist",
+            "version": 2
+          }
+        ],
+        "ref": {
+          "owner": "theory_scientist",
+          "key": "barrier_interaction_frontier",
+          "version": 3
+        },
+        "conceptual_content_changed": true,
+        "change_metric_scope": "Literal field difference, not semantic progress or improved quality",
+        "reason": "坐标从『记忆边界』改为『可分辨性边界』并改为二维面，属于前提层修订且吸收了 peer 的刚度论点；但二维性只有单点与四点数据支持，故保留 developing。",
+        "influenced_by": [
+          {
+            "key": "coupling_torque_moments",
+            "owner": "domain_scientist",
+            "version": 1
+          },
+          {
+            "key": "threshold_coordinate_factorization",
+            "owner": "theory_scientist",
+            "version": 2
+          }
+        ],
+        "source_stage": "03_exchange_1",
+        "source_result": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/03_exchange_1/api_v2/workspace/result.json"
+      },
+      {
+        "assumption": "夹紧表只在「夹紧态本身是自由平衡态」时是自由装置的合法摘要：止挡只能提供压向它的力矩，而 |b| 随 L 增长后，某些 (i,σ_j) 单元可能对应自由转子无法占据的位形（被耦合拉离止挡，成为 ±1 编码看不见的连续角度第三态）；此时受限的是可占据态集，而不是阈值次序。",
+        "motivation": "协议明确把邻居「固定在止挡上」；而案例定义服务无法确认 mount_l_cm 指哪一端的臂，使「力臂为零的 L=0 = 本征」这一便利解释缺少一半依据；此外 network_C 中出现该翻而未翻的转子（例如 --++ 半周期下降到末端 s4 仍未下翻），这既可以用阈值被抬高解释，也可以用位形不可实现解释。",
+        "conceptual_move": "把「静态可实现性」与「阈值次序」分成两个独立过滤器，并让它们对同一组事件给出不同预言；这把一个被默认的前提变成可攻击的假设。",
+        "implications": [
+          "若成立，夹紧→自由的偏差方向会随 b 的符号（并联 vs 交叉）相反，可用 pair_A 与 pair_B 的定性差别检验。",
+          "若成立，锁存预测（condition 4.3 ≤ 4.9）可能因该位形不存在而永远不可观测——两种机制在有观测时是可区分的，无观测时不可区分。",
+          "「转子被拉离止挡」会表现为连续角度状态，而事件表只记 ±1，故这种状态在现有数据里不可见，只能以「缺失事件」的形式出现。"
+        ],
+        "open_questions": [
+          "如何仅用给定行判断某个夹紧单元是否可实现（需要哪些额外几何量）？",
+          "缺失事件（该翻未翻）在两种机制下的分布是否有系统性差异？"
+        ],
+        "status": "developing",
+        "depends_on": [],
+        "ref": {
+          "owner": "theory_scientist",
+          "key": "clamp_admissibility_limits",
+          "version": 1
+        },
+        "conceptual_content_changed": true,
+        "change_metric_scope": "Literal field difference, not semantic progress or improved quality",
+        "reason": "它是与锁存解释竞争的分支，且指出了夹紧协议的一个默认前提；保留而不合并，避免过早用单一机制解释 6/2 交替。",
+        "influenced_by": [],
+        "source_stage": "02_initial_1",
+        "source_result": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/02_initial_1/api_v2/workspace/result.json"
+      },
+      {
+        "assumption": "修订：以『移位分散度/间隙』为坐标的边界不止一条，也不止一层。已发表的可表示性阶梯（随相互作用强度 Preisach→scrambled→accumulator）说明跨过第一条界只是离开可被单一状态无关排序描述的区域，再往上还有 accumulator 级；因此该坐标应有多条界线，且这些界线全部属于 P 轴（通路可表示性），与 R 轴（返回性）无关。分散度按边求和仍是我对多邻居的推广。",
+        "motivation": "pair_A 的移位/间隙 0/0.11/0.23/2.0 单调上升并在 (3.154,4.731) 越过 1，但同四个 L 上 Δα=Δβ 且全负；而已发表在压缩褶皱板上把同一类相互作用强度递增读成三级通路。于是『越过边界』不是一次事件，需要分级读。",
+        "conceptual_move": "把单一可分辨性前沿改成多级前沿（Preisach|scrambled|accumulator），并明确它只住在 P 轴，从而不再借它解释任何返回性现象。",
+        "implications": [
+          "条件性：pair_A 在 L=4.731 的 2|b|/间隙=2.0 只能读作『已离开 Preisach 级（进入 scrambled 或更高）』，不能读作『记忆变差』。",
+          "条件性：为易切换而加大 L 会连续跨越 P 轴的多条界线，但不会因此跨过 R 轴；两件事需要两套读数。",
+          "条件性：若某装置分散度大但耦合完全对称（无非对称项），它可能停在 scrambled 而不进入 accumulator；因此『强度』之外还缺一个非对称程度坐标（我在多周期模型里读到中心具『相同非对称耦合与清晰手性』）。"
+        ],
+        "open_questions": [
+          "三条界线各自对应的不等式是什么（是否只需逐对 Δα 差与间隙，还是要加上非对称项）？",
+          "在 N=4 的装置上分级是否仍由单对量决定，还是需要整体矩阵？"
+        ],
+        "status": "developing",
+        "depends_on": [
+          {
+            "key": "latch_as_threshold_inequality",
+            "owner": "theory_scientist",
+            "version": 2
+          }
+        ],
+        "ref": {
+          "owner": "theory_scientist",
+          "key": "threshold_gap_addressability",
+          "version": 3
+        },
+        "conceptual_content_changed": true,
+        "change_metric_scope": "Literal field difference, not semantic progress or improved quality",
+        "reason": "原有关系保留但被分级化并明确归属 P 轴；这改变了它的后果（从『记忆边界』变为『模型可表示性级别』），也给它添了一个我此前没有的坐标（非对称程度），故改版。",
+        "influenced_by": [
+          {
+            "key": "threshold_coordinate_factorization",
+            "owner": "theory_scientist",
+            "version": 4
+          },
+          {
+            "key": "gauge_frustration_memory_class",
+            "owner": "theory_scientist",
+            "version": 1
+          }
+        ],
+        "source_stage": "04_targeted_1_learn_1",
+        "source_result": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/04_targeted_1_learn_1/api_v2/workspace/result.json"
+      },
+      {
+        "assumption": "修订：判据要两层，且必须先扣掉 metric。Δα≠Δβ 仍是『该边不可写成纯 ±b』的标志（钢丝只受拉时力矩分段线性），但其容差应设在读数分辨率之上（≈0.1–0.2 cm），pair_B 的 +0.2/+0.6 cm 只算边缘；而跨转子 |b| 的大小差（pair_A 3.67 倍）不是单侧边证据，因为对称弹簧加上邻居止挡角差已给出同一量级（sin 比 3.5）。故钢丝假设的可判特征只剩非等量残余本身，且必须与 metric 预期分开读。",
+        "motivation": "上一版把『非零 Δα−Δβ』当单侧边判据，而 pair_B 纯弹簧边就给了 0.6 cm；本轮又发现跨转子幅度不对称可由对称弹簧的 metric 解释，于是判据的判别力被进一步压缩。",
+        "conceptual_move": "把单侧边的可观测从『幅度不对称』移回『等量性残余』，并把幅度层交给 metric 读数，使两条机制不再争同一个数字。",
+        "implications": [
+          "条件性：把钢丝换成同刚度的对称弹簧，Δα−Δβ 应回到分辨率内，而 up/down 平均位移 b 几乎不变——两件事可分开检验。",
+          "条件性：若钢丝在扫描中始终受拉，非等量残余应只在一个扫描方向出现；network_C 无夹紧格，现有数据不能判。",
+          "条件性：把 0.6 cm 读成单侧边证据会被 metric 解释吞掉一部分，故该支把握下降，不再是解释 network_C 异常的优先候选。"
+        ],
+        "open_questions": [
+          "钢丝在实测扫描中是否始终受拉，还是存在松弛段？",
+          "network_C 的 1–3 边是并联还是交叉（决定它参与的回路是否不平衡）？",
+          "Δα_3 与 Δβ_3 是否真的不等？（需要 network_C 的夹紧表，现有数据没有）"
+        ],
+        "status": "developing",
+        "depends_on": [],
+        "ref": {
+          "owner": "theory_scientist",
+          "key": "unilateral_wire_edge_hypothesis",
+          "version": 3
+        },
+        "conceptual_content_changed": true,
+        "change_metric_scope": "Literal field difference, not semantic progress or improved quality",
+        "reason": "核心读法保留，但两个支撑（幅度不对称、非零残余）都被削弱到边缘，若不改版会把 metric 效应误当单侧边证据。",
+        "influenced_by": [
+          {
+            "key": "coupling_torque_moments",
+            "owner": "domain_scientist",
+            "version": 3
+          },
+          {
+            "key": "threshold_coordinate_factorization",
+            "owner": "theory_scientist",
+            "version": 5
+          }
+        ],
+        "source_stage": "05_return_1_learn_1",
+        "source_result": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/05_return_1_learn_1/api_v2/workspace/result.json"
+      },
+      {
+        "assumption": "修订：挫折仍是 R 轴破坏的必要通道（＋耦合空间开区域＋幅值窗口），但『挫折』必须在有效图上判定；而稳定支上的单中介消去是星-网变换，保持无直接边回路的符号乘积，不单独制造或治愈挫折。故 R 轴风险不因 κ→1 本身单调变化；只有当 (i) 直接边与诱导边反号且占优，或 (ii) 中介走负刚度支/成为隐藏慢变量时，有效图的受挫奇偶才改变。",
+        "motivation": "上版说 κ→1 可以拆环也可以造环，依据是 J_eff=−J_ikJ_kj/K；符号纠正后，稳定支上诱导三角恒平衡，故必须把『造环』限定到直接边竞争或负刚度支。",
+        "conceptual_move": "把『有效图』从静态符号图改为『消去后带直接边竞争与稳定支判据的符号图』；挫折必要论保留，但融合不再自动改变奇偶。",
+        "implications": [
+          "条件性：只报告某回路符号乘积为 −1 仍不能预言 RPM 破坏；还要问该回路是否含近融合中介、消去后直接边是否与诱导边反号占优。",
+          "条件性：两转子无回路无中介，pair_A/pair_B 的 R 轴同类判断不变。",
+          "条件性：network_C 的 s3 异常不能仅凭 κ_3→1 归为 R 轴风险；若 1–3 与 3–j 同号且无直接边，消去只产生平衡三角。",
+          "条件性：若 κ→1 使复合元失去双稳，则有效图描述失效，挫折必要论需在『隐藏中介仍保留为慢变量』的扩展图上重述。"
+        ],
+        "open_questions": [
+          "如何从夹紧表判断直接边是否存在/占优？",
+          "有效图的不平衡在消去顺序依赖时是否良定义？",
+          "幅值窗口与有效 K_k 的关系：窗口边界是否正是复合元失稳的 γ 位置？"
+        ],
+        "status": "developing",
+        "depends_on": [
+          {
+            "key": "threshold_coordinate_factorization",
+            "owner": "theory_scientist",
+            "version": 5
+          }
+        ],
+        "ref": {
+          "owner": "theory_scientist",
+          "key": "gauge_frustration_memory_class",
+          "version": 4
+        },
+        "conceptual_content_changed": true,
+        "change_metric_scope": "Literal field difference, not semantic progress or improved quality",
+        "reason": "符号纠正改变了上版『可拆环也可造环』的前提；保留挫折必要通道，但把融合对奇偶的作用降为条件性。",
+        "influenced_by": [
+          {
+            "key": "fusion_as_renormalization",
+            "owner": "theory_scientist",
+            "version": 1
+          },
+          {
+            "key": "degeneracy_heals_frustration",
+            "owner": "domain_scientist",
+            "version": 1
+          },
+          {
+            "key": "threshold_coordinate_factorization",
+            "owner": "theory_scientist",
+            "version": 5
+          }
+        ],
+        "source_stage": "05_return_1_learn_0",
+        "source_result": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/05_return_1_learn_0/api_v2/workspace/result.json"
+      },
+      {
+        "assumption": "修订：两轴（R 返回性 / P 通路可表示性）仍是两个坐标，但『独立』只在远离 P 轴端点（κ≪1）时成立。κ→1 的稳定支消去不是删除元素，而是星-网变换：它改变有效耦合幅度与邻元有效 κ，但在无直接边时保持回路符号乘积，故不自动改变 R 轴；只有直接边竞争或中介走负刚度支时，R 轴才可能被触及。P 轴仍可是『图的重整化级别』，但 R 轴响应不是由邻边同号/异号二分。",
+        "motivation": "上版说 R 或因拆环更安全、或因造环更危险，取决于邻边符号；符号纠正后，稳定支上不存在这种二分。",
+        "conceptual_move": "把两轴耦合从『邻边符号决定 R 方向』改为『消去是否保持回路符号乘积』；轴间耦合仍有载体，但方向由直接边/稳定支决定。",
+        "implications": [
+          "条件性：『该翻未翻属 P 轴』仍成立，但理由改为：稳定支消去保持受挫奇偶，故单个沉默单元不单独改变 R 轴；若观察到 R 轴变化，必须另找直接边或隐藏中介。",
+          "条件性：R 轴证据仍需周期长度/嵌套环；P 轴证据仍是阈值移位、回路符号、雪崩、Δα≠Δβ。",
+          "条件性：pair_A/pair_B 在 R 轴同类、P 轴异类保留。",
+          "条件性：P 轴端点可传染，但传染不自动等于 R 轴风险；两者需分别读。"
+        ],
+        "open_questions": [
+          "远离端点时两轴是否仍通过 |b|/gap 弱耦合（雪崩即图变换）？",
+          "星-网消去的顺序依赖是否使『有效图』不唯一？"
+        ],
+        "status": "developing",
+        "depends_on": [
+          {
+            "key": "threshold_coordinate_factorization",
+            "owner": "theory_scientist",
+            "version": 5
+          }
+        ],
+        "ref": {
+          "owner": "theory_scientist",
+          "key": "pathway_vs_return_two_axes",
+          "version": 3
+        },
+        "conceptual_content_changed": true,
+        "change_metric_scope": "Literal field difference, not semantic progress or improved quality",
+        "reason": "符号纠正撤回了上版『邻边符号决定 R 方向』的具体机制；两轴独立性保留，但端点邻域的耦合方向改为条件性。",
+        "influenced_by": [
+          {
+            "key": "fusion_as_renormalization",
+            "owner": "theory_scientist",
+            "version": 1
+          },
+          {
+            "key": "unilateral_stop_state",
+            "owner": "domain_scientist",
+            "version": 4
+          },
+          {
+            "key": "degeneracy_heals_frustration",
+            "owner": "domain_scientist",
+            "version": 1
+          }
+        ],
+        "source_stage": "05_return_1_learn_0",
+        "source_result": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/05_return_1_learn_0/api_v2/workspace/result.json"
+      },
+      {
+        "assumption": "修订（增加通道区分，符号约定不变）：按能量 −ΣKσσ，稳定支上消去中介给 K_eff=+K_ikK_kj/K_k，无直接边时保持回路符号乘积。消去有两条输出通道：刚度（态对称，改变邻元有效刚度与环宽 h，即 κ 通道，正是 Schur 补所描述的）与诱导场（态反对称，在邻元上表现为读数 b 的刚体平移、Δh=0）。因此上一轮 parity 结论属场通道，『复合元失稳/截断』属刚度通道，二者可观测不同（Δα=Δβ≠0 对 Δh≠0）。",
+        "motivation": "场与宽度在实测表中是可分的（12 格上 Δα=Δβ 而 h 不变；而 ℓ 改变的是 h），若不把两条通道分开，就无法说明消去究竟改了哪一项，也无法给 K_eff 一个可测的读出方式。",
+        "conceptual_move": "把『消去＝图编辑』进一步改为『消去＝刚度重正化 + 诱导场生成』，并声明奇偶只住在前者之外的场通道上。",
+        "implications": [
+          "条件性：要检验『κ→1 是否改变网络奇偶』，应分别看邻元的 Δh（刚度）与 Δα=Δβ（场）趋势，而不是只看阈值平移。",
+          "条件性：K_eff 可通过『让 j 翻转、看 i 的环路是否只平移而不变宽』来探测；若同时看到 Δh≠0，说明中介没有真正被消去（仍有第三个自由度）。",
+          "条件性：χ≳1 时邻元环路被推出自身窗口，固定 γ 下的有效图不唯一，parity 陈述须附 γ 窗口条件。",
+          "条件性：若 K_eff 与已有直接边同为场通道，则判据仍是 sign(K_ij+K_eff) 与路径其余边之积，metric 只影响幅度不影响该符号判据。"
+        ],
+        "open_questions": [
+          "两条通道是否可加，还是在大 b 处出现 Δh∝b² 交叉项？",
+          "K_eff 的符号是否服从实测所得 sign(b)=−sign(K) 规则？",
+          "中介走负刚度支时，是场通道翻号，还是两条通道一起失效？",
+          "多中介同时近简并时，通道分解是否依赖消去顺序？"
+        ],
+        "status": "developing",
+        "depends_on": [
+          {
+            "key": "threshold_coordinate_factorization",
+            "owner": "theory_scientist",
+            "version": 5
+          },
+          {
+            "key": "unilateral_stop_state",
+            "owner": "domain_scientist",
+            "version": 4
+          }
+        ],
+        "ref": {
+          "owner": "theory_scientist",
+          "key": "fusion_as_renormalization",
+          "version": 3
+        },
+        "conceptual_content_changed": true,
+        "change_metric_scope": "Literal field difference, not semantic progress or improved quality",
+        "reason": "符号约定与 parity 结论未变，但消去被拆成两条物理上不同的输出通道，K_eff 因此获得可测读出方式；这是前提层的细化，不是措辞调整。",
+        "influenced_by": [
+          {
+            "key": "coupling_torque_moments",
+            "owner": "domain_scientist",
+            "version": 3
+          },
+          {
+            "key": "unilateral_stop_state",
+            "owner": "domain_scientist",
+            "version": 4
+          }
+        ],
+        "source_stage": "05_return_1_learn_1",
+        "source_result": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/05_return_1_learn_1/api_v2/workspace/result.json"
+      },
+      {
+        "assumption": "夹紧表的邻态依赖是耦合力场通道的读数：b_i ≡ c_i(σ_j=+1)−c_i(σ_j=−1) = 2g_iK_ij，其中 g_i>0 且（学习性标定，机制未测）g_i∝(k_c/k_d)(ℓ²/L)·sinθ_j^stop，θ_j 是**被夹紧邻居**的止挡角而不是被测转子的。于是：K 的符号可从逐边夹紧格保真读出（受挫奇偶对正 metric 规范不变），而 |b| 的跨转子/跨装配比较不可直接用。pair_A 两转子 |b| 差 3.67 倍对应 sin 比 3.27–3.50，pair_B 差 2.02 倍对应 2.00，故该不对称不是互易性破坏，也不是单侧边证据。",
+        "motivation": "上一轮把 healing/manufacturing 写成 sign(K_eff) 与 sign(K_ij) 的比较，却没有任何映射把『已测阈值』接到『能量耦合 K』，判据因此落不到现有表上；同时 pair_A 两个转子 |Δα| 相差 3.7 倍，看上去与对称能量前提矛盾。",
+        "conceptual_move": "把『耦合』分成能量层（K_ij，对称、组合性）与读数层（b_i，被一个正的 metric 加权）；正 metric 不改变符号乘积，故受挫奇偶是规范不变的量，而幅度不是。",
+        "implications": [
+          "条件性：受挫奇偶可由逐边夹紧格（other=±1 两组、上下取平均）读出，无需装配图；任何 |b| 的跨转子或跨装配比较必须先除掉 g_i。",
+          "条件性（学习性标定、未测机制）：|b|≈(5.0–5.65)(k_c/k_d)(ℓ²/L)sinθ_邻居，四格偏差 ±12%，可作为设计时量级估计，不是定律。",
+          "条件性：『某转子对邻居影响很大、自身受影响很小』可在完全互易的能量下实现，只要邻居止挡角大；这是一种可见非对称，与已发表用非对称能量景观编程非互易的路线不同，但这里只有度量论证，没有实验。",
+          "条件性：χ_i=|b_i|/(2h_i) 是场能否压过自身保护的量（pair_A 转子2≈2.0、pair_B 转子1≈1.37）；χ≳1 时邻态翻转可把固定 γ 的工作点推过自身阈值，±1 事件图的先后次序因此有内容，而导出数据明确无时间戳。",
+          "条件性：pair_B 的 x_mount_offsets 与 pair_A 完全不同而其 |b| 比仍精确落在 sinθ 上，是 sinθ 解释优于安装偏移解释的弱证据；两者未被分离。"
+        ],
+        "open_questions": [
+          "被夹紧转子是否真停在 stop_angles_degrees（案例服务第四次答 unknown）？若不，sinθ_j 加权失去依据。",
+          "metric 是否还含 1/cosθ_自身？加上后四格常数散度变差，但这只是拟合比较。",
+          "χ≳1 时一阶刚体平移是否仍成立（应出现 Δh∝b² 残余）？",
+          "K_eff 的符号是否服从同一条 sign(b)=−sign(K) 规则？"
+        ],
+        "status": "developing",
+        "depends_on": [
+          {
+            "key": "threshold_coordinate_factorization",
+            "owner": "theory_scientist",
+            "version": 5
+          }
+        ],
+        "ref": {
+          "owner": "theory_scientist",
+          "key": "interaction_field_metric",
+          "version": 1
+        },
+        "conceptual_content_changed": true,
+        "change_metric_scope": "Literal field difference, not semantic progress or improved quality",
+        "reason": "它把上一轮无法落地的 parity 判据变成可测读数，并消解了一个看似与互易性冲突的幅度不对称；但机制（邻居止挡角加权、被夹紧角、metric 的具体形式）都只有拟合级支持，故保留 developing。",
+        "influenced_by": [
+          {
+            "key": "coupling_torque_moments",
+            "owner": "domain_scientist",
+            "version": 3
+          },
+          {
+            "key": "wiring_parity_sign",
+            "owner": "domain_scientist",
+            "version": 3
+          },
+          {
+            "key": "threshold_coordinate_factorization",
+            "owner": "theory_scientist",
+            "version": 5
+          }
+        ],
+        "source_stage": "05_return_1_learn_1",
+        "source_result": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/05_return_1_learn_1/api_v2/workspace/result.json"
+      }
+    ],
+    "revision_obligations": [
+      {
+        "hypothesis_ref": {
+          "owner": "domain_scientist",
+          "key": "wiring_parity_sign",
+          "version": 3
+        },
+        "causes": [
+          {
+            "dependency_ref": {
+              "key": "coupling_torque_moments",
+              "owner": "domain_scientist",
+              "version": 2
+            },
+            "latest_ref": {
+              "owner": "domain_scientist",
+              "key": "coupling_torque_moments",
+              "version": 3
+            },
+            "reason": "dependency_changed"
+          }
+        ],
+        "scope": "Declared dependency needs review; hypothesis retained, not refuted"
+      },
+      {
+        "hypothesis_ref": {
+          "owner": "domain_scientist",
+          "key": "degeneracy_heals_frustration",
+          "version": 1
+        },
+        "causes": [
+          {
+            "dependency_ref": {
+              "key": "unilateral_stop_state",
+              "owner": "domain_scientist",
+              "version": 3
+            },
+            "latest_ref": {
+              "owner": "domain_scientist",
+              "key": "unilateral_stop_state",
+              "version": 4
+            },
+            "reason": "dependency_changed"
+          }
+        ],
+        "scope": "Declared dependency needs review; hypothesis retained, not refuted"
+      }
+    ]
+  },
+  "decisions": [
+    {
+      "assumption": "修订：b 与 1−w 仍是同一耦合力矩函数的两类矩，但『宽度一阶、平移二阶』错了。除以邻居总摆角后 λ_ij=b_i/Δθ_j 才是对称边权（pair_A 三点 −0.292/−0.313、−1.754/−1.487、−3.508/−3.444；pair_B 8.196/8.610；原始 b 的 3.67 倍不对称＝摆角比 3.735）。跨装置 λ≈(1.0–1.4)×2k_cℓ²/(k_dL)。但两通道 ℓ 幂不同：宽度 1.63、λ 2.22，通道比 0.81/1.75/1.56 不恒定，故 κ 只统量级。",
+      "base_version": 3,
+      "conceptual_move": "从『一个群 κ 的两个矩』改为『每条边两个读数：对角刚度 1−w（恒正）与非对角场 λ（可调）』；b 不是边权，λ 才是。",
+      "depends_on": [],
+      "implications": [
+        "条件性：对称性只在 λ 上检验，比较 |b| 前须除 Δθ_j。",
+        "条件性（学习性）：λ≈2k_cℓ²/(k_dL) 到 1.0–1.4 倍可作设计量级，残余归几何 O(1) 与预压。",
+        "条件性：宽度幂<2、场幂>2 的反向偏离正是对角/非对角拿到符号相反的 ε 修正项的指纹。",
+        "条件性：κ→1 只关宽度通道，λ→0 只关场通道，二者可独立调。",
+        "条件性：用平移推 κ 会高估，旧版说低估，方向说反了。"
+      ],
+      "influenced_by": [
+        {
+          "key": "interaction_field_metric",
+          "owner": "theory_scientist",
+          "version": 1
+        },
+        {
+          "key": "fusion_as_renormalization",
+          "owner": "theory_scientist",
+          "version": 3
+        }
+      ],
+      "key": "coupling_torque_moments",
+      "motivation": "把 b 当边权会逼出『互易性被破坏』的假问题（两转子差 3.67 倍、跨装置差 2.5 倍）；归一化后差异正好等于摆角比，而两通道幂差 0.6 才是旧版真错。",
+      "open_questions": [
+        "幂差是预压项还是小角/力臂失效？",
+        "mount_l 侧别未定，ℓ_i=ℓ_j 未证。",
+        "sinθ_j 与总摆角差 5% 对 2%，本分辨率不可分辨。"
+      ],
+      "reason": "实质修正核心断言（同阶而非一阶/二阶）并给出可判幂差与反向移动后果；三点支持、ε 符号未定，故 developing。",
+      "status": "developing"
+    },
+    {
+      "assumption": "修订：κ=(k_cℓ²)/(k_dL²cos²θ) 仍管宽度列（1−w≈cκ，c≈0.8–1.1），但不管平移列——平移一阶读数是 λ，实测幂 2.22 比宽度 1.63 更陡。故沉默有两可分辨机制：κ→1 关掉环宽（元素退化为单值），与 κ 不变时 |λ|Δθ≥2h 把阈值推出窗口。案件事实释放：中间角平衡被足够强驱动弹簧排除，故 κ<1 是设计约束，κ→1 是两态编码失效边界。",
+      "base_version": 4,
+      "conceptual_move": "把 κ 从『一个群读三件事』退回『宽度列的群』，并把沉默拆成两机制，分别落在宽度列与平移列。",
+      "depends_on": [],
+      "implications": [
+        "条件性：判『该翻未翻』先看 h 是否→0，再看 |λ|Δθ 是否≥2h；都不大才是次序/记录问题。",
+        "条件性：换软弹簧使 κ 增大时 λ 也按 1/k_d 增大，干净极限需同时减小 ℓ。",
+        "条件性：κ≥1 后 ±1 编码前提失效，该区事件序列不宜判记忆类别。",
+        "条件性：κ 不可跨装置比较。"
+      ],
+      "influenced_by": [
+        {
+          "key": "interaction_field_metric",
+          "owner": "theory_scientist",
+          "version": 1
+        }
+      ],
+      "key": "unilateral_stop_state",
+      "motivation": "旧版把 1−w 与平移都写成 κ 的读数（并断言后者二阶），λ 归一化后该断言被本表否定；案件事实又把 κ<1 变成设计前提。",
+      "open_questions": [
+        "两条边界在 ℓ 轴上谁先到？（本表 κ=0.47 时 χ 已达 2.0，场边界先到）",
+        "两态编码失效后的连续角度是否可记为第三态？"
+      ],
+      "reason": "案件事实支持其前提，但须撤回『平移是 κ 的二阶读数』并引入第二沉默机制，属前提层修订。",
+      "status": "developing"
+    },
+    {
+      "assumption": "单根线性弹簧的边耦合 K_ij=k_c a_i a_j+k_cε∂_i∂_jR、S_i=k_c a_i²+k_cε∂_i²R（a_i=∂R/∂θ_i，ε=R−ℓ0）。首项秩一（Mattis 型）：σ_i→s_iσ_i（s_i=sign a_i）可把边变正且不改回路符号乘积，故单簧网络无挫折，并联/交叉只是选取相对符号（规范）。不可规范符号只来自 (a) 一边 ≥2 簧且力臂符号不可公约，或 (b) ε 项主导。故一条边可把 λ=Σk_ca_i^(r)a_j^(r)/(k_dL) 连续调到 0：场隐形而刚度仍收缩。",
+      "base_version": 0,
+      "conceptual_move": "把边符号从『离散接线事实』改为『若干秩一项之和的符号』：可规范部分与不可规范部分分开，挫折成为 rank≥2 或预压的性质。",
+      "depends_on": [],
+      "implications": [
+        "条件性：单簧网络无论几何都不受挫，故某回路符号乘积=−1 必然指向多簧不可公约或预压，给出检验装配图的具体目标。",
+        "条件性：两簧反号且幅度接近时 λ≈0 而 1−w>0，成为场隐形边，逐边读 b 的奇偶方案在此盲。",
+        "条件性：ε 项进对角与非对角符号相反，正解释幂差；换静长应使两通道反向移动。",
+        "条件性（可判）：并联↔交叉只应翻 λ 符号而不改 1−w；换静长主要改幅度/幂而不翻号。"
+      ],
+      "influenced_by": [
+        {
+          "key": "interaction_field_metric",
+          "owner": "theory_scientist",
+          "version": 1
+        },
+        {
+          "key": "coupling_torque_moments",
+          "owner": "domain_scientist",
+          "version": 3
+        }
+      ],
+      "key": "rank_one_edge_coupling",
+      "motivation": "并联给 b<0、交叉给 b>0 被读成 FM/AF 离散标签；但同一力学里这只是 a_i、a_j 相对符号，而 pair_A 的 |λ| 随 ℓ 长 11.5 倍、宽度只长 6 倍，说明首项外还有可正可负的贡献。",
+      "open_questions": [
+        "秩一⇒可规范是 ±1 约化的产物还是连续旋转也成立？（未读到 Mattis/规范原文）",
+        "pair_A 两簧是否同侧？若同号，本装置无 λ 零点。",
+        "ε 在装置里是拉还是压？"
+      ],
+      "reason": "由现有装配参数与 12 格推出的新关系，同时解释幂差、给出场隐形边构造并重定位 FM/AF 标签；ε 符号与 ±1 约化合法性未定，故 developing。",
+      "status": "developing"
+    },
+    {
+      "assumption": "耦合边对邻居态的方向偏好由共享节点的接线奇偶性决定：两根耦合弹簧并联（同向）时两转子同向占据为低能组合，b<0（铁磁型）；交叉（跨接）时反向占据为低能组合，b>0（反铁磁型）。判别依据是线序这一离散装配事实，不是刚度或长度。幅度一半（幂律与 κ 群）由 coupling_torque_moments 承担，本支只承担符号一半。",
+      "base_version": 3,
+      "conceptual_move": "把「铁磁/反铁磁」这一 Ising 语言落到连接图上，使符号在装配层面有成因，并给出「换线序不改幅度」的操作；幅度侧改写后，本支自觉收缩为只保留符号侧。",
+      "depends_on": [
+        {
+          "key": "coupling_torque_moments",
+          "owner": "domain_scientist",
+          "version": 3
+        }
+      ],
+      "implications": [
+        "条件性：交叉边在驱动下可产生无外驱动的邻态跟随（同 γ 双翻的对称版本），不需要非互易元件；并联边给同向锁存。",
+        "条件性：若 network_C 的 1–3 边是交叉装配，Δβ_3>0 无需钢丝；若是并联，则 Δβ_3>0 指向单侧边或非可加求和。",
+        "条件性：符号结构（peer 用来判 l-RPM 类别）因此可由装配图预读，而不必从阈值表反推。",
+        "条件性：换线序应得 b→−b 而 |b| 与 1−w 近似不变；若真测到 |b| 同时改变，则本支与 coupling_torque_moments 的『符号/幅度分离』一并被削弱。"
+      ],
+      "influenced_by": [
+        {
+          "key": "threshold_coordinate_factorization",
+          "owner": "theory_scientist",
+          "version": 5
+        }
+      ],
+      "key": "wiring_parity_sign",
+      "motivation": "pair_A=parallel,b<0 与 pair_B=crossed,b>0 的事实配对；已发表 S 形双屈曲实验给出同一原型：同向屈曲使中间连接区曲率与弹性能很高，因此一个单元跳变可无外驱动带动另一单元反向跳。",
+      "open_questions": [
+        "并联/交叉是否也改变 |b| 量级（力臂不同），从而破坏「只翻符号」的简洁性？",
+        "大止挡跨度 73° 下共享节点能量论证（小曲率前提）是否仍给纯反向偏好？",
+        "network_C 各边奇偶性无记录（case 询问返回 unknown），该支在网络上暂不可判？"
+      ],
+      "reason": "维持停用（详见 dependency_responses）：声明前提 coupling_torque_moments 本轮由 v3 改到 v4、且 rank_one_edge_coupling 把并联/交叉降为单簧力臂相对符号的规范选择，本支的判别性预言（换线序只翻 λ 号、1−w 近似不变）只在单簧主导时成立，而『同几何换线序』的配对实验不存在；符号侧责任已移入秩一分解，故明确标记 parked 并原样保留该可判预言，不新增内容。",
+      "status": "parked"
+    },
+    {
+      "assumption": "条件性猜想：把某单元推到 κ→1（支合并）会把它从迟滞字母表删除，于是任何经过它的受挫回路在『迟滞元素图』上少一条边，受挫奇偶可因此被抹平；反过来 κ 略小于 1 的窄环单元最容易被邻态在同 γ 带走（雪崩），是 P 轴最不稳的一档。",
+      "base_version": 1,
+      "conceptual_move": "把『近阈值』从『跳变小』改述为『元素退出字母表的临界点』，并把它接到挫折奇偶上：κ 不是标量记忆刻度，而是改变图结构的旋钮。",
+      "depends_on": [
+        {
+          "key": "unilateral_stop_state",
+          "owner": "domain_scientist",
+          "version": 4
+        }
+      ],
+      "implications": [
+        "条件性：记忆风险随耦合增强不是单调的——只在 κ 跨 1 的邻域改变图结构；因此『更强相互作用＝更差记忆』在本装置上应被替换为『κ 跨 1 前后是两种图』。",
+        "条件性：窄环（κ≈0.9）单元会把雪崩量 2|b|/gap 推到最大（gap 是环宽），故 pair_A 在 ℓ≈6 cm 附近应出现同 γ 双翻，而 κ>1 处应完全无事件——两种『无事件』的对照。",
+        "条件性：退化单元仍随 γ 连续变化，作为对邻居的确定性场（而非迟滞元素）可以移动阈值但不能储存历史，故它不会单独产生多周期。"
+      ],
+      "influenced_by": [
+        {
+          "key": "gauge_frustration_memory_class",
+          "owner": "theory_scientist",
+          "version": 4
+        },
+        {
+          "key": "latch_as_threshold_inequality",
+          "owner": "theory_scientist",
+          "version": 2
+        }
+      ],
+      "key": "degeneracy_heals_frustration",
+      "motivation": "peer 的两轴判据说 R 破坏需挫折（必要）＋耦合空间开区域＋幅值窗口；而 κ 提供一个把单个元素推出迟滞域的连续旋钮，且 pair_A 的 κ 范围 0.05–0.47 正好从宽环走到窄环、接近但未跨过 1。",
+      "open_questions": [
+        "退化单元作为确定性场能否替代迟滞元素参与 pathway 结构（P 轴的 pathway 是否仍良定义）？",
+        "雪崩判据里的 gap 究竟是不是环宽（若 gap→0 则 2|b|/gap→∞，判据爆掉）？",
+        "多单元同时近简并时，被删除的元素集合依赖扫描路径吗？"
+      ],
+      "reason": "由 developing 改为 parked（实质修订）：声明前提 unilateral_stop_state 已由 v3 经 v4 走到 v5（κ 只统宽度列，平移列归 λ），本卡『κ→1 抹平回路受挫奇偶』的机制被削弱——rank_one_edge_coupling 给出单簧边本无挫折可治，且稳定消去退化单元仍保持回路符号乘积，故它不能单独承担 R 轴论证；只保留窄环（κ≈0.9）⇒ 同 γ 雪崩的幅度读数，作为 P 轴不稳的一档。",
+      "status": "parked"
+    }
+  ],
+  "dependency_responses": [
+    {
+      "action": "park",
+      "reason": "声明前提 coupling_torque_moments 已改版两次，秩一分解又把并联/交叉降为力臂相对符号的规范选择；其判别性预言（换线序只翻 λ 号、1−w 不变）只在单簧主导时成立，判别实验不存在，故保留停用。",
+      "ref": {
+        "key": "wiring_parity_sign",
+        "owner": "domain_scientist",
+        "version": 3
+      }
+    },
+    {
+      "action": "park",
+      "reason": "声明前提 unilateral_stop_state 已由 v3 到 v4（现 v5，把 κ 限定为宽度列）；机制上单簧边无挫折可治、稳定消去又保持回路符号乘积，故『κ→1 治挫折』不成立，只留窄环⇒雪崩的幅度读数。",
+      "ref": {
+        "key": "degeneracy_heals_frustration",
+        "owner": "domain_scientist",
+        "version": 1
+      }
+    }
+  ],
+  "updates": [
+    {
+      "assumption": "修订：b 与 1−w 仍是同一耦合力矩函数的两类矩，但『宽度一阶、平移二阶』错了。除以邻居总摆角后 λ_ij=b_i/Δθ_j 才是对称边权（pair_A 三点 −0.292/−0.313、−1.754/−1.487、−3.508/−3.444；pair_B 8.196/8.610；原始 b 的 3.67 倍不对称＝摆角比 3.735）。跨装置 λ≈(1.0–1.4)×2k_cℓ²/(k_dL)。但两通道 ℓ 幂不同：宽度 1.63、λ 2.22，通道比 0.81/1.75/1.56 不恒定，故 κ 只统量级。",
+      "motivation": "把 b 当边权会逼出『互易性被破坏』的假问题（两转子差 3.67 倍、跨装置差 2.5 倍）；归一化后差异正好等于摆角比，而两通道幂差 0.6 才是旧版真错。",
+      "conceptual_move": "从『一个群 κ 的两个矩』改为『每条边两个读数：对角刚度 1−w（恒正）与非对角场 λ（可调）』；b 不是边权，λ 才是。",
+      "implications": [
+        "条件性：对称性只在 λ 上检验，比较 |b| 前须除 Δθ_j。",
+        "条件性（学习性）：λ≈2k_cℓ²/(k_dL) 到 1.0–1.4 倍可作设计量级，残余归几何 O(1) 与预压。",
+        "条件性：宽度幂<2、场幂>2 的反向偏离正是对角/非对角拿到符号相反的 ε 修正项的指纹。",
+        "条件性：κ→1 只关宽度通道，λ→0 只关场通道，二者可独立调。",
+        "条件性：用平移推 κ 会高估，旧版说低估，方向说反了。"
+      ],
+      "open_questions": [
+        "幂差是预压项还是小角/力臂失效？",
+        "mount_l 侧别未定，ℓ_i=ℓ_j 未证。",
+        "sinθ_j 与总摆角差 5% 对 2%，本分辨率不可分辨。"
+      ],
+      "status": "developing",
+      "depends_on": [],
+      "ref": {
+        "owner": "domain_scientist",
+        "key": "coupling_torque_moments",
+        "version": 4
+      },
+      "conceptual_content_changed": true,
+      "change_metric_scope": "Literal field difference, not semantic progress or improved quality",
+      "reason": "实质修正核心断言（同阶而非一阶/二阶）并给出可判幂差与反向移动后果；三点支持、ε 符号未定，故 developing。",
+      "influenced_by": [
+        {
+          "key": "interaction_field_metric",
+          "owner": "theory_scientist",
+          "version": 1
+        },
+        {
+          "key": "fusion_as_renormalization",
+          "owner": "theory_scientist",
+          "version": 3
+        }
+      ],
+      "source_stage": "09_develop_000",
+      "source_result": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/09_develop_000/api_v2/workspace/result.json"
+    },
+    {
+      "assumption": "修订：κ=(k_cℓ²)/(k_dL²cos²θ) 仍管宽度列（1−w≈cκ，c≈0.8–1.1），但不管平移列——平移一阶读数是 λ，实测幂 2.22 比宽度 1.63 更陡。故沉默有两可分辨机制：κ→1 关掉环宽（元素退化为单值），与 κ 不变时 |λ|Δθ≥2h 把阈值推出窗口。案件事实释放：中间角平衡被足够强驱动弹簧排除，故 κ<1 是设计约束，κ→1 是两态编码失效边界。",
+      "motivation": "旧版把 1−w 与平移都写成 κ 的读数（并断言后者二阶），λ 归一化后该断言被本表否定；案件事实又把 κ<1 变成设计前提。",
+      "conceptual_move": "把 κ 从『一个群读三件事』退回『宽度列的群』，并把沉默拆成两机制，分别落在宽度列与平移列。",
+      "implications": [
+        "条件性：判『该翻未翻』先看 h 是否→0，再看 |λ|Δθ 是否≥2h；都不大才是次序/记录问题。",
+        "条件性：换软弹簧使 κ 增大时 λ 也按 1/k_d 增大，干净极限需同时减小 ℓ。",
+        "条件性：κ≥1 后 ±1 编码前提失效，该区事件序列不宜判记忆类别。",
+        "条件性：κ 不可跨装置比较。"
+      ],
+      "open_questions": [
+        "两条边界在 ℓ 轴上谁先到？（本表 κ=0.47 时 χ 已达 2.0，场边界先到）",
+        "两态编码失效后的连续角度是否可记为第三态？"
+      ],
+      "status": "developing",
+      "depends_on": [],
+      "ref": {
+        "owner": "domain_scientist",
+        "key": "unilateral_stop_state",
+        "version": 5
+      },
+      "conceptual_content_changed": true,
+      "change_metric_scope": "Literal field difference, not semantic progress or improved quality",
+      "reason": "案件事实支持其前提，但须撤回『平移是 κ 的二阶读数』并引入第二沉默机制，属前提层修订。",
+      "influenced_by": [
+        {
+          "key": "interaction_field_metric",
+          "owner": "theory_scientist",
+          "version": 1
+        }
+      ],
+      "source_stage": "09_develop_000",
+      "source_result": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/09_develop_000/api_v2/workspace/result.json"
+    },
+    {
+      "assumption": "单根线性弹簧的边耦合 K_ij=k_c a_i a_j+k_cε∂_i∂_jR、S_i=k_c a_i²+k_cε∂_i²R（a_i=∂R/∂θ_i，ε=R−ℓ0）。首项秩一（Mattis 型）：σ_i→s_iσ_i（s_i=sign a_i）可把边变正且不改回路符号乘积，故单簧网络无挫折，并联/交叉只是选取相对符号（规范）。不可规范符号只来自 (a) 一边 ≥2 簧且力臂符号不可公约，或 (b) ε 项主导。故一条边可把 λ=Σk_ca_i^(r)a_j^(r)/(k_dL) 连续调到 0：场隐形而刚度仍收缩。",
+      "motivation": "并联给 b<0、交叉给 b>0 被读成 FM/AF 离散标签；但同一力学里这只是 a_i、a_j 相对符号，而 pair_A 的 |λ| 随 ℓ 长 11.5 倍、宽度只长 6 倍，说明首项外还有可正可负的贡献。",
+      "conceptual_move": "把边符号从『离散接线事实』改为『若干秩一项之和的符号』：可规范部分与不可规范部分分开，挫折成为 rank≥2 或预压的性质。",
+      "implications": [
+        "条件性：单簧网络无论几何都不受挫，故某回路符号乘积=−1 必然指向多簧不可公约或预压，给出检验装配图的具体目标。",
+        "条件性：两簧反号且幅度接近时 λ≈0 而 1−w>0，成为场隐形边，逐边读 b 的奇偶方案在此盲。",
+        "条件性：ε 项进对角与非对角符号相反，正解释幂差；换静长应使两通道反向移动。",
+        "条件性（可判）：并联↔交叉只应翻 λ 符号而不改 1−w；换静长主要改幅度/幂而不翻号。"
+      ],
+      "open_questions": [
+        "秩一⇒可规范是 ±1 约化的产物还是连续旋转也成立？（未读到 Mattis/规范原文）",
+        "pair_A 两簧是否同侧？若同号，本装置无 λ 零点。",
+        "ε 在装置里是拉还是压？"
+      ],
+      "status": "developing",
+      "depends_on": [],
+      "ref": {
+        "owner": "domain_scientist",
+        "key": "rank_one_edge_coupling",
+        "version": 1
+      },
+      "conceptual_content_changed": true,
+      "change_metric_scope": "Literal field difference, not semantic progress or improved quality",
+      "reason": "由现有装配参数与 12 格推出的新关系，同时解释幂差、给出场隐形边构造并重定位 FM/AF 标签；ε 符号与 ±1 约化合法性未定，故 developing。",
+      "influenced_by": [
+        {
+          "key": "interaction_field_metric",
+          "owner": "theory_scientist",
+          "version": 1
+        },
+        {
+          "key": "coupling_torque_moments",
+          "owner": "domain_scientist",
+          "version": 3
+        }
+      ],
+      "source_stage": "09_develop_000",
+      "source_result": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/09_develop_000/api_v2/workspace/result.json"
+    },
+    {
+      "assumption": "耦合边对邻居态的方向偏好由共享节点的接线奇偶性决定：两根耦合弹簧并联（同向）时两转子同向占据为低能组合，b<0（铁磁型）；交叉（跨接）时反向占据为低能组合，b>0（反铁磁型）。判别依据是线序这一离散装配事实，不是刚度或长度。幅度一半（幂律与 κ 群）由 coupling_torque_moments 承担，本支只承担符号一半。",
+      "motivation": "pair_A=parallel,b<0 与 pair_B=crossed,b>0 的事实配对；已发表 S 形双屈曲实验给出同一原型：同向屈曲使中间连接区曲率与弹性能很高，因此一个单元跳变可无外驱动带动另一单元反向跳。",
+      "conceptual_move": "把「铁磁/反铁磁」这一 Ising 语言落到连接图上，使符号在装配层面有成因，并给出「换线序不改幅度」的操作；幅度侧改写后，本支自觉收缩为只保留符号侧。",
+      "implications": [
+        "条件性：交叉边在驱动下可产生无外驱动的邻态跟随（同 γ 双翻的对称版本），不需要非互易元件；并联边给同向锁存。",
+        "条件性：若 network_C 的 1–3 边是交叉装配，Δβ_3>0 无需钢丝；若是并联，则 Δβ_3>0 指向单侧边或非可加求和。",
+        "条件性：符号结构（peer 用来判 l-RPM 类别）因此可由装配图预读，而不必从阈值表反推。",
+        "条件性：换线序应得 b→−b 而 |b| 与 1−w 近似不变；若真测到 |b| 同时改变，则本支与 coupling_torque_moments 的『符号/幅度分离』一并被削弱。"
+      ],
+      "open_questions": [
+        "并联/交叉是否也改变 |b| 量级（力臂不同），从而破坏「只翻符号」的简洁性？",
+        "大止挡跨度 73° 下共享节点能量论证（小曲率前提）是否仍给纯反向偏好？",
+        "network_C 各边奇偶性无记录（case 询问返回 unknown），该支在网络上暂不可判？"
+      ],
+      "status": "parked",
+      "depends_on": [
+        {
+          "key": "coupling_torque_moments",
+          "owner": "domain_scientist",
+          "version": 3
+        }
+      ],
+      "ref": {
+        "owner": "domain_scientist",
+        "key": "wiring_parity_sign",
+        "version": 4
+      },
+      "conceptual_content_changed": true,
+      "change_metric_scope": "Literal field difference, not semantic progress or improved quality",
+      "reason": "维持停用（详见 dependency_responses）：声明前提 coupling_torque_moments 本轮由 v3 改到 v4、且 rank_one_edge_coupling 把并联/交叉降为单簧力臂相对符号的规范选择，本支的判别性预言（换线序只翻 λ 号、1−w 近似不变）只在单簧主导时成立，而『同几何换线序』的配对实验不存在；符号侧责任已移入秩一分解，故明确标记 parked 并原样保留该可判预言，不新增内容。",
+      "influenced_by": [
+        {
+          "key": "threshold_coordinate_factorization",
+          "owner": "theory_scientist",
+          "version": 5
+        }
+      ],
+      "source_stage": "09_develop_000",
+      "source_result": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/09_develop_000/api_v2/workspace/result.json"
+    },
+    {
+      "assumption": "条件性猜想：把某单元推到 κ→1（支合并）会把它从迟滞字母表删除，于是任何经过它的受挫回路在『迟滞元素图』上少一条边，受挫奇偶可因此被抹平；反过来 κ 略小于 1 的窄环单元最容易被邻态在同 γ 带走（雪崩），是 P 轴最不稳的一档。",
+      "motivation": "peer 的两轴判据说 R 破坏需挫折（必要）＋耦合空间开区域＋幅值窗口；而 κ 提供一个把单个元素推出迟滞域的连续旋钮，且 pair_A 的 κ 范围 0.05–0.47 正好从宽环走到窄环、接近但未跨过 1。",
+      "conceptual_move": "把『近阈值』从『跳变小』改述为『元素退出字母表的临界点』，并把它接到挫折奇偶上：κ 不是标量记忆刻度，而是改变图结构的旋钮。",
+      "implications": [
+        "条件性：记忆风险随耦合增强不是单调的——只在 κ 跨 1 的邻域改变图结构；因此『更强相互作用＝更差记忆』在本装置上应被替换为『κ 跨 1 前后是两种图』。",
+        "条件性：窄环（κ≈0.9）单元会把雪崩量 2|b|/gap 推到最大（gap 是环宽），故 pair_A 在 ℓ≈6 cm 附近应出现同 γ 双翻，而 κ>1 处应完全无事件——两种『无事件』的对照。",
+        "条件性：退化单元仍随 γ 连续变化，作为对邻居的确定性场（而非迟滞元素）可以移动阈值但不能储存历史，故它不会单独产生多周期。"
+      ],
+      "open_questions": [
+        "退化单元作为确定性场能否替代迟滞元素参与 pathway 结构（P 轴的 pathway 是否仍良定义）？",
+        "雪崩判据里的 gap 究竟是不是环宽（若 gap→0 则 2|b|/gap→∞，判据爆掉）？",
+        "多单元同时近简并时，被删除的元素集合依赖扫描路径吗？"
+      ],
+      "status": "parked",
+      "depends_on": [
+        {
+          "key": "unilateral_stop_state",
+          "owner": "domain_scientist",
+          "version": 4
+        }
+      ],
+      "ref": {
+        "owner": "domain_scientist",
+        "key": "degeneracy_heals_frustration",
+        "version": 2
+      },
+      "conceptual_content_changed": true,
+      "change_metric_scope": "Literal field difference, not semantic progress or improved quality",
+      "reason": "由 developing 改为 parked（实质修订）：声明前提 unilateral_stop_state 已由 v3 经 v4 走到 v5（κ 只统宽度列，平移列归 λ），本卡『κ→1 抹平回路受挫奇偶』的机制被削弱——rank_one_edge_coupling 给出单簧边本无挫折可治，且稳定消去退化单元仍保持回路符号乘积，故它不能单独承担 R 轴论证；只保留窄环（κ≈0.9）⇒ 同 γ 雪崩的幅度读数，作为 P 轴不稳的一档。",
+      "influenced_by": [
+        {
+          "key": "gauge_frustration_memory_class",
+          "owner": "theory_scientist",
+          "version": 4
+        },
+        {
+          "key": "latch_as_threshold_inequality",
+          "owner": "theory_scientist",
+          "version": 2
+        }
+      ],
+      "source_stage": "09_develop_000",
+      "source_result": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/09_develop_000/api_v2/workspace/result.json"
+    }
+  ]
+}

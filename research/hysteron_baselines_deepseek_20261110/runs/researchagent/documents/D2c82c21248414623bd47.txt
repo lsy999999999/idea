@@ -1,0 +1,97 @@
+{
+  "name": "analyze_csv",
+  "args": {
+    "dataset": "measurements",
+    "group_column": "spring_id",
+    "group_value": "S019",
+    "variables": [
+      {
+        "expression": "where(record_id<37,1,0)",
+        "name": "m"
+      },
+      {
+        "expression": "sum(m*x_m)/sum(m)",
+        "name": "xm"
+      },
+      {
+        "expression": "sum(m*force_N)/sum(m)",
+        "name": "fm"
+      },
+      {
+        "expression": "sum(m*(x_m-xm)*(force_N-fm))/sum(m*(x_m-xm)*(x_m-xm))",
+        "name": "sl"
+      },
+      {
+        "expression": "fm-sl*xm",
+        "name": "il"
+      },
+      {
+        "expression": "where(record_id>36,1,0)",
+        "name": "n"
+      },
+      {
+        "expression": "sum(n*x_m)/sum(n)",
+        "name": "xn"
+      },
+      {
+        "expression": "sum(n*force_N)/sum(n)",
+        "name": "fn"
+      },
+      {
+        "expression": "sum(n*(x_m-xn)*(force_N-fn))/sum(n*(x_m-xn)*(x_m-xn))",
+        "name": "su"
+      },
+      {
+        "expression": "fn-su*xn",
+        "name": "iu"
+      }
+    ],
+    "outputs": [
+      {
+        "expression": "sl/100",
+        "name": "k_load_N_per_cm"
+      },
+      {
+        "expression": "su/100",
+        "name": "k_unload_N_per_cm"
+      },
+      {
+        "expression": "abs((il-iu)+(sl-su)*0.11)",
+        "name": "gap_at_11cm_N"
+      }
+    ]
+  },
+  "call_id": "call_01_gqVIG4YDVJhE0esyFK0m4706",
+  "seconds": 0.0029362919740378857,
+  "registered_paths": [],
+  "result": {
+    "status": "executed",
+    "dataset": "measurements",
+    "sha256": "5e40502610e3904c627ab6b4cda5b65f4cf9185ed5190459d6b909313619504e",
+    "total_rows": 123,
+    "selected_rows": 13,
+    "selection": {
+      "column": "spring_id",
+      "value": "S019"
+    },
+    "outputs": {
+      "k_load_N_per_cm": {
+        "shape": [],
+        "value": 0.1898233928571428,
+        "nonfinite_count": 0
+      },
+      "k_unload_N_per_cm": {
+        "shape": [],
+        "value": 0.18933314285714287,
+        "nonfinite_count": 0
+      },
+      "gap_at_11cm_N": {
+        "shape": [],
+        "value": 0.002652951666666157,
+        "nonfinite_count": 0
+      }
+    },
+    "scope": "Executed researcher-authored expressions on registered measurements; not validation of causal interpretation."
+  },
+  "policy_fingerprint": "1e4f5dcbb6b1c6873b226ff66dc837a3f5d0ea528bce61489f59a4cc965b7607"
+}

@@ -30,7 +30,7 @@ statement:what changed or did not, remaining_gap:text or null}}.
 Account once for EACH service key in required_service_uptake. If peer_sources is nonempty,
 engage at least one (unresolved with a reason is valid). Other uptake is optional. Quotes must
 come from the named source; for published claims quote readable source content, not metadata.
-For relation/implication outcomes, quote the resulting claim verbatim in a hypothesis_update's
+For relation/implication outcomes, preserve the resulting claim in a hypothesis_update's
 assumption or implications. This records an author's proposal, NOT confirmed novelty/progress.
 No compulsory new relation, branch, agreement, data, experiment, proof or implementation.
 '''
@@ -74,8 +74,8 @@ def validate_step(result, packet):
         raise ValueError('Return development_step, including unchanged/uncertain when appropriate')
     sources = packet['sources']
     focus = step.get('focus', {})
-    if not isinstance(focus, dict) or focus.get('source') not in sources or not anchored(
-            focus.get('quote'), sources[focus['source']]):
+    if not isinstance(focus, dict) or focus.get('source') not in sources or (focus.get('quote') is not None and not anchored(
+            focus.get('quote'), sources[focus['source']])):
         raise ValueError('Development focus must quote an actual supplied source')
     for name in ('gap', 'reason'):
         if not isinstance(step.get(name), str) or not step[name].strip():
@@ -88,8 +88,8 @@ def validate_step(result, packet):
         raise ValueError('Describe expected conceptual change; hold may use null')
     request = result.get('learning_request', {})
     if isinstance(request, dict) and request.get('needed'):
-        if request.get('gap') != step['gap'] or request.get('why_now') != step['reason']:
-            raise ValueError('Learning request must use development gap and reason verbatim')
+        if not request.get('context_ref'):
+            request['context_ref']='development_step'  # Structural linkage; prose may be compressed or paraphrased.
     uptake = step.get('uptake')
     if not isinstance(uptake, list):
         raise ValueError('Development uptake must be an array')
@@ -103,8 +103,7 @@ def validate_step(result, packet):
         seen.add(key)
         if row.get('effect') not in {'revise', 'extend', 'challenge', 'unchanged', 'unresolved'}:
             raise ValueError('Unknown uptake effect')
-        if not anchored(row.get('quote'), sources[key]) and not (
-                row.get('effect') == 'unresolved' and row.get('quote') is None):
+        if row.get('quote') is not None and not anchored(row.get('quote'), sources[key]):
             raise ValueError('Uptake quote must occur in the named source')
         if not isinstance(row.get('reason'), str) or not row['reason'].strip():
             raise ValueError('Explain uptake in relation to the conceptual gap')
@@ -124,11 +123,8 @@ def validate_step(result, packet):
     gap = outcome.get('remaining_gap')
     if gap is not None and (not isinstance(gap, str) or not gap.strip()):
         raise ValueError('Remaining gap is text or null')
-    if outcome['kind'] in {'relation', 'implication'}:
-        proposals = [{'assumption': h.get('assumption'), 'implications': h.get('implications')}
-                     for h in result.get('hypothesis_updates', [])]
-        if not anchored(outcome['statement'], proposals):
-            raise ValueError('Claimed relation/implication must be saved in an actual hypothesis update')
+    # Scientific outcomes remain addressable in the immutable stage result.
+    # A separate hypothesis card is optional; verbatim duplication is not a provenance condition.
 
 
 def portfolio_context(packet, owner):

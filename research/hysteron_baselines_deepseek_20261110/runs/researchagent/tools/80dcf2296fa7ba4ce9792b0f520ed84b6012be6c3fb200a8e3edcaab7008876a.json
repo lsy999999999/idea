@@ -1,0 +1,86 @@
+{
+  "name": "analyze_csv",
+  "args": {
+    "dataset": "measurements",
+    "group_column": "spring_id",
+    "group_value": "S046",
+    "variables": [
+      {
+        "name": "xb",
+        "expression": "x_m-mean(x_m)"
+      },
+      {
+        "name": "fb",
+        "expression": "force_N-mean(force_N)"
+      },
+      {
+        "name": "slope",
+        "expression": "sum(xb*fb)/sum(xb*xb)"
+      },
+      {
+        "name": "icept",
+        "expression": "mean(force_N)-slope*mean(x_m)"
+      },
+      {
+        "name": "res",
+        "expression": "force_N-(icept+slope*x_m)"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "k_N_per_cm",
+        "expression": "slope/100"
+      },
+      {
+        "name": "x0_cm",
+        "expression": "-icept/slope*100"
+      },
+      {
+        "name": "max_abs_resid_N",
+        "expression": "max(abs(res))"
+      },
+      {
+        "name": "mean_abs_resid_N",
+        "expression": "mean(abs(res))"
+      }
+    ]
+  },
+  "call_id": "call_00_oCSFvhAkSur1W8rso46J9520",
+  "seconds": 0.003491249866783619,
+  "registered_paths": [],
+  "result": {
+    "status": "executed",
+    "dataset": "measurements",
+    "sha256": "5e40502610e3904c627ab6b4cda5b65f4cf9185ed5190459d6b909313619504e",
+    "total_rows": 123,
+    "selected_rows": 29,
+    "selection": {
+      "column": "spring_id",
+      "value": "S046"
+    },
+    "outputs": {
+      "k_N_per_cm": {
+        "shape": [],
+        "value": 0.4585329350291639,
+        "nonfinite_count": 0
+      },
+      "x0_cm": {
+        "shape": [],
+        "value": 3.894025252294048,
+        "nonfinite_count": 0
+      },
+      "max_abs_resid_N": {
+        "shape": [],
+        "value": 0.057778253234850974,
+        "nonfinite_count": 0
+      },
+      "mean_abs_resid_N": {
+        "shape": [],
+        "value": 0.029087037035038718,
+        "nonfinite_count": 0
+      }
+    },
+    "scope": "Executed researcher-authored expressions on registered measurements; not validation of causal interpretation."
+  },
+  "policy_fingerprint": "1e4f5dcbb6b1c6873b226ff66dc837a3f5d0ea528bce61489f59a4cc965b7607"
+}

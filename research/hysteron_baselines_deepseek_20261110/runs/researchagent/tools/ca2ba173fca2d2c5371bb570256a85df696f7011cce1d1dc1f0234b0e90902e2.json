@@ -1,0 +1,65 @@
+{
+  "name": "analyze_csv",
+  "args": {
+    "dataset": "measurements",
+    "group_column": "spring_id",
+    "group_value": "S046",
+    "variables": [
+      {
+        "name": "dx",
+        "expression": "x_m - mean(x_m)"
+      },
+      {
+        "name": "dy",
+        "expression": "force_N - mean(force_N)"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "slope_N_per_m",
+        "expression": "sum(dx*dy)/sum(dx*dx)"
+      },
+      {
+        "name": "n",
+        "expression": "sum(isfinite(force_N))"
+      },
+      {
+        "name": "max_gap_at_x",
+        "expression": "max(diff(force_N))"
+      }
+    ]
+  },
+  "call_id": "call_00_EWYzrHlGRKAxTL8gcKnG0287",
+  "seconds": 0.003978000022470951,
+  "registered_paths": [],
+  "result": {
+    "status": "executed",
+    "dataset": "measurements",
+    "sha256": "5e40502610e3904c627ab6b4cda5b65f4cf9185ed5190459d6b909313619504e",
+    "total_rows": 123,
+    "selected_rows": 29,
+    "selection": {
+      "column": "spring_id",
+      "value": "S046"
+    },
+    "outputs": {
+      "slope_N_per_m": {
+        "shape": [],
+        "value": 45.853293502916394,
+        "nonfinite_count": 0
+      },
+      "n": {
+        "shape": [],
+        "value": 29,
+        "nonfinite_count": 0
+      },
+      "max_gap_at_x": {
+        "shape": [],
+        "value": 0.9456799999999994,
+        "nonfinite_count": 0
+      }
+    },
+    "scope": "Executed researcher-authored expressions on registered measurements; not validation of causal interpretation."
+  },
+  "policy_fingerprint": "1e4f5dcbb6b1c6873b226ff66dc837a3f5d0ea528bce61489f59a4cc965b7607"
+}

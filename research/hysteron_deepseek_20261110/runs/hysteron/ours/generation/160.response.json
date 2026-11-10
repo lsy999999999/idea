@@ -1,0 +1,58 @@
+{
+  "id": "f4fab467-0af5-4b0c-8bdb-1459c77335d0",
+  "choices": [
+    {
+      "finish_reason": "tool_calls",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "",
+        "refusal": null,
+        "role": "assistant",
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "tool_calls": [
+          {
+            "id": "call_00_8Pjh7WatlblXyYgJslah6462",
+            "function": {
+              "arguments": "{\"requests\": [{\"limit\": 9000, \"offset\": 4000, \"pointer\": \"\", \"raw\": false, \"ref\": \"D2239165578088146b24f\"}, {\"limit\": 3000, \"offset\": 0, \"pointer\": \"/request\", \"raw\": false, \"ref\": \"D552b690538f89182f652\"}, {\"limit\": 8000, \"offset\": 0, \"pointer\": \"/relevance_reviews\", \"raw\": false, \"ref\": \"D552b690538f89182f652\"}, {\"limit\": 3000, \"offset\": 0, \"pointer\": \"/case_facts\", \"raw\": false, \"ref\": \"D552b690538f89182f652\"}]}",
+              "name": "read_documents"
+            },
+            "type": "function",
+            "index": 0
+          }
+        ],
+        "reasoning_content": "Let me continue reading the researcher context: hypothesis_state.self rest, question_state, development_cycle. And the service reply: reading /sources takes 81k chars — 13 sources. I need to classify each of the 13 broker_reply_source_ids. Also the service reply has relevance_reviews and case_facts sections which may help.\n\nLet me plan reads:\n- D2239165578088146b24f: continue hypothesis_state self remainder (offset 4000, 6000), then question_state, then development_cycle.\n- D552b690538f89182f652: /relevance_reviews and /case_facts and /request.\n\nLet me batch efficiently. First batch: researcher context offset 4000 limit 8000; and service reply /case_facts (unknown size) + /request.\n\nActually careful about total 24000.\n\nBatch:\n1. D2239165578088146b24f pointer \"\" offset 4000 limit 9000 (covers self branches rest and maybe peer branches, question_state).\n2. D552b690538f89182f652 pointer \"/request\" offset 0 limit 3000.\n3. D552b690538f89182f652 pointer \"/relevance_reviews\" offset 0 limit 8000.\n4. D552b690538f89182f652 pointer \"/case_facts\" offset 0 limit 3000.\n\nTotal ~23000. OK."
+      }
+    }
+  ],
+  "created": 1794294861,
+  "model": "deepseek-flash",
+  "object": "chat.completion",
+  "metadata": null,
+  "moderation": null,
+  "service_tier": null,
+  "system_fingerprint": "bc19ba97cbe016479903222bb1578db6",
+  "usage": {
+    "completion_tokens": 503,
+    "prompt_tokens": 21698,
+    "total_tokens": 22201,
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": null,
+      "audio_tokens": null,
+      "reasoning_tokens": 303,
+      "rejected_prediction_tokens": null,
+      "text_tokens": null
+    },
+    "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cache_write_tokens": null,
+      "cached_tokens": 16000,
+      "image_tokens": null,
+      "text_tokens": null
+    },
+    "prompt_cache_hit_tokens": 16000,
+    "prompt_cache_miss_tokens": 5698
+  }
+}

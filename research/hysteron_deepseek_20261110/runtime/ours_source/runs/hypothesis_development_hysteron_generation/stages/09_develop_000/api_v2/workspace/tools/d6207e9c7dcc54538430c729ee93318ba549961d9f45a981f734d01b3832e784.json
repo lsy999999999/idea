@@ -1,0 +1,119 @@
+{
+  "name": "read_documents",
+  "args": {
+    "requests": [
+      {
+        "limit": 4000,
+        "offset": 0,
+        "pointer": "/artifacts",
+        "raw": false,
+        "ref": "Dbfeef883c9a3bea36cf4"
+      },
+      {
+        "limit": 4000,
+        "offset": 0,
+        "pointer": "/files",
+        "raw": false,
+        "ref": "Dbfeef883c9a3bea36cf4"
+      },
+      {
+        "limit": 4000,
+        "offset": 0,
+        "pointer": "/source_use",
+        "raw": false,
+        "ref": "Dbfeef883c9a3bea36cf4"
+      },
+      {
+        "limit": 3000,
+        "offset": 0,
+        "pointer": "/learning_request",
+        "raw": false,
+        "ref": "Dbfeef883c9a3bea36cf4"
+      },
+      {
+        "limit": 2000,
+        "offset": 0,
+        "pointer": "/expertise_request",
+        "raw": false,
+        "ref": "Dbfeef883c9a3bea36cf4"
+      },
+      {
+        "limit": 4000,
+        "offset": 0,
+        "pointer": "/next_actions",
+        "raw": false,
+        "ref": "Dbfeef883c9a3bea36cf4"
+      }
+    ]
+  },
+  "call_id": "call_00_mvELl1h4Yn1iFSRBi9a11147",
+  "seconds": 0.24851816706359386,
+  "registered_paths": [],
+  "result": {
+    "status": "read",
+    "documents": [
+      {
+        "ref": "Dbfeef883c9a3bea36cf4",
+        "sha256": "bfeef883c9a3bea36cf4bbc97520f5493f76139d3b4ce756b17e8251d86dafea",
+        "pointer": "/artifacts",
+        "offset": 0,
+        "text": "[\"artifacts/channel_split_lambda.md\",\"artifacts/lambda_table.csv\"]",
+        "next_offset": null,
+        "total_characters": 66,
+        "raw_original": false
+      },
+      {
+        "ref": "Dbfeef883c9a3bea36cf4",
+        "sha256": "bfeef883c9a3bea36cf4bbc97520f5493f76139d3b4ce756b17e8251d86dafea",
+        "pointer": "/files",
+        "offset": 0,
+        "text": "{\"artifacts/channel_split_lambda.md\":\"# 一条边的两个读数：λ=b/Δθ 与 1−w\\n（domain_scientist/09_develop；数字为对 threshold 行的学习性复算，非拟合）\\n\\n## 读数\\nc=(γ_up+γ_down)/2，h=(γ_up−γ_down)/2，b=c(+1)−c(−1)，Δθ_j=2θ_j^stop（pair_A 1.2776/0.3421 rad，pair_B 0.6388/1.3543），边权 λ_ij=b_i/Δθ_j。逐格值见 lambda_table.csv。\\n\\n## 结果\\nR1 互易性通过：pair_A λ_12/λ_21=−0.292/−0.313、−1.754/−1.487、−3.508/−3.444；pair_B 8.196/8.610。原始 b 的 3.67 倍不对称＝摆角比 3.735。对称性只能在 λ 上谈。\\nR2 跨装置可比：λ_pred=2k_cℓ²/(k_dL)，pair_A 0.291/1.164/2.618 对实测 0.302/1.621/3.476（比 1.04/1.39/1.33），pair_B 7.01 对 8.40（1.20）；原始 b（4.4 对 11.1）不可比。不是共享拟合参数，是共用无量纲化。\\nR3 两通道 ℓ 幂不同：宽度 0.059/0.147/0.353（转子2）给幂 1.63，λ 为 2.22；λ/(L(1−w))=0.81/1.75/1.56 不恒定。⇒ 旧注记『平移对 κ 只有二阶依赖』被否，且高低估方向也说反了（场幂更高，用平移推 κ 会高估）。\\n\\n## 为什么幂不同：秩一＋预压\\n单簧 a_i=∂R/∂θ_i、ε=R−ℓ0：对角 S_i=k_c a_i²+k_cε∂_i²R（恒正首项⇒宽度只收缩）；非对角 K_ij=k_c a_i a_j+k_cε∂_i∂_jR，λ=K/(k_dL)。\\n(i) 名义同为 k_cℓ² 级，幂差 0.6 说明 ε 项在大 ℓ 不可忽略且进对角/非对角符号相反（宽度比纯 ℓ² 低 0.77，λ 高 1.33）。可判后果：固定 ℓ 换静长（改 ε）应使两通道反向移动。\\n(ii) 首项秩一：σ_i→s_iσ_i（s_i=sign a_i）把边变正且不改回路符号乘积 ⇒ 单簧边在任何回路不产生挫折，并联/交叉只是规范。\\n(iii) ≥2 簧的边才有不可规范符号；两簧力臂反号且幅度可比时 λ 可连续调零：场隐形而 S_i>0 仍收缩。⇒ 边符号是若干秩一项之和的符号，逐边读 b 的奇偶方案漏掉这类边。\\n\\n## 条件性后果\\n1 互易性只在 λ 上检验，比较 |b| 前须除 Δθ_j（2–15%）。\\n2 场隐形边（λ≈0、1−w>0）是『只调刚度不调场』的旋钮，其奇偶读法是『读不出』。\\n3 单簧网络可规范⇒无挫折；FM/AF 标签不宜当挫折。挫折需多簧力臂不可公约或预压主导。\\n4 χ_i=|λ_ij|Δθ_j/(2h_i) 混了对称 λ 与非对称上下文，故 χ 的转子不对称合法，λ 的不对称才可疑。\\n5 案件事实『驱动弹簧足够强以排除中间角平衡』⇒ κ<1 是设计约束，κ→1 是两态编码失效边界而非另一种模式。\\n\\n## 相邻已发表（摘要级）\\nKdca177429482b145（褶皱板：Preisach→scrambled→accumulator 分级）；K690a760e178df473（串联机械 hysteron：geometrically controllable antiferromagnetic-like interactions，支持符号由几何可调，不支持也不否定本推导）。\\n\\n## 未决与失败\\n幂差仅三点、ε 符号未定、未与小角/力臂失效分离；mount_l 侧别第 5 次仍 unknown（ℓ_i=ℓ_j 未证）；自搜 6/6 ValueError，05 服务 status=returned 但 sources=[]，故 Mattis/规范仅有学科记忆支撑。\\n\",\"artifacts/lambda_table.csv\":\"configuration,rotor_i,mount_l_cm,c_minus,c_plus,b_cm,h_bar_cm,neighbor_swing_rad,lambda,lambda_pred,ratio,width_shrink\\npair_A,1,0,0.10,0.10,0.00,7.20,0.3421,0.000,0.000,,0.000\\npair_A,1,1.577,0.30,0.20,-0.10,6.85,0.3421,-0.292,0.291,1.00,0.056\\npair_A,1,3.154,0.50,-0.10,-0.60,6.00,0.3421,-1.754,1.164,1.51,0.167\\npair_A,1,4.731,0.90,-0.30,-1.20,4.60,0.3421,-3.508,2.618,1.34,0.361\\npair_A,2,0,1.80,1.80,0.00,1.70,1.2776,0.000,0.000,,0.000\\npair_A,2,1.577,1.90,1.50,-0.40,1.60,1.2776,-0.313,0.291,1.08,0.059\\npair_A,2,3.154,2.50,0.60,-1.90,1.45,1.2776,-1.487,1.164,1.28,0.147\\npair_A,2,4.731,3.80,-0.60,-4.40,1.10,1.2776,-3.444,2.618,1.32,0.353\\npair_B,1,4.7,2.60,13.70,11.10,4.05,1.3543,8.196,7.013,1.17,\\npair_B,2,4.7,13.50,19.00,5.50,11.55,0.6388,8.610,7.013,1.23,\\n\"}",
+        "next_offset": null,
+        "total_characters": 2528,
+        "raw_original": false
+      },
+      {
+        "ref": "Dbfeef883c9a3bea36cf4",
+        "sha256": "bfeef883c9a3bea36cf4bbc97520f5493f76139d3b4ce756b17e8251d86dafea",
+        "pointer": "/source_use",
+        "offset": 0,
+        "text": "[]",
+        "next_offset": null,
+        "total_characters": 2,
+        "raw_original": false
+      },
+      {
+        "ref": "Dbfeef883c9a3bea36cf4",
+        "sha256": "bfeef883c9a3bea36cf4bbc97520f5493f76139d3b4ce756b17e8251d86dafea",
+        "pointer": "/learning_request",
+        "offset": 0,
+        "text": "{\"case_questions\":[\"pair_A 的两根并联耦合弹簧（静长 2.4 与 2.6 cm）各自的安装点相对转子枢轴在哪一侧、与被测转子的力臂符号是否相反？\"],\"gap\":\"秩一（Mattis 型）耦合在机械/连续自由度上的可规范性：何时一条多簧边的符号不可被 σ_i→s_iσ_i 规范掉？±1 约化是否保留这种不可规范性？这决定场隐形边与单簧网络无挫折是否只是约化后的巧合。\",\"needed\":true,\"operations\":[],\"queries\":[\"Mattis model gauge transformation frustration rank one coupling\",\"geometrically controllable interaction sign mechanical hysteron antiferromagnetic serial\",\"moving Preisach interaction field threshold shift return point memory condition\"],\"record_ids\":[],\"source_ids\":[],\"urls\":[],\"why_now\":\"本轮首次把边符号写成 Σk_ca_ia_j（＋预压项）之和并用它解释幂差；若规范论证在连续转子上不成立，rank_one_edge_coupling 的全部后果要重写。\"}",
+        "next_offset": null,
+        "total_characters": 619,
+        "raw_original": false
+      },
+      {
+        "ref": "Dbfeef883c9a3bea36cf4",
+        "sha256": "bfeef883c9a3bea36cf4bbc97520f5493f76139d3b4ce756b17e8251d86dafea",
+        "pointer": "/expertise_request",
+        "offset": 0,
+        "text": "{\"domain\":\"自旋玻璃规范理论 / 秩一耦合网络\",\"mode\":\"consult\",\"relation\":\"秩一（Mattis 型）机械耦合边的可规范性，以及多簧力臂不可公约时的最小非可规范结构；±1 约化是否保留不可规范性\",\"task\":\"判定该推导表述是否与已发表规范论证一致，并指出连续转子情形何处失效\"}",
+        "next_offset": null,
+        "total_characters": 162,
+        "raw_original": false
+      },
+      {
+        "ref": "Dbfeef883c9a3bea36cf4",
+        "sha256": "bfeef883c9a3bea36cf4bbc97520f5493f76139d3b4ce756b17e8251d86dafea",
+        "pointer": "/next_actions",
+        "offset": 0,
+        "text": "[\"固定 ℓ 只换耦合弹簧静长（现 2.4/2.6 cm），检验两通道是否反向移动。\",\"问清 pair_A 两簧安装侧与静长归属，判力臂是否反号、λ 能否调零。\",\"给 pair_B 补更小 ℓ 或零耦合基线，检验幂差是否跨装置复现。\"]",
+        "next_offset": null,
+        "total_characters": 120,
+        "raw_original": false
+      }
+    ],
+    "paging": "Large batches are paginated automatically; follow next_offset for remaining text."
+  },
+  "policy_fingerprint": "c05e68c657d34f6673d55715947f6115a1c5cb4fcfd1f899cf2f83a48dc104e5"
+}

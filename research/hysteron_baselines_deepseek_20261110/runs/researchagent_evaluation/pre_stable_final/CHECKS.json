@@ -1,0 +1,59 @@
+{
+  "checks": [
+    {
+      "hypothesis_id": "H-BIAS-GAIN-GEOM",
+      "prior_work_status": "unclear",
+      "prior_work_reason": "受控可读源中没有直接研究双转子硬止挡滞回窗口 c/h 分解、邻态偏置 B 与差分增益 G，以及 ℓ 改变共模刚度的先例。铁电畴壁综述只提供‘几何/微结构调切换’的远类比，且为摘要级覆盖；因此按覆盖不足标为 unclear，不能据此判 already_done 或 no-close。",
+      "sources": [
+        {
+          "source_id": "Kc3a0a1802032df14",
+          "quote": "Key parameters to tune their dielectric, piezoelectric, and electromechanical performance are the domain structure and the dynamic of the domain walls.",
+          "relation": "远类比：说明几何/微结构可调切换行为；未涉及 B/G 分解、双转子邻态偏置或 ℓ 共模增益。"
+        }
+      ],
+      "coherence_status": "no_obvious_error",
+      "coherence_reason": "c/h 与 B/G 的定义自洽；用表值复核，rotor1 ℓ=0 的 7.3/−7.1 给 c=0.1、h=7.2，pair_B rotor1 的 6.7/−1.5 与 17.7/9.7 给 h≈4.1/4.0，均与文中数值一致。需注意 q_ij θ_i 与 K_eff=K_i−Σσ_j q_ij 的单位：若 q 未折算到 γ 坐标，K_eff 会混合 torque/rad 与 torque/cm；这是待澄清的局部线性化约定，不是已证算术错误。G≈0 的等价边界也已作为假设保留。",
+      "substantive_content": "H1 将每个转子的上下切换阈值写成中心 c 与半宽 h，把邻态效应分为加法偏置 B 和差分增益 G；机制上提出耦合弹簧主要给近似常力矩 b，ℓ 主要改有效刚度 K_i(ℓ)，故 h 共模收缩而 G≈0。它用 pair_A 的 B 随 ℓ 增大、h 近邻态不变作支持，并用 pair_B 单 ℓ 的大偏置作旁证；条件预测是新的 crossed ℓ 扫描中 h 的邻态差应落在预设等价界内，否则 bias-only 解释被否证。"
+    },
+    {
+      "hypothesis_id": "H-ORDER-EQUIV",
+      "prior_work_status": "unclear",
+      "prior_work_reason": "最接近的可读源是 switched dynamic network topology 的可识别性研究：它从带时间的社会/传播级联推断未观测拓扑，与 H2 的‘从事件观测谈拓扑可识别性’方向相邻；但其模型是 switched SEM、依赖时间戳，不处理无时戳事件、区间约束、图-协议等价类或机械滞回最小破退化测量。摘要级覆盖下无法判定已有同向工作，故标 unclear。",
+      "sources": [
+        {
+          "source_id": "Kd91b1dbba0f199e7",
+          "quote": "Contagions, such as the spread of popular news stories, or infectious diseases, propagate in cascades over dynamic networks with unobservable topologies.",
+          "relation": "相邻问题：从未观测拓扑下的级联事件推断网络；但该文使用带时间的社会级联，H2 使用无时戳有序状态事件。"
+        },
+        {
+          "source_id": "Kd91b1dbba0f199e7",
+          "quote": "Conditions under which the proposed switched model is identifiable are established.",
+          "relation": "相邻贡献：讨论拓扑可识别性；未给出 H2 的 order-only 区间分支定界与 forced-present/absent/unresolved 等价类报告。"
+        }
+      ],
+      "coherence_status": "obvious_error",
+      "coherence_reason": "事件约束写成 γ_t∈[γ_i^−(σ_t),γ_i^+(σ_t)]；若两端是 down/up 释放阈值，则这是整个滞回窗口而非触发边界，任何落在窗口内的 γ 都会被允许，约束过宽。更直接的矛盾在 supplied rows：record 115 '---+' 到 record 116 '-+-+' 只改 s2，并不存在‘第8到第9事件的接缝改两个转子’；该支持陈述与表不符。",
+      "substantive_content": "H2 把 network_C 的 16 个有序事件当作有序区间约束而非时间序列，枚举 absent/parallel/crossed 等图与反转松弛，输出可行图集和协议集，并主张用逐转子双向释放阈值及单边刚度/附件干预来破退化。它明确不把 pair_A/B 参数当 C 的固定身份，也不从事件极值反推反转点；但事件触发约束与‘接缝改两转子’的表述需修正。"
+    },
+    {
+      "hypothesis_id": "H-SIGN-CROSS",
+      "prior_work_status": "unclear",
+      "prior_work_reason": "可读源中没有直接处理交叉杠杆/附件几何导致机械滞回阈值符号翻转的工作。铁电畴壁与磁化反转文献只提供‘驱动力/几何影响反转路径’的远类比，且均为摘要级；无法判定是否存在同向先例，故标 unclear。",
+      "sources": [
+        {
+          "source_id": "Kc3a0a1802032df14",
+          "quote": "An important step forward in the field was the fundamental understanding of the link between the local electric and mechanical driving forces and domain wall motion.",
+          "relation": "远类比：局部机械驱动力与畴壁运动有关；未涉及 crossed 几何、阈值符号翻转或窗口中心移位。"
+        },
+        {
+          "source_id": "Kf190577a5137a15f",
+          "quote": "This switching is found to follow a novel reversal pathway, that is shown however to depend crucially on the net angular momentum, reflecting the balance of the two opposite sublattices.",
+          "relation": "远类比：反转路径可依赖内部平衡/几何；但对象是磁化动力学，不是机械双转子滞回。"
+        }
+      ],
+      "coherence_status": "obvious_error",
+      "coherence_reason": "由 c=(γ_up+γ_down)/2，对任意实数 γ_up、γ_down，c 必在两者之间（min≤c≤max），不可能‘落在两个切换场之外’。pair_B rotor2 的 γ_down=2.1、γ_up=24.9 给 c=13.5，确在 [2.1,24.9] 内。另句‘γ_down>0 且 γ_up>0 则窗口跨越零点或整体位于正侧’中‘跨越零点’与两阈值同正矛盾；符号异常本身可作为条件机制，但这些代数陈述是明显错误。",
+      "substantive_content": "H3 把 pair_B 的 crossed 几何当作条件机制，试图解释 down 阈值出现在正 γ 的符号异常，并主张用 parallel↔crossed 或 ℓ 改变检验 γ_down 的符号/位置是否随几何翻转。它列出驱动零点、止挡不对称、摩擦/滞回等替代并保持未证明状态；但把代数中心 c 说成可位于两阈值之外，与其定义矛盾。"
+    }
+  ]
+}

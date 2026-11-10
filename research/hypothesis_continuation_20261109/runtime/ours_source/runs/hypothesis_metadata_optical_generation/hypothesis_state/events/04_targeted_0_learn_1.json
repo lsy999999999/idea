@@ -1,0 +1,82 @@
+{
+  "stage": "04_targeted_0_learn_1",
+  "researcher": "domain_scientist",
+  "sequence": 6,
+  "source_result": "/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/runs/hypothesis_metadata_optical_generation/stages/04_targeted_0_learn_1/api_v2/workspace/result.json",
+  "source_sha256": "d91e64c35519ba9d340206a68cd743a59d210994fa1766bded1e2829e5a390e4",
+  "result_object_sha256": "bcd46aaaa49042a75e26b5a2d85f9422bad4c3a2c8a6d1ab8ddfb20e58226ec6",
+  "before": {
+    "researcher": "domain_scientist",
+    "independent": false,
+    "self": [
+      {
+        "assumption": "案例导出的S1/S2/S3可能是逐行归一化的偏振方向变量，而DOP作为不同标量另行导出；两者不应被默认视为同一个Stokes向量的方向与长度测量。若先合成强度加权Stokes量再归一化，与先逐态单位化并丢弃权重/长度，会保留不同信息。",
+        "motivation": "brief明确称S字段为导出的归一化偏振方向分量，并提示其平方范数不可假定等于DOP；两个扫描中的方向向量范数近1而DOP有独立变化。当前材料未定义这些字段的估计阶段。",
+        "conceptual_move": "把字段差异表示为测量映射链中的估计对象和运算次序差异，而不从单位范数反推具体处理算法或DOP物理含义。",
+        "implications": [
+          "若S方向在逐态合成前归一化且所需长度/强度权重未保留，则仅凭这些方向不能重建合成Stokes长度或DOP。",
+          "若DOP由独立估计器导出，其变化可以与近单位方向字段共存，但不能自动解释为方向字段丢失的长度信息。",
+          "已读偏振测量摘要显示低DoLP时AoLP统计可能对Stokes测量不确定度敏感；若本案方向量处于相应低偏振/高不确定度区间，方向变化的解释还需测量不确定度信息。此条件是否满足未知。"
+        ],
+        "open_questions": [
+          "本案S1/S2/S3是否逐行归一化、归一化所用对象是什么？",
+          "DOP由未归一化Stokes量、偏振仪估计器还是其他处理步骤导出？",
+          "强度加权、跨相位平均与归一化在案例流程中的先后顺序是什么？",
+          "spread扫描DOP下降由哪些测量或物理过程产生，现有字段是否足以区分？"
+        ],
+        "status": "developing",
+        "depends_on": [],
+        "ref": {
+          "owner": "domain_scientist",
+          "key": "unit_direction_vs_dop",
+          "version": 1
+        },
+        "conceptual_content_changed": true,
+        "change_metric_scope": "Literal field difference, not semantic progress or improved quality",
+        "reason": "针对学习请求保留原分支并精确化其概念前提；检索未解决案例映射，故不宣称机制已知。",
+        "influenced_by": [
+          {
+            "key": "unit_direction_vs_dop",
+            "owner": "theory_scientist",
+            "version": 1
+          }
+        ],
+        "source_stage": "04_targeted_0_learn_0",
+        "source_result": "/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/runs/hypothesis_metadata_optical_generation/stages/04_targeted_0_learn_0/api_v2/workspace/result.json"
+      }
+    ],
+    "peer_branches": [
+      {
+        "assumption": "案例导出的S1/S2/S3可能是逐行归一化的偏振方向变量，而DOP作为不同标量另行导出；两者不应被默认视为同一个Stokes向量的方向与长度测量。",
+        "motivation": "注册CSV中两个独立扫描各自几乎所有S向量范数均为1，但DOP取值范围明显不同；brief也明确提示不得假定S分量平方范数等于DOP。",
+        "conceptual_move": "将状态/强度相关的Stokes信息、单位方向表示与导出DOP字段分开，视作不同的数据映射，直到原始定义建立它们之间的转换。",
+        "implications": [
+          "若方向确由单位化生成，S范数对DOP不提供额外证据；只可分析方向随控制量的变化。",
+          "若spread扫描DOP下降同时方向范数固定，则该下降可能反映被单独保留的长度信息，也可能是后处理或刻度效应，不能仅由方向字段认定物理机制。"
+        ],
+        "open_questions": [
+          "S分量是否逐行单位化？",
+          "DOP是由未归一化Stokes分量、偏振测量器输出还是其他拟合量计算？",
+          "spread扫描的DOP下降能否在明确平均顺序和校准后归因于相位分布展宽？"
+        ],
+        "status": "developing",
+        "depends_on": [],
+        "ref": {
+          "owner": "theory_scientist",
+          "key": "unit_direction_vs_dop",
+          "version": 1
+        },
+        "conceptual_content_changed": true,
+        "change_metric_scope": "Literal field difference, not semantic progress or improved quality",
+        "reason": "全量计算将数据表示层面的可辨识性缺口具体化为单位方向与标量DOP的分离假设；假设仍未被数据处理来源确认。",
+        "influenced_by": [],
+        "source_stage": "02_initial_1",
+        "source_result": "/Applications/ideas/research/hypothesis_continuation_20261109/runtime/ours_source/runs/hypothesis_metadata_optical_generation/stages/02_initial_1/api_v2/workspace/result.json"
+      }
+    ],
+    "revision_obligations": []
+  },
+  "decisions": [],
+  "dependency_responses": [],
+  "updates": []
+}

@@ -1,0 +1,65 @@
+{
+  "name": "analyze_csv",
+  "args": {
+    "dataset": "measurements",
+    "group_column": "spring_id",
+    "group_value": "S019",
+    "variables": [
+      {
+        "name": "x",
+        "expression": "x_m"
+      },
+      {
+        "name": "f",
+        "expression": "force_N"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "slope",
+        "expression": "(mean(x_m*force_N)-mean(x_m)*mean(force_N))/(mean(x_m*x_m)-mean(x_m)*mean(x_m))"
+      },
+      {
+        "name": "intercept",
+        "expression": "mean(force_N)-((mean(x_m*force_N)-mean(x_m)*mean(force_N))/(mean(x_m*x_m)-mean(x_m)*mean(x_m)))*mean(x_m)"
+      },
+      {
+        "name": "max_abs_resid",
+        "expression": "max(abs(force_N-(mean(force_N)-((mean(x_m*force_N)-mean(x_m)*mean(force_N))/(mean(x_m*x_m)-mean(x_m)*mean(x_m)))*mean(x_m))-((mean(x_m*force_N)-mean(x_m)*mean(force_N))/(mean(x_m*x_m)-mean(x_m)*mean(x_m)))*x_m))"
+      }
+    ]
+  },
+  "call_id": "call_01_diljP4UQ29C0ztFI4TOf9633",
+  "seconds": 0.001339334063231945,
+  "registered_paths": [],
+  "result": {
+    "status": "executed",
+    "dataset": "measurements",
+    "sha256": "5e40502610e3904c627ab6b4cda5b65f4cf9185ed5190459d6b909313619504e",
+    "total_rows": 123,
+    "selected_rows": 13,
+    "selection": {
+      "column": "spring_id",
+      "value": "S019"
+    },
+    "outputs": {
+      "slope": {
+        "shape": [],
+        "value": 18.968661960132913,
+        "nonfinite_count": 0
+      },
+      "intercept": {
+        "shape": [],
+        "value": -0.7994872088039897,
+        "nonfinite_count": 0
+      },
+      "max_abs_resid": {
+        "shape": [],
+        "value": 0.005109534883719569,
+        "nonfinite_count": 0
+      }
+    },
+    "scope": "Executed researcher-authored expressions on registered measurements; not validation of causal interpretation."
+  },
+  "policy_fingerprint": "1e4f5dcbb6b1c6873b226ff66dc837a3f5d0ea528bce61489f59a4cc965b7607"
+}

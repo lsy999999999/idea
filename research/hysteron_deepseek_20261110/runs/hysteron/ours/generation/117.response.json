@@ -1,0 +1,67 @@
+{
+  "id": "651d3aae-9fc3-48da-86bf-0999d4e7eb75",
+  "choices": [
+    {
+      "finish_reason": "tool_calls",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "",
+        "refusal": null,
+        "role": "assistant",
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "tool_calls": [
+          {
+            "id": "call_00_MhQKmRvxqgpKniQ0wk428998",
+            "function": {
+              "arguments": "{\"ref\": \"D03b424ea694e88071ea0\", \"pointer\": \"/revision_obligations\", \"offset\": 0, \"limit\": 6000, \"raw\": true}",
+              "name": "read_document"
+            },
+            "type": "function",
+            "index": 0
+          },
+          {
+            "id": "call_01_EIjXiJ1Teb4GlRg8H85g6076",
+            "function": {
+              "arguments": "{\"ref\": \"D03b424ea694e88071ea0\", \"pointer\": \"/hypothesis_updates\", \"offset\": 0, \"limit\": 12000, \"raw\": true}",
+              "name": "read_document"
+            },
+            "type": "function",
+            "index": 1
+          }
+        ],
+        "reasoning_content": "We need to repair the draft: validation error says \"Respond once to each pending hypothesis dependency obligation\". The revision_obligations field likely needs dependency_responses for each obligation. There are two obligations: barrier_interaction_frontier v2 (dep changed latch v1→v2) and threshold_gap_addressability v1 (dep changed). We need to return dependency_responses for each, with action revise/reaffirm/park/unresolved, using current dependency versions.\n\nWe should read the draft's current revision_obligations and hypothesis_updates to patch minimally. Let's read draft section by pointer. The draft ref is D03b424ea694e88071ea0. Read /revision_obligations and /hypothesis_updates.\n\nAlso may need to see current hypothesis cards to write consistent responses. Let's read."
+      }
+    }
+  ],
+  "created": 1794293876,
+  "model": "deepseek-flash",
+  "object": "chat.completion",
+  "metadata": null,
+  "moderation": null,
+  "service_tier": null,
+  "system_fingerprint": "bc19ba97cbe016479903222bb1578db6",
+  "usage": {
+    "completion_tokens": 401,
+    "prompt_tokens": 24241,
+    "total_tokens": 24642,
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": null,
+      "audio_tokens": null,
+      "reasoning_tokens": 173,
+      "rejected_prediction_tokens": null,
+      "text_tokens": null
+    },
+    "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cache_write_tokens": null,
+      "cached_tokens": 18432,
+      "image_tokens": null,
+      "text_tokens": null
+    },
+    "prompt_cache_hit_tokens": 18432,
+    "prompt_cache_miss_tokens": 5809
+  }
+}

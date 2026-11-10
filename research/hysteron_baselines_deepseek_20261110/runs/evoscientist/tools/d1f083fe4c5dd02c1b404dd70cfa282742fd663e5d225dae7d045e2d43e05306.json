@@ -1,0 +1,53 @@
+{
+  "name": "analyze_csv",
+  "args": {
+    "dataset": "measurements.csv",
+    "group_column": "spring_id",
+    "group_value": "S046",
+    "variables": [
+      {
+        "name": "x",
+        "expression": "x_m"
+      },
+      {
+        "name": "f",
+        "expression": "force_N"
+      },
+      {
+        "name": "xf",
+        "expression": "x_m*force_N"
+      },
+      {
+        "name": "x2",
+        "expression": "x_m*x_m"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "n",
+        "expression": "sum(isfinite(x))"
+      },
+      {
+        "name": "slope_N_per_m",
+        "expression": "(mean(xf)-mean(x)*mean(f))/(mean(x2)-mean(x)*mean(x))"
+      },
+      {
+        "name": "intercept_N",
+        "expression": "mean(f)-((mean(xf)-mean(x)*mean(f))/(mean(x2)-mean(x)*mean(x)))*mean(x)"
+      },
+      {
+        "name": "rms_resid_N",
+        "expression": "sqrt(mean((f-(mean(f)+((mean(xf)-mean(x)*mean(f))/(mean(x2)-mean(x)*mean(x)))*(x-mean(x)))^2))"
+      }
+    ]
+  },
+  "call_id": "a0624a1d8aa34dff847af95ae53de650",
+  "seconds": 6.004190072417259e-05,
+  "registered_paths": [],
+  "result": {
+    "status": "error",
+    "error_type": "ValueError",
+    "message": "Unknown dataset; use the dataset catalog"
+  },
+  "policy_fingerprint": "1e4f5dcbb6b1c6873b226ff66dc837a3f5d0ea528bce61489f59a4cc965b7607"
+}

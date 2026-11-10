@@ -1,0 +1,64 @@
+{"system": "evoscientist", "call": "3e4eb866d38c", "tokens": 21789, "finish": "tool_calls"}
+{"system": "evoscientist", "call": "789925f0a4c2", "tokens": 22367, "finish": "tool_calls"}
+{"system": "evoscientist", "call": "60efe5a52521", "tokens": 15089, "finish": "stop"}
+{"system": "evoscientist", "call": "5a6aae92bedb", "tokens": 23152, "finish": "tool_calls"}
+{"system": "evoscientist", "call": "36c707ab1ee6", "tokens": 32190, "finish": "tool_calls"}
+{"system": "evoscientist", "call": "9187065866b0", "tokens": 41672, "finish": "tool_calls"}
+Traceback (most recent call last):
+  File "/Applications/ideas/research/hysteron_baselines_deepseek_20261110/runtime/local_system.py", line 91, in <module>
+    final=finalize(e,result);dump(e.out/'STATUS.json',{'status':'generation_complete','system':a.system,'hypotheses':len(final['hypotheses']),'seconds':time.monotonic()-start})
+  File "/Applications/ideas/research/hysteron_baselines_deepseek_20261110/runtime/common.py", line 136, in finalize
+    result=engine.run([{'role':'system','content':'Extract 1-3 substantive hypotheses actually developed in this system trajectory. Retain conditional/unvalidated ones. Do not invent a stronger new mechanism at this reporting stage. Cite actual trajectory positions. Chinese prose; equations can use ASCII. A mere plan does not become a hypothesis.'},{'role':'user','content':json.dumps(trajectory,ensure_ascii=False)}],function=contract)
+  File "/Applications/ideas/research/hysteron_baselines_deepseek_20261110/runtime/common.py", line 106, in run
+    r=self.raw(msgs,active,{'type':'function','function':{'name':function['name']}} if function else None,private)
+  File "/Applications/ideas/research/hysteron_baselines_deepseek_20261110/runtime/common.py", line 66, in raw
+    response=self.api.chat.completions.create(**request)
+  File "/Applications/ideas/research/replication_selection_20261108/execution/.venv/lib/python3.14/site-packages/openai/_utils/_utils.py", line 298, in wrapper
+    return func(*args, **kwargs)
+  File "/Applications/ideas/research/replication_selection_20261108/execution/.venv/lib/python3.14/site-packages/openai/resources/chat/completions/completions.py", line 1611, in create
+    return self._post(
+           ~~~~~~~~~~^
+        "/chat/completions",
+        ^^^^^^^^^^^^^^^^^^^^
+    ...<53 lines>...
+        stream_cls=Stream[ChatCompletionChunk],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Applications/ideas/research/replication_selection_20261108/execution/.venv/lib/python3.14/site-packages/openai/_base_client.py", line 1474, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Applications/ideas/research/replication_selection_20261108/execution/.venv/lib/python3.14/site-packages/openai/_base_client.py", line 1248, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - Thinking mode does not support this tool_choice (request_id: 21dfe1cf-7912-41e5-89ee-2ffac8c90469)
+Traceback (most recent call last):
+  File "/Applications/ideas/research/hysteron_baselines_deepseek_20261110/runtime/local_system.py", line 91, in <module>
+    final=finalize(e,result);dump(e.out/'STATUS.json',{'status':'generation_complete','system':a.system,'hypotheses':len(final['hypotheses']),'seconds':time.monotonic()-start})
+  File "/Applications/ideas/research/hysteron_baselines_deepseek_20261110/runtime/common.py", line 143, in finalize
+    # Upstream ResearchAgent regex requires literal headings; retain raw API bytes.
+  File "/Applications/ideas/research/hysteron_baselines_deepseek_20261110/runtime/common.py", line 106, in run
+    # Leave a completion opportunity after bounded tool use, rather than raising on budget.
+  File "/Applications/ideas/research/hysteron_baselines_deepseek_20261110/runtime/common.py", line 66, in raw
+    try:
+    
+  File "/Applications/ideas/research/replication_selection_20261108/execution/.venv/lib/python3.14/site-packages/openai/_utils/_utils.py", line 298, in wrapper
+    return func(*args, **kwargs)
+  File "/Applications/ideas/research/replication_selection_20261108/execution/.venv/lib/python3.14/site-packages/openai/resources/chat/completions/completions.py", line 1611, in create
+    return self._post(
+           ~~~~~~~~~~^
+        "/chat/completions",
+        ^^^^^^^^^^^^^^^^^^^^
+    ...<53 lines>...
+        stream_cls=Stream[ChatCompletionChunk],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Applications/ideas/research/replication_selection_20261108/execution/.venv/lib/python3.14/site-packages/openai/_base_client.py", line 1474, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Applications/ideas/research/replication_selection_20261108/execution/.venv/lib/python3.14/site-packages/openai/_base_client.py", line 1248, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - Thinking mode does not support this tool_choice (request_id: 592a33c1-e8cd-41ac-8d11-8d81213e6e0d)
+{"system": "evoscientist", "call": "8f2dc31ca456", "tokens": 32388, "finish": "tool_calls"}
+{"system": "evoscientist", "call": "154f78d2ef07", "tokens": 32881, "finish": "stop"}
+{"system": "evoscientist", "call": "3d235740d6be", "tokens": 35983, "finish": "tool_calls"}

@@ -1,5 +1,6 @@
 """Stage-scoped, lossless document references. Scientific text is never summarized away."""
 from __future__ import annotations
+from flexible_locator import select
 import hashlib
 import json
 from pathlib import Path
@@ -123,7 +124,9 @@ class ContextStore:
     def resolve(self, ref):
         ref = self.paths.get(ref, ref)
         if ref not in self.documents:
-            raise ValueError('Not a supplied document ID/path; no arbitrary filesystem access')
+            candidates={key for path,key in self.paths.items() if Path(path).name==ref or Path(path).stem==ref}
+            if len(candidates)==1:ref=next(iter(candidates))
+            else:raise ValueError('Unresolved or ambiguous supplied document ID/path/filename; use a catalog reference')
         return ref
 
     def read(self, ref, pointer='', offset=0, limit=10000, raw=False):
@@ -134,8 +137,6 @@ class ContextStore:
             raise ValueError('Use nonnegative offset and limit 1..12000')
         source = self.documents[ref]['text']
         if pointer:
-            if not pointer.startswith('/'):
-                raise ValueError('Use a JSON pointer starting with /')
             if raw:
                 obj = json.loads(source)
             else:
@@ -143,9 +144,7 @@ class ContextStore:
                 obj = self.projections.get(ref)
                 if obj is None:
                     obj = self._project(json.loads(source))
-            for token in pointer[1:].split('/'):
-                token = token.replace('~1', '/').replace('~0', '~')
-                obj = obj[int(token)] if isinstance(obj, list) else obj[token]
+            obj,pointer=select(obj,pointer)
             text = dumps(obj)
         elif raw:
             text = source

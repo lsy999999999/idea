@@ -64,7 +64,9 @@ class ToolTests(unittest.TestCase):
    result=t.call('read_documents',{'requests':requests},'batch')
    self.assertEqual([x['text'] for x in result['documents']],['first exact page','second exact page'])
    for x in requests:x['limit']=12001
-   self.assertEqual(t.call('read_documents',{'requests':requests},'over')['status'],'error')
+   large=t.call('read_documents',{'requests':requests},'over')
+   self.assertEqual(large['status'],'read')
+   self.assertLessEqual(sum(len(page['text']) for page in large['documents']),24000)
  def test_dataset_mutation_rejected(self):
   with tempfile.TemporaryDirectory() as td:
    path=Path(td)/'x.csv';path.write_text('x\n1\n2\n');store=ContextStore(Path(td)/'docs');t=ResearchTools(store,Path(td),{'x':path},expression=runner.expression);path.write_text('x\n9\n')
@@ -84,14 +86,17 @@ class ContractTests(unittest.TestCase):
    store.add('/source',json.dumps({'data_dictionary':{'S1/S2/S3':text}}))
    a=object.__new__(StageAdapter)
    value={'development_step':{'focus':{'source':'S1','quote':'S1/S2/S3: '+text},'uptake':[]}}
-   with self.assertRaisesRegex(ValueError,'exact source string value.*Exported normalized'):
-    a.normalize(value,{'S1':'/source'},store)
+   out=a.normalize(value,{'S1':'/source'},store)
+   self.assertIsNone(out['development_step']['focus']['quote'])
+   self.assertEqual(out['development_step']['focus']['author_excerpt'],'S1/S2/S3: '+text)
    value['development_step']['focus']={'source':'S1','quote_pointer':'/data_dictionary/S1~1S2~1S3'}
    result=a.normalize(value,{'S1':'/source'},store)
    self.assertEqual(result['development_step']['focus']['quote'],text)
    self.assertNotIn('quote',value['development_step']['focus'])
    value['development_step']['focus']['quote']='a different scientific claim'
-   with self.assertRaisesRegex(ValueError,'conflicts'):a.normalize(value,{'S1':'/source'},store)
+   out=a.normalize(value,{'S1':'/source'},store)
+   self.assertEqual(out['development_step']['focus']['quote'],text)
+   self.assertEqual(out['development_step']['focus']['author_excerpt'],'a different scientific claim')
  def test_reference_binding_no_silent_semantic_repair(self):
   with tempfile.TemporaryDirectory() as td:
    store=ContextStore(td);store.add('/source','actual quote')
@@ -100,7 +105,9 @@ class ContractTests(unittest.TestCase):
    out=a.normalize(result,{'S1':'/source'},store)
    self.assertEqual(out['learning_request']['gap'],'gap');self.assertEqual(out['development_step']['focus']['source'],'/source');self.assertNotIn('gap',result['learning_request'])
    result['learning_request']['gap']='different claim'
-   with self.assertRaisesRegex(ValueError,'conflicts'):a.normalize(result,{'S1':'/source'},store)
+   out=a.normalize(result,{'S1':'/source'},store)
+   self.assertEqual(out['learning_request']['gap'],'different claim')
+   self.assertEqual(out['learning_request']['context_ref'],'development_step')
  def test_no_invalid_json_salvage(self):
   with self.assertRaises(json.JSONDecodeError):StageAdapter.parse('{"summary":"x"}}')
  def test_closed_mode_is_explicit_and_online_is_default(self):

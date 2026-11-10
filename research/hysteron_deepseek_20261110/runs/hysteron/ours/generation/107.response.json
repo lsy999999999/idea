@@ -1,0 +1,85 @@
+{
+  "id": "a4ca1305-b1cf-4edb-ab52-27b160b1e983",
+  "choices": [
+    {
+      "finish_reason": "tool_calls",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "",
+        "refusal": null,
+        "role": "assistant",
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "tool_calls": [
+          {
+            "id": "call_00_51vZgeLadIXSNE5O21oG2324",
+            "function": {
+              "arguments": "{\"limit\": 1500, \"offset\": 0, \"pointer\": \"/name\", \"raw\": false, \"ref\": \"D6b7f5bb8a8c8f73ee338\"}",
+              "name": "read_document"
+            },
+            "type": "function",
+            "index": 0
+          },
+          {
+            "id": "call_01_Ftr6uShv0IWnoO7axyNx4353",
+            "function": {
+              "arguments": "{\"limit\": 1500, \"offset\": 0, \"pointer\": \"/name\", \"raw\": false, \"ref\": \"Dd3b3a48faa6cea8e5696\"}",
+              "name": "read_document"
+            },
+            "type": "function",
+            "index": 1
+          },
+          {
+            "id": "call_02_0mGHOvAoxpJbRx2YRnxZ8726",
+            "function": {
+              "arguments": "{\"limit\": 2000, \"offset\": 0, \"pointer\": \"/result\", \"raw\": false, \"ref\": \"Dc0122bd8004436e6398d\"}",
+              "name": "read_document"
+            },
+            "type": "function",
+            "index": 2
+          },
+          {
+            "id": "call_03_cEaAmTtQis1ajPQMWRFt3538",
+            "function": {
+              "arguments": "{\"limit\": 2000, \"offset\": 0, \"pointer\": \"/result\", \"raw\": false, \"ref\": \"D428fa8a35b67078e4f99\"}",
+              "name": "read_document"
+            },
+            "type": "function",
+            "index": 3
+          }
+        ],
+        "reasoning_content": "So previous stage had [] (no obligations then). Now two obligations exist.\n\nThe question: which ref form satisfies. Let me consider likely validator implementation: it builds pending obligations map from hypothesis_state.revision_obligations. For each obligation it needs a response. Possibly it expects dependency_responses entries whose ref matches either dependency_ref or latest_ref, and counts \"once\". The draft has both matching latest_ref (v2) — should pass. Unless... the validator expects ref to match the *obligation hypothesis_ref*: i.e., dependency_responses is a list on each obligation, and ref field must be the branch ref? Hmm. Then the error would say missing responses.\n\nWait — maybe the validator requires the response ref to match cause.dependency_ref exactly (\"exact hypothesis_ref\" of the dependency as declared, version 1), because obligations are about declared premises (version 1) changed. The spec: \"Dependencies not explicitly declared cannot be inferred by this structural checker.\" and \"For each obligation return dependency_responses:[{ref:exact hypothesis_ref,...}]\". The dependency declared in depends_on is v1. So \"exact hypothesis_ref\" = the declared dependency ref = v1? But the obligation is per branch, and causes include dependency_ref v1 + latest_ref v2. Hmm, matching v1 seems plausible for a structural checker that verifies the branch's declared premise set was acknowledged.\n\nSafest: include both? \"Respond once to each pending hypothesis dependency obligation\" — respond once, not twice. So cannot include two responses for one obligation.\n\nHmm, but maybe we can include responses to both obligations each with ref = the obligation's own hypothesis_ref? Let me think about what a reasonable implementation does:\n\n```\npending = {(o.hypothesis_ref.key, o.hypothesis_ref.version): o for o in state.revision_obligations}\nresponses = {}\nfor ro in result.revision_obligations:\n    ... for dr in ro.dependency_responses: responses[(dr.ref.key, dr.ref.version)] = ...\nfor key in pending: if key not in responses: error\n```\nThat would require ref matching the obligation's hypothesis_ref (the branch). Alternatively keyed by dependency_ref.\n\nGiven \"Respond once to each pending hypothesis dependency obligation\", the obligation identity is (hypothesis_ref). Draft has no entry with ref = branch refs. So likely that's the failure.\n\nBut that reading is semantically odd: dependency_responses' ref means \"which dependency am I responding to\". Actually spec: \"revision_obligations lists your branches whose declared premises changed... For each obligation return dependency_responses:[{ref:exact hypothesis_ref,action:...,reason}]\". Here \"obligation\" = branch; \"each dependency\" within it... So ref = the dependency hypothesis ref. Hmm.\n\nGiven ambiguity, maybe the checker is per-cause: for each obligation and each cause, require a response whose ref equals latest_ref OR dependency_ref. Draft ref = v2 = latest_ref for both causes. Should pass under that.\n\nUnless the checker requires ref equals dependency_ref exactly (v1) — \"exact\" meaning the ref as declared, not the latest. Ugh.\n\nAnother possibility: the checker requires responses in a flat top-level way? No.\n\nAnother possibility: the error arises because draft's revision_obligations includes entries but hypothesis_updates versions differ — e.g., barrier branch new card v3 isn't reflected (base_version 2 → new version 3), and the response cites v3 in text but the checker sees... no, separate.\n\nHmm, maybe the checker requires each cause to have its own response, and since both causes for a single obligation are for the same ref, one response covers. Fine.\n\nLet me try a different tactic: perhaps the validator expects dependency_responses[].ref to be the dependency_ref including version the branch declared (v1), because it checks \"did you respond to each pending obligation\" by (owner,key,version) of the *premise that changed*, i.e., dependency_ref. Then draft's v2 fails.\n\nWhich to choose? I could hedge by using dependency_ref = v1 in one place... can't duplicate.\n\nAlternative hedge: use ref object with version matching... no.\n\nConsider the wording in upstream spec more: \"dependency_responses:[{ref:exact hypothesis_ref,action:revise/reaffirm/park/unresolved,reason}]\". And earlier: \"revision_obligations lists your branches whose declared premises changed or themselves await review.\" And \"Reaffirm/revise requires an updated full card citing current dependency versions\". So the action revise/reaffirm concerns the branch, and ref identifies which dependency triggered it. Since both obligations are triggered by the same dependency (latch v1→v2), the ref should be the dependency. Which version? The one that changed: the cause. I think latest_ref (v2) is the natural \"current\" ref, and the action revise requires citing current versions.\n\nHmm. Another thought: maybe the failure is not about ref matching at all, but that the draft's revision_obligations is fine while hypothesis_updates lacks... no, message specifically says respond once to each pending obligation.\n\nWait — perhaps the validator works like: it collects all obligation refs from state (branch refs), then looks at *the branches in hypothesis_updates* to see whether each obligation's branch was updated (a new card) — no, \"dependency_responses\".\n\nMaybe the checker requires dependency_responses with ref matching the *obligation's* hypothesis_ref (branch), because that's \"each pending hypothesis dependency obligation\" — i.e., you must say how you respond regarding branch X's dependency. And the semantic reason text explains which dependency. Then draft fails since refs are latch v2.\n\nRisk either way. Could I satisfy both interpretations? What if dependency_responses include two entries: one with ref = branch ref (revise) and one with ref = latch v2? But \"Respond once\" might penalize multiple. Hmm, \"Respond once to each pending hypothesis dependency obligation\" — likely it just requires presence, extra responses probably fine? But could error \"respond exactly once\".\n\nAlternative: set ref = branch hypothesis_ref (barrier v2) — under interpretation A (keyed by dependency latest) it fails.\n\nIs there any way to see the validator's expectation? Maybe check the tool result records in this stage — there may be records of the failed submit with details. Let's read some new_documents tool records to see if there's a policy fingerprint describing validation. Possibly one of them is the submit_result failure record with advice. Let me search: D6b7f5bb (25735 chars, result) etc. Also read the draft /summary and /response_to_peer to know content. And maybe the draft's revision_obligations response reason mentions \"depends_on 已指向 v2\" — consistent.\n\nLet me look at a couple of tool records that might contain schema/validator messages, e.g. D02ca180041 (900 chars), D127c9f7b (536), D855278d (536), D8355148 (1157), Dcc0fbe0 (1421), D43749b (1444). Small ones likely read_document calls. The big ones may be submit_result calls or analyze. Let me read a handful: D6b7f5bb (25k, maybe analyze_csv), Dd3b3a48 (19k), Dc0122bd (6.9k), Deeb4d9e (10.9k), Df2bb31c (23k), D428fa8a (8k), D3f4b8be (13k), D6696ec1 (5.6k), Db6aa981 (6.7k), D32f8996 (3.3k), Da01c3ec (3.7k), Df3e7040 (5.6k), Dd09bb99 (2.8k).\n\nThe submit attempt probably is captured in a tool record with the validation error — maybe with more detail (e.g. \"missing response for barrier...\"). Let's read a few big ones searching for \"dependency\". Rather than read whole, read /result sections. Let me batch read /name and /result for a few.\n\nActually to save budget: read /result of D6b7f5bb and Df2bb31c and Dd3b3a48 and Deeb4d9e... Each 12k limit. Let's do 4 in one call."
+      }
+    }
+  ],
+  "created": 1794293775,
+  "model": "deepseek-flash",
+  "object": "chat.completion",
+  "metadata": null,
+  "moderation": null,
+  "service_tier": null,
+  "system_fingerprint": "bc19ba97cbe016479903222bb1578db6",
+  "usage": {
+    "completion_tokens": 2250,
+    "prompt_tokens": 26762,
+    "total_tokens": 29012,
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": null,
+      "audio_tokens": null,
+      "reasoning_tokens": 1808,
+      "rejected_prediction_tokens": null,
+      "text_tokens": null
+    },
+    "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cache_write_tokens": null,
+      "cached_tokens": 26368,
+      "image_tokens": null,
+      "text_tokens": null
+    },
+    "prompt_cache_hit_tokens": 26368,
+    "prompt_cache_miss_tokens": 394
+  }
+}

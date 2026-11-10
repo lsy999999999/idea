@@ -1,0 +1,57 @@
+{
+  "name": "analyze_csv",
+  "args": {
+    "dataset": "measurements",
+    "group_column": "spring_id",
+    "group_value": "S019",
+    "variables": [
+      {
+        "name": "x",
+        "expression": "x_m"
+      },
+      {
+        "name": "f",
+        "expression": "force_N"
+      },
+      {
+        "name": "mx",
+        "expression": "mean(x_m)"
+      },
+      {
+        "name": "mf",
+        "expression": "mean(force_N)"
+      },
+      {
+        "name": "sxx",
+        "expression": "sum((x_m-mean(x_m))^2)"
+      },
+      {
+        "name": "sxf",
+        "expression": "sum((x_m-mean(x_m))*(force_N-mean(force_N)))"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "n",
+        "expression": "sum(isfinite(f))"
+      },
+      {
+        "name": "slope",
+        "expression": "sxf/sxx"
+      },
+      {
+        "name": "resid_maxabs",
+        "expression": "max(abs(f-(mf+(sxf/sxx)*(x-mx))))"
+      }
+    ]
+  },
+  "call_id": "call_01_265Qh4LCiuXAGNGjFoti0054",
+  "seconds": 0.0007962496019899845,
+  "registered_paths": [],
+  "result": {
+    "status": "error",
+    "error_type": "ValueError",
+    "message": "Unsupported expression syntax: BinOp"
+  },
+  "policy_fingerprint": "1e4f5dcbb6b1c6873b226ff66dc837a3f5d0ea528bce61489f59a4cc965b7607"
+}

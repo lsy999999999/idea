@@ -1,0 +1,94 @@
+{
+  "name": "analyze_csv",
+  "args": {
+    "dataset": "measurements",
+    "group_column": "spring_id",
+    "group_value": "S046",
+    "variables": [
+      {
+        "name": "x",
+        "expression": "x_m"
+      },
+      {
+        "name": "f",
+        "expression": "force_N"
+      },
+      {
+        "name": "mx",
+        "expression": "mean(x)"
+      },
+      {
+        "name": "mf",
+        "expression": "mean(f)"
+      },
+      {
+        "name": "k",
+        "expression": "(mean(x*f)-mx*mf)/(mean(x*x)-mx*mx)"
+      },
+      {
+        "name": "b",
+        "expression": "mf-k*mx"
+      },
+      {
+        "name": "r",
+        "expression": "f-(b+k*x)"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "slope_N_per_m",
+        "expression": "k"
+      },
+      {
+        "name": "intercept_N",
+        "expression": "b"
+      },
+      {
+        "name": "max_abs_resid",
+        "expression": "max(abs(r))"
+      },
+      {
+        "name": "rms_resid",
+        "expression": "sqrt(mean(r*r))"
+      }
+    ]
+  },
+  "call_id": "call_00_xwgsQRhS3Ze8AtujAlkD0580",
+  "seconds": 0.004463458899408579,
+  "registered_paths": [],
+  "result": {
+    "status": "executed",
+    "dataset": "measurements",
+    "sha256": "5e40502610e3904c627ab6b4cda5b65f4cf9185ed5190459d6b909313619504e",
+    "total_rows": 123,
+    "selected_rows": 29,
+    "selection": {
+      "column": "spring_id",
+      "value": "S046"
+    },
+    "outputs": {
+      "slope_N_per_m": {
+        "shape": [],
+        "value": 45.85329350291625,
+        "nonfinite_count": 0
+      },
+      "intercept_N": {
+        "shape": [],
+        "value": -1.7855388280120437,
+        "nonfinite_count": 0
+      },
+      "max_abs_resid": {
+        "shape": [],
+        "value": 0.057778253234833654,
+        "nonfinite_count": 0
+      },
+      "rms_resid": {
+        "shape": [],
+        "value": 0.03345666117118544,
+        "nonfinite_count": 0
+      }
+    },
+    "scope": "Executed researcher-authored expressions on registered measurements; not validation of causal interpretation."
+  },
+  "policy_fingerprint": "1e4f5dcbb6b1c6873b226ff66dc837a3f5d0ea528bce61489f59a4cc965b7607"
+}

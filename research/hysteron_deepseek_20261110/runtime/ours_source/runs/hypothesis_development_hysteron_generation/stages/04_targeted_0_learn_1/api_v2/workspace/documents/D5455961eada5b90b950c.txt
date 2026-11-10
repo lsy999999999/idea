@@ -1,0 +1,524 @@
+{
+  "artifacts": [
+    "notes/04_targeted_learning_note.md"
+  ],
+  "claims": [
+    "已发表的『接近阈值→连续通路』（球壳）支持把吸附式双稳与连续可逆放在同一条参数线上，但没有给出本装置可用的无量纲判据。",
+    "约束型屈曲实验中几何约束阻碍运动、弹性能累积到阈值才跳变，说明「约束」与「势垒」不是两种竞争机制：约束决定平衡流形，势垒是流形的鞍结高度。",
+    "两根屈曲单元共享节点时，同向位形使连接区弹性能高，一个单元跳变可无外驱动带动另一单元反向跳——这是 b>0（反铁磁型）的力学原型，且不需要非互易元件。",
+    "装置事实与 b 符号一一对应：pair_A 为并联耦合且 b<0，pair_B 为交叉耦合且 b>0。",
+    "若 (|b|,1−w) 由刚度比与几何决定、sign(b) 由线序决定，则 pair_A/pair_B 的符号差异不构成非互易性证据，network_C 的 Δβ_3>0 也不能单凭符号归因于钢丝单侧边。",
+    "本轮检索未命中「单侧止挡约束型滞回」作为命名类别，也未命中「状态粗粒化后 RPM」；这是检索结果，不是不存在性的证据。"
+  ],
+  "development_step": {
+    "action": "connect",
+    "expected_change": "预期把 unilateral_stop_state 的锐利符号判据改成「阈值位形＋到阈值的无量纲距离」的带，并给 coupling_torque_moments 增加装配奇偶性先验；连带把 network_C 的 Δβ_3>0 异常从「必须单侧钢丝」放宽为「并联/交叉线序或单侧边二者之一」。",
+    "focus": {
+      "quote": "We find that indentation provides a continuous route for transition between the two states for shells whose geometry makes them close to the threshold.",
+      "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/services/replies/04_targeted_0_request_0.json"
+    },
+    "gap": "我把「吸附式双稳 vs 连续可逆」压在 R−ℓ0 的符号上（零参数、锐利），把浮动当成第三种离散态。但已发表（球壳）说接近阈值时存在连续通路，而受限屈曲实验说几何约束只是阻碍运动、能量累积到阈值才跳——若约束与势垒同源，那么「该翻未翻」可以落在连续支内侧而不是第三态。缺的具体连接是：单侧止挡给的可占据位形集是离散两点还是区间，由哪个无量纲距离决定；以及这个带在两转子共享约束（交叉装配）时是否被邻态改变。",
+    "outcome": {
+      "kind": "relation",
+      "remaining_gap": "近阈值带的无量纲宽度与解析判据只在摘要级、未读到；「换线序只翻一阶矩」未测；network_C 各边奇偶性与安装距离无记录（case 询问返回 unknown）；粗粒化（±1 丢连续幅度）后 RPM 是否仍定义，两轮检索均未命中。",
+      "statement": "得到两条关系。(1) 约束与势垒同源：单侧止挡给出的是受限平衡流形，释放是该流形的鞍结（合力矩过枢轴）与静长支 R=ℓ0 的交汇，因此「吸附式双稳 vs 连续可逆」不是符号处的锐利开关，而由「阈值位形＋到阈值的无量纲距离」控制；近阈值时存在连续通路，『浮动』是这段连续支的极限，不是第三种离散态。(2) b 的符号结构由耦合边的装配奇偶性给定：并联（pair_A）→ b<0 铁磁型，交叉（pair_B）→ b>0 反铁磁型，其力学原型是共享节点上同向位形弹性能更高（S 形双屈曲中一个单元跳变可无外驱动带动另一单元反向跳）；(|b|,1−w) 仍由刚度比与几何决定。由此 network_C 的 Δβ_3>0 不再自动指向钢丝单侧边，判别量是同转子 Δα_3 与 Δβ_3 是否相等。"
+    },
+    "reason": "把「约束→平衡流形→鞍结分岔」这套语言接到本装置的止挡-弹簧几何上，可以一块儿解决两件事：把浮动从第三种态降为近阈值极限，并给已测的 b 符号一个装配来源（apparatus 里 pair_A 并联、pair_B 交叉，正是共享节点能量论证的两种接线）。若成立，我先前两个断言（R−ℓ0 符号决定能否浮动；b 的符号是经验参数）都要改，而 peer 的 Ising 符号分类会变成可从装配图预读的量。",
+    "uptake": [
+      {
+        "consequence": "条件性：距阈值足够近的转子在力-γ 上给有限斜率、有限宽度的沉默段，跳变高度随距离衰减（假设性算例：鞍结标度下距阈值 10% 者跳变约为远阈值的 3%），因此「该翻未翻」是连续量而非二值；pair_A 转子2（释放处压缩）不应浮动这一结论也只在远离带时成立。",
+        "effect": "revise",
+        "quote": "We find that indentation provides a continuous route for transition between the two states for shells whose geometry makes them close to the threshold.",
+        "reason": "服务唯一 direct 源给出「接近阈值→连续通路」，正对应我请求的『吸附式双稳 vs 连续可逆』，但以几何接近阈值为条件、不含静长与止挡；同批两条 method 源（平衡流形延拓＋鞍结定位；任意初始形状梁的双稳/吸附力解析、解分两支依轴力水平）把释放点写成流形上的鞍结，并显示双稳条件同时依赖初始形状幅度与轴力。三者合起来把我的零参数符号判据变成两参数（x_offset, R−ℓ0）＋距离的带。",
+        "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/services/replies/04_targeted_0_request_0.json"
+      },
+      {
+        "consequence": "条件性：固定几何与刚度、只把并联改交叉，应得 b→−b 而 (|b|,1−w) 近似不变；因此 pair_A/pair_B 的符号差异不构成非互易性证据，peer 的「铁磁型保 l-RPM」判据在装配图上就可预读。",
+        "effect": "extend",
+        "quote": "本装置的三坐标形态中等量平移（Δα=Δβ=2b）等价于 Ising 型局域场",
+        "reason": "peer 把等量平移读成 Ising 局域场，但仍把符号当经验读表（pair_A 全负、pair_B 全正）。装置事实给了符号的机械来源：pair_A 是 parallel coupling springs，pair_B 是 crossed coupling springs；而 S 形双屈曲实验说明共享节点上同向位形弹性能高。于是「符号结构」不是独立旋钮，而是线序这一离散装配事实。",
+        "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/03_exchange_1/api_v2/workspace/result.json"
+      },
+      {
+        "consequence": "条件性：若该边是交叉装配，Δβ_3>0 无需钢丝；只有当 Δα_3≠Δβ_3（同一转子上/下移位不等）时，单侧边才获得独立支持——这仍是可用现有夹紧协议读出的判别量。",
+        "effect": "unresolved",
+        "quote": "A spring pair between rotors 1 and 3 is extended with steel wire.",
+        "reason": "peer 的 unilateral_wire_edge_hypothesis 把 network_C 的 Δβ_3>0 归给这条只受拉的边；但该边的并联/交叉、安装距离、是否始终受拉都没有记录，而对称的交叉装配也能给出 b>0。因此符号异常目前不能选边。",
+        "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/allowed/measurements_brief.json"
+      }
+    ]
+  },
+  "evidence": [
+    {
+      "locator": "/sources, id=K70d9182fa3689f56（DOI 10.1098/rspa.2017.0910, abstract）",
+      "note": "唯一 direct 源：双稳↔连续通路的定性判据存在，但以「接近阈值」为条件、无静长/止挡。",
+      "quote": "We find that indentation provides a continuous route for transition between the two states for shells whose geometry makes them close to the threshold.",
+      "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/services/replies/04_targeted_0_request_0.json"
+    },
+    {
+      "locator": "/sources, id=K8c87c0f8a528ca44（abstract）",
+      "note": "方法：释放可写成平衡流形上的鞍结；位置可裁剪；序列输入改变能量累积。",
+      "quote": "Specific emphasis is placed on pinpointing and tailoring the position along the manifold of the saddle-node bifurcation at which the onset of elastic instability triggers dynamic snap-through.",
+      "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/services/replies/04_targeted_0_request_0.json"
+    },
+    {
+      "locator": "/sources, id=K413da0003bc27a6d（DOI 10.1115/1.4045844, abstract）",
+      "note": "方法：双稳/吸附力有解析条件，解分两支依轴力水平；初始形状幅度与轴力是两个参数。",
+      "quote": "The two solutions, bifurcation conditions, bistability conditions, and the snapping force equations are derived and discussed.",
+      "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/services/replies/04_targeted_0_request_0.json"
+    },
+    {
+      "locator": "/sources, id=K3b9128c94e6d85b4（正文节选）",
+      "note": "约束与势垒不是替代关系：几何约束使运动受阻并累积弹性能，越过阈值才跳。",
+      "quote": "bending to the opposite side is hampered by the geometric constrain",
+      "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/services/replies/04_targeted_0_request_0.json"
+    },
+    {
+      "locator": "/sources, id=K3b9128c94e6d85b4（正文节选，S 形双屈曲）",
+      "note": "共享约束节点的能量论证：同向位形能量高 ⇒ 低能组合为反向；一个单元跳变无外驱动带动另一单元反向跳（雪崩的对称原型）。",
+      "quote": "If the two units buckle to the same direction, the connection region (i.e., the middle region fixed by the needle) will have a large curvature and thus very high elastic energy.",
+      "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/services/replies/04_targeted_0_request_0.json"
+    },
+    {
+      "locator": "/apparatus/pair_A/connection 与 /apparatus/pair_B/connection",
+      "note": "与 pair_B 的 \"crossed coupling springs\" 配对：并联↔b<0、交叉↔b>0，符号与装配奇偶性一一对应。",
+      "quote": "parallel coupling springs",
+      "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/allowed/measurements_brief.json"
+    },
+    {
+      "locator": "/apparatus/network_C",
+      "note": "该边线序与安装距离无记录；单侧性只是候选机制之一。",
+      "quote": "A spring pair between rotors 1 and 3 is extended with steel wire.",
+      "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/allowed/measurements_brief.json"
+    },
+    {
+      "locator": "/development_step/outcome/statement",
+      "note": "peer 把 (Δα,Δβ) 的等量平移读成局域场并提出铁磁/反铁磁二分类；我把符号进一步归到装配奇偶性。",
+      "quote": "本装置的三坐标形态中等量平移（Δα=Δβ=2b）等价于 Ising 型局域场",
+      "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/stages/03_exchange_1/api_v2/workspace/result.json"
+    },
+    {
+      "locator": "/relevance_reviews",
+      "note": "控制器判 K70d91 为 direct、K8c87c/K413da 为 method，其余 11 条 irrelevant；我在此之外把 K3b912 与 Kf15caf 重判为 method（理由见 source_use）。",
+      "source": "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/services/replies/04_targeted_0_request_0.json"
+    },
+    {
+      "locator": "status=unknown, facts=[]",
+      "note": "network_C 的耦合边并联/交叉、安装距离、是否始终受拉：原始记录无此支持事实。",
+      "source": "case_definition_service:F2bc9876f3fec0dddc98b"
+    }
+  ],
+  "hypothesis_updates": [
+    {
+      "assumption": "修订：每个转子的态不是「离散可占据集」的硬事实，而是受限平衡流形的分支。释放条件＝该流形的鞍结（驱动力矩与弹簧合力矩过枢轴）与静长支 R=ℓ0 的交汇；回路半宽 h 仍是止挡角跨度的几何换算。v1 的锐利版（R−ℓ0 的符号决定能否浮动）只在细杆/小挠度、远离阈值时成立；一般情况下阈值附近存在一段连续通路，「浮动」是这段连续支的极限，而不是第三个离散态。因此判据是「阈值位形＋到阈值的无量纲距离」两个量。",
+      "base_version": 1,
+      "conceptual_move": "从「容许态集合是两点还是三点」改为「平衡流形 + 鞍结位置」，让约束与势垒变成同一对象的几何与高度两个侧面。",
+      "depends_on": [],
+      "implications": [
+        "条件性：近阈值的转子在力-γ 上给有限斜率、有限宽度的沉默段，跳变高度随距离按鞍结标度衰减（学习性算例：∝(1−g/g_c)^{3/2} 时，距阈值 10% 者跳变约为远阈值的 3%），故「该翻未翻」是连续量而非二值。",
+        "条件性：pair_A 转子2（释放处压缩，R−ℓ0≈−0.92 cm）「不可能浮动」只在远离带时成立；带内它应有可观测的小斜率支。",
+        "条件性：共享约束（交叉装配）使一个转子的状态改变另一个的流形，故单转子几何给出的带位置在网络上会被邻态移动，单转子判据不可直接移植到交叉边。"
+      ],
+      "influenced_by": [
+        {
+          "key": "threshold_coordinate_factorization",
+          "owner": "theory_scientist",
+          "version": 3
+        }
+      ],
+      "key": "unilateral_stop_state",
+      "motivation": "已发表球壳结果（接近阈值→压痕给连续通路）与约束型屈曲实验（几何约束阻碍运动、弹性能累积到阈值才跳）改变了我把「约束」与「势垒」当两种机制的前提；同时 pair_A 两转子在释放处 R−ℓ0 符号相反，若其中一个恰在带内，v1 的「必吸附」预言过强。",
+      "open_questions": [
+        "带的无量纲宽度由哪个组合量控制（(R−ℓ0)/x_offset、(R−ℓ0)/(y·tanθ_stop)、杆柔度？）",
+        "共享约束是否把带展宽到足以吞掉一个记录事件？",
+        "止挡有限刚度与摩擦是否把释放从条件变成过程？"
+      ],
+      "reason": "锐利判据与两条已发表事实不符，必须改成带；但带的定量形式只有摘要级支持，故保留 developing。",
+      "status": "developing"
+    },
+    {
+      "assumption": "保留 v1 的幅度分解并补上符号前提：b 与 1−w 仍是同一耦合力矩函数的两类矩（邻态方向的差 / 止挡方向的差），幅度同标度（∝ell^1.8–2.2）且同随 k_c/k_d 变；但 sign(b) 不是自由参数，而由耦合边的装配奇偶性决定——并联（pair_A）给 b<0，交叉（pair_B）给 b>0。于是「幅度」与「符号」分属刚度比/几何与线序两个旋钮。",
+      "base_version": 1,
+      "conceptual_move": "把 peer 分解中的符号从经验参数降为装配拓扑的不变量，同时保留「两类矩同源」的幅度论证。",
+      "depends_on": [],
+      "implications": [
+        "条件性：固定几何与刚度、只换并联/交叉，应得 b→−b 而 (|b|,1−w) 近似不变——可判别，但现有 pair 数据因 ell 与静长同时不同不能配对检验。",
+        "条件性：network_C 的 Δβ_3>0 单凭符号不能归因于钢丝单侧边；判别量是 Δα_3≠Δβ_3。",
+        "条件性：若 1−w 随线序翻转而变，则「两类矩共源」的分解被削弱，说明高阶项并不独立。"
+      ],
+      "influenced_by": [
+        {
+          "key": "threshold_coordinate_factorization",
+          "owner": "theory_scientist",
+          "version": 3
+        }
+      ],
+      "key": "coupling_torque_moments",
+      "motivation": "apparatus 的 parallel/crossed 与 b 的符号一一对应；peer 把等量平移读成 Ising 局域场，但只把符号当读表结果。",
+      "open_questions": [
+        "交叉安装是否只翻转一阶矩，还是也改变力矩臂从而改变 |b|？",
+        "同一几何换线序的实验不存在，如何用已有 pair 数据做弱检验？",
+        "释放处弹簧处于压缩时（R<ℓ0），力矩符号翻转，分解如何分情形重写？"
+      ],
+      "reason": "幅度分解的证据强度不变，新增的符号来源有装置事实与类比支持但未配对检验，故仍 developing。",
+      "status": "developing"
+    },
+    {
+      "assumption": "耦合边对邻居态的方向偏好由共享节点的接线奇偶性决定：两根耦合弹簧并联（同向）时两转子同向占据为低能组合，b<0（铁磁型）；交叉（跨接）时反向占据为低能组合，b>0（反铁磁型）。判别依据是线序这一离散装配事实，不是刚度或长度。",
+      "base_version": 0,
+      "conceptual_move": "把「铁磁/反铁磁」这一 Ising 语言落到连接图上，使符号在装配层面有成因，并给出「换线序不改幅度」的操作。",
+      "depends_on": [
+        {
+          "key": "coupling_torque_moments",
+          "owner": "domain_scientist",
+          "version": 1
+        }
+      ],
+      "implications": [
+        "条件性：交叉边在驱动下可产生无外驱动的邻态跟随（同 γ 双翻的对称版本），不需要非互易元件；并联边给同向锁存。",
+        "条件性：若 network_C 的 1–3 边是交叉装配，Δβ_3>0 无需钢丝；若是并联，则 Δβ_3>0 指向单侧边或非可加求和。",
+        "条件性：符号结构（peer 用来判 l-RPM 类别）因此可由装配图预读，而不必从阈值表反推。"
+      ],
+      "influenced_by": [
+        {
+          "key": "threshold_coordinate_factorization",
+          "owner": "theory_scientist",
+          "version": 3
+        }
+      ],
+      "key": "wiring_parity_sign",
+      "motivation": "pair_A=parallel,b<0 与 pair_B=crossed,b>0 的事实配对；已发表 S 形双屈曲实验给出同一原型：同向屈曲使中间连接区曲率与弹性能很高，于是其中一个单元跳变会无外驱动带动另一单元反向跳。",
+      "open_questions": [
+        "并联/交叉是否也改变 |b| 量级（力臂不同），从而破坏「只翻符号」的简洁性？",
+        "大止挡跨度 73° 下共享节点能量论证（小曲率前提）是否仍给纯反向偏好？",
+        "network_C 各边奇偶性无记录（case 询问返回 unknown），该支在网络上暂不可判。"
+      ],
+      "reason": "新支：它把 peer 的经验符号读表变成有机械成因的可预读量，但只有一对装置事实与一篇类比实验支持，故 developing。",
+      "status": "developing"
+    }
+  ],
+  "learning_change": "两处假设被改变，一处被新增。改变一：我原先把「吸附式双稳 vs 连续可逆」压在 R−ℓ0 的符号上（零参数、锐利）；球壳结果（接近阈值→连续通路）与约束型屈曲实验（约束阻碍运动、能量累积到阈值）合起来说明约束与势垒是同一平衡流形的两面，因此判据应是「阈值位形＋到阈值的无量纲距离」，『浮动』是连续支的极限而不是三种离散态中的一种。改变二：我把 peer 的 Ising 符号（铁磁/反铁磁）从经验读表改成装配奇偶性——pair_A 并联↔b<0、pair_B 交叉↔b>0，S 形双屈曲给出同一原型（共享节点上同向位形能量高）。新增：wiring_parity_sign 一支，附带「换线序使 b→−b 而 (|b|,1−w) 不变」这一可判别但当前无数据的预言。仍缺：近阈值带的无量纲判据、粗粒化后 RPM 的定义、network_C 各边奇偶性（case 询问返回 unknown）。",
+  "learning_request": {
+    "case_questions": [],
+    "gap": "两条方法源只到摘要：我不知道「接近阈值」的连续通路在梁/壳解析条件里由哪个无量纲组合控制（初始曲率幅度/厚度？轴力与屈曲载荷之比？），因此无法把它映射到本装置的 (x_offset, y, R−ℓ0) 并判断 pair_A 转子2（释放处压缩、R−ℓ0≈−0.92 cm）是否已落在带内。另一个缺口是状态粗粒化后 RPM 是否仍有定义：±1 编码丢掉连续离位幅度，而我的新表述里「浮动」是连续支而非离散态。",
+    "needed": true,
+    "operations": [],
+    "queries": [
+      "snap-through bistability threshold dimensionless parameter initial curvature to thickness ratio axial load beam criterion",
+      "return point memory Preisach model continuous state variable coarse graining validity"
+    ],
+    "record_ids": [],
+    "source_ids": [],
+    "urls": [],
+    "why_now": "若不解决第一个缺口，我的修订只是把「锐利」换成「模糊」，无法给出任何可读的量；若不解决第二个缺口，rpm_as_order_invariance 与新的连续支表述之间会留下一个未连接的矛盾（排列 ρ 在连续幅度下是否存在）。",
+    "context_ref": "development_step"
+  },
+  "limitations": [
+    "关键 direct 源与两条方法源只有摘要级内容，判据的公式与适用条件未读到。",
+    "唯一 direct 源是球壳压痕，不涉及静长、止挡或单标量驱动；映射到本装置是我的类比，不是已发表结论。",
+    "装配奇偶性→符号的机制没有专门实验：pair_A 与 pair_B 同时改了 ell 与静长，无法配对检验 b→−b。",
+    "network_C 的并联/交叉、安装距离、止挡角均无记录（case 询问返回 unknown），R2 在 network_C 上不可判。",
+    "所有数值标度（如 (1−g/g_c)^{3/2} 与 10% 带）均为标注过的假设性算例，不是对测量数据的拟合。"
+  ],
+  "materials": [],
+  "memory_notes": [
+    {
+      "conditions": "适用于「刚性杆被硬止挡限位、由弹簧/水平杆驱动」的准静态情形，且弹簧-止挡-摩擦都按理想化处理；球壳与屈曲梁的结论只到摘要级，映射到本装置是类比。",
+      "example": "学习性算例（假设，未测）：若势垒按鞍结标度 ∝(1−g/g_c)^{3/2}，距阈值 10% 的转子跳变高度约为远阈值时的 (0.1)^{1.5}≈3%，即「沉默但不卡住」应落在阈值 ~10% 以内；跳变仍清晰可见的转子不在带内。",
+      "key": "constraint_vs_energy_bistability",
+      "kind": "correction",
+      "mastery": "used",
+      "open_questions": [
+        "带的无量纲宽度由哪个组合量控制（(R−ℓ0)/x_offset？(R−ℓ0)/y·tanθ_stop？杆柔度？）",
+        "pair_A 转子2 在释放处压缩（R−ℓ0≈−0.92 cm），它是否已落在带内、因而「必吸附」说得太强？",
+        "止挡有限刚度与摩擦是否把释放从条件变成过程？"
+      ],
+      "revision_reason": "上一版把「R<ℓ0 ⇒ 必须吸附、R>ℓ0 ⇒ 可浮动」当作锐利判据；本轮读到的球壳「接近阈值连续通路」与约束型屈曲实验中的「约束→能量累积→阈值跳变」表明约束与势垒同源，锐利符号判据只在细杆/小挠度极限成立，故改为「阈值+带」，并把浮动降为连续支的极限。",
+      "sources": [
+        "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/services/replies/04_targeted_0_request_0.json",
+        "https://doi.org/10.1098/rspa.2017.0910",
+        "https://doi.org/10.1098/rsif.2024.0148",
+        "https://doi.org/10.1115/1.4045844"
+      ],
+      "tags": [
+        "unilateral constraint",
+        "equilibrium manifold",
+        "saddle-node",
+        "continuous transition",
+        "snap-through",
+        "单侧约束",
+        "平衡流形",
+        "鞍结分岔",
+        "连续通路",
+        "近阈值带"
+      ],
+      "title": "约束与势垒同源：约束决定平衡流形，势垒是流形的鞍结；近阈值存在连续通路",
+      "understanding": "修订上一版把「止挡约束型双稳」与「能量型双稳」并列的写法：已发表（受限屈曲水凝胶，正文）几何约束阻碍运动、弹性能累积到阈值才跳变；已发表（球壳，摘要）接近阈值的几何给出两态之间的连续通路，更抗跳变。因此「吸附式双稳 vs 连续可逆」不是 R−ℓ0 符号处的零参数开关，而是「阈值位形＋到阈值的无量纲距离」的带；我原先的「第三可容许态（浮动）」应改写为连续支的极限。释放点可写成受限平衡流形的鞍结，位置可裁剪（延拓方法），且输入序列影响能量累积。"
+    },
+    {
+      "conditions": "要求夹紧态下邻居确实固定在止挡、阈值对 γ 可线性化（±0.1 cm 分辨率）、小角近似只在数量级上成立（止挡跨度达 73°）；「翻转线序只翻转一阶矩」是我的推断，无实验。",
+      "example": "学习性算例（由给定表读出，非新测）：2b₁=0/0/−0.6/−1.2、2b₂=0/−0.4/−1.8/−4.4、1−w=0/0.056/0.167/0.361；4.4/1.8=2.44 对 (4.731/3.154)²=2.25。",
+      "key": "coupling_torque_moments",
+      "kind": "hypothesis",
+      "mastery": "used",
+      "open_questions": [
+        "交叉安装是否真的只翻转一阶矩，还是也改变力矩臂从而改变 |b|？",
+        "pair_A 与 pair_B 的 ell 与静长同时不同，无法配对检验 b→−b，需要同一几何换线序的测量。",
+        "若释放处某些弹簧处于压缩（R<ℓ0），力矩符号翻转，这一分解如何分情形重写？"
+      ],
+      "revision_reason": "原note把幅度与符号都当作同一分解的输出、未说明符号来源；装置 apparatus 的 parallel/crossed 事实与 S 形双屈曲的共享节点能量论证给出符号的机械成因，故补入装配奇偶性这一前提，并把「翻转线序只动一阶矩」标为待检验推断。",
+      "sources": [
+        "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/allowed/measurements_brief.json",
+        "https://doi.org/10.1098/rsif.2024.0148"
+      ],
+      "tags": [
+        "coupling torque",
+        "threshold shift",
+        "loop width",
+        "wiring parity",
+        "Ising",
+        "耦合力矩",
+        "阈值平移",
+        "回线宽度",
+        "并联",
+        "交叉"
+      ],
+      "title": "b 与 1−w 是同一耦合力矩函数的两类矩；b 的符号由装配奇偶性（并联/交叉）给定",
+      "understanding": "保留 v1：邻居固定在止挡时 T_c 与驱动 γ 无关，阈值移动 δγ=−δT_c/(∂T_d/∂γ)；b 是 T_c 关于邻态的差、1−w 是 T_c 在两端止挡处的差，故二者同标度（∝ell^1.8–2.2）且同随 k_c/k_d 变。新增：sign(b) 不是自由参数——装置事实给出 pair_A「parallel coupling springs」且 b<0、pair_B「crossed coupling springs」且 b>0；跨接/并联改变的是两个转子相对位形在共享节点处的能量，故翻转线序应使 b→−b，而对称的二阶量 (|b|,1−w) 近似不变。"
+    },
+    {
+      "conditions": "只在两根耦合弹簧共享一个可动节点、且节点能量以曲率/偏转的二阶项主导时论证成立；本装置止挡跨度大（73°），小曲率前提只是数量级。network_C 各边的并联/交叉无记录。",
+      "example": "假设性情景（未观测）：同一对转子、同刚度、同 ell，只把并联改交叉，预期上翻/下翻的等量平移方向反号（b→−b），而回路宽度收缩 1−w 与 |b| 近似不变；对照观测应为上升段与下降段哪一段出现同 γ 双翻互换。",
+      "key": "wiring_parity_sets_coupling_sign",
+      "kind": "hypothesis",
+      "mastery": "read",
+      "open_questions": [
+        "并联/交叉是否也改变 |b| 量级（力臂不同），从而破坏「只翻符号」的简洁性？",
+        "network_C 的 1–3 带钢丝边是并联还是交叉？case 询问返回 unknown，故 Δβ_3>0 仍无法归因。",
+        "若符号真由装配图给定，是否存在「符号混合」是设计选择而非偶然的装置？"
+      ],
+      "sources": [
+        "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/allowed/measurements_brief.json",
+        "/Applications/ideas/research/hysteron_deepseek_20261110/runtime/ours_source/runs/hypothesis_development_hysteron_generation/services/replies/04_targeted_0_request_0.json",
+        "https://doi.org/10.1098/rsif.2024.0148"
+      ],
+      "tags": [
+        "wiring parity",
+        "ferromagnetic",
+        "antiferromagnetic",
+        "shared constraint",
+        "latching",
+        "装配奇偶性",
+        "并联",
+        "交叉",
+        "共享约束",
+        "锁存"
+      ],
+      "title": "耦合边符号由共享节点的并联/交叉决定（铁磁/反铁磁的装配原型）",
+      "understanding": "假设：两条耦合弹簧并联（同向接线）时两转子同向占据为低能组合，b<0（铁磁型）；交叉（跨接）时反向占据为低能组合，b>0（反铁磁型）。依据是装置事实（pair_A 并联↔b<0，pair_B 交叉↔b>0）与已发表 S 形双屈曲的论证：共享中间节点时同向屈曲使连接区曲率高、弹性能高，故一个单元跳变会无外驱动带动另一单元反向跳。若成立，peer 的记忆类别判据（符号结构是否破坏 l-RPM）可由装配图预判，而不必从阈值表反推。"
+    }
+  ],
+  "memory_use": [],
+  "next_actions": [
+    "下一轮学习瞄准两个具体缺口：近阈值带的无量纲判据（梁/壳的解析条件），以及粗粒化状态变量下 RPM 是否仍定义。",
+    "把「同一几何只换并联/交叉线序」当作判别性协议设想（不宣称可行），用于检验 b→−b 而 (|b|,1−w) 不变。",
+    "在拿到 network_C 阈值表后，先比较同一转子的 Δα_3 与 Δβ_3：相等则符号异常可由装配奇偶性解释，不等才支持单侧钢丝边。",
+    "保持 rpm_as_order_invariance 不动（本轮无改变它的证据）；等振幅子循环协议仍是判 RPM 的唯一入口。"
+  ],
+  "personal_question_update": {
+    "action": "revise",
+    "base": {
+      "id": "personal:domain_scientist",
+      "owner": "domain_scientist",
+      "version": 2
+    },
+    "influenced_by": [
+      {
+        "id": "personal:theory_scientist",
+        "owner": "theory_scientist",
+        "version": 3
+      },
+      {
+        "id": "shared:discussion",
+        "owner": "shared",
+        "version": 2
+      }
+    ],
+    "question": "在这台装置里，决定四转子事件序列的是哪三件互不相同的装配事实——(i) 释放面的几何排列（决定次序，与刚度无关）、(ii) 耦合边的并联/交叉线序（决定 b 的符号与记忆类别）、(iii) 每个转子到阈值的无量纲距离（决定它是吸附态还是连续支的哪一段、以及沉默段宽度）——以及「±1 接触符号 + 一个连续离位幅度」这一最小状态集能否把三者分开、哪些量是刚度比与静长的函数？",
+    "reason": "本轮学习把问题从「哪些量由几何、哪些由刚度决定」推进到「哪些离散装配事实（止挡排列、线序）与哪些连续距离（到阈值的无量纲距离）」：约束与势垒同源使浮动不再是离散态，而 b 的符号有了装配层面的成因。这样问题直接指向可读的量（连接图、Δα 对 Δβ、跳变高度与斜率），而不是在「独立 hysteron vs 复合单元」之间二选一。"
+  },
+  "shared_question_update": {
+    "action": "revise",
+    "base": {
+      "id": "shared:discussion",
+      "owner": "shared",
+      "version": 2
+    },
+    "influenced_by": [
+      {
+        "id": "personal:theory_scientist",
+        "owner": "theory_scientist",
+        "version": 3
+      },
+      {
+        "id": "personal:domain_scientist",
+        "owner": "domain_scientist",
+        "version": 2
+      }
+    ],
+    "question": "当每条耦合边只把两个阈值等量平移时：(a) 平移的符号结构是否由装配奇偶性（并联/交叉）预先决定，因而可从连接图读出记忆类别？(b) 平移幅度与阈值间隙之比是否只决定 Preisach→scrambled 与雪崩？(c) 一条只能受拉（钢丝）的边是否等价于额外的单侧状态变量，其唯一判据是同一转子上/下移位不等（Δα≠Δβ）？(d) 近阈值时是否还存在连续支，使某些「单元」既非双稳也非单侧，从而必须以连续幅度而非额外离散态进入状态集？",
+    "reason": "在原有 (b)(c) 之外补入 (a)(d)：(a) 来自 apparatus 的并联/交叉事实与共享节点能量论证，(d) 来自球壳的接近阈值连续通路。两点都改变「状态集里放什么」而不是只改变参数值，并且都能用现有夹紧/扫描读数判别。"
+  },
+  "source_use": [
+    {
+      "reason": "动态滞回综述：驱动频率/弛豫延迟导致的准静态不出现的滞回；与准静态约束释放、静长穿越无关。",
+      "relation": "irrelevant",
+      "source_id": "K3164c40fbbffab26"
+    },
+    {
+      "reason": "控制器判它 irrelevant（跳变仍是能量势垒型），我不认同：它同时给出（i）几何约束阻碍运动→弹性能累积→越阈值跳变，即约束与势垒的同源性；（ii）S 形双屈曲共享节点上同向位形能量高、一个单元跳变无外驱动带动另一单元反向跳，这是我需要的 b>0 力学原型与雪崩原型。它是唯一我读到正文节选的相关源。",
+      "relation": "method",
+      "source_id": "K3b9128c94e6d85b4"
+    },
+    {
+      "reason": "任意初始形状梁的分岔条件、双稳条件与吸附力解析式，解分两支依轴力水平；这给了我「(安装偏置, R−ℓ0) 是两个独立参数」的现成模板，而非单符号判据。仅摘要级。",
+      "relation": "method",
+      "source_id": "K413da0003bc27a6d"
+    },
+    {
+      "reason": "球壳实验/FE 给出双稳↔单稳阈值与「接近阈值时压痕提供连续通路」，正是我请求的『吸附式双稳 vs 连续可逆』的已发表对应物；但它以几何接近阈值为条件、无静长与止挡，故我只把它用作「带存在」的定性支持，并把锐利符号判据改为「阈值+距离」。",
+      "relation": "direct",
+      "source_id": "K70d9182fa3689f56"
+    },
+    {
+      "reason": "FBAR 封装热疲劳；正文中 hysteresis 仅指焊料黏塑性应力-应变回线，与单侧止挡或 RPM 无关。",
+      "relation": "irrelevant",
+      "source_id": "K7b074baeb00fa818"
+    },
+    {
+      "reason": "port-Hamiltonian 系统的收缩/部分收缩收敛性分析，属轨迹跟踪控制，与准静态滞回机制无关。",
+      "relation": "irrelevant",
+      "source_id": "K7cb18e71b191e676"
+    },
+    {
+      "reason": "软可穿戴机器人综述，系统分类与控制技术，无约束型滞回或状态粗粒化内容。",
+      "relation": "irrelevant",
+      "source_id": "K89716008ff0465d6"
+    },
+    {
+      "reason": "磁纳米颗粒热疗的控制研究，hysteresis 指磁滞损耗生热。",
+      "relation": "irrelevant",
+      "source_id": "K89a5fc500ba9f43a"
+    },
+    {
+      "reason": "平衡流形＋延拓＋鞍结分岔定位，可直接搬到「释放=受限平衡流形的鞍结」这一写法；并且强调输入序列的中间步骤决定能量累积，支持我把释放点当作流形位置而非能量景观的固定高度。仅摘要级。",
+      "relation": "method",
+      "source_id": "K8c87c0f8a528ca44"
+    },
+    {
+      "reason": "非对称势阱导致阱内/阱间两个振幅阈值与单向波传输；其「dual-threshold」是振幅—响应阈值，不是我说的上下移位不等（Δα≠Δβ），机制与判据都不同。",
+      "relation": "irrelevant",
+      "source_id": "Ka16c61c73e8c783d"
+    },
+    {
+      "reason": "运动学约束＋阈值应变后的 PIC 阶段，约束角影响力学性质；但无滞回/记忆形式，也无状态变量粗粒化问题。仅「约束角控制行为」与我词面相近。",
+      "relation": "irrelevant",
+      "source_id": "Kbe19a866c38454e5"
+    },
+    {
+      "reason": "CNT 谐振器跳变的直流电导特征与 latching；只给能量势垒型跳变，无约束/势垒判据区分，也无记忆类别讨论。",
+      "relation": "irrelevant",
+      "source_id": "Kd9c7597f13648224"
+    },
+    {
+      "reason": "「杠杆效应」：只靠选择约束把激活力降到常规的 3%–6%，说明边界条件/约束几何是设定阈值的独立设计旋钮。仍属能量语言、无记忆形式，故只作弱方法支撑。",
+      "relation": "method",
+      "source_id": "Kf15caf4101fcd528"
+    },
+    {
+      "reason": "岛屿生物地理的 constraint-based hysteresis：历史偶然性与性状约束，术语借用，无力学判据。",
+      "relation": "irrelevant",
+      "source_id": "Kfe8cd247ca3ae735"
+    }
+  ],
+  "sources": [],
+  "summary": "本轮把控制器返回的 14 条源全部读过（2 条正文节选、12 条仅摘要级），并按「直接相关/方法/不相关」分类：唯一 direct 源是球壳「接近阈值时压痕提供连续通路」，两条方法源分别是平衡流形延拓＋鞍结分岔定位、任意初始形状梁的双稳与吸附力解析条件；我另外把控制器判为 irrelevant 的「受限屈曲水凝胶」重判为方法源，因为它同时给出「几何约束阻碍运动→弹性能累积→越阈值跳变」与「共享节点上同向位形能量高、一个单元跳变无外驱动带动另一单元反向跳」两条力学事实。学习后我修订了两支：把「R−ℓ0 符号」的锐利判据改成「阈值位形＋到阈值的无量纲距离」的带（浮动＝连续支的极限，而非第三种离散态）；把 b 的符号从经验参数改判为由耦合边装配奇偶性（并联/交叉）决定，与 pair_A/pair_B 的 connection 事实、S 形双屈曲的能量论证一致。新增一支 wiring_parity_sign。case 询问（network_C 各边并联/交叉与安装距离）返回 unknown，故该支在 network_C 上暂不可判。",
+  "source_use_author_submission": [
+    {
+      "reason": "球壳实验/FE 给出双稳↔单稳阈值与「接近阈值时压痕提供连续通路」，正是我请求的『吸附式双稳 vs 连续可逆』的已发表对应物；但它以几何接近阈值为条件、无静长与止挡，故我只把它用作「带存在」的定性支持，并把锐利符号判据改为「阈值+距离」。",
+      "relation": "direct",
+      "source_id": "K70d9182fa3689f56"
+    },
+    {
+      "reason": "平衡流形＋延拓＋鞍结分岔定位，可直接搬到「释放=受限平衡流形的鞍结」这一写法；并且强调输入序列的中间步骤决定能量累积，支持我把释放点当作流形位置而非能量景观的固定高度。仅摘要级。",
+      "relation": "method",
+      "source_id": "K8c87c0f8a528ca44"
+    },
+    {
+      "reason": "任意初始形状梁的分岔条件、双稳条件与吸附力解析式，解分两支依轴力水平；这给了我「(安装偏置, R−ℓ0) 是两个独立参数」的现成模板，而非单符号判据。仅摘要级。",
+      "relation": "method",
+      "source_id": "K413da0003bc27a6d"
+    },
+    {
+      "reason": "控制器判它 irrelevant（跳变仍是能量势垒型），我不认同：它同时给出（i）几何约束阻碍运动→弹性能累积→越阈值跳变，即约束与势垒的同源性；（ii）S 形双屈曲共享节点上同向位形能量高、一个单元跳变无外驱动带动另一单元反向跳，这是我需要的 b>0 力学原型与雪崩原型。它是唯一我读到正文节选的相关源。",
+      "relation": "method",
+      "source_id": "K3b9128c94e6d85b4"
+    },
+    {
+      "reason": "「杠杆效应」：只靠选择约束把激活力降到常规的 3%–6%，说明边界条件/约束几何是设定阈值的独立设计旋钮。仍属能量语言、无记忆形式，故只作弱方法支撑。",
+      "relation": "method",
+      "source_id": "Kf15caf4101fcd528"
+    },
+    {
+      "reason": "CNT 谐振器跳变的直流电导特征与 latching；只给能量势垒型跳变，无约束/势垒判据区分，也无记忆类别讨论。",
+      "relation": "irrelevant",
+      "source_id": "Kd9c7597f13648224"
+    },
+    {
+      "reason": "运动学约束＋阈值应变后的 PIC 阶段，约束角影响力学性质；但无滞回/记忆形式，也无状态变量粗粒化问题。仅「约束角控制行为」与我词面相近。",
+      "relation": "irrelevant",
+      "source_id": "Kbe19a866c38454e5"
+    },
+    {
+      "reason": "非对称势阱导致阱内/阱间两个振幅阈值与单向波传输；其「dual-threshold」是振幅—响应阈值，不是我说的上下移位不等（Δα≠Δβ），机制与判据都不同。",
+      "relation": "irrelevant",
+      "source_id": "Ka16c61c73e8c783d"
+    },
+    {
+      "reason": "动态滞回综述：驱动频率/弛豫延迟导致的准静态不出现的滞回；与准静态约束释放、静长穿越无关。",
+      "relation": "irrelevant",
+      "source_id": "K3164c40fbbffab26"
+    },
+    {
+      "reason": "岛屿生物地理的 constraint-based hysteresis：历史偶然性与性状约束，术语借用，无力学判据。",
+      "relation": "irrelevant",
+      "source_id": "Kfe8cd247ca3ae735"
+    },
+    {
+      "reason": "磁纳米颗粒热疗的控制研究，hysteresis 指磁滞损耗生热。",
+      "relation": "irrelevant",
+      "source_id": "K89a5fc500ba9f43a"
+    },
+    {
+      "reason": "FBAR 封装热疲劳；正文中 hysteresis 仅指焊料黏塑性应力-应变回线，与单侧止挡或 RPM 无关。",
+      "relation": "irrelevant",
+      "source_id": "K7b074baeb00fa818"
+    },
+    {
+      "reason": "软可穿戴机器人综述，系统分类与控制技术，无约束型滞回或状态粗粒化内容。",
+      "relation": "irrelevant",
+      "source_id": "K89716008ff0465d6"
+    },
+    {
+      "reason": "port-Hamiltonian 系统的收缩/部分收缩收敛性分析，属轨迹跟踪控制，与准静态滞回机制无关。",
+      "relation": "irrelevant",
+      "source_id": "K7cb18e71b191e676"
+    }
+  ],
+  "transport_bindings": [
+    {
+      "field": "source_use",
+      "rule": "Preserve author submission; map known IDs and mark unreported use as unconfirmed"
+    }
+  ]
+}
