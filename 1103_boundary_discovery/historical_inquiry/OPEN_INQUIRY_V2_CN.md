@@ -2,6 +2,8 @@
 
 2026-11-05。当前入口为 `fish_inquiry.py`，依据 [统一修正记录](REVISION_DECISIONS_20261105_CN.md) 实施。研究角色继续请求 GPT-6 Luna。`fish_pilot.py`、原始测量、旧研究者笔记和已冻结试跑保留；新运行使用新的 run-id 和 `researchers_v2/` 分支。
 
+2026-11-06 增加[假说发展讨论](HYPOTHESIS_DEVELOPMENT_20261106_CN.md)：从现象或困难提出 assumption，讨论其概念变化和条件性后果。每位研究者的假说分支可修订、分叉、暂置及恢复；初读、补学、核查回应、返回讨论和新会话续接均接入。原有独立学科身份、长期记忆与操作沿用。实验可行性、证据充分程度、证明和实现不作为保留或推进门槛。以下历史验证数字保留，新验证见该说明。
+
 同日完成[五项审查问题的修复](REVIEW_FIXES_20261105_CN.md)：补全核查笔记的上游来源、修复旧纠正笔记续写与中断恢复、统一计算默认轴、接入公共 `claim-centric-v2` 最终 checker，以及允许无摘要的合格文献继续获取全文。旧实现的验证记录仍保存在原目录，修复验证记录在 `fix_checks_20261105/`。
 
 ## 已实现的要求
@@ -49,6 +51,8 @@ cd /Applications/ideas/1103_boundary_discovery
 ```
 
 计算请求由研究者指定问题和操作性定义，完整协议见 `analysis_executor.py:PLAN_PROTOCOL`。命名为 `analysis/segment/compare/state/model` 的操作均可使用同一组合计划；暂不可表达的方法可用 `custom` 请求交给执行控制器。拟合当前支持有截距的最小二乘及按行顺序切分的留出误差，更复杂方法进入具体能力任务。
+
+2026-11-06 [补全分析请求调度](ANALYSIS_DISPATCH_FIX_20261106_CN.md)：推荐放在 `learning_request.operations`，顶层 `analysis_plan` 对象或对象数组也会执行；即使 `learning_request` 缺省或 `needed:false`，显式计算仍被调度，未申请的知识检索不会因此启动。同一回答中完全相同的方案只执行一次。无计算请求时使用 `analysis_plan:null/[]` 与空 `operations`，暂定设想放在假说或下一步建议中。结果通过 `broker_reply.computed` 返回，无法执行的方案通过 `controller_pending` 返回具体原因。每次来源映射保存在 `request_dispatch/` 并纳入生成冻结；补学后及请求预算末尾的方案同样进入此入口。
 
 `diff(x)` 默认沿第 0 轴作时间差分；`norm(x)` 默认沿最后一轴逐向量计算。显式指定 `axis` 可以改变所选轴，接口行为与研究者收到的协议一致。
 

@@ -1,5 +1,7 @@
 # Boundary Discovery Lab · 2026-11-03
 
+2026-11-06 当前通用入口已接入假说发展、问题版本、控制器补学、算例核查及终端评价。接口和恢复方式见 [持续学习与假说讨论接口](docs/INQUIRY_INTERFACES_CN.md)；葡萄酒旧实测的诊断与修复见 [修复记录](wine_flow_fixes_20261106/REVIEW_AND_FIXES_CN.md)。105 项程序测试通过；新入口的真实科学效果需要单独试跑确认。
+
 当前研究者协作入口（2026-11-05）使用 [开放补学与探索 v2](historical_inquiry/OPEN_INQUIRY_V2_CN.md)：保留可核实的测量背景，按任务日期联网补学，支持研究者定义变量、条件比较和分析请求，复用经来源审核的版本记忆。启动脚本为 `historical_inquiry/fish_inquiry.py`；鱼类任务截止日沿用 2010-01-01 之前。
 
 持续学习与共同提问入口见 [learning_lab/README.md](learning_lab/README.md)：依据 `agent_learn.md`，增加稳定研究者身份、带版本的长期理解、按情境取回知识、交流驱动补学，以及新调用中的接续。首轮测试组合为“微生物群落 × 非平衡物理”和“免疫记忆 × 非平衡物理”，结果保存在独立的 `runs/learn_20261104_*` 目录。

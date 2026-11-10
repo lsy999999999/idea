@@ -1,0 +1,43 @@
+{
+  "kind": "analysis",
+  "question": "每条记录内A-B距离较近的时刻之后10帧，距离变化是否比距离较远的时刻更低？",
+  "record_id": "",
+  "variables": [
+    {
+      "name": "distance",
+      "expression": "norm(positions[:,0,:]-positions[:,1,:],axis=-1)",
+      "meaning": "两只追踪目标的二维图像坐标间距离",
+      "units": "native image coordinates"
+    },
+    {
+      "name": "distance_change_10",
+      "expression": "shift(distance,-10)-distance",
+      "meaning": "10帧后的距离减当前距离；须排除缺失及记录末端无效行",
+      "units": "native image coordinates"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "near_far_distance_change",
+      "expression": "mean(distance_change_10 | near)-mean(distance_change_10 | far)"
+    }
+  ],
+  "groups": [
+    {
+      "name": "near",
+      "where": "distance <= quantile(distance,0.25)",
+      "values": [
+        "distance",
+        "distance_change_10"
+      ]
+    },
+    {
+      "name": "far",
+      "where": "distance >= quantile(distance,0.75)",
+      "values": [
+        "distance",
+        "distance_change_10"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,955 @@
+{
+  "ratings": {
+    "r1": {
+      "directional_guess": {
+        "id": "P800",
+        "core_claim": "此前10帧含有当前状态之外的信息，因此加入历史会改善下一帧预测。",
+        "value": {
+          "score": 1,
+          "quote": "加入历史会改善下一帧预测",
+          "reason": "提出了局部预测用途，但没有说明其重要性或改变何种判断。"
+        },
+        "concept": {
+          "score": 1,
+          "quote": "此前10帧包含当前状态之外的信息",
+          "reason": "给出具体猜测，但未说明如何定义或识别这些额外信息。"
+        },
+        "generativity": {
+          "score": 1,
+          "quote": "加入历史会改善下一帧预测",
+          "reason": "导出一个笼统的预测效果预期。"
+        },
+        "uncertainties": [
+          "“当前状态之外的信息”没有操作定义。",
+          "没有提供分析结果；预测增益尚未验证。"
+        ],
+        "next_development": "明确当前状态表示、历史表示和下一帧目标，提出可区分“历史含额外信息”与“模型复杂度增加”的比较。"
+      },
+      "question_equivalent": {
+        "id": "P506",
+        "core_claim": "历史的预测作用可能部分来自区分当前状态无法区分的交互阶段；加入阶段信息后，历史带来的增益应减小。",
+        "value": {
+          "score": 2,
+          "quote": "相似的当前位置和速度，会不会属于不同的交互阶段",
+          "reason": "指出当前状态表示可能混淆交互阶段这一明确困难，并提出其与预测的关系。"
+        },
+        "concept": {
+          "score": 3,
+          "quote": "如果把阶段信息加入当前状态，额外历史所带来的预测增益是否应当减少？",
+          "reason": "提出阶段与历史的解释联系，并给出纳入阶段后历史增益变化的可检验含义。"
+        },
+        "generativity": {
+          "score": 3,
+          "quote": "历史的预测作用，会不会部分来自区分这些阶段？如果把阶段信息加入当前状态，额外历史所带来的预测增益是否应当减少？",
+          "reason": "同一阶段区分思想组织出阶段识别、历史作用来源和增益变化等相互关联的问题。"
+        },
+        "uncertainties": [
+          "交互阶段如何定义和测量尚未说明。",
+          "预测增益如何估计及如何避免阶段定义与历史信息重叠，尚未说明。"
+        ],
+        "next_development": "提出阶段的操作定义，说明其相对当前位置和速度增加了什么信息，并指定比较阶段信息与历史信息的预测方案。"
+      },
+      "idea_distance_transition": {
+        "id": "P892",
+        "core_claim": "比较近、远距离状态起点后的有向距离变化分布，并同时报告双方各自位移，以避免把距离缩小误读为双方共同趋近。",
+        "value": {
+          "score": 2,
+          "quote": "同时避免把距离缩小直接解释为双方共同趋近",
+          "reason": "针对相对距离变化不能区分双方运动贡献这一具体解释困难，提出配套报告方式。"
+        },
+        "concept": {
+          "score": 2,
+          "quote": "并列报告A、B各自10帧位移",
+          "reason": "明确构造了相对距离变化与个体位移并列描述的分析原则。"
+        },
+        "generativity": {
+          "score": 2,
+          "quote": "回答近远状态之后距离变化分布是否不同，同时避免把距离缩小直接解释为双方共同趋近。",
+          "reason": "导出状态分组后的距离变化比较，并要求检查个体位移以区分可能的运动解释。"
+        },
+        "uncertainties": [
+          "具体有向距离变化的定义、抽样单位和统计比较方法未给出。",
+          "分位数与10帧滞后是研究者选定的操作定义，不代表生物阈值。",
+          "位置数组的物理标定、帧率、身份稳定性和行为标签未独立核实。"
+        ],
+        "next_development": "明确定义有向距离变化和汇总统计，并说明如何处理连续帧依赖及个体位移方向。"
+      },
+      "mechanism_removed": {
+        "id": "P564",
+        "core_claim": "历史可能包含当前状态之外的信息，且交互阶段差异可能解释部分历史预测作用；计划比较当前状态与加入历史的模型。",
+        "value": {
+          "score": 1,
+          "quote": "围绕两者的预测误差差异研究历史的预测作用",
+          "reason": "提出一个局部预测问题，但未说明该问题解决的重要困难或会改变什么判断。"
+        },
+        "concept": {
+          "score": 1,
+          "quote": "两段轨迹可以具有相似的当前位置和速度，但后续轨迹仍可能不同。",
+          "reason": "指出状态相似但后续不同的现象，并提出历史信息猜测；尚未说明更具体的机制或表示。"
+        },
+        "generativity": {
+          "score": 1,
+          "quote": "比较当前状态模型与加入历史的模型",
+          "reason": "导出一项模型比较，但预期主要是笼统的误差差异。"
+        },
+        "uncertainties": [
+          "当前状态和历史的具体特征表示、预测目标及评价方案未说明。",
+          "历史带来预测增益的阶段解释只在前文提出，未说明如何单独检验。",
+          "没有提供分析结果；预测作用尚未验证。"
+        ],
+        "next_development": "将阶段区分假说转化为阶段定义及增量预测比较，明确模型输入、目标和时间顺序留出方式。"
+      },
+      "idea_direction_similarity": {
+        "id": "P798",
+        "core_claim": "用两标签逐帧位移向量的方向相似度描述图像平面运动方向，并处理零位移和短位移问题。",
+        "value": {
+          "score": 1,
+          "quote": "作为距离转移和各自位移之外的可选次要轨迹描述。",
+          "reason": "增加一种局部轨迹描述量，但没有提出其会解决何种重要困难。"
+        },
+        "concept": {
+          "score": 2,
+          "quote": "可将两标签逐帧位移向量的方向相似度定义为点积除以两者模长的乘积。",
+          "reason": "给出明确的数学构造原则，并限定其描述范围。"
+        },
+        "generativity": {
+          "score": 2,
+          "quote": "零位移时未定义，短位移阈值需另行选择并做敏感性检查",
+          "reason": "定义导出零位移处理和阈值敏感性检查等具体后续分析要求。"
+        },
+        "uncertainties": [
+          "短位移阈值的选择依据未给出。",
+          "方向相似度与研究问题或预测目标的关系尚未说明。",
+          "图像平面运动方向不必然对应物理运动方向。"
+        ],
+        "next_development": "说明该描述量对应的研究问题，以及如何与距离变化和各自位移联合解释。"
+      },
+      "structural_hypothesis": {
+        "id": "P301",
+        "core_claim": "历史部分通过区分交互阶段发挥预测作用；若将阶段加入当前状态表示，历史预测增益应减少。",
+        "value": {
+          "score": 2,
+          "quote": "历史的预测作用部分来自区分这些阶段。",
+          "reason": "提出当前运动状态遗漏阶段信息这一明确解释，并指出其与历史预测作用的联系。"
+        },
+        "concept": {
+          "score": 3,
+          "quote": "若把阶段信息加入当前状态，额外历史所带来的预测增益应当减少。",
+          "reason": "把阶段视为当前状态表示的扩展，并给出扩展后历史增益变化的明确关系。"
+        },
+        "generativity": {
+          "score": 3,
+          "quote": "相似的当前位置和速度可能属于不同的交互阶段",
+          "reason": "核心思想可导出阶段区分、历史增益来源及阶段信息纳入后的增益变化等关联预期。"
+        },
+        "uncertainties": [
+          "阶段没有操作定义，无法判断如何从轨迹识别。",
+          "如何衡量历史增益及确保阶段信息不是历史的重复编码，尚未说明。"
+        ],
+        "next_development": "给出阶段识别规则，并制定当前状态、状态加阶段、状态加历史三者的可比较预测设计。"
+      },
+      "grand_wish": {
+        "id": "P742",
+        "core_claim": "建立解释所有动物集体行为的统一理论，并提高预测精度。",
+        "value": {
+          "score": 0,
+          "quote": "建立一个统一解释所有动物集体行为的理论",
+          "reason": "范围宏大，但没有指出具体用途、关键困难或可能改变的认识。"
+        },
+        "concept": {
+          "score": 0,
+          "quote": "建立一个统一解释所有动物集体行为的理论",
+          "reason": "提出目标而非具体关系、机制、表示或构造原则。"
+        },
+        "generativity": {
+          "score": 0,
+          "quote": "同时提高预测精度",
+          "reason": "只有笼统的效果预期，没有可导出的具体后果。"
+        },
+        "uncertainties": [
+          "没有说明理论的核心构造、适用范围或要解释的行为关系。",
+          "没有提出预测任务或可检验的具体预期。"
+        ],
+        "next_development": "收窄到一个具体行为与运动关系，提出可区分于现有解释的机制或表示，并说明其可导出的预期。"
+      },
+      "explicitly_unfinished": {
+        "id": "P752",
+        "core_claim": "交互阶段可能解释历史预测作用的一部分；将阶段纳入当前状态后，额外历史预测增益应减少。",
+        "value": {
+          "score": 2,
+          "quote": "历史的预测作用部分来自区分这些阶段。",
+          "reason": "指出状态表示可能忽略交互阶段这一具体解释问题，并关联到预测作用。"
+        },
+        "concept": {
+          "score": 3,
+          "quote": "若把阶段信息加入当前状态，额外历史所带来的预测增益应当减少。",
+          "reason": "提出阶段与历史作用之间的明确关系及可检验的增益变化。"
+        },
+        "generativity": {
+          "score": 3,
+          "quote": "相似的当前位置和速度可能属于不同的交互阶段",
+          "reason": "阶段区分可以组织阶段定义、历史作用来源和增益变化等关联研究后果。"
+        },
+        "uncertainties": [
+          "阶段操作定义仍待调研，因此想法的关键构念尚未具体化。",
+          "没有实验结果、证明或可运行实现；这些是验证和实施状态，不构成当前评分扣分理由。",
+          "如何避免阶段表示与历史信息重叠尚未说明。"
+        ],
+        "next_development": "优先给出可操作的阶段划分，并说明它如何在当前位置和速度之外编码交互过程。"
+      },
+      "idea_history_prediction": {
+        "id": "P488",
+        "core_claim": "通过时间顺序留出预测比较当前相对状态基线与加入此前10帧平均相对位移的模型，检验短期历史是否提供额外预测信息。",
+        "value": {
+          "score": 2,
+          "quote": "检验当前相对状态之外，短期轨迹历史是否提供额外预测信息。",
+          "reason": "针对当前相对状态可能不足以预测的明确问题，提出边界清楚的检验。"
+        },
+        "concept": {
+          "score": 2,
+          "quote": "比较仅使用当前相对位置和相对位移的基线，与增加此前10帧平均相对位移的模型",
+          "reason": "明确指定了当前状态与历史的表示构造及其比较。"
+        },
+        "generativity": {
+          "score": 2,
+          "quote": "预测误差若降低，只说明所选模型中的预测增量，不证明互动或集体记忆。",
+          "reason": "导出关于预测增量的有限解释，并明确它不能单独支持更强的互动或记忆主张。"
+        },
+        "uncertainties": [
+          "没有说明具体误差指标、模型形式或时间留出区间的选择。",
+          "所选历史特征只能检验特定表示，不能覆盖所有可能的历史信息。",
+          "数据标定、帧率和身份稳定性尚未独立核实。"
+        ],
+        "next_development": "说明模型与误差指标，检查结果对历史窗口、留出区间及相关帧依赖的敏感性。"
+      },
+      "polished_equivalent": {
+        "id": "P145",
+        "core_claim": "历史的预测作用部分来自区分相似当前位置和速度下的不同交互阶段；将阶段纳入当前状态后，历史带来的额外预测增益应减少。",
+        "value": {
+          "score": 2,
+          "quote": "历史之所以有助于预测，部分原因在于它区分了这些交互阶段。",
+          "reason": "提出当前状态表示可能遗漏阶段这一具体问题，并提供了历史预测作用的解释。"
+        },
+        "concept": {
+          "score": 3,
+          "quote": "当阶段信息被纳入当前状态表示后，继续加入额外历史所获得的预测增益应当减少。",
+          "reason": "明确提出阶段信息与历史信息的功能联系及表示扩展后的预测变化。"
+        },
+        "generativity": {
+          "score": 3,
+          "quote": "这一思路围绕阶段区分来组织对历史预测作用的理解。",
+          "reason": "同一核心思想串联阶段区分、历史作用来源和增益递减等后果。"
+        },
+        "uncertainties": [
+          "没有说明阶段的识别规则或时间边界。",
+          "没有说明如何判断阶段信息已被纳入当前状态，也没有给出增益比较方案。",
+          "“部分原因”未量化，无法从文本确定预期效应大小。"
+        ],
+        "next_development": "提出阶段操作定义，并说明如何比较阶段信息加入前后的历史增量预测。"
+      },
+      "analysis_request": {
+        "id": "P136",
+        "core_claim": "检验此前10帧运动能否改善下一帧预测。",
+        "value": {
+          "score": 1,
+          "quote": "加入此前10帧的运动，是否能改善下一帧预测？",
+          "reason": "提出明确的局部预测问题，但未说明其重要性或认识变化。"
+        },
+        "concept": {
+          "score": 0,
+          "quote": "加入此前10帧的运动",
+          "reason": "这是一个分析任务，未提出历史信息为何起作用或如何表示的具体构想。"
+        },
+        "generativity": {
+          "score": 1,
+          "quote": "是否能改善下一帧预测",
+          "reason": "导出一个直接但笼统的预测效果问题。"
+        },
+        "uncertainties": [
+          "未定义运动特征、当前状态基线、预测对象或评价方法。",
+          "未说明预测改善将如何改变对双鱼运动关系的理解。"
+        ],
+        "next_development": "明确当前状态基线与历史特征的区别，并提出若增益出现或消失将区分的解释。"
+      }
+    },
+    "r2": {
+      "explicitly_unfinished": {
+        "id": "P112",
+        "core_claim": "历史可能通过区分交互阶段提供预测信息；显式表示阶段后，额外历史的预测增益应减少。",
+        "value": {
+          "score": 2,
+          "quote": "历史的预测作用部分来自区分这些阶段。",
+          "reason": "提出了关于历史预测作用的明确解释，聚焦当前状态与阶段信息的区分。"
+        },
+        "concept": {
+          "score": 2,
+          "quote": "若把阶段信息加入当前状态，额外历史所带来的预测增益应当减少。",
+          "reason": "给出可检验的表示关系及具体方向性预期。"
+        },
+        "generativity": {
+          "score": 2,
+          "quote": "相似的当前位置和速度可能属于不同的交互阶段",
+          "reason": "可导出阶段操作定义、状态相似而阶段不同的比较，以及加入阶段信息后历史增益变化等问题。"
+        },
+        "uncertainties": [
+          "阶段尚无操作定义；其预测作用和阶段加入状态后的增益变化均未验证。"
+        ],
+        "next_development": "明确交互阶段的操作定义，并说明如何在避免循环定义的情况下表示阶段。"
+      },
+      "analysis_request": {
+        "id": "P133",
+        "core_claim": "此前10帧的运动可能改善下一帧预测。",
+        "value": {
+          "score": 1,
+          "quote": "加入此前10帧的运动，是否能改善下一帧预测？",
+          "reason": "提出局部预测问题，但未说明它能解决何种重要困难或改变何种认识。"
+        },
+        "concept": {
+          "score": 0,
+          "quote": "加入此前10帧的运动",
+          "reason": "只指定分析任务，没有提出关系、机制或构造原则。"
+        },
+        "generativity": {
+          "score": 1,
+          "quote": "是否能改善下一帧预测？",
+          "reason": "导出一个直接的预测效果检验，但没有区别于既有理解的具体后果。"
+        },
+        "uncertainties": [
+          "未说明历史信息的表示、基线或预测设置。"
+        ],
+        "next_development": "说明当前状态基线和历史表示，并提出一个能区分不同历史解释的预期。"
+      },
+      "question_equivalent": {
+        "id": "P485",
+        "core_claim": "相似的当前位置和速度可能对应不同交互阶段；历史或通过区分阶段帮助预测，显式纳入阶段后历史增益可能减少。",
+        "value": {
+          "score": 2,
+          "quote": "历史的预测作用，会不会部分来自区分这些阶段？",
+          "reason": "触及历史预测作用的一个明确解释问题，涉及状态表示中阶段信息的作用。"
+        },
+        "concept": {
+          "score": 2,
+          "quote": "如果把阶段信息加入当前状态，额外历史所带来的预测增益是否应当减少？",
+          "reason": "提出了阶段表示与历史增益之间的具体关系，尽管以问题形式表达。"
+        },
+        "generativity": {
+          "score": 2,
+          "quote": "相似的当前位置和速度，会不会属于不同的交互阶段",
+          "reason": "可引出阶段定义、状态匹配比较和阶段表示对历史增益的影响等相互关联的检验。"
+        },
+        "uncertainties": [
+          "阶段如何定义及如何纳入当前状态尚不清楚；文本提出的是待检验问题。"
+        ],
+        "next_development": "给出阶段的操作定义，并说明哪些观察会支持或削弱阶段解释。"
+      },
+      "polished_equivalent": {
+        "id": "P990",
+        "core_claim": "历史有助于预测，部分因为它区分了当前位置和速度相似但交互阶段不同的轨迹；显式表示阶段后，额外历史增益应减少。",
+        "value": {
+          "score": 2,
+          "quote": "历史之所以有助于预测，部分原因在于它区分了这些交互阶段。",
+          "reason": "提出了针对历史预测作用的明确解释，有助于重新理解历史信息所含内容。"
+        },
+        "concept": {
+          "score": 2,
+          "quote": "两段轨迹即使具有相似的当前位置和速度，也可能分别处于接近刚开始和接近已持续一段时间的阶段。",
+          "reason": "明确区分运动状态与交互阶段，并将此区别用于解释轨迹差异。"
+        },
+        "generativity": {
+          "score": 2,
+          "quote": "当阶段信息被纳入当前状态表示后，继续加入额外历史所获得的预测增益应当减少。",
+          "reason": "由核心解释导出阶段表示和历史增益之间的具体方向性预期。"
+        },
+        "uncertainties": [
+          "没有提供阶段定义或支持该解释的分析结果；如何测量阶段及检验增益关系仍未说明。"
+        ],
+        "next_development": "界定阶段并设计能区分阶段解释与其他历史信息来源的预测比较。"
+      },
+      "directional_guess": {
+        "id": "P975",
+        "core_claim": "此前10帧含有当前状态之外的信息，因此加入历史会改善下一帧预测。",
+        "value": {
+          "score": 1,
+          "quote": "因此加入历史会改善下一帧预测。",
+          "reason": "提出了局部预测改进预期，没有说明更广的认识变化或重要困难。"
+        },
+        "concept": {
+          "score": 1,
+          "quote": "此前10帧包含当前状态之外的信息",
+          "reason": "给出了历史可能含有额外信息的具体猜测，但没有明确其来源或构造原则。"
+        },
+        "generativity": {
+          "score": 1,
+          "quote": "加入历史会改善下一帧预测",
+          "reason": "可导出历史模型与当前状态模型的预测比较，但后果仍是笼统的效果预期。"
+        },
+        "uncertainties": [
+          "未说明“当前状态”的具体内容、历史表示或预测比较条件。"
+        ],
+        "next_development": "说明何种历史信息超出当前状态，并提出能区分其来源的具体预测。"
+      },
+      "idea_direction_similarity": {
+        "id": "P377",
+        "core_claim": "可用两标签逐帧位移方向的余弦相似度描述图像平面运动方向相似性，并将其作为次要轨迹描述。",
+        "value": {
+          "score": 1,
+          "quote": "作为距离转移和各自位移之外的可选次要轨迹描述。",
+          "reason": "提供一个局部描述量，可能补充现有轨迹量，但文本未提出更广的认识变化。"
+        },
+        "concept": {
+          "score": 2,
+          "quote": "可将两标签逐帧位移向量的方向相似度定义为点积除以两者模长的乘积。",
+          "reason": "给出了明确的数学构造及其适用边界。"
+        },
+        "generativity": {
+          "score": 1,
+          "quote": "它仅描述图像平面运动方向。",
+          "reason": "能引出方向相似度的计算和阈值敏感性检查，但没有提出超出描述量本身的具体研究后果。"
+        },
+        "uncertainties": [
+          "短位移阈值尚未选择；图像平面方向相似度不能单独表征实际空间运动或行为。"
+        ],
+        "next_development": "说明该描述量对应的研究问题，并预先规定短位移处理和敏感性分析。"
+      },
+      "grand_wish": {
+        "id": "P730",
+        "core_claim": "希望建立解释所有动物集体行为的统一理论，同时提高预测精度并推动多个领域。",
+        "value": {
+          "score": 0,
+          "quote": "我们希望建立一个统一解释所有动物集体行为的理论",
+          "reason": "范围宏大，但未指出具体困难、研究对象边界或可说明的认识变化。"
+        },
+        "concept": {
+          "score": 0,
+          "quote": "同时提高预测精度",
+          "reason": "表达目标，未提出具体关系、机制或构造原则。"
+        },
+        "generativity": {
+          "score": 0,
+          "quote": "推动物理学、生物学和人工智能的发展",
+          "reason": "没有从核心思想导出可检验的具体后果。"
+        },
+        "uncertainties": [
+          "未说明理论内容、研究范围、预测目标或拟解决的问题。"
+        ],
+        "next_development": "限定一个具体行为或轨迹问题，并提出可区分的解释主张。"
+      },
+      "mechanism_removed": {
+        "id": "P108",
+        "core_claim": "相似当前状态的轨迹可能有不同后续；此前10帧可能提供当前状态之外的信息，并改善下一帧预测。",
+        "value": {
+          "score": 1,
+          "quote": "两段轨迹可以具有相似的当前位置和速度，但后续轨迹仍可能不同。",
+          "reason": "指出当前状态可能不足以概括轨迹差异，但提出的目标仍是局部预测效果比较。"
+        },
+        "concept": {
+          "score": 1,
+          "quote": "我们猜测此前10帧包含当前状态之外的信息，因此加入历史会改善下一帧预测。",
+          "reason": "提出历史含有额外预测信息的具体猜测，但未明确该信息的结构或来源。"
+        },
+        "generativity": {
+          "score": 1,
+          "quote": "计划比较当前状态模型与加入历史的模型",
+          "reason": "给出模型比较方向，但预期仍停留在历史模型是否降低预测误差。"
+        },
+        "uncertainties": [
+          "未定义当前状态和此前10帧的表示，也未说明模型比较的控制条件。"
+        ],
+        "next_development": "明确历史中的额外信息可能是什么，并提出一个能区分不同信息来源的预测。"
+      },
+      "idea_history_prediction": {
+        "id": "P808",
+        "core_claim": "在共同样本、目标对齐和留出区间下，比较当前相对状态基线与加入此前10帧平均相对位移的模型，以检验短期历史是否提供额外预测信息。",
+        "value": {
+          "score": 1,
+          "quote": "检验当前相对状态之外，短期轨迹历史是否提供额外预测信息。",
+          "reason": "针对双鱼轨迹预测中的一个具体信息增量问题，但文本未说明其会改变重要判断。"
+        },
+        "concept": {
+          "score": 2,
+          "quote": "与增加此前10帧平均相对位移的模型",
+          "reason": "明确提出了历史信息的具体构造及与当前相对状态的比较原则。"
+        },
+        "generativity": {
+          "score": 2,
+          "quote": "预测误差若降低，只说明所选模型中的预测增量，不证明互动或集体记忆。",
+          "reason": "导出受限但具体的解释边界：模型增量预测信息不等同于互动或记忆证据。"
+        },
+        "uncertainties": [
+          "所选相对位移均值可能只覆盖一种短期历史表示；未提供分析结果。"
+        ],
+        "next_development": "阐明该表示对应的研究问题，并说明模型选择及时间顺序留出如何支持所需解释。"
+      },
+      "idea_distance_transition": {
+        "id": "P216",
+        "core_claim": "在R07中，以距离分位数定义近远状态，比较状态起点后10帧的有向距离变化，并分别报告两条轨迹的位移，以避免把距离缩小直接解释为双方共同趋近。",
+        "value": {
+          "score": 2,
+          "quote": "同时避免把距离缩小直接解释为双方共同趋近。",
+          "reason": "针对双鱼距离变化解释中的明确困难，避免将相对距离变化混同于双方共同运动。"
+        },
+        "concept": {
+          "score": 2,
+          "quote": "并列报告A、B各自10帧位移。",
+          "reason": "提出把有向距离变化与个体位移分开表示的分析构造，明确区分相对变化和各自运动。"
+        },
+        "generativity": {
+          "score": 2,
+          "quote": "回答近远状态之后距离变化分布是否不同",
+          "reason": "导出近远状态的后续距离变化比较，并可结合个体位移检查距离变化对应的运动情形。"
+        },
+        "uncertainties": [
+          "分位数和10帧滞后是研究者选择的操作定义，不是已验证的生物阈值；未提供结果。"
+        ],
+        "next_development": "说明距离分位数方案的敏感性检查，并明确有向距离变化的符号约定。"
+      },
+      "structural_hypothesis": {
+        "id": "P101",
+        "core_claim": "历史可能通过区分交互阶段提供预测信息；显式表示阶段后，额外历史的预测增益应减少。",
+        "value": {
+          "score": 2,
+          "quote": "历史的预测作用部分来自区分这些阶段。",
+          "reason": "针对历史预测作用提出明确解释，关注阶段信息在状态表示中的位置。"
+        },
+        "concept": {
+          "score": 2,
+          "quote": "若把阶段信息加入当前状态，额外历史所带来的预测增益应当减少。",
+          "reason": "提出阶段信息与额外历史增益之间的明确、可检验关系。"
+        },
+        "generativity": {
+          "score": 2,
+          "quote": "相似的当前位置和速度可能属于不同的交互阶段",
+          "reason": "可导出阶段定义、状态匹配和加入阶段信息后历史预测增益变化等具体研究问题。"
+        },
+        "uncertainties": [
+          "没有给出阶段操作定义，也没有提供分析结果或证明。"
+        ],
+        "next_development": "提出可操作的阶段表示，并说明如何检验它对历史预测增益的影响。"
+      }
+    }
+  },
+  "comparisons": [
+    {
+      "repeat": "r1",
+      "kind": "invariance",
+      "reference": "structural_hypothesis",
+      "comparison": "polished_equivalent",
+      "comparison_minus_reference": {
+        "value": 0,
+        "concept": 0,
+        "generativity": 0
+      },
+      "passes_predeclared_rule": true
+    },
+    {
+      "repeat": "r1",
+      "kind": "invariance",
+      "reference": "structural_hypothesis",
+      "comparison": "question_equivalent",
+      "comparison_minus_reference": {
+        "value": 0,
+        "concept": 0,
+        "generativity": 0
+      },
+      "passes_predeclared_rule": true
+    },
+    {
+      "repeat": "r1",
+      "kind": "content",
+      "reference": "structural_hypothesis",
+      "comparison": "analysis_request",
+      "comparison_minus_reference": {
+        "value": -1,
+        "concept": -3,
+        "generativity": -2
+      },
+      "passes_predeclared_rule": true
+    },
+    {
+      "repeat": "r1",
+      "kind": "content",
+      "reference": "structural_hypothesis",
+      "comparison": "directional_guess",
+      "comparison_minus_reference": {
+        "value": -1,
+        "concept": -2,
+        "generativity": -2
+      },
+      "passes_predeclared_rule": true
+    },
+    {
+      "repeat": "r1",
+      "kind": "content",
+      "reference": "structural_hypothesis",
+      "comparison": "mechanism_removed",
+      "comparison_minus_reference": {
+        "value": -1,
+        "concept": -2,
+        "generativity": -2
+      },
+      "passes_predeclared_rule": true
+    },
+    {
+      "repeat": "r1",
+      "kind": "maturity",
+      "reference": "structural_hypothesis",
+      "comparison": "explicitly_unfinished",
+      "comparison_minus_reference": {
+        "value": 0,
+        "concept": 0,
+        "generativity": 0
+      },
+      "passes_predeclared_rule": true
+    },
+    {
+      "repeat": "r1",
+      "kind": "wish",
+      "score": 0,
+      "passes_predeclared_rule": true
+    },
+    {
+      "repeat": "r2",
+      "kind": "invariance",
+      "reference": "structural_hypothesis",
+      "comparison": "polished_equivalent",
+      "comparison_minus_reference": {
+        "value": 0,
+        "concept": 0,
+        "generativity": 0
+      },
+      "passes_predeclared_rule": true
+    },
+    {
+      "repeat": "r2",
+      "kind": "invariance",
+      "reference": "structural_hypothesis",
+      "comparison": "question_equivalent",
+      "comparison_minus_reference": {
+        "value": 0,
+        "concept": 0,
+        "generativity": 0
+      },
+      "passes_predeclared_rule": true
+    },
+    {
+      "repeat": "r2",
+      "kind": "content",
+      "reference": "structural_hypothesis",
+      "comparison": "analysis_request",
+      "comparison_minus_reference": {
+        "value": -1,
+        "concept": -2,
+        "generativity": -1
+      },
+      "passes_predeclared_rule": true
+    },
+    {
+      "repeat": "r2",
+      "kind": "content",
+      "reference": "structural_hypothesis",
+      "comparison": "directional_guess",
+      "comparison_minus_reference": {
+        "value": -1,
+        "concept": -1,
+        "generativity": -1
+      },
+      "passes_predeclared_rule": true
+    },
+    {
+      "repeat": "r2",
+      "kind": "content",
+      "reference": "structural_hypothesis",
+      "comparison": "mechanism_removed",
+      "comparison_minus_reference": {
+        "value": -1,
+        "concept": -1,
+        "generativity": -1
+      },
+      "passes_predeclared_rule": true
+    },
+    {
+      "repeat": "r2",
+      "kind": "maturity",
+      "reference": "structural_hypothesis",
+      "comparison": "explicitly_unfinished",
+      "comparison_minus_reference": {
+        "value": 0,
+        "concept": 0,
+        "generativity": 0
+      },
+      "passes_predeclared_rule": true
+    },
+    {
+      "repeat": "r2",
+      "kind": "wish",
+      "score": 0,
+      "passes_predeclared_rule": true
+    }
+  ],
+  "agreement": [
+    {
+      "key": "idea_distance_transition",
+      "dimension": "value",
+      "r1": 2,
+      "r2": 2,
+      "exact_match": true,
+      "absolute_difference": 0
+    },
+    {
+      "key": "idea_distance_transition",
+      "dimension": "concept",
+      "r1": 2,
+      "r2": 2,
+      "exact_match": true,
+      "absolute_difference": 0
+    },
+    {
+      "key": "idea_distance_transition",
+      "dimension": "generativity",
+      "r1": 2,
+      "r2": 2,
+      "exact_match": true,
+      "absolute_difference": 0
+    },
+    {
+      "key": "idea_history_prediction",
+      "dimension": "value",
+      "r1": 2,
+      "r2": 1,
+      "exact_match": false,
+      "absolute_difference": 1
+    },
+    {
+      "key": "idea_history_prediction",
+      "dimension": "concept",
+      "r1": 2,
+      "r2": 2,
+      "exact_match": true,
+      "absolute_difference": 0
+    },
+    {
+      "key": "idea_history_prediction",
+      "dimension": "generativity",
+      "r1": 2,
+      "r2": 2,
+      "exact_match": true,
+      "absolute_difference": 0
+    },
+    {
+      "key": "idea_direction_similarity",
+      "dimension": "value",
+      "r1": 1,
+      "r2": 1,
+      "exact_match": true,
+      "absolute_difference": 0
+    },
+    {
+      "key": "idea_direction_similarity",
+      "dimension": "concept",
+      "r1": 2,
+      "r2": 2,
+      "exact_match": true,
+      "absolute_difference": 0
+    },
+    {
+      "key": "idea_direction_similarity",
+      "dimension": "generativity",
+      "r1": 2,
+      "r2": 1,
+      "exact_match": false,
+      "absolute_difference": 1
+    },
+    {
+      "key": "analysis_request",
+      "dimension": "value",
+      "r1": 1,
+      "r2": 1,
+      "exact_match": true,
+      "absolute_difference": 0
+    },
+    {
+      "key": "analysis_request",
+      "dimension": "concept",
+      "r1": 0,
+      "r2": 0,
+      "exact_match": true,
+      "absolute_difference": 0
+    },
+    {
+      "key": "analysis_request",
+      "dimension": "generativity",
+      "r1": 1,
+      "r2": 1,
+      "exact_match": true,
+      "absolute_difference": 0
+    },
+    {
+      "key": "directional_guess",
+      "dimension": "value",
+      "r1": 1,
+      "r2": 1,
+      "exact_match": true,
+      "absolute_difference": 0
+    },
+    {
+      "key": "directional_guess",
+      "dimension": "concept",
+      "r1": 1,
+      "r2": 1,
+      "exact_match": true,
+      "absolute_difference": 0
+    },
+    {
+      "key": "directional_guess",
+      "dimension": "generativity",
+      "r1": 1,
+      "r2": 1,
+      "exact_match": true,
+      "absolute_difference": 0
+    },
+    {
+      "key": "structural_hypothesis",
+      "dimension": "value",
+      "r1": 2,
+      "r2": 2,
+      "exact_match": true,
+      "absolute_difference": 0
+    },
+    {
+      "key": "structural_hypothesis",
+      "dimension": "concept",
+      "r1": 3,
+      "r2": 2,
+      "exact_match": false,
+      "absolute_difference": 1
+    },
+    {
+      "key": "structural_hypothesis",
+      "dimension": "generativity",
+      "r1": 3,
+      "r2": 2,
+      "exact_match": false,
+      "absolute_difference": 1
+    },
+    {
+      "key": "polished_equivalent",
+      "dimension": "value",
+      "r1": 2,
+      "r2": 2,
+      "exact_match": true,
+      "absolute_difference": 0
+    },
+    {
+      "key": "polished_equivalent",
+      "dimension": "concept",
+      "r1": 3,
+      "r2": 2,
+      "exact_match": false,
+      "absolute_difference": 1
+    },
+    {
+      "key": "polished_equivalent",
+      "dimension": "generativity",
+      "r1": 3,
+      "r2": 2,
+      "exact_match": false,
+      "absolute_difference": 1
+    },
+    {
+      "key": "explicitly_unfinished",
+      "dimension": "value",
+      "r1": 2,
+      "r2": 2,
+      "exact_match": true,
+      "absolute_difference": 0
+    },
+    {
+      "key": "explicitly_unfinished",
+      "dimension": "concept",
+      "r1": 3,
+      "r2": 2,
+      "exact_match": false,
+      "absolute_difference": 1
+    },
+    {
+      "key": "explicitly_unfinished",
+      "dimension": "generativity",
+      "r1": 3,
+      "r2": 2,
+      "exact_match": false,
+      "absolute_difference": 1
+    },
+    {
+      "key": "question_equivalent",
+      "dimension": "value",
+      "r1": 2,
+      "r2": 2,
+      "exact_match": true,
+      "absolute_difference": 0
+    },
+    {
+      "key": "question_equivalent",
+      "dimension": "concept",
+      "r1": 3,
+      "r2": 2,
+      "exact_match": false,
+      "absolute_difference": 1
+    },
+    {
+      "key": "question_equivalent",
+      "dimension": "generativity",
+      "r1": 3,
+      "r2": 2,
+      "exact_match": false,
+      "absolute_difference": 1
+    },
+    {
+      "key": "mechanism_removed",
+      "dimension": "value",
+      "r1": 1,
+      "r2": 1,
+      "exact_match": true,
+      "absolute_difference": 0
+    },
+    {
+      "key": "mechanism_removed",
+      "dimension": "concept",
+      "r1": 1,
+      "r2": 1,
+      "exact_match": true,
+      "absolute_difference": 0
+    },
+    {
+      "key": "mechanism_removed",
+      "dimension": "generativity",
+      "r1": 1,
+      "r2": 1,
+      "exact_match": true,
+      "absolute_difference": 0
+    },
+    {
+      "key": "grand_wish",
+      "dimension": "value",
+      "r1": 0,
+      "r2": 0,
+      "exact_match": true,
+      "absolute_difference": 0
+    },
+    {
+      "key": "grand_wish",
+      "dimension": "concept",
+      "r1": 0,
+      "r2": 0,
+      "exact_match": true,
+      "absolute_difference": 0
+    },
+    {
+      "key": "grand_wish",
+      "dimension": "generativity",
+      "r1": 0,
+      "r2": 0,
+      "exact_match": true,
+      "absolute_difference": 0
+    }
+  ]
+}

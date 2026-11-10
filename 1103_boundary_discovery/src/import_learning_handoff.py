@@ -44,6 +44,8 @@ def main():
     write(run / "manifest.json", manifest)
     state["stages"][sid] = {"path": str(path), "sha256": digest(path),
                             "adapter": "collaboration", "agent_name": args.agent}
+    if 'input_sha256' in request:
+        state['stages'][sid]['input_sha256'] = request['input_sha256']
     write(run / "learning_state.json", state)
     archive = run / "native_dispatch" / (sid + ".json")
     write(archive, {**request, "agent_name": args.agent, "result_sha256": digest(path)})

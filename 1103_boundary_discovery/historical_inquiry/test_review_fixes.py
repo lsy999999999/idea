@@ -16,6 +16,7 @@ from knowledge_broker import KnowledgeBroker, SourcePolicy
 from note_dependencies import prepare_dependencies
 from prepare import HERE, PROJECT, save
 from question_state import QuestionState
+from hypothesis_development import HypothesisState
 from final_evaluation import evaluate_final
 sys.path.insert(0, str(PROJECT / 'src'))
 sys.path.insert(0, str(PROJECT / 'bootstrap'))
@@ -23,18 +24,20 @@ from learning_memory import Memory
 from novelty_fixtures import claim_report, scope_report
 from novelty_scope import date_interval
 from test_fish_inquiry import result as base
+from test_open_inquiry import frozen_memory_case
 
 CONFIG = json.loads((HERE/'configs/fish_v2.json').read_text())
 
 
-def shell(root):
+def shell(root, case=CASE):
     pilot = InquiryPilot.__new__(InquiryPilot)
     pilot.run = root/'run'; pilot.run.mkdir()
-    pilot.case = CASE
+    pilot.case = case
     pilot.task_id, pilot.timeout, pilot.config = 'review/probe', 1, CONFIG
-    pilot.broker = InquiryBroker(CASE, pilot.run/'services', CONFIG, fetch=lambda _: '{}')
+    pilot.broker = InquiryBroker(case, pilot.run/'services', CONFIG, fetch=lambda _: '{}')
     pilot.memory = Memory(root/'memory')
     pilot.questions = QuestionState(pilot.run/'questions', ['animal_behaviorist'])
+    pilot.hypotheses = HypothesisState(pilot.run/'hypotheses', ['animal_behaviorist'])
     pilot.evidence = RecordLedger(pilot.run/'internal_verification')
     pilot.state, pilot.state_path = {'stages': {}}, pilot.run/'state.json'
     return pilot
@@ -100,11 +103,11 @@ class NoteClosure(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
-        self.pilot = shell(self.root)
+        self.pilot = shell(self.root, frozen_memory_case())
 
     def old_answer(self):
         p = self.pilot
-        packet = NoteGate(p.broker, [p.memory.root, CASE/'researchers']).retrieve(
+        packet = NoteGate(p.broker, [p.memory.root, p.case/'researchers']).retrieve(
             'animal_behaviorist', 'fish coordinates', self.root/'packet/memory_retrieval/test.json')
         note = next(n['note'] for n in packet['retrieved'] if n['note']['kind'] == 'correction')
         p.packet = lambda sid, rid: packet

@@ -1,0 +1,94 @@
+{
+  "source_stage": "replay_01_initial_0",
+  "source_result_object_sha256": "d2a641d0c2edaa9988a57986b855eb99fd8970165edee782e577ffd2c59592a5",
+  "request": {
+    "needed": true,
+    "queries": [],
+    "urls": [],
+    "operations": [
+      {
+        "kind": "analysis",
+        "question": "在R07中，A-B距离近状态与远状态之后10帧的距离变化分布是否不同？",
+        "record_id": "R07",
+        "start": 0,
+        "stop": 44999,
+        "variables": [
+          {
+            "name": "distance",
+            "expression": "norm(positions[:,0,:]-positions[:,1,:],axis=1)",
+            "meaning": "局部标签A与B每帧的二维欧氏距离",
+            "units": "native image coordinate unit"
+          },
+          {
+            "name": "future_change_10",
+            "expression": "shift(distance,-10)-distance",
+            "meaning": "10帧后的距离减当前距离",
+            "units": "native image coordinate unit per 10 frames"
+          },
+          {
+            "name": "valid_pair",
+            "expression": "isfinite(distance)&isfinite(future_change_10)",
+            "meaning": "当前距离及10帧后配对距离均有限",
+            "units": "boolean"
+          },
+          {
+            "name": "near_threshold",
+            "expression": "quantile(distance,0.25)",
+            "meaning": "R07全记录距离第25分位数，供操作性分组使用",
+            "units": "native image coordinate unit"
+          },
+          {
+            "name": "far_threshold",
+            "expression": "quantile(distance,0.75)",
+            "meaning": "R07全记录距离第75分位数，供操作性分组使用",
+            "units": "native image coordinate unit"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "distance_and_future_change",
+            "expression": "distance"
+          },
+          {
+            "name": "future_distance_change",
+            "expression": "future_change_10"
+          }
+        ],
+        "groups": [
+          {
+            "name": "near",
+            "where": "valid_pair&(distance<=near_threshold)",
+            "values": [
+              "distance",
+              "future_change_10"
+            ]
+          },
+          {
+            "name": "far",
+            "where": "valid_pair&(distance>=far_threshold)",
+            "values": [
+              "distance",
+              "future_change_10"
+            ]
+          }
+        ],
+        "model": {
+          "target": "future_change_10",
+          "features": [
+            "distance"
+          ],
+          "train_fraction": 0.7
+        }
+      }
+    ]
+  },
+  "knowledge_requested": false,
+  "routes": [
+    {
+      "field": "analysis_plan",
+      "index": 0,
+      "operation_index": 0,
+      "deduplicated": false
+    }
+  ]
+}

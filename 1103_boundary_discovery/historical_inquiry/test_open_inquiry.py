@@ -18,10 +18,25 @@ from knowledge_broker import KnowledgeBroker, SourcePolicy
 from prepare import HERE, save
 from test_fish_inquiry import result, claim
 from test_question_state import decision
+from test_hypothesis_development import card
 sys.path.insert(0, str(HERE.parent / 'bootstrap'))
 from novelty_fixtures import claim_report
 
 CONFIG = json.loads((HERE / 'configs/fish_v2.json').read_text())
+
+
+def frozen_memory_case():
+    """Use the original immutable fixture; copied indexes retain absolute provenance."""
+    index = json.loads((CASE/'researchers/animal_behaviorist/index.json').read_text())
+    item = next(iter(index['notes'].values()))
+    note = json.loads(Path(item['path']).read_text())
+    case_name, run_id = note['source_task'].split('/', 1)
+    source = Path(note['source_result'])
+    original = next(p for p in source.parents if p.name == case_name and
+                    (p/'runs'/run_id) in source.parents)
+    if (original/'controller_only/allowed_hashes.json').read_bytes() != (CASE/'controller_only/allowed_hashes.json').read_bytes():
+        raise ValueError('Original frozen fixture differs from this case')
+    return original
 
 
 class KnowledgeTests(unittest.TestCase):
@@ -117,14 +132,15 @@ class MemoryAndReasoningTests(unittest.TestCase):
         sys.path.insert(0, str(HERE.parent / 'src'))
         from learning_memory import Memory
         with tempfile.TemporaryDirectory() as tmp:
-            broker = InquiryBroker(CASE, Path(tmp)/'services', CONFIG, fetch=lambda _: '{}')
+            case = frozen_memory_case()
+            broker = InquiryBroker(case, Path(tmp)/'services', CONFIG, fetch=lambda _: '{}')
             local = Path(tmp)/'memory'; local.mkdir()
-            gate = NoteGate(broker,[local,CASE/'researchers',HERE.parent/'learning_lab/researchers'])
-            before = {str(p):digest(p) for p in (CASE/'researchers').rglob('*.json')}
+            gate = NoteGate(broker,[local,case/'researchers',HERE.parent/'learning_lab/researchers'])
+            before = {str(p):digest(p) for p in (case/'researchers').rglob('*.json')}
             packet = gate.retrieve('nonequilibrium_physicist','motion history memory fish',Path(tmp)/'run/memory_retrieval/test.json')
             self.assertTrue(packet['retrieved'])
             self.assertTrue(all(n['note']['source_task'].startswith('fish_001/') for n in packet['retrieved']))
-            self.assertEqual(before,{str(p):digest(p) for p in (CASE/'researchers').rglob('*.json')})
+            self.assertEqual(before,{str(p):digest(p) for p in (case/'researchers').rglob('*.json')})
 
     def test_check_prioritizes_the_decision_to_stop_over_generic_scope_limits(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -146,7 +162,7 @@ class PipelineTests(unittest.TestCase):
             case = Path(tmp)/'case'
             shutil.copytree(CASE/'allowed',case/'allowed')
             shutil.copytree(CASE/'controller_only',case/'controller_only')
-            seen, searches = {}, []
+            seen, searches, invocations = {}, [], []
             config = {**CONFIG, 'max_rounds': 2, 'max_internal_batches': 1, 'read_full_text': False}
             def fetch(url):
                 searches.append(url)
@@ -159,6 +175,7 @@ class PipelineTests(unittest.TestCase):
                 (attempt/'prompt.txt').write_text(prompt)
                 save(attempt/'execution_audit.json', {'returncode':0,'tool_events':0,'requested_model':'gpt-6-luna'})
                 c = json.loads(prompt.split('INPUTS:\n',1)[1]); sid = c['_stage']; seen[sid] = c
+                invocations.append(sid)
                 r = result(); rid = c.get('researcher')
                 if sid in {f'01_initial_{i}' for i in range(3)}:
                     self.assertEqual(c['evidence_state']['claims'], [])
@@ -169,6 +186,20 @@ class PipelineTests(unittest.TestCase):
                     if sid.startswith('01_initial_'):
                         self.assertEqual(c['question_state']['peer_questions'], [])
                 if rid:
+                    self.assertIn('HYPOTHESIS DEVELOPMENT v1', prompt)
+                    self.assertIn('NOT requirements', prompt)
+                    if sid.startswith('01_initial_'):
+                        self.assertEqual(c['hypothesis_state']['peer_branches'], [])
+                    if sid in {f'01_initial_{i}' for i in range(3)}:
+                        r['hypothesis_updates'] = [card()]
+                    elif sid == '01_initial_0_learn_0':
+                        self.assertEqual(c['hypothesis_state']['self'][0]['ref']['version'], 1)
+                        r['hypothesis_updates'] = [card(base=1, implications=['If true, distinguish two cases'])]
+                    elif sid == 'r1_return_1_learn_0':
+                        r['hypothesis_updates'] = [card(base=1, conceptual_move='Separate two meanings')]
+                    elif sid == '04_fresh_continuation':
+                        self.assertEqual(c['hypothesis_state']['self'][0]['assumption'], card()['assumption'])
+                        self.assertEqual(len(c['hypothesis_state']['peer_branches']), 2)
                     r['memory_notes'] = [{'key':'coordinate_state','title':'Coordinate state','kind':'interpretation',
                         'mastery':'explained','understanding':'A chosen observation definition', 'conditions':'Coordinates only',
                         'example':'Two tracked coordinates', 'open_questions':'Which useful state?', 'tags':['fish','state'],
@@ -183,6 +214,13 @@ class PipelineTests(unittest.TestCase):
                         'interface_gaps':[], 'next_action':'Compare definitions', 'stalled_reason':'', 'understanding_changed':True}
                 if sid == '01_initial_0':
                     r['evidence_claims'] = [claim('scope')]
+                    r['analysis_plan'] = {'kind': 'analysis', 'record_id': 'R01',
+                        'question': 'A requested coordinate summary', 'start': 0, 'stop': 20,
+                        'outputs': [{'name': 'mean', 'expression': 'mean(positions)'}]}
+                if sid == '01_initial_0_learn_0':
+                    r['analysis_plan'] = {'kind': 'analysis', 'record_id': 'R01',
+                        'question': 'A follow-up coordinate summary', 'start': 0, 'stop': 20,
+                        'outputs': [{'name': 'std', 'expression': 'std(positions)'}]}
                 if sid.endswith('_verify'):
                     r['findings'] = [{'claim_ref':t['ref'],'status':'needs_correction','reason':'The claimed inference exceeds the evidence',
                         'evidence_refs':['motion:R01'],'corrected_claim':'Only a coordinate description is supported'} for t in c['targets']]
@@ -196,6 +234,8 @@ class PipelineTests(unittest.TestCase):
                         r['memory_notes'] = []
                 if sid == '05_candidates':
                     r['ideas'] = [{'id':'Q1','title':'Unfinished question','idea':'Unfinished question'}]
+                    r['preserved_branches'] = [{'ref': c['ref'], 'reason': 'Retain unfinished assumption'}
+                                              for c in c['current_hypotheses']]
                 return r
             def fake_final(run, stage, role, prompt, inputs, model, effort, timeout):
                 self.assertTrue((case/'runs/test/GENERATION_FREEZE.json').exists())
@@ -206,18 +246,42 @@ class PipelineTests(unittest.TestCase):
                 path = run/'fixture_result.json'; save(path, checked)
                 return path, checked
             with patch('fish_inquiry.invoke',side_effect=fake), patch('final_evaluation.stage_run',side_effect=fake_final):
-                pilot = InquiryPilot(case,30,'test',config,fetch); pilot.execute()
+                pilot = InquiryPilot(case,30,'test',config,fetch)
+                with patch.object(pilot.evidence, 'observe', side_effect=OSError('interrupt after hypothesis commit')):
+                    with self.assertRaises(OSError):
+                        pilot.execute()
+                self.assertEqual(len(pilot.hypotheses.current()), 1)
+                initial_memory = copy.deepcopy(pilot.memory.index(RESEARCHERS[0][0]))
+                pilot.execute()
+                self.assertEqual(invocations.count('01_initial_0'), 1)
+                initial_key = initial_memory['notes']['coordinate_state']
+                self.assertTrue(Path(initial_key['path']).exists())
+                self.assertEqual(digest(initial_key['path']), initial_key['sha256'])
             self.assertIn('r1_evidence_verify',seen)
             self.assertIn('01_initial_0_learn_0',seen)
             self.assertIn('r1_return_1_learn_0',seen)
             self.assertEqual(len(searches), 6)
+            self.assertEqual(seen['01_initial_0_learn_0']['broker_reply']['computed'][0]['result']['status'], 'executed')
+            self.assertEqual(seen['01_initial_0_learn_1']['broker_reply']['computed'][0]['result']['status'], 'executed')
             self.assertEqual(seen['01_initial_0_learn_0']['broker_reply']['sources'][0]['text'], 'A real concept and its conditions.')
             self.assertEqual(seen['01_initial_0']['measurement_metadata']['measurement_context']['species']['value'],'Danio rerio (zebrafish)')
             self.assertTrue(seen['04_fresh_continuation']['memory']['retrieved'])
+            self.assertEqual(len(pilot.hypotheses.current()), 3)
+            incomplete = {'summary': '', 'artifacts': [], 'evidence': [], 'claims': [],
+                          'limitations': [], 'next_actions': [], 'ideas': [], 'preserved_branches': []}
+            with self.assertRaisesRegex(ValueError, 'each exact hypothesis ref'):
+                pilot.validate('05_candidates', 'discussion_recorder', incomplete,
+                               seen['05_candidates'], False, False)
+            self.assertTrue(any('/hypothesis_state/' in p for p in
+                                json.loads((pilot.run/'GENERATION_FREEZE.json').read_text())['files']))
+            self.assertTrue(any('/request_dispatch/' in p for p in
+                                json.loads((pilot.run/'GENERATION_FREEZE.json').read_text())['files']))
+            hypothesis_before = {str(p): digest(p) for p in pilot.hypotheses.root.rglob('*.json')}
             before = {str(p):digest(p) for p in pilot.memory.root.rglob('*.json')}
             with patch('fish_inquiry.invoke',side_effect=AssertionError('Must reuse accepted stages')), patch('final_evaluation.stage_run',side_effect=AssertionError('Must reuse final check')):
                 InquiryPilot(case,30,'test',config,fetch).execute()
             self.assertEqual(before,{str(p):digest(p) for p in pilot.memory.root.rglob('*.json')})
+            self.assertEqual(hypothesis_before, {str(p): digest(p) for p in pilot.hypotheses.root.rglob('*.json')})
 
 
 if __name__ == '__main__':

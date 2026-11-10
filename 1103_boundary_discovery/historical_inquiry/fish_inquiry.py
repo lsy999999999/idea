@@ -14,12 +14,14 @@ import tempfile
 from fish_materials import CASE, prepare, verify, digest
 from inquiry_services import InquiryBroker, NoteGate
 from analysis_executor import PLAN_PROTOCOL
+from request_routing import service_request
 from note_dependencies import prepare_dependencies
 from final_evaluation import evaluate_final
 from isolated_cli import invoke, parse_response
 from internal_verification import EvidenceLedger, UPTAKE_TASK
 from prepare import HERE, PROJECT, save
 from question_state import QuestionState, PROTOCOL as QUESTION_PROTOCOL, object_hash
+from hypothesis_development import HypothesisState, PROTOCOL as HYPOTHESIS_PROTOCOL
 from run import Pilot as ExistingPilot
 sys.path.insert(0, str(PROJECT / 'src'))
 from learning_memory import Memory
@@ -40,7 +42,7 @@ measurement context are permitted. Keep observation, expectation, expectation_ba
 conditions distinct. Propose and revise observation definitions, comparison conditions and
 explanations. Separate missing external facts, definitions you can choose, and interface gaps.
 A missing fact limits the relevant inference; pursue other useful questions. Ideas may be
-unfinished. All results include summary, artifacts,evidence,claims,limitations,next_actions
+unfinished. All results include a summary string, artifacts/evidence/claims/limitations/next_actions
 arrays and possible_pretraining_familiarity string. Cite actual supplied sources and distinguish
 reading, explaining and using knowledge. Keep useful concepts/examples in memory, revise
 same keys when understanding changes. No compulsory tool use or manufactured disagreement.
@@ -60,16 +62,25 @@ queries:[free text queries for any relevant foundations/models/examples/methods/
 urls:[optional identifiers or URLs to find and verify],source_ids:[],record_ids:[],operations:[]}.
 Knowledge requests automatically trigger online search and reading, not human approval.
 Only actually read, date-verified content is returned. You may ask again if a search fails.
+Put executable analyses in learning_request.operations. A top-level analysis_plan object
+or list of plan objects is also dispatched, even when learning_request.needed is false
+or absent. Any explicit operation requests execution; needed:false disables knowledge
+search, not explicit computations. Use analysis_plan:null/[] and operations:[] for no
+computation. Keep tentative proposals in hypothesis_updates or next_actions instead.
+Identical plans in both fields execute once within this response. Results or concrete
+pending capability tasks return through broker_reply.computed/controller_pending.
 """ + PLAN_PROTOCOL + """
 Return exploration:{missing_external_facts:[],unselected_definitions:[],interface_gaps:[],
-next_action,stalled_reason,understanding_changed:boolean}. When progress stalls, choose an
-alternative observation/definition, request useful knowledge/computation, or explicitly park
+next_action,stalled_reason,understanding_changed:boolean}. When progress stalls, choose
+conceptual development of an assumption or its consequences, an alternative observation/definition,
+request useful knowledge/computation, or explicitly park
 the branch with a reason. No forced tool request or completed formula/experiment is required.
 """
 
 
 def load(path):
     return json.loads(Path(path).read_text())
+
 
 
 def admit_reference_layout(result, sid, broker):
@@ -189,6 +200,7 @@ class InquiryPilot:
         self.memory = Memory(self.case / 'researchers_v2')
         self.note_gate = NoteGate(self.broker, [self.memory.root, self.case / 'researchers', PROJECT / 'learning_lab/researchers'])
         self.questions = QuestionState(self.run / 'question_state', [r for r, _ in RESEARCHERS])
+        self.hypotheses = HypothesisState(self.run / 'hypothesis_state', [r for r, _ in RESEARCHERS])
         self.evidence = RecordLedger(self.run / 'internal_verification', max_checks=self.config.get('max_internal_batches', 2), batch_size=2)
         self.state_path = self.run / 'state.json'
         self.state = load(self.state_path) if self.state_path.exists() else {'protocol': 'open-inquiry-v2', 'stages': {}}
@@ -205,10 +217,10 @@ class InquiryPilot:
         code_sources = {name: HERE / name for name in (
             'fish_inquiry.py', 'inquiry_services.py', 'knowledge_broker.py', 'analysis_executor.py',
             'note_dependencies.py', 'final_evaluation.py', 'fish_materials.py', 'isolated_cli.py',
-            'question_state.py', 'internal_verification.py', 'prepare.py', 'run.py')}
+            'question_state.py', 'hypothesis_development.py', 'request_routing.py', 'internal_verification.py', 'prepare.py', 'run.py')}
         code_sources.update({'shared/' + name: PROJECT / 'src' / name for name in (
             'idea_check.py', 'novelty_contract.py', 'novelty_scope.py', 'learning_memory.py',
-            'learning_lab.py', 'discover.py', 'runtime.py')})
+            'learning_lab.py', 'learning_support.py', 'discover.py', 'runtime.py')})
         if not setup.exists():
             save(setup, {'model_requested': 'gpt-6-luna', 'max_rounds': self.config['max_rounds'], 'task_config': self.config,
                  'initial_window_rule': 'R01/R07/R13, frames [1000,1160), stride 4; fixed before generation, not selected for an anomaly',
@@ -257,6 +269,7 @@ class InquiryPilot:
                 if any(key not in supplied_ids for key in c['basis']['source_ids']):
                     raise ValueError('Evidence cites material not supplied to this researcher')
             self.questions.validate(sid, role, result, context.get('question_state'), initial)
+            self.hypotheses.validate(sid, role, result, context.get('hypothesis_state'))
             exploration = result.get('exploration')
             if not isinstance(exploration, dict) or not isinstance(exploration.get('understanding_changed'), bool):
                 raise ValueError('Exploration needs an explicit understanding_changed boolean')
@@ -315,15 +328,8 @@ class InquiryPilot:
                 p = Path(temp) / 'result.json'
                 save(p, result)
                 Memory(Path(temp) / 'memory').commit(role, self.task_id, sid, p)
-        if 'learning_request' in result:
-            req = result['learning_request']
-            if not isinstance(req, dict) or not isinstance(req.get('needed'), bool):
-                raise ValueError('learning_request.needed must be a boolean')
-            for key in ('queries', 'urls', 'source_ids', 'record_ids', 'operations'):
-                if not isinstance(req.get(key, []), list):
-                    raise ValueError('Request ' + key + ' must be an array')
-            if any(not isinstance(op, dict) for op in req.get('operations', [])):
-                raise ValueError('Each computation request must be an object')
+        if 'learning_request' in result or 'analysis_plan' in result:
+            service_request(result)  # Reject malformed envelopes before stage admission.
         if role == 'discussion_recorder':
             if not isinstance(result.get('ideas'), list):
                 raise ValueError('Recorder must return ideas array')
@@ -331,6 +337,16 @@ class InquiryPilot:
                 validate_ideas(result)
             if any('evaluation_context' in idea for idea in result['ideas']):
                 raise ValueError('Generation cannot declare evaluation exposure or dates')
+            expected = [c['ref'] for c in context.get('current_hypotheses', [])]
+            if expected:
+                preserved = result.get('preserved_branches')
+                if not isinstance(preserved, list) or any(not isinstance(b, dict) for b in preserved):
+                    raise ValueError('Recorder must account for all hypothesis branches')
+                refs = [b.get('ref') for b in preserved]
+                if len(refs) != len(expected) or any(refs.count(ref) != 1 for ref in expected):
+                    raise ValueError('Recorder must preserve each exact hypothesis ref once')
+                if any(not isinstance(b.get('reason'), str) or not b['reason'].strip() for b in preserved):
+                    raise ValueError('Preserved branch needs a reason, not a feasibility verdict')
 
     def call(self, sid, role, task, context, notes=False):
         researcher = role in self.questions.researchers
@@ -341,7 +357,8 @@ class InquiryPilot:
             context['researcher'] = role
             context['memory'] = self.packet(sid, role)
             context['evidence_state'] = self.evidence.history_packet(sid, independent=independent)
-            task += '\n' + EVIDENCE_PROTOCOL + '\n' + LEARNING_REQUEST
+            context['hypothesis_state'] = self.hypotheses.packet(sid, role, independent=independent)
+            task += '\n' + EVIDENCE_PROTOCOL + '\n' + LEARNING_REQUEST + '\n' + HYPOTHESIS_PROTOCOL
             if not initial:
                 context['question_state'] = self.questions.packet(sid, role)
                 if independent:
@@ -406,6 +423,7 @@ class InquiryPilot:
             self.record_note_dependencies(role, result, context, pending['note_dependencies'])
         if role in self.questions.researchers:
             self.questions.accept(sid, role, result, path, context.get('question_state'), initial)
+            self.hypotheses.accept(sid, role, result, path, context.get('hypothesis_state'))
             self.evidence.observe(sid, role, result, path)
         self.state['stages'][sid] = {'input_sha256': pending['input_sha256'], 'output_sha256': digest(path)}
         save(self.state_path, self.state)
@@ -488,30 +506,49 @@ class InquiryPilot:
             reviews[str(Path(item['path']).resolve())] = {**prepared[note['key']], 'sha256': item['sha256']}
         save(path, reviews)
 
+    def service_reply(self, step, source_stage, answer):
+        request, routing = service_request(answer)
+        dispatch = {'source_stage': source_stage, 'source_result_object_sha256': object_hash(answer),
+                    'request': request, **routing}
+        dispatch_path = self.run / 'request_dispatch' / (step + '.json')
+        if dispatch_path.exists():
+            if load(dispatch_path) != dispatch:
+                raise ValueError('Frozen service dispatch changed')
+        else:
+            save(dispatch_path, dispatch)
+        path = self.run / 'broker' / (step + '.json')
+        if not path.exists():
+            save(path, self.broker.request(request, step))
+        reply = load(path)
+        if reply.get('request') != request:
+            raise ValueError('Cached broker request changed')
+        return request, reply
+
     def service(self, sid, rid, answer):
         learned = []
+        source_stage = sid
         for hop in range(self.config['max_request_hops']):
-            request = answer.get('learning_request', {'needed': False})
+            request, _ = service_request(answer)
             if not request.get('needed'):
                 break
             step = f'{sid}_learn_{hop}'
-            path = self.run / 'broker' / (step + '.json')
-            if not path.exists():
-                save(path, self.broker.request(request, step))
+            request, reply = self.service_reply(step, source_stage, answer)
             answer = self.call(step, rid, "Study the actual returned material/computation. Explain "
                 "a useful concept or result with a worked example and scope. Return learning_change, "
                 "remaining_gap, memory_notes and learning_request if another concrete gap remains. "
                 "Differentiate read/explained/used. A failed search is not learning. For pending "
-                "capability tasks preserve the question and choose another useful branch or request.",
-                {'your_request': request, 'broker_reply': load(path)}, notes=True)
+                "capability tasks preserve the question and hypothesis; conceptual development can continue. "
+                "Explain whether the material changes an assumption or its consequences; no forced change. "
+                "Illustrative hypothetical examples must not be presented as measured results.",
+                {'your_request': request, 'broker_reply': reply}, notes=True)
+            source_stage = step
             learned.append({'researcher': rid, 'result': answer})
-        if answer.get('learning_request', {}).get('needed'):
+        request, _ = service_request(answer)
+        if request['needed']:
             # Execute the final request too; retain its result for the next common discussion.
             step = f'{sid}_continuation_request'
-            path = self.run / 'broker' / (step + '.json')
-            if not path.exists():
-                save(path, self.broker.request(answer['learning_request'], step))
-            learned.append({'researcher': rid, 'continuation_material': load(path),
+            _, reply = self.service_reply(step, source_stage, answer)
+            learned.append({'researcher': rid, 'continuation_material': reply,
                             'status': 'read_return_pending_next_discussion'})
         return learned
 
@@ -530,7 +567,9 @@ class InquiryPilot:
                 "Return observation, expectation, expectation_basis, conditions, initial_question, "
                 "question_to_peers, worked_example and memory_notes. Identify specific foundational "
                 "gaps, models or examples you need for this question; use learning_request to acquire "
-                "them now. You may propose operational definitions and change them after analysis.",
+                "them when useful. You may propose operational definitions and change them. "
+                "If a phenomenon or difficulty suggests an assumption, state and explore it as a hypothesis; "
+                "its feasibility and proof are outside this discussion task.",
                 {**load(initial_context), 'domain': domain}, notes=True)
             initial.append({'researcher': rid, 'result': answer})
             # Independent initial learning sees no peer questions or evidence.
@@ -540,7 +579,9 @@ class InquiryPilot:
             for i, (rid, _) in enumerate(RESEARCHERS):
                 sid = f'r{round_id}_exchange_{i}'
                 answer = self.call(sid, rid, "Respond to specific peer statements and pursue a useful "
-                    "question. Return response_to_peers, changed_understanding, branches and exploration. "
+                    "question or assumption. Return response_to_peers, changed_understanding, branches and exploration. "
+                    "Develop the conceptual content of a specific hypothesis: what relationship or default "
+                    "assumption changes, and what follows if the proposal holds. Keep alternative lines. "
                     "Advance a concrete uncertainty through theory, an example/counterexample, an "
                     "observation definition, conditions, or analysis. Explain the actual reason for "
                     "unchanged understanding. Consider the supplied progress state; repeating a general "
@@ -556,6 +597,7 @@ class InquiryPilot:
                 sid = f'r{round_id}_return_{i}'
                 answer = self.call(sid, rid, "Return to common discussion with actual learned material "
                     "and results. Return changed_because, branches, memory_notes and exploration. "
+                    "Develop or revise an assumption, its conceptual move and conditional consequences when useful. "
                     "Revise a definition, comparison, concept scope or question when useful. Preserve "
                     "unfinished hypotheses and explain why a parked branch can or cannot resume.",
                     {'initial': initial, 'prior_rounds': history, 'exchanges': exchanges,
@@ -570,21 +612,27 @@ class InquiryPilot:
                 break
         rid = RESEARCHERS[-1][0]
         fresh = self.call('04_fresh_continuation', rid, "Fresh session: use current screened notes "
-            "and explicit question versions, without the full dialogue. Return memory_use "
+            "and explicit question/hypothesis versions, without the full dialogue. Return memory_use "
             "[{key,version,source_task,scope_check}], continuation_question, worked_example and "
-            "remaining_gap. Continue the actual saved line.", {'measurement_metadata': self.broker.catalog})
+            "remaining_gap. Continue the actual saved line, including unfinished assumptions and consequences.", {'measurement_metadata': self.broker.catalog})
         learning.extend(self.service('04_fresh_continuation', rid, fresh))
         ideas = self.call('05_candidates', 'discussion_recorder', "Record 0-4 actual ideas, including "
             "unfinished ones. Return ideas [{id,title,idea,motivation,emergence,supporting_claim_refs}], "
             "question_trajectory and preserved_branches. Preserve corrections and actual changes. "
-            "Do not strengthen a question beyond the discussion.",
+            "Do not strengthen a question beyond the discussion. Faithfully preserve each recorded "
+            "assumption, conceptual move and conditional consequence; do not reduce it to a whether-question "
+            "or promote it to an established finding. Do not select by feasibility, proof or evidence strength. "
+            "preserved_branches: [{ref: exact supplied hypothesis ref, reason: faithful disposition}] "
+            "must account for ALL current_hypotheses, including "
+            "parked/incomplete branches and those not selected among the 0-4 ideas.",
             {'initial': initial, 'rounds': history, 'learning': learning, 'internal_discussions': corrections,
-             'fresh': fresh, **self.questions.history_packet('05_candidates')})
+             'fresh': fresh, **self.questions.history_packet('05_candidates'),
+             **self.hypotheses.history_packet('05_candidates')})
         save(self.run / 'ideas.json', ideas)
         freeze = self.run / 'GENERATION_FREEZE.json'
         if not freeze.exists():
             paths = [self.run / 'ideas.json']
-            for sub in ('stages', 'broker', 'services', 'question_state', 'internal_verification', 'memory_retrieval', 'progress'):
+            for sub in ('stages', 'broker', 'request_dispatch', 'services', 'question_state', 'hypothesis_state', 'internal_verification', 'memory_retrieval', 'progress'):
                 paths.extend(p for p in (self.run / sub).rglob('*') if p.is_file() and '06_final_check' not in str(p))
             save(freeze, {'files': {str(p.resolve()): digest(p) for p in paths},
                           'external_feedback_used_for_generation': False})
@@ -609,8 +657,11 @@ class InquiryPilot:
         question_changed = any(r['result'].get(field, {}).get('action') in {'revise', 'propose'}
                                for r in exchanges + returned for field in ('personal_question_update', 'shared_question_update')
                                if isinstance(r['result'].get(field), dict))
-        stalled = bool(values) and not question_changed and all(v.get('stalled_reason') and not v.get('understanding_changed') for v in values)
+        hypothesis_changes = [u for e in self.hypotheses.events()
+                              if e['stage'].startswith(f'r{round_id}_') for u in e['updates']]
+        stalled = bool(values) and not question_changed and not hypothesis_changes and all(v.get('stalled_reason') and not v.get('understanding_changed') for v in values)
         return {'round': round_id, 'learning_events': len(learned), 'researcher_progress': values,
+                'hypothesis_changes': [u['ref'] for u in hypothesis_changes],
                 'pending_controller_tasks': unresolved,
                 'disposition': 'park_with_explicit_reasons' if stalled and not learned else 'continue_with_next_actions',
                 'boundary': 'Parking or a controller capability gap is not a scientific impossibility.'}
